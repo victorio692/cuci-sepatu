@@ -2,83 +2,66 @@
 
 namespace App\Controllers\Admin;
 
-use CodeIgniter\Controller;
-use Config\Database;
+use App\Controllers\BaseController;
+use App\Models\UserModel;
 
-class Users extends Controller
+class Users extends BaseController
 {
-    protected $db;
+    protected $userModel;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->userModel = new UserModel();
     }
 
+    /**
+     * Halaman kelola pelanggan
+     */
     public function index()
     {
-        $search = $this->request->getVar('search');
-
-        $query = $this->db->table('users');
-
-        if ($search) {
-            $query->groupStart()
-                ->like('full_name', $search)
-                ->orLike('email', $search)
-                ->orLike('phone', $search)
-                ->groupEnd();
-        }
-
-        $users = $query->orderBy('created_at', 'DESC')
-            ->paginate(20);
-
         $data = [
-            'title' => 'Users - Admin SYH Cleaning',
-            'users' => $users,
-            'pager' => $this->db->pager,
-            'search' => $search,
+            'title'      => 'Kelola Pelanggan',
+            'pelanggan'  => $this->userModel->getPelanggan(),
         ];
 
         return view('admin/users', $data);
     }
 
+    /**
+     * Detail user
+     */
     public function detail($id)
     {
-        $user = $this->db->table('users')->find($id);
-
-        if (!$user) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        $user = $this->userModel->find($id);
+        
+        if (!$user || $user['role'] !== 'pelanggan') {
+            return redirect()->to('/admin/users')->with('error', 'Pelanggan tidak ditemukan');
         }
 
-        $bookings = $this->db->table('bookings')
-            ->where('user_id', $id)
-            ->orderBy('created_at', 'DESC')
-            ->get()
-            ->getResultArray();
-
         $data = [
-            'title' => 'Detail User - Admin SYH Cleaning',
-            'user' => $user,
-            'bookings' => $bookings,
+            'title' => 'Detail Pelanggan',
+            'user'  => $user,
         ];
 
         return view('admin/user_detail', $data);
     }
 
-    public function toggleActive($id)
+    /**
+     * Hapus user
+     */
+    public function delete($id)
     {
-        $user = $this->db->table('users')->find($id);
-
-        if (!$user) {
-            return $this->response->setJSON(['success' => false, 'message' => 'User not found']);
+        $user = $this->userModel->find($id);
+        
+        // Tidak boleh hapus admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin/users')->with('error', 'Tidak dapat menghapus admin');
         }
 
-        $new_status = !$user->is_active;
-        $this->db->table('users')->update(['is_active' => $new_status], ['id' => $id]);
+        if ($this->userModel->delete($id)) {
+            return redirect()->to('/admin/users')->with('success', 'Pelanggan berhasil dihapus');
+        }
 
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Status updated',
-            'is_active' => $new_status,
-        ]);
+        return redirect()->to('/admin/users')->with('error', 'Gagal menghapus pelanggan');
     }
 }
