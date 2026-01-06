@@ -2,96 +2,89 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
-use App\Models\BookingModel;
+use CodeIgniter\Controller;
+use Config\Database;
 
-class Bookings extends BaseController
+class Bookings extends Controller
 {
-    protected $bookingModel;
+    protected $db;
 
     public function __construct()
     {
-        $this->bookingModel = new BookingModel();
+        $this->db = Database::connect();
     }
 
-    /**
-     * Halaman kelola booking
-     */
     public function index()
     {
+        $status = $this->request->getVar('status');
+        $search = $this->request->getVar('search');
+
+        $query = $this->db->table('bookings')
+            ->select('bookings.*, users.full_name, users.email, users.phone')
+            ->join('users', 'bookings.user_id = users.id');
+
+        if ($status) {
+            $query->where('bookings.status', $status);
+        }
+
+        if ($search) {
+            $query->groupStart()
+                ->like('users.full_name', $search)
+                ->orLike('users.email', $search)
+                ->orLike('bookings.service', $search)
+                ->groupEnd();
+        }
+
+        $bookings = $query->orderBy('bookings.created_at', 'DESC')
+            ->paginate(20);
+
         $data = [
-            'title'    => 'Kelola Booking',
-            'bookings' => $this->bookingModel->getWithDetails(),
-            'stats'    => $this->bookingModel->getStatistik(),
+            'title' => 'Pesanan - Admin SYH Cleaning',
+            'bookings' => $bookings,
+            'pager' => $this->db->pager,
+            'status' => $status,
+            'search' => $search,
         ];
 
         return view('admin/bookings', $data);
     }
 
-    /**
-     * Detail booking
-     */
     public function detail($id)
     {
-        $booking = $this->bookingModel->getWithDetails($id);
-        
+        $booking = $this->db->table('bookings')
+            ->select('bookings.*, users.full_name, users.email, users.phone, users.address, users.city, users.province, users.zip_code')
+            ->join('users', 'bookings.user_id = users.id')
+            ->where('bookings.id', $id)
+            ->get()
+            ->getRow();
+
         if (!$booking) {
-            return redirect()->to('/admin/bookings')->with('error', 'Booking tidak ditemukan');
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
         $data = [
-            'title'   => 'Detail Booking',
-            'booking' => $booking,
+            'title' => 'Detail Pesanan - Admin SYH Cleaning',
+            'booking' => (array)$booking,
         ];
 
         return view('admin/booking_detail', $data);
     }
 
-    /**
-     * Update status booking
-     */
     public function updateStatus($id)
     {
-        $status = $this->request->getPost('status');
-        
-        // Validasi status
-        $validStatus = ['menunggu', 'diterima', 'diproses', 'selesai', 'dibatalkan'];
-        if (!in_array($status, $validStatus)) {
-            return redirect()->back()->with('error', 'Status tidak valid');
+        $status = $this->request->getJSON()->status ?? $this->request->getPost('status');
+
+        if (!in_array($status, ['pending', 'approved', 'in_progress', 'completed', 'cancelled'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid status']);
         }
 
-        if ($this->bookingModel->updateStatus($id, $status)) {
-            return redirect()->back()->with('success', 'Status booking berhasil diupdate');
+        $booking = $this->db->table('bookings')->find($id);
+        if (!$booking) {
+            return $this->response->setStatusCode(404)->setJSON(['success' => false, 'message' => 'Booking not found']);
         }
 
-        return redirect()->back()->with('error', 'Gagal mengupdate status booking');
-    }
+        $this->db->table('bookings')->update(['status' => $status], ['id' => $id]);
 
-    /**
-     * Hapus booking
-     */
-    public function delete($id)
-    {
-        if ($this->bookingModel->delete($id)) {
-            return redirect()->to('/admin/bookings')->with('success', 'Booking berhasil dihapus');
-        }
-
-        return redirect()->to('/admin/bookings')->with('error', 'Gagal menghapus booking');
-    }
-
-    /**
-     * Filter booking berdasarkan status
-     */
-    public function filterByStatus($status)
-    {
-        $bookings = $this->bookingModel->where('status', $status)->getWithDetails();
-        
-        $data = [
-            'title'    => 'Booking - ' . ucfirst($status),
-            'bookings' => $bookings,
-            'filter'   => $status,
-        ];
-
-        return view('admin/bookings', $data);
+        return $this->response->setJSON(['success' => true, 'message' => 'Status updated']);
     }
 }

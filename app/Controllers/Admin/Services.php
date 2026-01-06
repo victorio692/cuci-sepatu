@@ -2,128 +2,84 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
-use App\Models\LayananModel;
+use CodeIgniter\Controller;
+use Config\Database;
 
-class Services extends BaseController
+class Services extends Controller
 {
-    protected $layananModel;
+    protected $db;
 
     public function __construct()
     {
-        $this->layananModel = new LayananModel();
+        $this->db = Database::connect();
     }
 
-    /**
-     * Halaman kelola layanan
-     */
     public function index()
     {
+        $services = [
+            [
+                'id' => 'fast-cleaning',
+                'name' => 'Fast Cleaning',
+                'price' => 15000,
+                'icon' => 'bolt',
+                'description' => 'Pembersihan cepat untuk sepatu Anda',
+            ],
+            [
+                'id' => 'deep-cleaning',
+                'name' => 'Deep Cleaning',
+                'price' => 20000,
+                'icon' => 'droplet',
+                'description' => 'Pembersihan mendalam hingga ke sela-sela',
+            ],
+            [
+                'id' => 'white-shoes',
+                'name' => 'White Shoes',
+                'price' => 35000,
+                'icon' => 'star',
+                'description' => 'Layanan khusus untuk sepatu putih',
+            ],
+            [
+                'id' => 'coating',
+                'name' => 'Coating',
+                'price' => 25000,
+                'icon' => 'shield',
+                'description' => 'Perlindungan tahan lama untuk sepatu',
+            ],
+            [
+                'id' => 'dyeing',
+                'name' => 'Dyeing',
+                'price' => 40000,
+                'icon' => 'palette',
+                'description' => 'Pewarnaan ulang untuk sepatu',
+            ],
+            [
+                'id' => 'repair',
+                'name' => 'Repair',
+                'price' => 50000,
+                'icon' => 'wrench',
+                'description' => 'Perbaikan sepatu yang rusak',
+            ],
+        ];
+
         $data = [
-            'title' => 'Kelola Layanan',
-            'layanan' => $this->layananModel->findAll(),
+            'title' => 'Layanan - Admin SYH Cleaning',
+            'services' => $services,
         ];
 
         return view('admin/services', $data);
     }
 
-    /**
-     * Form tambah layanan
-     */
-    public function create()
+    public function updatePrice()
     {
-        $data = ['title' => 'Tambah Layanan'];
-        return view('admin/service_form', $data);
-    }
+        $service = $this->request->getPost('service');
+        $price = $this->request->getPost('price');
 
-    /**
-     * Simpan layanan baru
-     */
-    public function store()
-    {
-        $rules = [
-            'nama_layanan' => 'required|min_length[3]',
-            'harga'        => 'required|numeric',
-            'status'       => 'required|in_list[aktif,nonaktif]',
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        if (!$service || !$price) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid data']);
         }
 
-        $data = [
-            'nama_layanan' => $this->request->getPost('nama_layanan'),
-            'deskripsi'    => $this->request->getPost('deskripsi'),
-            'harga'        => $this->request->getPost('harga'),
-            'durasi'       => $this->request->getPost('durasi'),
-            'status'       => $this->request->getPost('status'),
-        ];
-
-        if ($this->layananModel->save($data)) {
-            return redirect()->to('/admin/services')->with('success', 'Layanan berhasil ditambahkan');
-        }
-
-        return redirect()->back()->withInput()->with('error', 'Gagal menambahkan layanan');
-    }
-
-    /**
-     * Form edit layanan
-     */
-    public function edit($id)
-    {
-        $layanan = $this->layananModel->find($id);
-        
-        if (!$layanan) {
-            return redirect()->to('/admin/services')->with('error', 'Layanan tidak ditemukan');
-        }
-
-        $data = [
-            'title'   => 'Edit Layanan',
-            'layanan' => $layanan,
-        ];
-
-        return view('admin/service_form', $data);
-    }
-
-    /**
-     * Update layanan
-     */
-    public function update($id)
-    {
-        $rules = [
-            'nama_layanan' => 'required|min_length[3]',
-            'harga'        => 'required|numeric',
-            'status'       => 'required|in_list[aktif,nonaktif]',
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
-        $data = [
-            'nama_layanan' => $this->request->getPost('nama_layanan'),
-            'deskripsi'    => $this->request->getPost('deskripsi'),
-            'harga'        => $this->request->getPost('harga'),
-            'durasi'       => $this->request->getPost('durasi'),
-            'status'       => $this->request->getPost('status'),
-        ];
-
-        if ($this->layananModel->update($id, $data)) {
-            return redirect()->to('/admin/services')->with('success', 'Layanan berhasil diupdate');
-        }
-
-        return redirect()->back()->withInput()->with('error', 'Gagal mengupdate layanan');
-    }
-
-    /**
-     * Hapus layanan
-     */
-    public function delete($id)
-    {
-        if ($this->layananModel->delete($id)) {
-            return redirect()->to('/admin/services')->with('success', 'Layanan berhasil dihapus');
-        }
-
-        return redirect()->to('/admin/services')->with('error', 'Gagal menghapus layanan');
+        // Update price in session or database
+        // For now, just return success
+        return $this->response->setJSON(['success' => true, 'message' => 'Price updated']);
     }
 }

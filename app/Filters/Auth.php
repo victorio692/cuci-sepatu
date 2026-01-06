@@ -5,44 +5,32 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\Database;
 
 class Auth implements FilterInterface
 {
-    /**
-     * Filter untuk memastikan user sudah login
-     * Jika belum login, redirect ke halaman login
-     *
-     * @param RequestInterface $request
-     * @param array|null       $arguments
-     *
-     * @return RequestInterface|ResponseInterface|string|void
-     */
     public function before(RequestInterface $request, $arguments = null)
     {
-        // Cek apakah user sudah login
-        if (!session()->has('user_id')) {
-            // Simpan URL yang dituju untuk redirect setelah login
-            session()->set('redirect_url', current_url());
+        // Check if user is logged in
+        $session = session();
+        
+        if (!$session->has('user_id')) {
+            return redirect()->to('/login');
+        }
+
+        // If 'admin' argument is passed, check if user is admin
+        if (in_array('admin', $arguments ?? [])) {
+            $db = Database::connect();
+            $user = $db->table('users')->find($session->get('user_id'));
             
-            // Redirect ke login dengan pesan
-            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+            if (!$user || !$user['is_admin']) {
+                return redirect()->to('/dashboard')->with('error', 'Access denied');
+            }
         }
     }
 
-    /**
-     * Allows After filters to inspect and modify the response
-     * object as needed. This method does not allow any way
-     * to stop execution of other after filters, short of
-     * throwing an Exception or Error.
-     *
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     * @param array|null        $arguments
-     *
-     * @return ResponseInterface|void
-     */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // Do something here
+        // Do nothing
     }
 }

@@ -3,158 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($title ?? 'Admin Dashboard') ?> - Cuci Sepatu</title>
-    
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    
-    <style>
-        /* Sidebar Styling */
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 12px 20px;
-            margin: 5px 15px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        .sidebar .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-        .sidebar .nav-link.active {
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            font-weight: 600;
-        }
-        .sidebar .nav-link i {
-            margin-right: 10px;
-            font-size: 1.1rem;
-        }
-        .main-content {
-            background: #f8f9fa;
-            min-height: 100vh;
-        }
-        .navbar-admin {
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
-    </style>
+    <title><?= $title ?? 'Admin - SYH Cleaning' ?></title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?= $this->renderSection('extra_css') ?>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- SIDEBAR -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-0">
-                <div class="position-sticky pt-4">
-                    <!-- Logo/Brand -->
-                    <div class="text-center mb-4">
-                        <h4 class="text-white fw-bold">
-                            <i class="bi bi-gem"></i> Cuci Sepatu
-                        </h4>
-                        <p class="text-white-50 small">Admin Panel</p>
-                    </div>
-                    
-                    <!-- User Info -->
-                    <div class="px-3 mb-4">
-                        <div class="bg-white bg-opacity-10 rounded p-3 text-white">
-                            <div class="d-flex align-items-center">
-                                <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                    <i class="bi bi-person-circle fs-4"></i>
-                                </div>
-                                <div class="ms-2">
-                                    <div class="fw-bold"><?= esc(session()->get('nama')) ?></div>
-                                    <small class="text-white-50">Administrator</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Menu -->
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link <?= url_is('admin/dashboard') ? 'active' : '' ?>" href="<?= base_url('admin/dashboard') ?>">
-                                <i class="bi bi-speedometer2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?= url_is('admin/services*') ? 'active' : '' ?>" href="<?= base_url('admin/services') ?>">
-                                <i class="bi bi-box-seam"></i> Kelola Layanan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?= url_is('admin/bookings*') ? 'active' : '' ?>" href="<?= base_url('admin/bookings') ?>">
-                                <i class="bi bi-calendar-check"></i> Kelola Booking
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <?= url_is('admin/users*') ? 'active' : '' ?>" href="<?= base_url('admin/users') ?>">
-                                <i class="bi bi-people"></i> Kelola Pelanggan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('admin/reports') ?>">
-                                <i class="bi bi-bar-chart"></i> Laporan
-                            </a>
-                        </li>
-                        <li class="nav-item mt-4">
-                            <a class="nav-link" href="<?= base_url('logout') ?>" onclick="return confirm('Yakin ingin logout?')">
-                                <i class="bi bi-box-arrow-right"></i> Logout
-                            </a>
-                        </li>
-                    </ul>
+    <!-- Admin Navbar -->
+    <nav class="admin-navbar">
+        <div class="admin-navbar-content">
+            <a href="/admin" class="admin-logo">
+                <img src="/assets/images/logo.png" alt="SYH Cleaning" class="logo-img" style="height: 40px;">
+                <span>Admin Panel</span>
+            </a>
+            <div class="admin-navbar-right">
+                <div class="admin-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari pesanan, user...">
                 </div>
-            </nav>
-            
-            <!-- MAIN CONTENT -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <!-- Top Navbar -->
-                <nav class="navbar navbar-expand-lg navbar-admin py-3 mb-4">
-                    <div class="container-fluid">
-                        <h5 class="mb-0"><?= esc($title ?? 'Dashboard') ?></h5>
-                        <div class="d-flex align-items-center">
-                            <span class="text-muted small me-3">
-                                <i class="bi bi-clock"></i> <?= date('d M Y, H:i') ?>
-                            </span>
-                        </div>
+                <div class="admin-user-menu">
+                    <button class="admin-user-btn" onclick="toggleUserMenu()">
+                        <div class="admin-user-avatar">A</div>
+                        <span>Admin</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="adminUserMenu" class="admin-user-dropdown">
+                        <a href="/admin/profile">
+                            <i class="fas fa-user-circle"></i> Profil
+                        </a>
+                        <a href="/admin/settings">
+                            <i class="fas fa-cog"></i> Pengaturan
+                        </a>
+                        <hr style="margin: 0.5rem 0;">
+                        <a href="/logout" style="color: #ef4444;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
                     </div>
-                </nav>
-                
-                <!-- Flash Messages -->
-                <?php if (session()->has('success')): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle me-2"></i>
-                        <?= session('success') ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (session()->has('error')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <?= session('error') ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Content Section -->
-                <div class="content-wrapper">
-                    <?= $this->renderSection('content') ?>
                 </div>
-            </main>
+            </div>
         </div>
+    </nav>
+
+    <!-- Admin Container -->
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <img src="/assets/images/logo.png" alt="SYH Cleaning" style="height: 40px;">
+                <span>SYH Cleaning</span>
+            </div>
+            
+            <ul class="admin-sidebar-menu">
+                <li class="menu-section">MAIN</li>
+                <li>
+                    <a href="/admin" class="menu-item active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="menu-section">MANAGEMENT</li>
+                <li>
+                    <a href="/admin/bookings" class="menu-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pesanan</span>
+                        <span class="badge" id="bookingBadge">0</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/users" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/services" class="menu-item">
+                        <i class="fas fa-list"></i>
+                        <span>Layanan</span>
+                    </a>
+                </li>
+
+                <li class="menu-section">REPORTS</li>
+                <li>
+                    <a href="/admin/reports" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/analytics" class="menu-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+
+                <li class="menu-section">SETTINGS</li>
+                <li>
+                    <a href="/admin/settings" class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/profile" class="menu-item">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="admin-sidebar-footer">
+                <p>SYH Cleaning Admin v1.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <?= $this->renderSection('content') ?>
+        </main>
     </div>
-    
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom Scripts -->
-    <?= $this->renderSection('scripts') ?>
+
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/admin.js"></script>
+    <?= $this->renderSection('extra_js') ?>
 </body>
 </html>
