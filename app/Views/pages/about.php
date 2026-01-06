@@ -18,16 +18,8 @@
                     <div class="service-icon">
                         <i class="fas fa-history"></i>
                     </div>
-                    <h3>Sejak 2020</h3>
-                    <p>Kami telah melayani ribuan pelanggan puas selama 5 tahun lebih.</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Tim Profesional</h3>
-                    <p>Tim berpengalaman dengan pelatihan khusus dalam penanganan sepatu.</p>
+                    <h3>Sejak 2025</h3>
+                    <p>Kami telah melayani ratusan pelanggan, dan berbagai sepatu dengan hasil memuaskan.</p>
                 </div>
 
                 <div class="service-card">
@@ -35,26 +27,7 @@
                         <i class="fas fa-award"></i>
                     </div>
                     <h3>Kualitas Terjamin</h3>
-                    <p>Menggunakan bahan dan teknik terbaik untuk hasil maksimal.</p>
-                </div>
-            </div>
-
-            <div style="background-color: #f3e8ff; padding: 2rem; border-radius: 0.75rem; margin-top: 2rem;">
-                <h2 style="color: #6d28d9;">Visi & Misi</h2>
-                <div style="display: grid; gap: 2rem; margin-top: 1rem;">
-                    <div>
-                        <h4 style="color: #7c3aed;">Visi</h4>
-                        <p>Menjadi perusahaan cuci sepatu terkemuka dan terpercaya di bansel dengan standar kualitas yang baik.</p>
-                    </div>
-                    <div>
-                        <h4 style="color: #7c3aed;">Misi</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check"></i> Memberikan layanan cuci sepatu berkualitas tinggi</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check"></i> Menggunakan bahan ramah lingkungan</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check"></i> Memberikan harga yang kompetitif dan terjangkau</li>
-                            <li><i class="fas fa-check"></i> Memberikan pelayanan pelanggan terbaik</li>
-                        </ul>
-                    </div>
+                    <p>Menggunakan bahan dan teknik terbaik untuk hasil maksimal.kalau customer tidak puas kami jamin uang kembali.</p>
                 </div>
             </div>
         </div>

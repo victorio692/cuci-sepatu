@@ -17,7 +17,7 @@
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <h3>Lokasi</h3>
-                        <p style="margin: 0;">Jl. Example No. 123<br>Jakarta, Indonesia</p>
+                        <p style="margin: 0;">Desa Paten RT04, Sumberaguung, Jetis, Bantul</p>
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
                         </div>
                         <h3>Telepon</h3>
                         <p style="margin: 0;">
-                            <a href="tel:+6281234567890">+62 812-3456-7890</a>
+                            <a href="tel:+6281234567890">08985709532</a>
                         </p>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         </div>
                         <h3>Email</h3>
                         <p style="margin: 0;">
-                            <a href="mailto:info@syhcleaning.com">info@syhcleaning.com</a>
+                            <a href="mailto:info@syhcleaning.com">syhcleaning@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -50,17 +50,9 @@
                 <div>
                     <h3>Jam Operasional</h3>
                     <table style="width: 100%;">
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.5rem 0;">Senin - Jumat</td>
-                            <td style="padding: 0.5rem 0; text-align: right;"><strong>08:00 - 18:00</strong></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.5rem 0;">Sabtu</td>
-                            <td style="padding: 0.5rem 0; text-align: right;"><strong>08:00 - 16:00</strong></td>
-                        </tr>
                         <tr>
-                            <td style="padding: 0.5rem 0;">Minggu</td>
-                            <td style="padding: 0.5rem 0; text-align: right;"><strong>Tutup</strong></td>
+                            <td style="padding: 0.5rem 0;">Setiap Hari</td>
+                            <td style="padding: 0.5rem 0; text-align: right;"><strong>08:00 - 20:00</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -69,18 +61,10 @@
                     <h3>Media Sosial</h3>
                     <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                         <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
-                            <i class="fab fa-facebook"></i> Facebook
-                        </a>
-                        <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
                             <i class="fab fa-instagram"></i> Instagram
                         </a>
-                    </div>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                         <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
                             <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                        <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
-                            <i class="fab fa-twitter"></i> Twitter
                         </a>
                     </div>
                 </div>

@@ -14,7 +14,7 @@
     <nav class="admin-navbar">
         <div class="admin-navbar-content">
             <a href="/admin" class="admin-logo">
-                <img src="/assets/images/logo.png" alt="SYH Cleaning" class="logo-img" style="height: 40px;">
+                <img src="/assets/images/SYH.CLEANING.png" alt="SYH Cleaning" class="logo-img" style="height: 40px;">
                 <span>Admin Panel</span>
             </a>
             <div class="admin-navbar-right">
