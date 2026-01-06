@@ -2,103 +2,156 @@
 
 namespace App\Controllers;
 
-use Config\Database;
+use App\Models\UserModel;
 
 class Auth extends BaseController
 {
-    protected $db;
+    protected $userModel;
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->userModel = new UserModel();
     }
 
-    // Show Login Page
+    /**
+     * Halaman login
+     */
     public function login()
     {
-        return view('auth/login', ['title' => 'Login - SYH Cleaning']);
-    }
-
-    // Process Login
-    public function loginSubmit()
-    {
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-
-        // Validate
-        if (!$this->validate([
-            'email' => 'required|valid_email',
-            'password' => 'required|min_length[6]',
-        ])) {
-            return redirect()->back()->with('errors', $this->validator->getErrors());
+        // Jika sudah login, redirect sesuai role
+        if (session()->has('user_id')) {
+            return $this->redirectByRole();
         }
 
-        // Find user
-        $user = $this->db->table('users')->where('email', $email)->get()->getRow();
-
-        if (!$user || !password_verify($password, $user->password_hash)) {
-            return redirect()->back()->with('error', 'Email atau password salah');
-        }
-
-        // Set session
-        session()->set('user_id', $user->id);
-
-        return redirect()->to('/dashboard')->with('success', 'Selamat datang!');
+        return view('auth/login');
     }
 
-    // Show Register Page
-    public function register()
+    /**
+     * Proses login
+     */
+    public function attemptLogin()
     {
-        return view('auth/register', ['title' => 'Daftar - SYH Cleaning']);
-    }
-
-    // Process Register
-    public function registerSubmit()
-    {
-        $data = [
-            'full_name' => $this->request->getPost('full_name'),
-            'email' => $this->request->getPost('email'),
-            'phone' => $this->request->getPost('phone'),
-            'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT),
-            'address' => '',
-            'city' => '',
-            'province' => '',
-            'zip_code' => '',
-            'is_active' => 1,
-            'is_admin' => 0,
+        // Validasi input
+        $rules = [
+            'email_or_username' => 'required',
+            'password'          => 'required',
         ];
 
-        // Validate
-        if (!$this->validate([
-            'full_name' => 'required|min_length[3]',
-            'email' => 'required|valid_email|is_unique[users.email]',
-            'phone' => 'required|min_length[10]',
-            'password' => 'required|min_length[6]',
-        ])) {
-            return redirect()->back()->with('errors', $this->validator->getErrors());
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Check if email exists
-        $existing = $this->db->table('users')->where('email', $data['email'])->get()->getRow();
-        if ($existing) {
-            return redirect()->back()->with('error', 'Email sudah terdaftar');
+        $emailOrUsername = $this->request->getPost('email_or_username');
+        $password = $this->request->getPost('password');
+
+        // Cek login dengan UserModel
+        $user = $this->userModel->login($emailOrUsername, $password);
+
+        if ($user) {
+            // Set session
+            session()->set([
+                'user_id'   => $user['id'],
+                'nama'      => $user['nama'],
+                'email'     => $user['email'],
+                'username'  => $user['username'],
+                'role'      => $user['role'],
+                'logged_in' => true
+            ]);
+
+            // Redirect sesuai role
+            if ($user['role'] === 'admin') {
+                return redirect()->to('/admin/dashboard')->with('success', 'Selamat datang, ' . $user['nama']);
+            } else {
+                return redirect()->to('/pelanggan/dashboard')->with('success', 'Selamat datang, ' . $user['nama']);
+            }
         }
 
-        // Insert user
-        $this->db->table('users')->insert($data);
-        $user_id = $this->db->insertID();
-
-        // Set session
-        session()->set('user_id', $user_id);
-
-        return redirect()->to('/dashboard')->with('success', 'Pendaftaran berhasil! Selamat datang!');
+        return redirect()->back()->withInput()->with('error', 'Email/Username atau password salah');
     }
 
-    // Logout
+    /**
+     * Halaman register
+     */
+    public function register()
+    {
+        // Jika sudah login, redirect sesuai role
+        if (session()->has('user_id')) {
+            return $this->redirectByRole();
+        }
+
+        return view('auth/register');
+    }
+
+    /**
+     * Proses register - JANGAN auto login
+     */
+    public function attemptRegister()
+    {
+        // Validasi input
+        $rules = [
+            'nama'             => 'required|min_length[3]|max_length[100]',
+            'email'            => 'required|valid_email|is_unique[users.email]',
+            'username'         => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
+            'password'         => 'required|min_length[6]',
+            'password_confirm' => 'required|matches[password]',
+            'telepon'          => 'permit_empty|numeric|min_length[10]',
+        ];
+
+        $messages = [
+            'email' => [
+                'is_unique' => 'Email sudah terdaftar',
+            ],
+            'username' => [
+                'is_unique' => 'Username sudah digunakan',
+            ],
+            'password_confirm' => [
+                'matches' => 'Konfirmasi password tidak cocok',
+            ],
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Simpan data user baru (role default = pelanggan)
+        $data = [
+            'nama'     => $this->request->getPost('nama'),
+            'email'    => $this->request->getPost('email'),
+            'username' => $this->request->getPost('username'),
+            'password' => $this->request->getPost('password'),
+            'telepon'  => $this->request->getPost('telepon'),
+            'alamat'   => $this->request->getPost('alamat'),
+            'role'     => 'pelanggan', // Default pelanggan
+        ];
+
+        if ($this->userModel->save($data)) {
+            // JANGAN auto login - redirect ke login
+            return redirect()->to('/login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Anda');
+        }
+
+        return redirect()->back()->withInput()->with('error', 'Registrasi gagal, silakan coba lagi');
+    }
+
+    /**
+     * Logout
+     */
     public function logout()
     {
+        // Destroy session
         session()->destroy();
-        return redirect()->to('/')->with('success', 'Anda telah logout.');
+        
+        return redirect()->to('/login')->with('success', 'Anda telah logout');
+    }
+
+    /**
+     * Helper: Redirect berdasarkan role
+     */
+    private function redirectByRole()
+    {
+        if (session()->get('role') === 'admin') {
+            return redirect()->to('/admin/dashboard');
+        }
+        return redirect()->to('/pelanggan/dashboard');
     }
 }
 

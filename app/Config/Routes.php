@@ -6,56 +6,63 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Home
+// ==========================================
+// PUBLIC ROUTES
+// ==========================================
 $routes->get('/', 'Home::index');
 
-// Auth
+// ==========================================
+// AUTH ROUTES (Login, Register, Logout)
+// ==========================================
 $routes->get('/login', 'Auth::login');
-$routes->post('/login', 'Auth::loginSubmit');
+$routes->post('/login', 'Auth::attemptLogin');
 $routes->get('/register', 'Auth::register');
-$routes->post('/register', 'Auth::registerSubmit');
+$routes->post('/register', 'Auth::attemptRegister');
 $routes->get('/logout', 'Auth::logout');
 
-// Dashboard (Protected)
-$routes->group('', ['filter' => 'auth'], static function($routes) {
-    $routes->get('/dashboard', 'Dashboard::index');
-    $routes->get('/my-bookings', 'Dashboard::myBookings');
-    $routes->get('/profile', 'Dashboard::profile');
-    $routes->post('/update-profile', 'Dashboard::updateProfile');
-    $routes->post('/change-password', 'Dashboard::changePassword');
-});
-
-// Booking (Protected)
-$routes->group('', ['filter' => 'auth'], static function($routes) {
-    $routes->get('/make-booking', 'Booking::makeBooking');
-    $routes->post('/submit-booking', 'Booking::submitBooking');
-    $routes->get('/booking-detail/(:num)', 'Booking::detail/$1');
-    $routes->post('/cancel-booking/(:num)', 'Booking::cancelBooking/$1');
-});
-
-// Admin Routes (Protected)
-$routes->group('admin', ['filter' => 'auth:admin'], static function($routes) {
+// ==========================================
+// ADMIN ROUTES (Protected dengan RoleAdmin Filter)
+// ==========================================
+$routes->group('admin', ['filter' => 'roleAdmin'], static function($routes) {
     // Dashboard
-    $routes->get('/', 'Admin\Dashboard::index');
+    $routes->get('dashboard', 'Admin\Dashboard::index');
     
-    // Bookings
-    $routes->get('/bookings', 'Admin\Bookings::index');
-    $routes->get('/bookings/(:num)', 'Admin\Bookings::detail/$1');
-    $routes->put('/bookings/(:num)/status', 'Admin\Bookings::updateStatus/$1');
+    // Kelola Layanan
+    $routes->get('services', 'Admin\Services::index');
+    $routes->get('services/create', 'Admin\Services::create');
+    $routes->post('services/store', 'Admin\Services::store');
+    $routes->get('services/edit/(:num)', 'Admin\Services::edit/$1');
+    $routes->post('services/update/(:num)', 'Admin\Services::update/$1');
+    $routes->get('services/delete/(:num)', 'Admin\Services::delete/$1');
     
-    // Users
-    $routes->get('/users', 'Admin\Users::index');
-    $routes->get('/users/(:num)', 'Admin\Users::detail/$1');
-    $routes->post('/users/(:num)/toggle', 'Admin\Users::toggleActive/$1');
+    // Kelola Booking
+    $routes->get('bookings', 'Admin\Bookings::index');
+    $routes->get('bookings/detail/(:num)', 'Admin\Bookings::detail/$1');
+    $routes->post('bookings/update-status/(:num)', 'Admin\Bookings::updateStatus/$1');
+    $routes->get('bookings/delete/(:num)', 'Admin\Bookings::delete/$1');
+    $routes->get('bookings/filter/(:alpha)', 'Admin\Bookings::filterByStatus/$1');
     
-    // Services
-    $routes->get('/services', 'Admin\Services::index');
-    $routes->post('/services/price', 'Admin\Services::updatePrice');
+    // Kelola Pelanggan
+    $routes->get('users', 'Admin\Users::index');
+    $routes->get('users/detail/(:num)', 'Admin\Users::detail/$1');
+    $routes->get('users/delete/(:num)', 'Admin\Users::delete/$1');
 });
 
-// Static Pages
-$routes->get('/tentang', 'Pages::about');
-$routes->get('/kontak', 'Pages::contact');
-$routes->post('/kontak', 'Pages::submitContact');
-$routes->get('/kebijakan', 'Pages::privacy');
-$routes->get('/syarat', 'Pages::terms');
+// ==========================================
+// PELANGGAN ROUTES (Protected dengan RolePelanggan Filter)
+// ==========================================
+$routes->group('pelanggan', ['filter' => 'rolePelanggan'], static function($routes) {
+    // Dashboard
+    $routes->get('dashboard', 'Pelanggan\Dashboard::index');
+    
+    // Booking
+    $routes->get('booking', 'Pelanggan\Booking::index');
+    $routes->get('booking/create', 'Pelanggan\Booking::create');
+    $routes->post('booking/store', 'Pelanggan\Booking::store');
+    $routes->get('booking/detail/(:num)', 'Pelanggan\Booking::detail/$1');
+    $routes->post('booking/cancel/(:num)', 'Pelanggan\Booking::cancel/$1');
+    
+    // Profil
+    $routes->get('profile', 'Pelanggan\Profile::index');
+    $routes->post('profile/update', 'Pelanggan\Profile::update');
+});

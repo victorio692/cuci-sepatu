@@ -6,11 +6,11 @@ use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Auth implements FilterInterface
+class RolePelanggan implements FilterInterface
 {
     /**
-     * Filter untuk memastikan user sudah login
-     * Jika belum login, redirect ke halaman login
+     * Filter untuk memastikan user yang login adalah pelanggan
+     * Jika bukan pelanggan, redirect dengan pesan error
      *
      * @param RequestInterface $request
      * @param array|null       $arguments
@@ -21,11 +21,12 @@ class Auth implements FilterInterface
     {
         // Cek apakah user sudah login
         if (!session()->has('user_id')) {
-            // Simpan URL yang dituju untuk redirect setelah login
-            session()->set('redirect_url', current_url());
-            
-            // Redirect ke login dengan pesan
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Cek apakah role adalah pelanggan
+        if (session()->get('role') !== 'pelanggan') {
+            return redirect()->to('/admin/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman pelanggan');
         }
     }
 
