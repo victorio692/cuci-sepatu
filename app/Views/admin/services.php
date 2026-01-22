@@ -25,7 +25,7 @@
                     <div style="margin: 1.5rem 0; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <span style="color: #6b7280;">Harga:</span>
-                            <strong style="font-size: 1.5rem; color: #7c3aed;">
+                            <strong style="font-size: 1.5rem; color: #3b82f6;">
                                 Rp <?= number_format($service['price'], 0, ',', '.') ?>
                             </strong>
                         </div>
@@ -174,7 +174,7 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #7c3aed;
+    border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
@@ -189,12 +189,12 @@
 }
 
 .btn-primary {
-    background-color: #7c3aed;
+    background-color: #3b82f6;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #6d28d9;
+    background-color: #2563eb;
 }
 
 .btn-secondary {

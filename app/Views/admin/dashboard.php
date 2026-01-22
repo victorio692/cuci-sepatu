@@ -6,188 +6,235 @@
     <!-- Admin Header -->
     <div class="admin-header">
         <h1>Dashboard Admin</h1>
-        <p>Kelola bisnis SYH Cleaning Anda</p>
+        <p>Kelola semua booking dan layanan</p>
     </div>
 
     <!-- Statistics Cards -->
     <div class="admin-stats">
         <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #7c3aed, #ec4899);">
-                <i class="fas fa-users"></i>
-            </div>
             <div class="stat-content">
-                <div class="stat-label">Total Users</div>
-                <div class="stat-number"><?= $total_users ?? 0 ?></div>
-                <div class="stat-change">+<?= $users_this_month ?? 0 ?> bulan ini</div>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="stat-content">
-                <div class="stat-label">Total Pesanan</div>
+                <div class="stat-label">Total booking</div>
                 <div class="stat-number"><?= $total_bookings ?? 0 ?></div>
-                <div class="stat-change">+<?= $bookings_this_month ?? 0 ?> bulan ini</div>
+                <div class="stat-sublabel">Total semua pesanan</div>
             </div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
-                <i class="fas fa-check-circle"></i>
-            </div>
             <div class="stat-content">
-                <div class="stat-label">Pesanan Selesai</div>
+                <div class="stat-label">Dalam Proses</div>
+                <div class="stat-number"><?= $proses_bookings ?? 0 ?></div>
+                <div class="stat-sublabel">Sedang dikerjakan</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-content">
+                <div class="stat-label">Selesai</div>
                 <div class="stat-number"><?= $completed_bookings ?? 0 ?></div>
-                <div class="stat-change"><?= round(($completed_bookings ?? 0) / max($total_bookings ?? 1, 1) * 100) ?>% completion</div>
+                <div class="stat-sublabel">Siap Diambil</div>
             </div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4, #8b5cf6);">
-                <i class="fas fa-money-bill-wave"></i>
-            </div>
             <div class="stat-content">
-                <div class="stat-label">Total Revenue</div>
+                <div class="stat-label">Total Pendapatan</div>
                 <div class="stat-number">Rp <?= number_format($total_revenue ?? 0, 0, ',', '.') ?></div>
-                <div class="stat-change">Bulan ini</div>
+                <div class="stat-sublabel">Dari pesanan selesai</div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="admin-grid">
-        <!-- Recent Bookings -->
-        <div class="admin-card" style="grid-column: 1 / -1;">
-            <div class="card-header">
-                <h3>Pesanan Terbaru</h3>
-                <a href="/admin/bookings" class="btn btn-sm btn-primary">Lihat Semua</a>
+    <!-- Data Booking -->
+    <div class="admin-card">
+        <div class="card-header-with-search">
+            <div>
+                <h3>Data Booking</h3>
+                <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.9rem;">Kelola semua pesanan customer</p>
             </div>
-            <div class="card-body">
-                <?php if (!empty($recent_bookings)): ?>
-                    <table class="admin-table">
-                        <thead>
+            <div class="search-box">
+                <input type="text" id="searchBooking" placeholder="Cari Booking...." onkeyup="searchTable()">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <?php if (!empty($recent_bookings)): ?>
+                <table class="admin-table" id="bookingTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>CUSTOMER</th>
+                            <th>KONTAK</th>
+                            <th>LAYANAN</th>
+                            <th>JUMLAH</th>
+                            <th>TOTAL</th>
+                            <th>STATUS</th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($recent_bookings as $booking): ?>
                             <tr>
-                                <th>ID</th>
-                                <th>Customer</th>
-                                <th>Layanan</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Tanggal</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($recent_bookings as $booking): ?>
-                                <tr>
-                                    <td><strong>#<?= $booking['id'] ?></strong></td>
-                                    <td><?= $booking['customer_name'] ?></td>
-                                    <td><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></td>
-                                    <td>Rp <?= number_format($booking['total'], 0, ',', '.') ?></td>
-                                    <td>
-                                        <span class="badge badge-<?= getStatusBadgeClass($booking['status']) ?>">
-                                            <?= getStatusLabel($booking['status']) ?>
-                                        </span>
-                                    </td>
-                                    <td><?= date('d M Y', strtotime($booking['created_at'])) ?></td>
-                                    <td>
-                                        <a href="/admin/bookings/<?= $booking['id'] ?>" class="btn-sm btn-link">
+                                <td><strong><?= 'BK' . str_pad($booking['id'], 3, '0', STR_PAD_LEFT) ?></strong></td>
+                                <td>
+                                    <div>
+                                        <strong><?= $booking['customer_name'] ?></strong>
+                                        <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: #6b7280;">
+                                            <?= date('d M Y', strtotime($booking['dibuat_pada'])) ?>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="color: #10b981;">
+                                        <i class="fab fa-whatsapp"></i> <?= $booking['no_hp'] ?? '-' ?>
+                                    </span>
+                                </td>
+                                <td><?= ucfirst(str_replace('-', ' ', $booking['layanan'])) ?></td>
+                                <td><?= $booking['jumlah'] ?? 1 ?> Pasang</td>
+                                <td><strong>Rp <?= number_format($booking['total'], 0, ',', '.') ?></strong></td>
+                                <td>
+                                    <select 
+                                        class="status-select-modern"
+                                        data-booking-id="<?= $booking['id'] ?>"
+                                        onchange="updateBookingStatus(this)"
+                                        <?= in_array($booking['status'], ['selesai', 'ditolak']) ? 'disabled' : '' ?>
+                                    >
+                                        <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
+                                        <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
+                                        <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Proses</option>
+                                        <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                                        <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="<?= base_url('admin/bookings/' . $booking['id']) ?>" class="btn-icon btn-view" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <p style="text-align: center; color: #6b7280;">Tidak ada pesanan</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Pending Bookings -->
-        <div class="admin-card">
-            <div class="card-header">
-                <h3>Pesanan Pending</h3>
-                <span class="badge" style="background: #fef3c7; color: #92400e;"><?= $pending_count ?? 0 ?></span>
-            </div>
-            <div class="card-body">
-                <?php if (!empty($pending_bookings)): ?>
-                    <ul style="list-style: none; padding: 0;">
-                        <?php foreach ($pending_bookings as $booking): ?>
-                            <li style="padding: 1rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong><?= $booking['customer_name'] ?></strong>
-                                    <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; color: #6b7280;">
-                                        <?= ucfirst(str_replace('-', ' ', $booking['service'])) ?>
-                                    </p>
-                                </div>
-                                <a href="/admin/bookings/<?= $booking['id'] ?>" class="btn btn-sm btn-primary">
-                                    Proses
-                                </a>
-                            </li>
+                                        <button class="btn-icon btn-delete" onclick="deleteBooking(<?= $booking['id'] ?>)" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p style="text-align: center; color: #6b7280;">Tidak ada pesanan pending</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Service Performance -->
-        <div class="admin-card">
-            <div class="card-header">
-                <h3>Layanan Populer</h3>
-            </div>
-            <div class="card-body">
-                <?php if (!empty($service_stats)): ?>
-                    <ul style="list-style: none; padding: 0;">
-                        <?php foreach ($service_stats as $stat): ?>
-                            <li style="margin-bottom: 1rem;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <span><?= ucfirst(str_replace('-', ' ', $stat['service'])) ?></span>
-                                    <strong><?= $stat['count'] ?> order</strong>
-                                </div>
-                                <div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
-                                    <div style="background: linear-gradient(90deg, #7c3aed, #ec4899); height: 100%; width: <?= min($stat['count'] * 10, 100) ?>%;"></div>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p style="text-align: center; color: #6b7280;">Tidak ada data</p>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Recent Users -->
-        <div class="admin-card">
-            <div class="card-header">
-                <h3>User Terbaru</h3>
-                <a href="/admin/users" class="btn btn-sm btn-primary">Lihat Semua</a>
-            </div>
-            <div class="card-body">
-                <?php if (!empty($recent_users)): ?>
-                    <ul style="list-style: none; padding: 0;">
-                        <?php foreach ($recent_users as $user): ?>
-                            <li style="padding: 1rem; border-bottom: 1px solid #e5e7eb;">
-                                <strong><?= $user['full_name'] ?></strong>
-                                <p style="margin: 0.25rem 0 0 0; font-size: 0.9rem; color: #6b7280;">
-                                    <?= $user['email'] ?>
-                                </p>
-                                <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #9ca3af;">
-                                    <?= date('d M Y', strtotime($user['created_at'])) ?>
-                                </p>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <p style="text-align: center; color: #6b7280;">Tidak ada user</p>
-                <?php endif; ?>
-            </div>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div style="padding: 3rem; text-align: center; color: #9ca3af;">
+                    <i class="fas fa-inbox" style="font-size: 3rem; color: #d1d5db; margin-bottom: 1rem;"></i>
+                    <p>Belum ada booking</p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('extra_js') ?>
+<script>
+function searchTable() {
+    const input = document.getElementById('searchBooking');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('bookingTable');
+    const tr = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName('td');
+        let found = false;
+        
+        for (let j = 0; j < td.length; j++) {
+            if (td[j]) {
+                const txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        tr[i].style.display = found ? '' : 'none';
+    }
+}
+
+function updateBookingStatus(selectElement) {
+    const bookingId = selectElement.getAttribute('data-booking-id');
+    const status = selectElement.value;
+    
+    fetch('<?= base_url() ?>/admin/bookings/' + bookingId + '/status', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Status berhasil diupdate', 'success');
+        } else {
+            showToast('Gagal update status', 'danger');
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Terjadi kesalahan', 'danger');
+        location.reload();
+    });
+}
+
+function deleteBooking(id) {
+    if (confirm('Yakin ingin menghapus booking ini?')) {
+        fetch('<?= base_url() ?>/admin/bookings/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Booking berhasil dihapus', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast('Gagal menghapus booking', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Terjadi kesalahan', 'danger');
+        });
+    }
+}
+
+function cetakLaporan() {
+    window.print();
+}
+
+function showToast(message, type) {
+    // Create toast container if doesn't exist
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
 <?= $this->endSection() ?>

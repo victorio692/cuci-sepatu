@@ -12,7 +12,7 @@
             <h1>Sepatu Bersih, Percaya Diri Maksimal</h1>
             <p>Layanan cuci sepatu profesional dengan hasil terbaik dan harga terjangkau. Gratis delivery untuk pemesanan awal.</p>
             <div class="hero-buttons">
-                <a href="#booking" class="btn btn-primary btn-lg">
+                <a href="/login" class="btn btn-primary btn-lg">
                     <i class="fas fa-shopping-cart"></i> Pesan Sekarang
                 </a>
                 <a href="#services" class="btn btn-outline btn-lg" style="color: white; border-color: white;">
@@ -156,13 +156,13 @@
 </section>
 
 <!-- CTA Section -->
-<section style="background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); padding: 4rem 0; color: white;">
+<section style="background: #3b82f6; padding: 4rem 0; color: white;">
     <div class="container text-center">
         <h2 style="color: white;">Siap Membuat Sepatu Anda Bersih?</h2>
         <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; font-size: 1.1rem;">
             Jangan tunggu lagi, pesan layanan cuci sepatu kami sekarang dan dapatkan diskon spesial!
         </p>
-        <a href="#booking" class="btn btn-primary btn-lg">
+        <a href="/login" class="btn btn-primary btn-lg">
             Pesan Sekarang
         </a>
     </div>

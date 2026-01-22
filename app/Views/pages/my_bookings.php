@@ -19,13 +19,19 @@
                 </a>
             </li>
             <li>
+                <a href="/make-booking">
+                    <span class="sidebar-icon"><i class="fas fa-plus-circle"></i></span>
+                    Pesan Baru
+                </a>
+            </li>
+            <li>
                 <a href="/profile">
                     <span class="sidebar-icon"><i class="fas fa-user-circle"></i></span>
                     Profil
                 </a>
             </li>
             <li>
-                <a href="/logout">
+                <a href="#" onclick="confirmLogout(event)" style="color: #ef4444;">
                     <span class="sidebar-icon"><i class="fas fa-sign-out-alt"></i></span>
                     Logout
                 </a>
@@ -53,13 +59,47 @@
                 </thead>
                 <tbody>
                     <?php foreach ($bookings as $booking): ?>
+                        <?php
+                        // Status badge class
+                        $statusClass = match($booking['status']) {
+                            'pending' => 'warning',
+                            'disetujui' => 'info',
+                            'proses' => 'primary',
+                            'selesai' => 'success',
+                            'ditolak' => 'danger',
+                            default => 'secondary'
+                        };
+                        
+                        // Status label
+                        $statusLabel = match($booking['status']) {
+                            'pending' => 'Menunggu',
+                            'disetujui' => 'Disetujui',
+                            'proses' => 'Diproses',
+                            'selesai' => 'Selesai',
+                            'ditolak' => 'Ditolak',
+                            default => $booking['status']
+                        };
+                        
+                        // Service name mapping
+                        $serviceName = match($booking['layanan']) {
+                            'fast-cleaning' => 'Fast Cleaning',
+                            'deep-cleaning' => 'Deep Cleaning',
+                            'white-shoes' => 'White Shoes',
+                            'suede-treatment' => 'Suede Treatment',
+                            'unyellowing' => 'Unyellowing',
+                            default => $booking['layanan']
+                        };
+                        
+                        // Format date
+                        $tanggal = date('d M Y', strtotime($booking['dibuat_pada']));
+                        ?>
                         <tr>
                             <td><strong>#<?= $booking['id'] ?></strong></td>
-                            <td><?= $booking['service_name'] ?></td>
-                            <td><?= formatDate($booking['created_at']) ?></td>
+                            <td><?= $serviceName ?></td>
+                            <td><?= $tanggal ?></td>
                             <td>
-                                <span class="badge badge-<?= getStatusBadgeClass($booking['status']) ?>">
-                                    <?= getStatusLabel($booking['status']) ?>
+                                <span class="badge badge-<?= $statusClass ?>">
+                                    <?= $statusLabel ?>
                                 </span>
                             </td>
                             <td>Rp <?= number_format($booking['total'], 0, ',', '.') ?></td>

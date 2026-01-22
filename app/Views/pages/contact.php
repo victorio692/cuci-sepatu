@@ -13,7 +13,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
                 <div class="card">
                     <div class="card-body">
-                        <div style="font-size: 2rem; color: #7c3aed; margin-bottom: 1rem;">
+                        <div style="font-size: 2rem; color: #3b82f6; margin-bottom: 1rem;">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
                         <h3>Lokasi</h3>
@@ -23,7 +23,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <div style="font-size: 2rem; color: #7c3aed; margin-bottom: 1rem;">
+                        <div style="font-size: 2rem; color: #3b82f6; margin-bottom: 1rem;">
                             <i class="fas fa-phone"></i>
                         </div>
                         <h3>Telepon</h3>
@@ -35,7 +35,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <div style="font-size: 2rem; color: #7c3aed; margin-bottom: 1rem;">
+                        <div style="font-size: 2rem; color: #3b82f6; margin-bottom: 1rem;">
                             <i class="fas fa-envelope"></i>
                         </div>
                         <h3>Email</h3>
@@ -60,10 +60,10 @@
                 <div>
                     <h3>Media Sosial</h3>
                     <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
+                        <a href="https://www.instagram.com/syh.cleaning" target="_blank" class="btn btn-primary" style="flex: 1; text-align: center;">
                             <i class="fab fa-instagram"></i> Instagram
                         </a>
-                        <a href="#" class="btn btn-primary" style="flex: 1; text-align: center;">
+                        <a href="https://wa.me/628985709532" target="_blank" class="btn btn-primary" style="flex: 1; text-align: center;">
                             <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                     </div>

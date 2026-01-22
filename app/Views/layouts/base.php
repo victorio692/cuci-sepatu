@@ -9,6 +9,16 @@
     <?= $this->renderSection('extra_css') ?>
 </head>
 <body>
+    <?php 
+    // Check if current page is dashboard/user area
+    $isDashboard = strpos(current_url(), '/dashboard') !== false 
+                || strpos(current_url(), '/my-bookings') !== false 
+                || strpos(current_url(), '/make-booking') !== false 
+                || strpos(current_url(), '/booking-detail') !== false 
+                || strpos(current_url(), '/profile') !== false;
+    ?>
+    
+    <?php if (!$isDashboard): ?>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
@@ -31,12 +41,14 @@
             </div>
         </div>
     </nav>
+    <?php endif; ?>
 
     <!-- Main Content -->
     <main>
         <?= $this->renderSection('content') ?>
     </main>
 
+    <?php if (!$isDashboard): ?>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -84,6 +96,7 @@
             </div>
         </div>
     </footer>
+    <?php endif; ?>
 
     <script src="/assets/js/main.js"></script>
     <?= $this->renderSection('extra_js') ?>

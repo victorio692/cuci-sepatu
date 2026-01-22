@@ -25,11 +25,11 @@
 
                     <select name="status" class="form-control">
                         <option value="">Semua Status</option>
-                        <option value="pending" <?= $status === 'pending' ? 'selected' : '' ?>>Pending</option>
-                        <option value="approved" <?= $status === 'approved' ? 'selected' : '' ?>>Approved</option>
-                        <option value="in_progress" <?= $status === 'in_progress' ? 'selected' : '' ?>>In Progress</option>
-                        <option value="completed" <?= $status === 'completed' ? 'selected' : '' ?>>Completed</option>
-                        <option value="cancelled" <?= $status === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                        <option value="pending" <?= $status === 'pending' ? 'selected' : '' ?>>Menunggu</option>
+                        <option value="disetujui" <?= $status === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
+                        <option value="proses" <?= $status === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
+                        <option value="selesai" <?= $status === 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                        <option value="batal" <?= $status === 'batal' ? 'selected' : '' ?>>Ditolak</option>
                     </select>
 
                     <button type="submit" class="btn btn-primary">
@@ -77,11 +77,11 @@
                                         data-booking-id="<?= $booking['id'] ?>"
                                         onchange="updateBookingStatus(this)"
                                     >
-                                        <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-                                        <option value="approved" <?= $booking['status'] === 'approved' ? 'selected' : '' ?>>Approved</option>
-                                        <option value="in_progress" <?= $booking['status'] === 'in_progress' ? 'selected' : '' ?>>In Progress</option>
-                                        <option value="completed" <?= $booking['status'] === 'completed' ? 'selected' : '' ?>>Completed</option>
-                                        <option value="cancelled" <?= $booking['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                                        <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
+                                        <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
+                                        <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
+                                        <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                                        <option value="batal" <?= $booking['status'] === 'batal' ? 'selected' : '' ?>>Ditolak</option>
                                     </select>
                                 </td>
                                 <td>
@@ -94,9 +94,9 @@
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
-                <div style="padding: 1.5rem; border-top: 1px solid #e5e7eb; text-align: center;">
-                    <?= $pager->links() ?>
+                <!-- Total Bookings -->
+                <div style="padding: 1.5rem; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280;">
+                    Total: <?= count($bookings) ?> pesanan
                 </div>
             <?php else: ?>
                 <div style="padding: 2rem; text-align: center; color: #6b7280;">
@@ -123,7 +123,7 @@
 
 .status-select:focus {
     outline: none;
-    border-color: #7c3aed;
+    border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 </style>

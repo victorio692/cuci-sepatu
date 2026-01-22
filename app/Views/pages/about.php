@@ -8,12 +8,12 @@
         <div style="max-width: 800px; margin: 0 auto;">
             <h1>Tentang SYH Cleaning</h1>
             <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.8;">
-                SYH Cleaning adalah perusahaan layanan cuci sepatu profesional yang berdedikasi memberikan 
+                SYH Cleaning adalah layanan cuci sepatu profesional yang berdedikasi memberikan 
                 hasil terbaik dengan harga terjangkau. Kami memahami bahwa sepatu adalah bagian penting dari penampilan Anda, 
                 dan kami berkomitmen untuk menjaganya tetap bersih dan rapi.
             </p>
 
-            <div class="services-grid">
+            <div class="services-grid">     
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-history"></i>

@@ -21,9 +21,9 @@ class Auth implements FilterInterface
         // If 'admin' argument is passed, check if user is admin
         if (in_array('admin', $arguments ?? [])) {
             $db = Database::connect();
-            $user = $db->table('users')->find($session->get('user_id'));
+            $user = $db->table('users')->where('id', $session->get('user_id'))->get()->getRowArray();
             
-            if (!$user || !$user['is_admin']) {
+            if (!$user || $user['role'] !== 'admin') {
                 return redirect()->to('/dashboard')->with('error', 'Access denied');
             }
         }

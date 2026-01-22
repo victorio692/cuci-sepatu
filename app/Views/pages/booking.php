@@ -19,12 +19,6 @@
                 </a>
             </li>
             <li>
-                <a href="/my-services">
-                    <span class="sidebar-icon"><i class="fas fa-list"></i></span>
-                    Riwayat Layanan
-                </a>
-            </li>
-            <li>
                 <a href="/make-booking" class="active">
                     <span class="sidebar-icon"><i class="fas fa-plus-circle"></i></span>
                     Pesan Baru
@@ -37,7 +31,7 @@
                 </a>
             </li>
             <li>
-                <a href="/logout">
+                <a href="#" onclick="confirmLogout(event)" style="color: #ef4444;">
                     <span class="sidebar-icon"><i class="fas fa-sign-out-alt"></i></span>
                     Logout
                 </a>
@@ -47,9 +41,13 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="dashboard-header">
-            <h1><i class="fas fa-shopping-cart"></i> Pesan Layanan</h1>
+        <div style="margin-bottom: 2rem;">
+            <a href="/dashboard" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+            </a>
         </div>
+
+        <h1 style="margin-bottom: 2rem;">Buat Booking Baru</h1>
 
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success">
@@ -65,328 +63,593 @@
             </div>
         <?php endif; ?>
 
-        <form action="/submit-booking" method="POST" id="bookingForm">
-            <?= csrf_field() ?>
+        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+            <!-- Left Column: Form -->
+            <div>
+                <form action="/submit-booking" method="POST" id="bookingForm" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
 
-            <!-- Step 1: Choose Service -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>
-                        <span class="badge badge-primary" style="margin-right: 0.5rem;">1</span>
-                        Pilih Layanan
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="services-grid">
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-bolt"></i></div>
-                            <h3>Fast Cleaning</h3>
-                            <p>Pembersihan cepat</p>
-                            <div class="service-price">Rp 15.000</div>
-                            <input type="radio" name="service" value="fast-cleaning" data-price="15000" required style="display: none;">
-                        </div>
+                    <!-- Service Selection -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <!-- Fast Cleaning -->
+                        <label class="service-radio-card">
+                            <input type="radio" name="service" value="fast-cleaning" data-price="15000" required>
+                            <div class="service-radio-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Fast Cleaning</h3>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan cuci cepat yang praktis</p>
+                                    </div>
+                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <span style="color: #3b82f6; font-weight: 600;">Rp 15,000</span>
+                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                            </div>
+                        </label>
 
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-water"></i></div>
-                            <h3>Deep Cleaning</h3>
-                            <p>Pembersihan mendalam</p>
-                            <div class="service-price">Rp 20.000</div>
-                            <input type="radio" name="service" value="deep-cleaning" data-price="20000" style="display: none;">
-                        </div>
+                        <!-- Deep Cleaning -->
+                        <label class="service-radio-card">
+                            <input type="radio" name="service" value="deep-cleaning" data-price="20000">
+                            <div class="service-radio-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Deep Cleaning</h3>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan cuci full yang lebih detail</p>
+                                    </div>
+                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <span style="color: #3b82f6; font-weight: 600;">Rp 20,000</span>
+                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                            </div>
+                        </label>
 
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-star"></i></div>
-                            <h3>White Shoes</h3>
-                            <p>Khusus sepatu putih</p>
-                            <div class="service-price">Rp 35.000</div>
-                            <input type="radio" name="service" value="white-shoes" data-price="35000" style="display: none;">
-                        </div>
+                        <!-- Suede Treatment -->
+                        <label class="service-radio-card">
+                            <input type="radio" name="service" value="suede-treatment" data-price="30000">
+                            <div class="service-radio-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Suede Treatment</h3>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan Khusus untuk sepatu Bahan Suede</p>
+                                    </div>
+                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <span style="color: #3b82f6; font-weight: 600;">Rp 30,000</span>
+                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                            </div>
+                        </label>
 
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
-                            <h3>Coating</h3>
-                            <p>Perlindungan tahan lama</p>
-                            <div class="service-price">Rp 25.000</div>
-                            <input type="radio" name="service" value="coating" data-price="25000" style="display: none;">
-                        </div>
+                        <!-- White Shoes -->
+                        <label class="service-radio-card">
+                            <input type="radio" name="service" value="white-shoes" data-price="35000">
+                            <div class="service-radio-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">White Shoes</h3>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan khusus untuk sepatu white midsole</p>
+                                    </div>
+                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <span style="color: #3b82f6; font-weight: 600;">Rp 35,000</span>
+                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                            </div>
+                        </label>
 
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-palette"></i></div>
-                            <h3>Dyeing</h3>
-                            <p>Pewarnaan ulang</p>
-                            <div class="service-price">Rp 40.000</div>
-                            <input type="radio" name="service" value="dyeing" data-price="40000" style="display: none;">
-                        </div>
-
-                        <div class="service-card" style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
-                            <div class="service-icon"><i class="fas fa-tools"></i></div>
-                            <h3>Repair</h3>
-                            <p>Perbaikan sepatu</p>
-                            <div class="service-price">Rp 50.000</div>
-                            <input type="radio" name="service" value="repair" data-price="50000" style="display: none;">
-                        </div>
+                        <!-- Unyellowing -->
+                        <label class="service-radio-card">
+                            <input type="radio" name="service" value="unyellowing" data-price="30000">
+                            <div class="service-radio-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Unyellowing</h3>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan penyegaran/kuningan midsole</p>
+                                    </div>
+                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <span style="color: #3b82f6; font-weight: 600;">Rp 30,000</span>
+                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
+                                </div>
+                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                            </div>
+                        </label>
                     </div>
-                </div>
-            </div>
 
-            <!-- Step 2: Booking Details -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>
-                        <span class="badge badge-primary" style="margin-right: 0.5rem;">2</span>
-                        Detail Pemesanan
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="shoe_type">Jenis Sepatu</label>
-                            <select id="shoe_type" name="shoe_type" class="form-control" required>
-                                <option value="">-- Pilih Jenis Sepatu --</option>
-                                <option value="sneaker">Sneaker</option>
-                                <option value="canvas">Canvas</option>
-                                <option value="sports">Sepatu Olahraga</option>
-                                <option value="casual">Casual</option>
-                                <option value="formal">Formal</option>
-                                <option value="boot">Boot</option>
-                                <option value="other">Lainnya</option>
-                            </select>
-                        </div>
+                    <!-- Hidden fields for shoe details -->
+                    <input type="hidden" name="shoe_type" value="sneaker">
+                    <input type="hidden" name="shoe_condition" value="normal">
+                    <input type="hidden" name="delivery_option" value="pickup">
+                    <input type="hidden" name="delivery_address" value="">
 
-                        <div class="form-group">
-                            <label for="shoe_condition">Kondisi Sepatu</label>
-                            <select id="shoe_condition" name="shoe_condition" class="form-control" required>
-                                <option value="">-- Pilih Kondisi --</option>
-                                <option value="normal">Normal (sedikit kotor)</option>
-                                <option value="dirty">Kotor</option>
-                                <option value="very_dirty">Sangat Kotor</option>
-                                <option value="damaged">Ada yang Rusak</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="quantity">Jumlah Sepatu</label>
+                    <!-- Jumlah Sepatu -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jumlah Sepatu</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <button type="button" id="btnMinus" class="btn-quantity">
+                                <i class="fas fa-minus"></i>
+                            </button>
                             <input 
                                 type="number" 
                                 id="quantity" 
                                 name="quantity" 
-                                class="form-control" 
                                 value="1" 
                                 min="1"
+                                readonly
+                                style="width: 80px; text-align: center; border: 1px solid #e5e7eb; padding: 0.5rem; border-radius: 0.375rem; font-size: 1.1rem; font-weight: 600;"
                                 required
                             >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="delivery_date">Tanggal Pengambilan</label>
-                            <input 
-                                type="date" 
-                                id="delivery_date" 
-                                name="delivery_date" 
-                                class="form-control"
-                                required
-                            >
+                            <button type="button" id="btnPlus" class="btn-quantity">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="notes">Catatan Khusus (Opsional)</label>
+                    <!-- Tanggal Masuk -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="delivery_date" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tanggal masuk</label>
+                        <input 
+                            type="date" 
+                            id="delivery_date" 
+                            name="delivery_date" 
+                            class="form-control"
+                            required
+                        >
+                    </div>
+
+                    <!-- Jam Booking -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="booking_time" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jam Booking</label>
+                        <input 
+                            type="time" 
+                            id="booking_time" 
+                            name="booking_time" 
+                            class="form-control"
+                            required
+                        >
+                        <small style="color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem; display: block;">
+                            Waktu saat ini: <span id="currentTime"></span>
+                        </small>
+                    </div>
+
+                    <!-- Catatan -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="notes" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Catatan</label>
                         <textarea 
                             id="notes" 
                             name="notes" 
                             class="form-control" 
-                            rows="3" 
-                            placeholder="Contoh: Warna tertentu, alergi bahan, dll"
+                            rows="4" 
+                            placeholder="Tulis catatan di sini..."
                         ></textarea>
                     </div>
-                </div>
-            </div>
 
-            <!-- Step 3: Delivery Option -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>
-                        <span class="badge badge-primary" style="margin-right: 0.5rem;">3</span>
-                        Opsi Pengiriman
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="form-check" style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                        <input 
-                            type="radio" 
-                            id="delivery_pickup" 
-                            name="delivery_option" 
-                            value="pickup"
-                            checked
-                        >
-                        <label for="delivery_pickup" style="margin-bottom: 0;">
-                            <strong>Ambil Sendiri</strong>
-                            <p style="margin: 0.5rem 0 0 1.5rem; color: #6b7280; font-size: 0.9rem;">Gratis</p>
+                    <!-- Foto Sepatu -->
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
+                            Foto Sepatu <span style="color: #ef4444;">*</span>
                         </label>
+                        <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required style="display: none;">
+                        
+                        <div id="uploadArea" style="border: 2px dashed #e5e7eb; border-radius: 0.5rem; padding: 2rem; text-align: center; background: #f9fafb; transition: all 0.3s ease;">
+                            <div style="margin-bottom: 1rem;">
+                                <i class="fas fa-image" style="font-size: 3rem; color: #3b82f6;"></i>
+                            </div>
+                            <p style="margin: 0 0 0.5rem 0; font-weight: 500; color: #374151;">Upload Foto Sepatu Anda</p>
+                            <p style="margin: 0 0 1rem 0; color: #6b7280; font-size: 0.85rem;">PNG, JPG, JPEG (Maks. 5 MB)</p>
+                            
+                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="btn-upload">
+                                <i class="fas fa-camera"></i> Pilih Foto
+                            </button>
+                            
+                            <p style="margin: 1rem 0 0 0; color: #9ca3af; font-size: 0.8rem;">
+                                <i class="fas fa-hand-pointer"></i> atau seret file kesini
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; color: #ef4444; font-size: 0.85rem;">
+                                <i class="fas fa-exclamation-circle"></i> Wajib upload foto sepatu
+                            </p>
+                        </div>
+                        
+                        <div id="imagePreview" style="display: none; margin-top: 1rem;">
+                            <div style="position: relative; display: inline-block;">
+                                <img id="previewImg" src="" style="max-width: 100%; max-height: 300px; border-radius: 0.5rem; border: 2px solid #3b82f6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                                <div style="position: absolute; top: -10px; right: -10px;">
+                                    <button type="button" onclick="removeImage()" class="btn-remove-photo">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; text-align: center;">
+                                <button type="button" onclick="document.getElementById('shoe_photo').click()" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-sync-alt"></i> Ganti Foto
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-check" style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                        <input 
-                            type="radio" 
-                            id="delivery_home" 
-                            name="delivery_option" 
-                            value="home"
-                        >
-                        <label for="delivery_home" style="margin-bottom: 0;">
-                            <strong>Antar-Jemput</strong>
-                            <p style="margin: 0.5rem 0 0 1.5rem; color: #6b7280; font-size: 0.9rem;">Biaya: Rp 5.000</p>
-                        </label>
-                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-check-circle"></i> Buat Booking
+                    </button>
+                </form>
+            </div>
 
-                    <div id="addressField" style="display: none; margin-top: 1rem;">
-                        <label for="delivery_address">Alamat Pengiriman</label>
-                        <textarea 
-                            id="delivery_address" 
-                            name="delivery_address" 
-                            class="form-control" 
-                            rows="3" 
-                            placeholder="Masukkan alamat lengkap"
-                        ></textarea>
+            <!-- Right Column: Summary -->
+            <div>
+                <div class="card" style="position: sticky; top: 2rem;">
+                    <div class="card-header">
+                        <h3 style="margin: 0;"><i class="fas fa-clipboard-list"></i> Ringkasan Booking</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <span style="color: #6b7280;">Layanan</span>
+                                <span id="summaryService" style="font-weight: 600;">-</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <span style="color: #6b7280;">Harga/Sepatu</span>
+                                <span id="summaryPrice" style="font-weight: 600;">Rp 0</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                                <span style="color: #6b7280;">Jumlah</span>
+                                <span id="summaryQuantity" style="font-weight: 600;">1 pasang</span>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 1rem 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.1rem;">
+                                <span style="font-weight: 600;">Total</span>
+                                <span id="summaryTotal" style="font-weight: 700; color: #3b82f6;">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem;">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <i class="fas fa-info-circle" style="color: #3b82f6; margin-top: 0.25rem;"></i>
+                                <p style="margin: 0; color: #1e40af; font-size: 0.85rem;">
+                                    Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Order Summary -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>Ringkasan Pesanan</h3>
-                </div>
-                <div class="card-body">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.75rem 0;">Layanan</td>
-                            <td style="padding: 0.75rem 0; text-align: right;" id="summaryService">-</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.75rem 0;">Harga Satuan</td>
-                            <td style="padding: 0.75rem 0; text-align: right;" id="summaryPrice">-</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.75rem 0;">Jumlah</td>
-                            <td style="padding: 0.75rem 0; text-align: right;" id="summaryQuantity">1</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e5e7eb;">
-                            <td style="padding: 0.75rem 0;">Biaya Pengiriman</td>
-                            <td style="padding: 0.75rem 0; text-align: right;" id="summaryDelivery">Rp 0</td>
-                        </tr>
-                        <tr style="font-size: 1.1rem; font-weight: 700;">
-                            <td style="padding: 1rem 0;">Total</td>
-                            <td style="padding: 1rem 0; text-align: right; color: #7c3aed;" id="summaryTotal">Rp 0</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div style="display: flex; gap: 1rem;">
-                <a href="/dashboard" class="btn btn-outline" style="flex: 1;">
-                    <i class="fas fa-arrow-left"></i> Kembali
-                </a>
-                <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
-                    <i class="fas fa-check"></i> Lanjutkan ke Pembayaran
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <?= $this->endSection() ?>
 
+<?= $this->section('extra_css') ?>
+<style>
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #e5e7eb;
+    color: #374151;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #d1d5db;
+}
+
+.service-radio-card {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.service-radio-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.service-radio-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.service-radio-card input[type="radio"]:checked + .service-radio-content {
+    background: #eff6ff;
+}
+
+.service-radio-card input[type="radio"]:checked ~ .service-radio-content::before {
+    content: '\f058';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    color: #3b82f6;
+    font-size: 1.25rem;
+}
+
+.service-radio-card input[type="radio"]:checked {
+    border-color: #3b82f6;
+}
+
+.service-radio-card:has(input:checked) {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.service-radio-content {
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.btn-quantity {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #374151;
+}
+
+.btn-quantity:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.btn-quantity:active {
+    transform: scale(0.95);
+}
+
+.btn-outline {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+.btn-outline:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.btn-upload {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-upload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.4);
+}
+
+.btn-upload:active {
+    transform: translateY(0);
+}
+
+.btn-remove-photo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-remove-photo:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+#uploadArea {
+    cursor: default;
+}
+</style>
+<?= $this->endSection() ?>
+
 <?= $this->section('extra_js') ?>
 <script>
-// Service selection
-const serviceCards = document.querySelectorAll('.service-card');
-const serviceInputs = document.querySelectorAll('input[name="service"]');
-
-serviceCards.forEach((card, index) => {
-    card.addEventListener('click', () => {
-        serviceInputs[index].checked = true;
+// Quantity buttons
+document.getElementById('btnMinus').addEventListener('click', () => {
+    const input = document.getElementById('quantity');
+    const value = parseInt(input.value);
+    if (value > 1) {
+        input.value = value - 1;
         updateSummary();
-        
-        serviceCards.forEach(c => {
-            c.style.borderColor = 'transparent';
-            c.style.backgroundColor = 'white';
-        });
-        
-        card.style.borderColor = '#7c3aed';
-        card.style.backgroundColor = '#f3e8ff';
-    });
+    }
 });
 
-serviceInputs.forEach((input, index) => {
-    input.addEventListener('change', () => {
-        serviceCards[index].click();
-    });
-});
-
-// Delivery option
-document.getElementById('delivery_home').addEventListener('change', () => {
-    document.getElementById('addressField').style.display = 'block';
+document.getElementById('btnPlus').addEventListener('click', () => {
+    const input = document.getElementById('quantity');
+    const value = parseInt(input.value);
+    input.value = value + 1;
     updateSummary();
 });
 
-document.getElementById('delivery_pickup').addEventListener('change', () => {
-    document.getElementById('addressField').style.display = 'none';
-    updateSummary();
+// Service selection
+const serviceRadios = document.querySelectorAll('input[name="service"]');
+serviceRadios.forEach(radio => {
+    radio.addEventListener('change', updateSummary);
 });
-
-// Quantity update
-document.getElementById('quantity').addEventListener('change', updateSummary);
 
 // Update summary
 function updateSummary() {
     const selectedService = document.querySelector('input[name="service"]:checked');
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
-    const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;
     
     if (selectedService) {
-        const serviceLabel = selectedService.value.replace('-', ' ').toUpperCase();
         const price = parseInt(selectedService.dataset.price);
-        const deliveryFee = deliveryOption === 'home' ? 5000 : 0;
-        const subtotal = price * quantity;
-        const total = subtotal + deliveryFee;
+        const total = price * quantity;
         
-        document.getElementById('summaryService').textContent = serviceLabel;
+        // Get service name
+        const serviceCard = selectedService.closest('.service-radio-card');
+        const serviceName = serviceCard.querySelector('h3').textContent;
+        
+        document.getElementById('summaryService').textContent = serviceName;
         document.getElementById('summaryPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
-        document.getElementById('summaryQuantity').textContent = quantity;
-        document.getElementById('summaryDelivery').textContent = 'Rp ' + deliveryFee.toLocaleString('id-ID');
+        document.getElementById('summaryQuantity').textContent = quantity + ' pasang';
         document.getElementById('summaryTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
     }
 }
 
-// Set minimum date
+// Set minimum date (today)
 const today = new Date();
-const minDate = new Date(today);
-minDate.setDate(minDate.getDate() + 1);
-document.getElementById('delivery_date').min = minDate.toISOString().split('T')[0];
+document.getElementById('delivery_date').min = today.toISOString().split('T')[0];
+
+// Update current time every second
+function updateCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+updateCurrentTime();
+setInterval(updateCurrentTime, 1000);
+
+// Set default time to current time
+const now = new Date();
+const currentHours = String(now.getHours()).padStart(2, '0');
+const currentMinutes = String(now.getMinutes()).padStart(2, '0');
+document.getElementById('booking_time').value = `${currentHours}:${currentMinutes}`;
 
 // Form submission
-document.getElementById('bookingForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
+document.getElementById('bookingForm').addEventListener('submit', (e) => {
     const selectedService = document.querySelector('input[name="service"]:checked');
     if (!selectedService) {
-        showToast('Pilih layanan terlebih dahulu', 'warning');
+        e.preventDefault();
+        alert('Pilih layanan terlebih dahulu');
         return;
     }
     
-    const formData = new FormData(this);
-    try {
-        const response = await API.post('/submit-booking', Object.fromEntries(formData));
-        showToast('Pesanan berhasil dibuat', 'success');
-        setTimeout(() => {
-            window.location.href = '/payment/' + response.booking_id;
-        }, 1500);
-    } catch (error) {
-        showToast(error.message || 'Gagal membuat pesanan', 'danger');
+    const shoePhoto = document.getElementById('shoe_photo');
+    if (!shoePhoto.files || shoePhoto.files.length === 0) {
+        e.preventDefault();
+        alert('Wajib upload foto sepatu terlebih dahulu');
+        return;
     }
 });
+
+// File upload handling
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('shoe_photo');
+const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+
+fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Check file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Ukuran file maksimal 5 MB');
+            fileInput.value = '';
+            return;
+        }
+        
+        // Check file type
+        if (!file.type.match('image/(png|jpeg|jpg)')) {
+            alert('Format file harus PNG, JPG, atau JPEG');
+            fileInput.value = '';
+            return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            previewImg.src = event.target.result;
+            uploadArea.style.display = 'none';
+            imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Remove image
+function removeImage() {
+    fileInput.value = '';
+    uploadArea.style.display = 'block';
+    imagePreview.style.display = 'none';
+    previewImg.src = '';
+}
+
+// Drag and drop
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#3b82f6';
+    uploadArea.style.background = '#eff6ff';
+});
+
+uploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#e5e7eb';
+    uploadArea.style.background = '#f9fafb';
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#e5e7eb';
+    uploadArea.style.background = '#f9fafb';
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+});
+
+// Initialize
+updateSummary();
 </script>
 <?= $this->endSection() ?>

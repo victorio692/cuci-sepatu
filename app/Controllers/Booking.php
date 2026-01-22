@@ -27,15 +27,51 @@ class Booking extends BaseController
     public function submitBooking()
     {
         $user_id = session()->get('user_id');
-        $user = $this->db->table('users')->find($user_id);
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Validate file upload
+        $validationRule = [
+            'shoe_photo' => [
+                'label' => 'Foto Sepatu',
+                'rules' => 'uploaded[shoe_photo]'
+                    . '|is_image[shoe_photo]'
+                    . '|mime_in[shoe_photo,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[shoe_photo,5120]', // 5MB in KB
+            ],
+        ];
+
+        if (!$this->validate($validationRule)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Foto sepatu wajib diupload (format PNG/JPG/JPEG, maksimal 5MB)');
+        }
+
+        // Handle file upload
+        $file = $this->request->getFile('shoe_photo');
+        $fileName = null;
+        
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generate unique filename
+            $fileName = $file->getRandomName();
+            // Move to public/uploads directory
+            $uploadPath = FCPATH . 'uploads';
+            
+            // Create directory if not exists
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            
+            $file->move($uploadPath, $fileName);
+        }
 
         $service = $this->request->getPost('service');
         $shoe_type = $this->request->getPost('shoe_type');
         $shoe_condition = $this->request->getPost('shoe_condition');
         $quantity = $this->request->getPost('quantity');
         $delivery_date = $this->request->getPost('delivery_date');
+        $booking_time = $this->request->getPost('booking_time');
         $delivery_option = $this->request->getPost('delivery_option');
-        $delivery_address = $this->request->getPost('delivery_address') ?? $user['address'];
+        $delivery_address = $this->request->getPost('delivery_address') ?? $user['alamat'];
         $notes = $this->request->getPost('notes');
 
         // Get service price
@@ -46,25 +82,40 @@ class Booking extends BaseController
 
         // Insert booking
         $booking_data = [
-            'user_id' => $user_id,
-            'service' => $service,
-            'shoe_type' => $shoe_type,
-            'shoe_condition' => $shoe_condition,
-            'quantity' => $quantity,
-            'delivery_date' => $delivery_date,
-            'delivery_option' => $delivery_option,
-            'delivery_address' => $delivery_address,
-            'notes' => $notes,
+            'id_user' => $user_id,
+            'layanan' => $service,
+            'tipe_sepatu' => $shoe_type,
+            'kondisi_sepatu' => $shoe_condition,
+            'jumlah' => $quantity,
+            'tanggal_kirim' => $delivery_date,
+            'jam_booking' => $booking_time,
+            'foto_sepatu' => $fileName,
+            'opsi_kirim' => $delivery_option,
+            'alamat_kirim' => $delivery_address,
+            'catatan' => $notes,
             'subtotal' => $subtotal,
-            'delivery_fee' => $delivery_fee,
+            'biaya_kirim' => $delivery_fee,
             'total' => $total,
             'status' => 'pending',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'dibuat_pada' => date('Y-m-d H:i:s'),
+            'diupdate_pada' => date('Y-m-d H:i:s'),
         ];
 
         $this->db->table('bookings')->insert($booking_data);
         $booking_id = $this->db->insertID();
+
+        // Create notification for all admins
+        $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
+        
+        foreach ($admins as $admin) {
+            $this->db->table('notifications')->insert([
+                'id_user' => $admin['id'],
+                'booking_id' => $booking_id,
+                'judul' => 'Booking Baru! 🔔',
+                'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$service}, Jumlah: {$quantity} pasang sepatu.",
+                'tipe' => 'new_booking'
+            ]);
+        }
 
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibuat!');
     }
@@ -76,9 +127,9 @@ class Booking extends BaseController
         
         $booking = $this->db->table('bookings')
             ->where('id', $bookingId)
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->get()
-            ->getRow();
+            ->getRowArray();
 
         if (!$booking) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
@@ -86,7 +137,7 @@ class Booking extends BaseController
 
         $data = [
             'title' => 'Detail Pesanan - SYH Cleaning',
-            'booking' => (array)$booking,
+            'booking' => $booking,
         ];
 
         return view('pages/booking_detail', $data);
@@ -99,22 +150,22 @@ class Booking extends BaseController
         
         $booking = $this->db->table('bookings')
             ->where('id', $bookingId)
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->get()
-            ->getRow();
+            ->getRowArray();
 
         if (!$booking) {
-            return redirect()->back()->with('error', 'Pesanan tidak ditemukan');
+            return redirect()->to('/my-bookings')->with('error', 'Pesanan tidak ditemukan');
         }
 
-        // Only allow cancel if status is pending or approved
-        if (!in_array($booking->status, ['pending', 'approved'])) {
+        // Only allow cancel if status is pending
+        if ($booking['status'] !== 'pending') {
             return redirect()->back()->with('error', 'Pesanan tidak bisa dibatalkan pada status ini');
         }
 
-        $this->db->table('bookings')->update(['status' => 'cancelled'], ['id' => $bookingId]);
+        $this->db->table('bookings')->update(['status' => 'batal'], ['id' => $bookingId]);
 
-        return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan');
+        return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibatalkan');
     }
 
     // Get Service Price
@@ -124,9 +175,8 @@ class Booking extends BaseController
             'fast-cleaning' => 15000,
             'deep-cleaning' => 20000,
             'white-shoes' => 35000,
-            'coating' => 25000,
-            'dyeing' => 40000,
-            'repair' => 50000,
+            'suede-treatment' => 30000,
+            'unyellowing' => 30000,
         ];
 
         return $prices[$service] ?? 0;
