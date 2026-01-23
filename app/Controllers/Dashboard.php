@@ -51,7 +51,7 @@ class Dashboard extends BaseController
 
         $recent_bookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
@@ -76,7 +76,7 @@ class Dashboard extends BaseController
 
         $bookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -108,9 +108,9 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
 
         $data = [
-            'nama_lengkap' => $this->request->getPost('full_name'),
-            'no_hp' => $this->request->getPost('phone'),
-            'alamat' => $this->request->getPost('address'),
+            'full_name' => $this->request->getPost('full_name'),
+            'phone' => $this->request->getPost('phone'),
+            'address' => $this->request->getPost('address'),
         ];
 
         $this->db->table('users')->update($data, ['id' => $user_id]);
@@ -140,7 +140,7 @@ class Dashboard extends BaseController
 
         // Get old photo
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
-        $oldPhoto = $user['foto_profil'];
+        $oldPhoto = $user['profile_photo'] ?? null;
 
         // Handle file upload
         $file = $this->request->getFile('profile_photo');
@@ -167,7 +167,7 @@ class Dashboard extends BaseController
 
         // Update database
         $this->db->table('users')->update([
-            'foto_profil' => $fileName
+            'profile_photo' => $fileName
         ], ['id' => $user_id]);
 
         return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');

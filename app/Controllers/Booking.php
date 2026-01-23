@@ -71,7 +71,7 @@ class Booking extends BaseController
         $delivery_date = $this->request->getPost('delivery_date');
         $booking_time = $this->request->getPost('booking_time');
         $delivery_option = $this->request->getPost('delivery_option');
-        $delivery_address = $this->request->getPost('delivery_address') ?? $user['alamat'];
+        $delivery_address = $this->request->getPost('delivery_address') ?? $user['address'];
         $notes = $this->request->getPost('notes');
 
         // Get service price
@@ -82,30 +82,28 @@ class Booking extends BaseController
 
         // Insert booking
         $booking_data = [
-            'id_user' => $user_id,
-            'layanan' => $service,
-            'tipe_sepatu' => $shoe_type,
-            'kondisi_sepatu' => $shoe_condition,
-            'jumlah' => $quantity,
-            'tanggal_kirim' => $delivery_date,
-            'jam_booking' => $booking_time,
-            'foto_sepatu' => $fileName,
-            'opsi_kirim' => $delivery_option,
-            'alamat_kirim' => $delivery_address,
-            'catatan' => $notes,
+            'user_id' => $user_id,
+            'service' => $service,
+            'shoe_type' => $shoe_type,
+            'shoe_condition' => $shoe_condition,
+            'quantity' => $quantity,
+            'delivery_date' => $delivery_date,
+            'delivery_option' => $delivery_option,
+            'delivery_address' => $delivery_address,
+            'notes' => $notes,
             'subtotal' => $subtotal,
-            'biaya_kirim' => $delivery_fee,
+            'delivery_fee' => $delivery_fee,
             'total' => $total,
             'status' => 'pending',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         $this->db->table('bookings')->insert($booking_data);
         $booking_id = $this->db->insertID();
 
         // Create notification for all admins
-        $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
+        $admins = $this->db->table('users')->where('is_admin', 1)->get()->getResultArray();
         
         foreach ($admins as $admin) {
             $this->db->table('notifications')->insert([

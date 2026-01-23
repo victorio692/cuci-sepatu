@@ -14,22 +14,25 @@ class UserModel extends Model
     protected $protectFields = true;
     
     protected $allowedFields = [
-        'nama_lengkap',
+        'full_name',
         'email',
-        'no_hp',
+        'phone',
         'password_hash',
-        'foto_profil',
-        'alamat',
-        'role',
-        'dibuat_pada',
-        'diupdate_pada'
+        'address',
+        'city',
+        'province',
+        'zip_code',
+        'is_active',
+        'is_admin',
+        'created_at',
+        'updated_at'
     ];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat = 'datetime';
-    protected $createdField = 'dibuat_pada';
-    protected $updatedField = 'diupdate_pada';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     // Validation
     protected $validationRules = [];
@@ -61,7 +64,7 @@ class UserModel extends Model
      */
     public function getActiveUsers()
     {
-        return $this->where('aktif', 1)->findAll();
+        return $this->where('is_active', 1)->findAll();
     }
 
     /**
@@ -69,7 +72,7 @@ class UserModel extends Model
      */
     public function getAdminUsers()
     {
-        return $this->where('admin', 1)->findAll();
+        return $this->where('is_admin', 1)->findAll();
     }
 
     /**
@@ -97,11 +100,11 @@ class UserModel extends Model
             return false;
         }
 
-        $newStatus = !$user['aktif'];
+        $newStatus = !$user['is_active'];
         
         return $this->update($userId, [
-            'aktif' => $newStatus,
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'is_active' => $newStatus,
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
     }
 
@@ -110,9 +113,9 @@ class UserModel extends Model
      */
     public function searchUsers($keyword)
     {
-        return $this->like('nama_lengkap', $keyword)
+        return $this->like('full_name', $keyword)
                     ->orLike('email', $keyword)
-                    ->orLike('no_hp', $keyword)
+                    ->orLike('phone', $keyword)
                     ->findAll();
     }
 
@@ -122,9 +125,9 @@ class UserModel extends Model
     public function getUsersWithBookingCount()
     {
         return $this->select('users.*, COUNT(bookings.id) as total_booking')
-                    ->join('bookings', 'bookings.id_user = users.id', 'left')
+                    ->join('bookings', 'bookings.user_id = users.id', 'left')
                     ->groupBy('users.id')
-                    ->orderBy('users.dibuat_pada', 'DESC')
+                    ->orderBy('users.created_at', 'DESC')
                     ->findAll();
     }
 }

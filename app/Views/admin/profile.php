@@ -95,12 +95,12 @@
                 <div>
                     <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem;">Role:</label>
                     <span style="display: inline-block; background: #7c3aed; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">
-                        <?= ucfirst($user['role']) ?>
+                        <?= $user['is_admin'] ? 'Admin' : 'Customer' ?>
                     </span>
                 </div>
                 <div>
                     <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem;">Terdaftar Sejak:</label>
-                    <span><?= date('d M Y', strtotime($user['dibuat_pada'])) ?></span>
+                    <span><?= date('d M Y', strtotime($user['created_at'])) ?></span>
                 </div>
                 <div>
                     <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem;">Status:</label>

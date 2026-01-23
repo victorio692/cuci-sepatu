@@ -167,7 +167,7 @@
                         div.className = 'notification-item';
                         div.onclick = () => markAsRead(notif.id, notif.booking_id);
                         
-                        const timeAgo = getTimeAgo(notif.dibuat_pada);
+                        const timeAgo = getTimeAgo(notif.created_at);
                         
                         div.innerHTML = `
                             <div class="notification-icon ${notif.tipe}">

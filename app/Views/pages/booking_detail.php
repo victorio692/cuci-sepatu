@@ -48,7 +48,7 @@
                 </a>
                 <h1><i class="fas fa-receipt"></i> Detail Pesanan #<?= $booking['id'] ?></h1>
                 <p style="margin: 0.5rem 0 0; color: #6b7280;">
-                    Dibuat pada <?= date('d M Y H:i', strtotime($booking['dibuat_pada'])) ?>
+                    Dibuat pada <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
                 </p>
             </div>
         </div>

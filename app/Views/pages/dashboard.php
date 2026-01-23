@@ -216,7 +216,7 @@ async function loadCustomerNotifications() {
                 div.className = 'notification-item-customer';
                 div.onclick = () => markAsReadCustomer(notif.id, notif.booking_id);
                 
-                const timeAgo = getTimeAgo(notif.dibuat_pada);
+                const timeAgo = getTimeAgo(notif.created_at);
                 
                 div.innerHTML = `
                     <div class="notification-icon-customer ${notif.tipe}">

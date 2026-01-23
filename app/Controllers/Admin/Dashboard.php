@@ -22,15 +22,15 @@ class Dashboard extends Controller
         // Users statistics
         $total_users = $db->table('users')->countAllResults();
         $users_this_month = $db->table('users')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
 
         // Bookings statistics
         $total_bookings = $db->table('bookings')->countAllResults();
         $bookings_this_month = $db->table('bookings')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
         $completed_bookings = $db->table('bookings')
             ->where('status', 'selesai')
@@ -42,17 +42,17 @@ class Dashboard extends Controller
         // Revenue
         $revenue = $db->table('bookings')
             ->selectSum('total')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->get()
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
 
         // Recent bookings - tampilkan semua
         $recent_bookings = $db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as customer_name, users.no_hp')
-            ->join('users', 'bookings.id_user = users.id')
-            ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->select('bookings.*, users.full_name as customer_name, users.phone')
+            ->join('users', 'bookings.user_id = users.id')
+            ->orderBy('bookings.created_at', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -61,26 +61,26 @@ class Dashboard extends Controller
             ->where('status', 'pending')
             ->countAllResults();
         $pending_bookings = $db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as customer_name')
-            ->join('users', 'bookings.id_user = users.id')
+            ->select('bookings.*, users.full_name as customer_name')
+            ->join('users', 'bookings.user_id = users.id')
             ->where('bookings.status', 'pending')
-            ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->orderBy('bookings.created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
 
         // Service statistics
         $service_stats = $db->table('bookings')
-            ->select('layanan as service, COUNT(*) as count')
-            ->groupBy('layanan')
+            ->select('service, COUNT(*) as count')
+            ->groupBy('service')
             ->orderBy('count', 'DESC')
             ->get()
             ->getResultArray();
 
         // Recent users
         $recent_users = $db->table('users')
-            ->select('id, nama_lengkap as full_name, email, dibuat_pada as created_at')
-            ->orderBy('dibuat_pada', 'DESC')
+            ->select('id, full_name, email, created_at')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();

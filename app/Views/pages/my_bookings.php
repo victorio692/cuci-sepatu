@@ -91,7 +91,7 @@
                         };
                         
                         // Format date
-                        $tanggal = date('d M Y', strtotime($booking['dibuat_pada']));
+                        $tanggal = date('d M Y', strtotime($booking['created_at']));
                         ?>
                         <tr>
                             <td><strong>#<?= $booking['id'] ?></strong></td>

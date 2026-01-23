@@ -79,7 +79,7 @@
                                     <div>
                                         <strong><?= $booking['customer_name'] ?></strong>
                                         <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: #6b7280;">
-                                            <?= date('d M Y', strtotime($booking['dibuat_pada'])) ?>
+                                            <?= date('d M Y', strtotime($booking['created_at'])) ?>
                                         </p>
                                     </div>
                                 </td>

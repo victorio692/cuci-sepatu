@@ -65,9 +65,9 @@ class AuthApi extends ResourceController
             session()->set([
                 'user_id' => $user['id'],
                 'email' => $user['email'],
-                'nama_lengkap' => $user['nama_lengkap'],
+                'full_name' => $user['full_name'],
                 'is_logged_in' => true,
-                'is_admin' => $user['role'] === 'admin'
+                'is_admin' => $user['is_admin']
             ]);
 
             return $this->respondCreated([
@@ -135,9 +135,9 @@ class AuthApi extends ResourceController
         session()->set([
             'user_id' => $user['id'],
             'email' => $user['email'],
-            'nama_lengkap' => $user['nama_lengkap'],
+            'full_name' => $user['full_name'],
             'is_logged_in' => true,
-            'is_admin' => $user['role'] === 'admin'
+            'is_admin' => $user['is_admin']
         ]);
 
         return $this->respond([

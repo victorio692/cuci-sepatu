@@ -46,7 +46,7 @@
                     <div style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
                         <div class="info-item">
                             <span style="color: #6b7280; font-size: 0.9rem;">Bergabung</span>
-                            <strong><?= date('d M Y', strtotime($user['dibuat_pada'])) ?></strong>
+                            <strong><?= date('d M Y', strtotime($user['created_at'])) ?></strong>
                         </div>
                         <div class="info-item">
                             <span style="color: #6b7280; font-size: 0.9rem;">Total Pesanan</span>
@@ -121,7 +121,7 @@
                                                 <?= ucfirst(str_replace('_', ' ', $booking['status'])) ?>
                                             </span>
                                         </td>
-                                        <td><?= date('d M Y', strtotime($booking['dibuat_pada'])) ?></td>
+                                        <td><?= date('d M Y', strtotime($booking['created_at'])) ?></td>
                                         <td>
                                             <a href="/admin/bookings/<?= $booking['id'] ?>" class="btn-link">
                                                 <i class="fas fa-eye"></i>

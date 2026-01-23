@@ -23,7 +23,7 @@ class Notifications extends Controller
 
         $notifications = $this->db->table('notifications')
             ->where('id_user', $userId)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(50)
             ->get()
             ->getResultArray();
@@ -49,7 +49,7 @@ class Notifications extends Controller
         $notifications = $this->db->table('notifications')
             ->where('id_user', $userId)
             ->where('dibaca', 0)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
@@ -104,7 +104,7 @@ class Notifications extends Controller
 
         // Get booking and customer info
         $booking = $this->db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap, users.no_hp')
+            ->select('bookings.*, users.full_name, users.phone')
             ->join('users', 'bookings.id_user = users.id')
             ->where('bookings.id', $bookingId)
             ->get()
@@ -115,13 +115,13 @@ class Notifications extends Controller
         }
 
         // Format phone number (remove leading 0, add 62)
-        $phone = $booking['no_hp'];
+        $phone = $booking['phone'];
         if (substr($phone, 0, 1) === '0') {
             $phone = '62' . substr($phone, 1);
         }
 
         // Create WhatsApp message
-        $message = "Halo {$booking['nama_lengkap']},\n\n";
+        $message = "Halo {$booking['full_name']},\n\n";
         $message .= "Sepatu Anda dengan booking ID #{$bookingId} sudah selesai dicuci! ✨\n\n";
         $message .= "Layanan: {$booking['layanan']}\n";
         $message .= "Jumlah: {$booking['jumlah_sepatu']} pasang\n";

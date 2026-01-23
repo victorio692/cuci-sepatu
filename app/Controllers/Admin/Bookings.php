@@ -20,8 +20,8 @@ class Bookings extends Controller
         $search = $this->request->getVar('search');
 
         $query = $this->db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp')
-            ->join('users', 'bookings.id_user = users.id');
+            ->select('bookings.*, users.full_name, users.email, users.phone')
+            ->join('users', 'bookings.user_id = users.id');
 
         if ($status) {
             $query->where('bookings.status', $status);
@@ -29,21 +29,15 @@ class Bookings extends Controller
 
         if ($search) {
             $query->groupStart()
-                ->like('users.nama_lengkap', $search)
+                ->like('users.full_name', $search)
                 ->orLike('users.email', $search)
-                ->orLike('bookings.layanan', $search)
+                ->orLike('bookings.service', $search)
                 ->groupEnd();
         }
 
-        $bookings = $query->orderBy('bookings.dibuat_pada', 'DESC')
+        $bookings = $query->orderBy('bookings.created_at', 'DESC')
             ->get()
             ->getResultArray();
-        
-        // Map Indonesian columns to English for view
-        foreach ($bookings as &$booking) {
-            $booking['service'] = $booking['layanan'];
-            $booking['created_at'] = $booking['dibuat_pada'];
-        }
 
         $data = [
             'title' => 'Pesanan - Admin SYH Cleaning',

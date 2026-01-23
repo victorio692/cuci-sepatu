@@ -43,8 +43,11 @@ class Auth extends BaseController
         // Set session
         session()->set('user_id', $user->id);
 
+        // Set session
+        session()->set('is_admin', $user->is_admin);
+
         // Redirect based on role
-        if ($user->role === 'admin') {
+        if ($user->is_admin) {
             return redirect()->to('/admin')->with('success', 'Selamat datang, Admin!');
         } else {
             return redirect()->to('/dashboard')->with('success', 'Selamat datang!');
@@ -61,14 +64,18 @@ class Auth extends BaseController
     public function registerSubmit()
     {
         $data = [
-            'nama_lengkap' => $this->request->getPost('full_name'),
+            'full_name' => $this->request->getPost('full_name'),
             'email' => $this->request->getPost('email'),
-            'no_hp' => $this->request->getPost('phone'),
+            'phone' => $this->request->getPost('phone'),
             'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT),
-            'alamat' => '',
-            'role' => 'pelanggan',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'address' => '',
+            'city' => '',
+            'province' => '',
+            'zip_code' => '',
+            'is_admin' => 0,
+            'is_active' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         // Validate
@@ -113,17 +120,17 @@ class Auth extends BaseController
     public function forgotPasswordSubmit()
     {
         $email = $this->request->getPost('email');
-        $noHp = $this->request->getPost('no_hp');
+        $phone = $this->request->getPost('phone');
 
         // Validate
-        if (empty($email) || empty($noHp)) {
+        if (empty($email) || empty($phone)) {
             return redirect()->back()->with('error', 'Email dan nomor HP harus diisi');
         }
 
         // Check if user exists with email and phone number
         $user = $this->db->table('users')
             ->where('email', $email)
-            ->where('no_hp', $noHp)
+            ->where('phone', $phone)
             ->get()
             ->getRowArray();
 
