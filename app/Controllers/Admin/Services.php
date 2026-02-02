@@ -42,7 +42,7 @@ class Services extends Controller
                 'id' => 'suede-treatment',
                 'name' => 'Suede Treatment',
                 'price' => 30000,
-                'icon' => 'sparkles',
+                'icon' => 'brush',
                 'description' => 'Perawatan khusus untuk sepatu suede',
             ],
             [

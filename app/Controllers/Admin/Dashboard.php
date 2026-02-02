@@ -16,8 +16,20 @@ class Dashboard extends Controller
 
     public function index()
     {
-        // Get statistics
+        // Cek login
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Cek role admin
         $db = db_connect();
+        $user = $db->table('users')->where('id', $user_id)->get()->getRow();
+        if (!$user || $user->role !== 'admin') {
+            return redirect()->to('/dashboard')->with('error', 'Akses ditolak. Anda bukan admin.');
+        }
+
+        // Get statistics
 
         // Users statistics
         $total_users = $db->table('users')->countAllResults();

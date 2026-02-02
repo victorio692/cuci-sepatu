@@ -16,6 +16,21 @@ class Booking extends BaseController
     // Show Booking Form
     public function makeBooking()
     {
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if (!$user) {
+            return redirect()->to('/login')->with('error', 'User tidak ditemukan');
+        }
+
+        // Cek jika admin, redirect ke admin dashboard
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
+        }
+
         $data = [
             'title' => 'Pesan Layanan - SYH Cleaning',
         ];
@@ -65,7 +80,6 @@ class Booking extends BaseController
         }
 
         $service = $this->request->getPost('service');
-        $shoe_type = $this->request->getPost('shoe_type');
         $shoe_condition = $this->request->getPost('shoe_condition');
         $quantity = $this->request->getPost('quantity');
         $delivery_date = $this->request->getPost('delivery_date');
@@ -84,7 +98,6 @@ class Booking extends BaseController
         $booking_data = [
             'id_user' => $user_id,
             'layanan' => $service,
-            'tipe_sepatu' => $shoe_type,
             'kondisi_sepatu' => $shoe_condition,
             'jumlah' => $quantity,
             'tanggal_kirim' => $delivery_date,

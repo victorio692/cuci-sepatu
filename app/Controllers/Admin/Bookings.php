@@ -16,6 +16,17 @@ class Bookings extends Controller
 
     public function index()
     {
+        // Cek login dan role admin
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRow();
+        if (!$user || $user->role !== 'admin') {
+            return redirect()->to('/dashboard')->with('error', 'Akses ditolak. Anda bukan admin.');
+        }
+
         $status = $this->request->getVar('status');
         $search = $this->request->getVar('search');
 
@@ -48,7 +59,6 @@ class Bookings extends Controller
         $data = [
             'title' => 'Pesanan - Admin SYH Cleaning',
             'bookings' => $bookings,
-            'pager' => $this->db->pager,
             'status' => $status,
             'search' => $search,
         ];
@@ -95,9 +105,19 @@ class Bookings extends Controller
 
     public function updateStatus($id)
     {
-        $json = $this->request->getJSON(true);
-        $status = $json['status'] ?? $this->request->getPost('status');
-        $alasan = $json['alasan_penolakan'] ?? $this->request->getPost('alasan_penolakan');
+        // Check if this is multipart form data (file upload)
+        $contentType = $this->request->getHeaderLine('Content-Type');
+        
+        if (strpos($contentType, 'multipart/form-data') !== false) {
+            // Handle file upload (POST request)
+            $status = $this->request->getPost('status');
+            $alasan = $this->request->getPost('alasan_penolakan');
+        } else {
+            // Handle JSON (PUT request)
+            $json = $this->request->getJSON(true);
+            $status = $json['status'] ?? $this->request->getPost('status');
+            $alasan = $json['alasan_penolakan'] ?? $this->request->getPost('alasan_penolakan');
+        }
 
         // Get current booking
         $booking = $this->db->table('bookings')->where('id', $id)->get()->getRowArray();
@@ -160,11 +180,67 @@ class Bookings extends Controller
             ]);
         }
 
+        // Initialize foto hasil variable
+        $newName = null;
+        
+        // Jika status selesai, foto hasil harus diupload
+        if ($status === 'selesai') {
+            $foto_hasil = $this->request->getFile('foto_hasil');
+            
+            if (!$foto_hasil) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Foto hasil cucian tidak ditemukan. Pastikan Anda memilih foto.'
+                ]);
+            }
+
+            if (!$foto_hasil->isValid()) {
+                $error = $foto_hasil->getErrorString();
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Error upload foto: ' . $error
+                ]);
+            }
+
+            // Validate file type
+            $mimeType = $foto_hasil->getClientMimeType();
+            if (!in_array($mimeType, ['image/jpeg', 'image/jpg', 'image/png'])) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Format foto harus JPG, JPEG, atau PNG. File Anda: ' . $mimeType
+                ]);
+            }
+
+            // Validate file size (max 5MB)
+            $fileSize = $foto_hasil->getSizeByUnit('mb');
+            if ($fileSize > 5) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Ukuran foto maksimal 5MB. File Anda: ' . round($fileSize, 2) . ' MB'
+                ]);
+            }
+
+            // Upload foto
+            try {
+                $newName = $foto_hasil->getRandomName();
+                $foto_hasil->move(FCPATH . 'uploads/', $newName);
+            } catch (\Exception $e) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Gagal upload foto: ' . $e->getMessage()
+                ]);
+            }
+        }
+
         // Update status
         $updateData = ['status' => $status];
         
         if ($status === 'ditolak') {
             $updateData['alasan_penolakan'] = $alasan;
+        }
+
+        if ($status === 'selesai' && $newName !== null) {
+            $updateData['foto_hasil'] = $newName;
         }
 
         $this->db->table('bookings')->where('id', $id)->update($updateData);
@@ -187,7 +263,10 @@ class Bookings extends Controller
                 break;
             case 'selesai':
                 $notificationData['judul'] = 'Sepatu Sudah Selesai! 🎉';
-                $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan ambil sepatu Anda di SYH.CLEANING. Terima kasih!";
+                $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan lihat hasilnya dan ambil sepatu Anda di SYH.CLEANING. Terima kasih!";
+                if (isset($newName)) {
+                    $notificationData['foto_hasil'] = $newName;
+                }
                 break;
             case 'ditolak':
                 $notificationData['judul'] = 'Booking Ditolak ❌';

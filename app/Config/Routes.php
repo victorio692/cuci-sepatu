@@ -47,6 +47,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function($routes) {
     $routes->get('bookings', 'Admin\Bookings::index');
     $routes->get('bookings/(:num)', 'Admin\Bookings::detail/$1');
     $routes->put('bookings/(:num)/status', 'Admin\Bookings::updateStatus/$1');
+    $routes->post('bookings/(:num)/status', 'Admin\Bookings::updateStatus/$1'); // For file upload
     $routes->delete('bookings/(:num)', 'Admin\Bookings::delete/$1');
     
     // Users

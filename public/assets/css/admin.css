@@ -889,3 +889,138 @@
         font-size: 1.5rem;
     }
 }
+
+/* =========================
+   Print Styles - Hide Sidebar & Navbar
+   ========================= */
+@media print {
+    /* Hide navigation elements */
+    .admin-navbar,
+    .admin-sidebar,
+    .btn-cetak-laporan,
+    .search-box,
+    .notification-bell,
+    .admin-navbar-right,
+    .card-actions,
+    .status-select-modern,
+    button,
+    a.btn,
+    .admin-sidebar-footer {
+        display: none !important;
+    }
+    
+    /* Full width for content */
+    .admin-wrapper {
+        display: block !important;
+        padding: 0 !important;
+    }
+    
+    .admin-main {
+        margin: 0 !important;
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .admin-container {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Optimize table for print */
+    .admin-table {
+        width: 100% !important;
+        font-size: 11px !important;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 8px 6px !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    /* Hide action columns */
+    .admin-table th:last-child,
+    .admin-table td:last-child {
+        display: none !important;
+    }
+    
+    /* Card styling for print */
+    .admin-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+    }
+    
+    .card-header-with-search {
+        border-bottom: 2px solid #333 !important;
+        padding-bottom: 10px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    /* Statistics cards */
+    .admin-stats {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .stat-card {
+        flex: 1 1 calc(25% - 10px) !important;
+        min-width: 150px !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+    }
+    
+    /* Header styling */
+    .admin-header h1 {
+        font-size: 24px !important;
+        margin-bottom: 10px !important;
+        color: #000 !important;
+    }
+    
+    .admin-header p {
+        font-size: 14px !important;
+        color: #666 !important;
+    }
+    
+    /* Remove backgrounds */
+    body {
+        background: white !important;
+    }
+    
+    .admin-card,
+    .stat-card {
+        background: white !important;
+    }
+    
+    /* Page break control */
+    .stat-card,
+    .admin-card {
+        page-break-inside: avoid;
+    }
+    
+    /* Add print header */
+    .admin-header::before {
+        content: "SYH CLEANING - LAPORAN ADMIN";
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #333;
+    }
+    
+    /* Print timestamp */
+    .admin-header::after {
+        content: "Dicetak pada: " attr(data-print-date);
+        display: block;
+        text-align: right;
+        font-size: 10px;
+        color: #666;
+        margin-top: 5px;
+    }
+}

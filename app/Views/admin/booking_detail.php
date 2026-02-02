@@ -47,24 +47,24 @@
                         </div>
                         
                         <!-- Action Buttons -->
-                        <div style="display: flex; gap: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <?php if ($booking['status'] === 'pending'): ?>
-                                <button onclick="approveBooking()" class="btn" style="background: #10b981; color: white; padding: 0.75rem 1.5rem;">
+                                <button onclick="approveBooking()" class="btn" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
                                     <i class="fas fa-check"></i> Setujui
                                 </button>
-                                <button onclick="showRejectModal()" class="btn" style="background: #ef4444; color: white; padding: 0.75rem 1.5rem;">
+                                <button onclick="showRejectModal()" class="btn" style="background: #ef4444; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);">
                                     <i class="fas fa-times"></i> Tolak
                                 </button>
                             <?php elseif ($booking['status'] === 'disetujui'): ?>
-                                <button onclick="changeStatus('proses')" class="btn" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem;">
+                                <button onclick="changeStatus('proses')" class="btn" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);">
                                     <i class="fas fa-cog"></i> Mulai Proses
                                 </button>
                             <?php elseif ($booking['status'] === 'proses'): ?>
-                                <button onclick="changeStatus('selesai')" class="btn" style="background: #10b981; color: white; padding: 0.75rem 1.5rem;">
-                                    <i class="fas fa-check-circle"></i> Tandai Selesai
+                                <button onclick="showCompleteModal()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 30px rgba(16, 185, 129, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 20px rgba(16, 185, 129, 0.4)'">
+                                    <i class="fas fa-check-circle"></i> Upload Foto & Tandai Selesai
                                 </button>
                             <?php elseif ($booking['status'] === 'selesai'): ?>
-                                <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.75rem 1.5rem;">
+                                <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(37, 211, 102, 0.3);">
                                     <i class="fab fa-whatsapp"></i> Kabari via WhatsApp
                                 </button>
                             <?php endif; ?>
@@ -78,7 +78,7 @@
                                 <i class="fas fa-exclamation-circle" style="color: #ef4444; margin-top: 0.25rem;"></i>
                                 <div>
                                     <strong style="color: #991b1b;">Alasan Penolakan:</strong>
-                                    <p style="margin: 0.5rem 0 0; color: #7f1d1d;"><?= nl2br(esc($booking['alasan_penolakan'])) ?></p>
+                                    <p style="margin: 0.5rem 0 0; color: #7f1d1d;"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
                                 </div>
                             </div>
                         </div>
@@ -128,10 +128,6 @@
                     <div class="info-row">
                         <label>Layanan:</label>
                         <span><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
-                    </div>
-                    <div class="info-row">
-                        <label>Tipe Sepatu:</label>
-                        <span><?= ucfirst(str_replace('_', ' ', $booking['shoe_type'])) ?></span>
                     </div>
                     <div class="info-row">
                         <label>Kondisi Sepatu:</label>
@@ -201,26 +197,56 @@
         <!-- Sidebar Summary -->
         <div>
             <!-- Price Summary -->
-            <div class="admin-card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-receipt"></i> Ringkasan
+            <div class="admin-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none; border-radius: 1rem; overflow: hidden;">
+                <div style="padding: 1.5rem;">
+                    <h3 style="margin: 0 0 1.5rem 0; color: white; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-receipt"></i> Ringkasan Booking
                     </h3>
-                </div>
-                <div class="card-body">
-                    <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span>Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: rgba(255, 255, 255, 0.9);">Layanan:</span>
+                            <span style="color: white; font-weight: 600;">
+                                <?php
+                                $serviceName = match($booking['service']) {
+                                    'fast-cleaning' => 'Fast Cleaning',
+                                    'deep-cleaning' => 'Deep Cleaning',
+                                    'white-shoes' => 'White Shoes',
+                                    'suede-treatment' => 'Suede Treatment',
+                                    'unyellowing' => 'Unyellowing',
+                                    default => $booking['service']
+                                };
+                                echo $serviceName;
+                                ?>
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                            <span style="color: rgba(255, 255, 255, 0.9);">Harga/Sepatu</span>
+                            <span style="color: white; font-weight: 600;">Rp <?= number_format($booking['subtotal'] / $booking['quantity'], 0, ',', '.') ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: rgba(255, 255, 255, 0.9);">Jumlah</span>
+                            <span style="color: white; font-weight: 600;"><?= $booking['quantity'] ?> pasang</span>
+                        </div>
                     </div>
-                    <div class="summary-row">
-                        <span>Biaya Pengiriman:</span>
-                        <span>Rp <?= number_format($booking['delivery_fee'], 0, ',', '.') ?></span>
+                    <div style="background: white; padding: 1rem; border-radius: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: #374151;">Subtotal:</span>
+                            <span style="color: #374151; font-weight: 600;">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+                            <span style="color: #374151;">Biaya Pengiriman:</span>
+                            <span style="color: #374151; font-weight: 600;">Rp <?= number_format($booking['delivery_fee'], 0, ',', '.') ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
+                            <span style="color: #374151; font-weight: 700; font-size: 1.1rem;">Total</span>
+                            <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                        </div>
                     </div>
-                    <div class="summary-row" style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: 1rem;">
-                        <strong>Total:</strong>
-                        <strong style="color: #3b82f6; font-size: 1.25rem;">
-                            Rp <?= number_format($booking['total'], 0, ',', '.') ?>
-                        </strong>
+                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.2); border-radius: 0.5rem; border-left: 4px solid rgba(255, 255, 255, 0.5);">
+                        <p style="margin: 0; color: white; font-size: 0.875rem; display: flex; align-items: start; gap: 0.5rem;">
+                            <i class="fas fa-info-circle" style="margin-top: 0.125rem;"></i>
+                            <span>Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -299,6 +325,80 @@
             </button>
             <button onclick="closeRejectModal()" class="btn" style="flex: 1; background: #6b7280; color: white; padding: 0.75rem;">
                 <i class="fas fa-ban"></i> Batal
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Complete Modal with Photo Upload -->
+<div id="completeModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); overflow-y: auto; padding: 20px 0;">
+    <div style="background: white; max-width: 600px; margin: 20px auto; padding: 0; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden;">
+        <!-- Header -->
+        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 1.5rem; text-align: center;">
+            <div style="width: 60px; height: 60px; background: white; border-radius: 50%; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);">
+                <i class="fas fa-camera" style="font-size: 1.75rem; color: #10b981;"></i>
+            </div>
+            <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700;">
+                Upload Foto Hasil Cucian
+            </h3>
+            <p style="margin: 0.5rem 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">
+                Pesanan #<?= $booking['id'] ?> - <?= $booking['full_name'] ?>
+            </p>
+        </div>
+
+        <!-- Body -->
+        <div style="padding: 1.5rem;">
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 0.875rem; border-radius: 0.5rem; margin-bottom: 1.25rem;">
+                <div style="display: flex; align-items: start; gap: 0.75rem;">
+                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b; font-size: 1.1rem; margin-top: 0.25rem;"></i>
+                    <div>
+                        <strong style="color: #92400e; display: block; margin-bottom: 0.25rem; font-size: 0.95rem;">Penting!</strong>
+                        <p style="margin: 0; color: #78350f; font-size: 0.875rem; line-height: 1.5;">
+                            Upload foto hasil cucian sepatu yang sudah selesai dikerjakan. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.75rem; font-size: 1rem;">
+                    <i class="fas fa-image"></i> Pilih Foto Hasil Cucian <span style="color: #ef4444;">*</span>
+                </label>
+                <input 
+                    type="file" 
+                    id="fotoHasil" 
+                    accept="image/jpeg,image/jpg,image/png"
+                    style="width: 100%; padding: 0.875rem; border: 2px dashed #d1d5db; border-radius: 0.5rem; cursor: pointer; font-size: 0.95rem;"
+                    onchange="this.style.borderColor='#10b981'"
+                >
+                <div style="display: flex; gap: 1rem; margin-top: 0.625rem;">
+                    <small style="color: #6b7280; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Format: JPG, JPEG, PNG
+                    </small>
+                    <small style="color: #6b7280; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
+                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Maksimal: 5MB
+                    </small>
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div id="previewContainer" style="display: none; margin-bottom: 1.25rem;">
+                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.625rem; font-size: 0.95rem;">
+                    <i class="fas fa-eye"></i> Preview Foto:
+                </label>
+                <div style="text-align: center; padding: 0.75rem; background: #f9fafb; border-radius: 0.5rem; border: 2px solid #10b981;">
+                    <img id="previewImage" style="max-width: 100%; max-height: 250px; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: #f9fafb; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; border-top: 1px solid #e5e7eb;">
+            <button onclick="confirmComplete()" class="btn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: all 0.2s;">
+                <i class="fas fa-check-circle"></i> Upload & Tandai Selesai
+            </button>
+            <button onclick="closeCompleteModal()" class="btn" style="flex: 1; background: #e5e7eb; color: #374151; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s;">
+                <i class="fas fa-times"></i> Batal
             </button>
         </div>
     </div>
@@ -431,6 +531,107 @@ function showRejectModal() {
 function closeRejectModal() {
     document.getElementById('rejectModal').style.display = 'none';
     document.getElementById('rejectReason').value = '';
+}
+
+function showCompleteModal() {
+    document.getElementById('completeModal').style.display = 'block';
+}
+
+function closeCompleteModal() {
+    document.getElementById('completeModal').style.display = 'none';
+    document.getElementById('fotoHasil').value = '';
+    document.getElementById('previewContainer').style.display = 'none';
+}
+
+// Preview foto sebelum upload
+document.addEventListener('DOMContentLoaded', function() {
+    const fotoInput = document.getElementById('fotoHasil');
+    if (fotoInput) {
+        fotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('previewContainer').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+
+function confirmComplete() {
+    const fotoInput = document.getElementById('fotoHasil');
+    const file = fotoInput.files[0];
+    
+    if (!file) {
+        alert('Foto hasil cucian wajib diupload!');
+        return;
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!validTypes.includes(file.type)) {
+        alert('Format foto harus JPG, JPEG, atau PNG!');
+        return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Ukuran foto maksimal 5MB!');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('status', 'selesai');
+    formData.append('foto_hasil', file);
+
+    // Show loading indicator
+    const submitBtn = event.target;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengupload...';
+    }
+
+    // Use POST for file upload (PUT doesn't support multipart/form-data properly)
+    fetch('<?= base_url() ?>/admin/bookings/' + bookingId + '/status', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+            // Close modal
+            closeCompleteModal();
+            
+            // Show success message
+            alert('✅ Pesanan berhasil ditandai selesai!\n\n📸 Foto hasil cucian telah diupload\n🔔 Customer telah menerima notifikasi\n📦 Sepatu siap diambil/diantar');
+            
+            // Reload page to show updated status
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            alert('❌ Error: ' + (data.message || 'Gagal mengubah status'));
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Terjadi kesalahan saat upload foto.\n\nCek console untuk detail atau coba lagi.');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+        }
+    });
 }
 
 function confirmReject() {

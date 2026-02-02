@@ -2,92 +2,106 @@
 
 <?= $this->section('content') ?>
 
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="auth-card-header">
-            <div class="auth-icon">
-                <i class="fas fa-user-lock"></i>
-            </div>
-            <h1>Login</h1>
-            <p class="auth-card-description">Masuk untuk melanjutkan</p>
-        </div>
-
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i>
-                <span><?= session()->getFlashdata('error') ?></span>
-            </div>
-        <?php endif; ?>
-
-        <form action="/login" method="POST">
-            <?= csrf_field() ?>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    class="form-control" 
-                    placeholder="Masukkan email"
-                    required
-                    value="<?= old('email') ?>"
-                >
-                <?php if (session()->getFlashdata('email_error')): ?>
-                    <small style="color: #ef4444;">
-                        <?= session()->getFlashdata('email_error') ?>
-                    </small>
-                <?php endif; ?>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div style="position: relative;">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="form-control" 
-                        placeholder="Masukkan password"
-                        style="padding-right: 3rem;"
-                        required
-                    >
-                    <button 
-                        type="button" 
-                        onclick="togglePassword('password', this)" 
-                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; padding: 0.5rem;"
-                    >
-                        <i class="fas fa-eye" id="password-icon"></i>
-                    </button>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-lock text-white text-3xl"></i>
                 </div>
-                <?php if (session()->getFlashdata('password_error')): ?>
-                    <small style="color: #ef4444;">
-                        <?= session()->getFlashdata('password_error') ?>
-                    </small>
-                <?php endif; ?>
+                <h1 class="text-3xl font-bold text-gray-900">Login</h1>
+                <p class="text-gray-600 mt-2">Masuk untuk melanjutkan</p>
             </div>
 
-            <div class="form-check">
-                <input 
-                    type="checkbox" 
-                    id="remember" 
-                    name="remember"
-                >
-                <label for="remember">Ingat saya</label>
-            </div>
+            <!-- Error Alert -->
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                        <span class="text-red-700"><?= session()->getFlashdata('error') ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-            <button type="submit" class="btn btn-primary btn-block btn-lg mt-3">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
+            <!-- Form -->
+            <form action="/login" method="POST" class="space-y-6">
+                <?= csrf_field() ?>
 
-            <div class="auth-footer" style="margin-top: 1.5rem;">
-                Belum punya akun? <a href="/register">Daftar di sini</a>
-            </div>
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        placeholder="Masukkan email"
+                        required
+                        value="<?= old('email') ?>"
+                    >
+                    <?php if (session()->getFlashdata('email_error')): ?>
+                        <p class="text-red-500 text-sm mt-1">
+                            <?= session()->getFlashdata('email_error') ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
 
-            <div class="auth-footer" style="margin-top: 1rem;">
-                <a href="/forgot-password">Lupa password?</a>
-            </div>
-        </form>
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Masukkan password"
+                            required
+                        >
+                        <button 
+                            type="button" 
+                            onclick="togglePassword('password', this)" 
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        >
+                            <i class="fas fa-eye" id="password-icon"></i>
+                        </button>
+                    </div>
+                    <?php if (session()->getFlashdata('password_error')): ?>
+                        <p class="text-red-500 text-sm mt-1">
+                            <?= session()->getFlashdata('password_error') ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        name="remember"
+                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    >
+                    <label for="remember" class="ml-2 text-sm text-gray-700">Ingat saya</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </button>
+
+                <!-- Footer Links -->
+                <div class="text-center space-y-2 mt-6">
+                    <p class="text-gray-600">
+                        Belum punya akun? <a href="/register" class="text-blue-600 hover:text-blue-700 font-medium">Daftar di sini</a>
+                    </p>
+                    <p>
+                        <a href="/forgot-password" class="text-blue-600 hover:text-blue-700 font-medium text-sm">Lupa password?</a>
+                    </p>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

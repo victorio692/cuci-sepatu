@@ -2,162 +2,105 @@
 
 <?= $this->section('content') ?>
 
-<div class="dashboard">
+<div class="flex min-h-screen bg-gray-50">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <ul class="sidebar-menu">
-            <li>
-                <a href="/dashboard" class="active">
-                    <span class="sidebar-icon"><i class="fas fa-home"></i></span>
-                    Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/my-bookings">
-                    <span class="sidebar-icon"><i class="fas fa-calendar-check"></i></span>
-                    Pesanan Saya
-                </a>
-            </li>
-            <li>
-                <a href="/make-booking">
-                    <span class="sidebar-icon"><i class="fas fa-plus-circle"></i></span>
-                    Pesan Baru
-                </a>
-            </li>
-            <li>
-                <a href="/profile">
-                    <span class="sidebar-icon"><i class="fas fa-user-circle"></i></span>
-                    Profil
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="confirmLogout(event)" style="color: #ef4444;">
-                    <span class="sidebar-icon"><i class="fas fa-sign-out-alt"></i></span>
-                    Logout
-                </a>
-            </li>
-        </ul>
+    <aside class="w-64 bg-white shadow-lg fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+        </div>
+        <nav class="py-4">
+            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-900 bg-gray-100 border-l-4 border-blue-500">
+                <i class="fas fa-home mr-3"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-calendar-check mr-3"></i>
+                <span>Pesanan Saya</span>
+            </a>
+            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-plus-circle mr-3"></i>
+                <span>Pesan Baru</span>
+            </a>
+            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-user-circle mr-3"></i>
+                <span>Profil</span>
+            </a>
+            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
     </aside>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="dashboard-header">
-            <div class="dashboard-title">
-                <div>
-                    <h1>Selamat Datang, <?= $user['nama_lengkap'] ?? 'Guest' ?>!</h1>
-                    <p style="color: #6b7280; margin: 0;">Kelola pesanan dan layanan cuci sepatu Anda</p>
-                </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <!-- Notification Bell -->
-                    <div class="notification-bell-customer" onclick="toggleCustomerNotifications()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge-customer" id="notificationBadgeCustomer" style="display: none;">0</span>
-                        
-                        <!-- Notification Dropdown -->
-                        <div class="notification-dropdown-customer" id="notificationDropdownCustomer" style="display: none;">
-                            <div class="notification-header-customer">
-                                <span>Notifikasi</span>
-                                <button onclick="markAllAsReadCustomer(event)" class="mark-all-read-customer">Tandai semua dibaca</button>
-                            </div>
-                            <div class="notification-list-customer" id="notificationListCustomer">
-                                <div class="notification-empty-customer">
-                                    <i class="fas fa-inbox"></i>
-                                    <p>Tidak ada notifikasi baru</p>
+    <div class="flex-1 ml-64">
+        <div class="p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang, <?= $user['nama_lengkap'] ?? 'Guest' ?>!</h1>
+                <p class="text-gray-600">Kelola pesanan dan layanan cuci sepatu Anda</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button onclick="toggleCustomerNotifications()" class="relative p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span id="notificationBadgeCustomer" class="hidden absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
+                            </button>
+                            
+                            <!-- Notification Dropdown -->
+                            <div id="notificationDropdownCustomer" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
+                                <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                                    <span class="font-semibold text-gray-800">Notifikasi</span>
+                                    <button onclick="markAllAsReadCustomer(event)" class="text-sm text-blue-600 hover:text-blue-700">Tandai semua dibaca</button>
+                                </div>
+                                <div id="notificationListCustomer" class="max-h-96 overflow-y-auto">
+                                    <div class="p-8 text-center text-gray-500">
+                                        <i class="fas fa-inbox text-4xl mb-2"></i>
+                                        <p>Tidak ada notifikasi baru</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <a href="/make-booking" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Pesan Sekarang
+                    <a href="/make-booking" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-plus mr-2"></i> Pesan Sekarang
                     </a>
                 </div>
             </div>
 
             <!-- Stats -->
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-label">Total Pesanan</div>
-                    <div class="stat-value"><?= $total_bookings ?></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+                    <div class="text-sm font-medium text-blue-600 mb-1">Total Pesanan</div>
+                    <div class="text-3xl font-bold text-blue-900"><?= $total_bookings ?></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Pesanan Aktif</div>
-                    <div class="stat-value" style="color: #f59e0b;"><?= $active_bookings ?></div>
+                <div class="bg-orange-50 rounded-lg p-6 border-l-4 border-orange-500">
+                    <div class="text-sm font-medium text-orange-600 mb-1">Pesanan Aktif</div>
+                    <div class="text-3xl font-bold text-orange-900"><?= $active_bookings ?></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Selesai</div>
-                    <div class="stat-value" style="color: #10b981;"><?= $completed_bookings ?></div>
+                <div class="bg-green-50 rounded-lg p-6 border-l-4 border-green-500">
+                    <div class="text-sm font-medium text-green-600 mb-1">Selesai</div>
+                    <div class="text-3xl font-bold text-green-900"><?= $completed_bookings ?></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Pengeluaran</div>
-                    <div class="stat-value">Rp <?= number_format($total_spent, 0, ',', '.') ?></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Bookings -->
-        <div class="card">
-            <div class="card-header">
-                <h3>Pesanan Terbaru</h3>
-            </div>
-            <div class="card-body">
-                <div class="text-center p-4">
-                    <i class="fas fa-inbox" style="font-size: 3rem; color: #d1d5db;"></i>
-                    <p style="color: #6b7280; margin-top: 1rem;">Anda belum memiliki pesanan.</p>
-                    <a href="/make-booking" class="btn btn-primary mt-2">Pesan Sekarang</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Links -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
-            <div class="card">
-                <div class="card-body">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-                            <i class="fas fa-plus-circle"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0;">Pesan Baru</h4>
-                            <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">Mulai pesanan baru</p>
-                        </div>
-                    </div>
-                    <a href="/make-booking" style="display: block; margin-top: 1rem; text-align: center;" class="btn btn-primary btn-sm">
-                        Pesan
-                    </a>
+                <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
+                    <div class="text-sm font-medium text-purple-600 mb-1">Total Pengeluaran</div>
+                    <div class="text-3xl font-bold text-purple-900">Rp <?= number_format($total_spent, 0, ',', '.') ?></div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0;">Profil</h4>
-                            <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">Update data pribadi</p>
-                        </div>
-                    </div>
-                    <a href="/profile" style="display: block; margin-top: 1rem; text-align: center;" class="btn btn-primary btn-sm">
-                        Lihat
-                    </a>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 50px; height: 50px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-                            <i class="fas fa-headset"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0;">Dukungan</h4>
-                            <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">Hubungi customer service</p>
-                        </div>
-                    </div>
-                    <a href="/kontak" style="display: block; margin-top: 1rem; text-align: center;" class="btn btn-primary btn-sm">
-                        Hubungi
+            <!-- Recent Bookings -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Pesanan Terbaru</h3>
+                <div class="text-center py-12">
+                    <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-600 mb-4">Anda belum memiliki pesanan.</p>
+                    <a href="/make-booking" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
+                        Pesan Sekarang
                     </a>
                 </div>
             </div>

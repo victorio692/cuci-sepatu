@@ -2,182 +2,173 @@
 
 <?= $this->section('content') ?>
 
-<div class="dashboard">
+<div class="flex min-h-screen bg-gray-50">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <ul class="sidebar-menu">
-            <li>
-                <a href="/dashboard">
-                    <span class="sidebar-icon"><i class="fas fa-home"></i></span>
-                    Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/my-bookings">
-                    <span class="sidebar-icon"><i class="fas fa-calendar-check"></i></span>
-                    Pesanan Saya
-                </a>
-            </li>
-            <li>
-                <a href="/make-booking" class="active">
-                    <span class="sidebar-icon"><i class="fas fa-plus-circle"></i></span>
-                    Pesan Baru
-                </a>
-            </li>
-            <li>
-                <a href="/profile">
-                    <span class="sidebar-icon"><i class="fas fa-user-circle"></i></span>
-                    Profil
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="confirmLogout(event)" style="color: #ef4444;">
-                    <span class="sidebar-icon"><i class="fas fa-sign-out-alt"></i></span>
-                    Logout
-                </a>
-            </li>
-        </ul>
+    <aside class="w-64 bg-white shadow-lg fixed h-full">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+        </div>
+        <nav class="py-4">
+            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-home mr-3"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-calendar-check mr-3"></i>
+                <span>Pesanan Saya</span>
+            </a>
+            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-900 bg-gray-100 border-l-4 border-blue-500">
+                <i class="fas fa-plus-circle mr-3"></i>
+                <span>Pesan Baru</span>
+            </a>
+            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
+                <i class="fas fa-user-circle mr-3"></i>
+                <span>Profil</span>
+            </a>
+            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
     </aside>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div style="margin-bottom: 2rem;">
-            <a href="/dashboard" class="btn-back">
-                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-            </a>
-        </div>
-
-        <h1 style="margin-bottom: 2rem;">Buat Booking Baru</h1>
-
-        <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                <span><?= session()->getFlashdata('success') ?></span>
+    <div class="flex-1 ml-64">
+        <div class="p-8">
+            <!-- Back Button -->
+            <div class="mb-6">
+                <a href="/dashboard" class="ripple inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+                </a>
             </div>
-        <?php endif; ?>
 
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i>
-                <span><?= session()->getFlashdata('error') ?></span>
-            </div>
-        <?php endif; ?>
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Buat Booking Baru</h1>
 
-        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
-            <!-- Left Column: Form -->
-            <div>
-                <form action="/submit-booking" method="POST" id="bookingForm" enctype="multipart/form-data">
-                    <?= csrf_field() ?>
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                        <span class="text-green-800"><?= session()->getFlashdata('success') ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-                    <!-- Service Selection -->
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
+                        <span class="text-red-800"><?= session()->getFlashdata('error') ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Form -->
+                <div class="lg:col-span-2">
+                    <form action="/submit-booking" method="POST" id="bookingForm" enctype="multipart/form-data" class="bg-white rounded-xl shadow-lg p-6">
+                        <?= csrf_field() ?>
+
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Pilih Layanan</h2>
+
+                        <!-- Service Selection -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         <!-- Fast Cleaning -->
-                        <label class="service-radio-card">
-                            <input type="radio" name="service" value="fast-cleaning" data-price="15000" required>
-                            <div class="service-radio-content">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                    <div>
-                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Fast Cleaning</h3>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan cuci cepat yang praktis</p>
-                                    </div>
-                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                            <input type="radio" name="service" value="fast-cleaning" data-price="15000" required class="absolute opacity-0">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Fast Cleaning</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Layanan cuci cepat yang praktis</p>
                                 </div>
-                                <div style="margin-top: 0.75rem;">
-                                    <span style="color: #3b82f6; font-weight: 600;">Rp 15,000</span>
-                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
-                                </div>
-                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                                <i class="fas fa-star text-yellow-400 text-xl"></i>
                             </div>
+                            <div class="mt-3">
+                                <span class="text-blue-600 font-semibold text-lg">Rp 15,000</span>
+                                <span class="text-gray-400 text-sm">/pasang</span>
+                            </div>
+                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
                         </label>
 
                         <!-- Deep Cleaning -->
-                        <label class="service-radio-card">
-                            <input type="radio" name="service" value="deep-cleaning" data-price="20000">
-                            <div class="service-radio-content">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                    <div>
-                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Deep Cleaning</h3>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan cuci full yang lebih detail</p>
-                                    </div>
-                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                            <input type="radio" name="service" value="deep-cleaning" data-price="20000" class="absolute opacity-0">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Deep Cleaning</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Layanan cuci full yang lebih detail</p>
                                 </div>
-                                <div style="margin-top: 0.75rem;">
-                                    <span style="color: #3b82f6; font-weight: 600;">Rp 20,000</span>
-                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
-                                </div>
-                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                                <i class="fas fa-star text-yellow-400 text-xl"></i>
                             </div>
+                            <div class="mt-3">
+                                <span class="text-blue-600 font-semibold text-lg">Rp 20,000</span>
+                                <span class="text-gray-400 text-sm">/pasang</span>
+                            </div>
+                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
                         </label>
 
                         <!-- Suede Treatment -->
-                        <label class="service-radio-card">
-                            <input type="radio" name="service" value="suede-treatment" data-price="30000">
-                            <div class="service-radio-content">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                    <div>
-                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Suede Treatment</h3>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan Khusus untuk sepatu Bahan Suede</p>
-                                    </div>
-                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                            <input type="radio" name="service" value="suede-treatment" data-price="30000" class="absolute opacity-0">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Suede Treatment</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Layanan Khusus untuk sepatu Bahan Suede</p>
                                 </div>
-                                <div style="margin-top: 0.75rem;">
-                                    <span style="color: #3b82f6; font-weight: 600;">Rp 30,000</span>
-                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
-                                </div>
-                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                                <i class="fas fa-star text-yellow-400 text-xl"></i>
                             </div>
+                            <div class="mt-3">
+                                <span class="text-blue-600 font-semibold text-lg">Rp 30,000</span>
+                                <span class="text-gray-400 text-sm">/pasang</span>
+                            </div>
+                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
                         </label>
 
                         <!-- White Shoes -->
-                        <label class="service-radio-card">
-                            <input type="radio" name="service" value="white-shoes" data-price="35000">
-                            <div class="service-radio-content">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                    <div>
-                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">White Shoes</h3>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan khusus untuk sepatu white midsole</p>
-                                    </div>
-                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                            <input type="radio" name="service" value="white-shoes" data-price="35000" class="absolute opacity-0">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">White Shoes</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Layanan khusus untuk sepatu white midsole</p>
                                 </div>
-                                <div style="margin-top: 0.75rem;">
-                                    <span style="color: #3b82f6; font-weight: 600;">Rp 35,000</span>
-                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
-                                </div>
-                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                                <i class="fas fa-star text-yellow-400 text-xl"></i>
                             </div>
+                            <div class="mt-3">
+                                <span class="text-blue-600 font-semibold text-lg">Rp 35,000</span>
+                                <span class="text-gray-400 text-sm">/pasang</span>
+                            </div>
+                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
                         </label>
 
                         <!-- Unyellowing -->
-                        <label class="service-radio-card">
-                            <input type="radio" name="service" value="unyellowing" data-price="30000">
-                            <div class="service-radio-content">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                    <div>
-                                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem;">Unyellowing</h3>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.85rem;">Layanan penyegaran/kuningan midsole</p>
-                                    </div>
-                                    <i class="fas fa-star" style="color: #fbbf24; font-size: 1.25rem;"></i>
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                            <input type="radio" name="service" value="unyellowing" data-price="30000" class="absolute opacity-0">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-900">Unyellowing</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Layanan penyegaran/kuningan midsole</p>
                                 </div>
-                                <div style="margin-top: 0.75rem;">
-                                    <span style="color: #3b82f6; font-weight: 600;">Rp 30,000</span>
-                                    <span style="color: #9ca3af; font-size: 0.85rem;">/pasang</span>
-                                </div>
-                                <div style="margin-top: 0.5rem; color: #9ca3af; font-size: 0.8rem;">1 hari</div>
+                                <i class="fas fa-star text-yellow-400 text-xl"></i>
                             </div>
+                            <div class="mt-3">
+                                <span class="text-blue-600 font-semibold text-lg">Rp 30,000</span>
+                                <span class="text-gray-400 text-sm">/pasang</span>
+                            </div>
+                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
                         </label>
                     </div>
 
                     <!-- Hidden fields for shoe details -->
                     <input type="hidden" name="shoe_type" value="sneaker">
                     <input type="hidden" name="shoe_condition" value="normal">
-                    <input type="hidden" name="delivery_option" value="pickup">
-                    <input type="hidden" name="delivery_address" value="">
+
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 mt-8">Detail Pesanan</h2>
 
                     <!-- Jumlah Sepatu -->
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jumlah Sepatu</label>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <button type="button" id="btnMinus" class="btn-quantity">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Jumlah Sepatu</label>
+                        <div class="flex items-center gap-4">
+                            <button type="button" id="btnMinus" class="ripple w-10 h-10 border-2 border-gray-300 bg-white rounded-lg hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition flex items-center justify-center">
                                 <i class="fas fa-minus"></i>
                             </button>
                             <input 
@@ -187,91 +178,144 @@
                                 value="1" 
                                 min="1"
                                 readonly
-                                style="width: 80px; text-align: center; border: 1px solid #e5e7eb; padding: 0.5rem; border-radius: 0.375rem; font-size: 1.1rem; font-weight: 600;"
+                                class="w-20 text-center border border-gray-300 rounded-lg py-2 text-lg font-semibold focus:outline-none focus:border-blue-500"
                                 required
                             >
-                            <button type="button" id="btnPlus" class="btn-quantity">
+                            <button type="button" id="btnPlus" class="ripple w-10 h-10 border-2 border-gray-300 bg-white rounded-lg hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition flex items-center justify-center">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
 
+                    <!-- Opsi Pengiriman -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-3">
+                            <i class="fas fa-shipping-fast text-blue-500 mr-1"></i> Opsi Pengiriman <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Ambil di Tempat -->
+                            <label class="delivery-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                                <input type="radio" name="delivery_option" value="pickup" checked required class="absolute opacity-0">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-store text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">Ambil di Tempat</h4>
+                                        <p class="text-sm text-gray-600">Ambil sendiri di SYH.CLEANING</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Diantar ke Rumah -->
+                            <label class="delivery-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                                <input type="radio" name="delivery_option" value="delivery" required class="absolute opacity-0">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-home text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">Diantar ke Rumah</h4>
+                                        <p class="text-sm text-gray-600">Kami antar ke alamat Anda</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Pengiriman (conditional) -->
+                    <div id="deliveryAddressSection" class="mb-6 hidden">
+                        <label for="delivery_address" class="block text-gray-700 font-medium mb-2">
+                            <i class="fas fa-map-marker-alt text-green-500 mr-1"></i> Alamat Pengiriman <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="delivery_address" 
+                            name="delivery_address" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                            rows="3" 
+                            placeholder="Masukkan alamat lengkap untuk pengiriman..."
+                        ></textarea>
+                        <small class="text-gray-500 text-sm mt-1 block">
+                            <i class="fas fa-info-circle"></i> Pastikan alamat lengkap dan jelas agar sepatu dapat diantar dengan tepat
+                        </small>
+                    </div>
+
                     <!-- Tanggal Masuk -->
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label for="delivery_date" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tanggal masuk</label>
+                    <div class="mb-6">
+                        <label for="delivery_date" class="block text-gray-700 font-medium mb-2">Tanggal masuk</label>
                         <input 
                             type="date" 
                             id="delivery_date" 
                             name="delivery_date" 
-                            class="form-control"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
                     </div>
 
                     <!-- Jam Booking -->
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label for="booking_time" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jam Booking</label>
+                    <div class="mb-6">
+                        <label for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</label>
                         <input 
                             type="time" 
                             id="booking_time" 
                             name="booking_time" 
-                            class="form-control"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
-                        <small style="color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem; display: block;">
+                        <small class="text-gray-500 text-sm mt-1 block">
                             Waktu saat ini: <span id="currentTime"></span>
                         </small>
                     </div>
 
                     <!-- Catatan -->
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label for="notes" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Catatan</label>
+                    <div class="mb-6">
+                        <label for="notes" class="block text-gray-700 font-medium mb-2">Catatan</label>
                         <textarea 
                             id="notes" 
                             name="notes" 
-                            class="form-control" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
                             rows="4" 
                             placeholder="Tulis catatan di sini..."
                         ></textarea>
                     </div>
 
                     <!-- Foto Sepatu -->
-                    <div class="form-group" style="margin-bottom: 2rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">
-                            Foto Sepatu <span style="color: #ef4444;">*</span>
+                    <div class="mb-8">
+                        <label class="block text-gray-700 font-medium mb-2">
+                            Foto Sepatu <span class="text-red-500">*</span>
                         </label>
-                        <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required style="display: none;">
+                        <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required class="hidden">
                         
-                        <div id="uploadArea" style="border: 2px dashed #e5e7eb; border-radius: 0.5rem; padding: 2rem; text-align: center; background: #f9fafb; transition: all 0.3s ease;">
-                            <div style="margin-bottom: 1rem;">
-                                <i class="fas fa-image" style="font-size: 3rem; color: #3b82f6;"></i>
+                        <div id="uploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50 transition hover:border-blue-500 hover:bg-blue-50">
+                            <div class="mb-4">
+                                <i class="fas fa-image text-6xl text-blue-500"></i>
                             </div>
-                            <p style="margin: 0 0 0.5rem 0; font-weight: 500; color: #374151;">Upload Foto Sepatu Anda</p>
-                            <p style="margin: 0 0 1rem 0; color: #6b7280; font-size: 0.85rem;">PNG, JPG, JPEG (Maks. 5 MB)</p>
+                            <p class="text-gray-800 font-medium mb-1">Upload Foto Sepatu Anda</p>
+                            <p class="text-gray-600 text-sm mb-4">PNG, JPG, JPEG (Maks. 5 MB)</p>
                             
-                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="btn-upload">
+                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
                                 <i class="fas fa-camera"></i> Pilih Foto
                             </button>
                             
-                            <p style="margin: 1rem 0 0 0; color: #9ca3af; font-size: 0.8rem;">
+                            <p class="text-gray-400 text-xs mt-4">
                                 <i class="fas fa-hand-pointer"></i> atau seret file kesini
                             </p>
-                            <p style="margin: 0.5rem 0 0 0; color: #ef4444; font-size: 0.85rem;">
+                            <p class="text-red-500 text-sm mt-2">
                                 <i class="fas fa-exclamation-circle"></i> Wajib upload foto sepatu
                             </p>
                         </div>
                         
-                        <div id="imagePreview" style="display: none; margin-top: 1rem;">
-                            <div style="position: relative; display: inline-block;">
-                                <img id="previewImg" src="" style="max-width: 100%; max-height: 300px; border-radius: 0.5rem; border: 2px solid #3b82f6; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-                                <div style="position: absolute; top: -10px; right: -10px;">
-                                    <button type="button" onclick="removeImage()" class="btn-remove-photo">
+                        <div id="imagePreview" class="hidden mt-4">
+                            <div class="relative inline-block">
+                                <img id="previewImg" src="" class="max-w-full max-h-80 rounded-lg border-2 border-blue-500 shadow-lg">
+                                <div class="absolute -top-2 -right-2">
+                                    <button type="button" onclick="removeImage()" class="ripple w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center border-2 border-white shadow-md transition hover:scale-110">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div style="margin-top: 1rem; text-align: center;">
-                                <button type="button" onclick="document.getElementById('shoe_photo').click()" class="btn btn-outline btn-sm">
+                            <div class="mt-4 text-center">
+                                <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
                                     <i class="fas fa-sync-alt"></i> Ganti Foto
                                 </button>
                             </div>
@@ -279,43 +323,47 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-                        <i class="fas fa-check-circle"></i> Buat Booking
+                    <button type="submit" class="ripple w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-bold text-lg hover:shadow-xl transform hover:-translate-y-0.5 transition">
+                        <i class="fas fa-check-circle mr-2"></i> Buat Booking
                     </button>
                 </form>
             </div>
 
             <!-- Right Column: Summary -->
             <div>
-                <div class="card" style="position: sticky; top: 2rem;">
-                    <div class="card-header">
-                        <h3 style="margin: 0;"><i class="fas fa-clipboard-list"></i> Ringkasan Booking</h3>
+                <div class="bg-white rounded-xl shadow-lg sticky top-8 overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-xl p-6">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <i class="fas fa-clipboard-list"></i> Ringkasan Booking
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div style="margin-bottom: 1rem;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                                <span style="color: #6b7280;">Layanan</span>
-                                <span id="summaryService" style="font-weight: 600;">-</span>
+                    <div class="p-6">
+                        <div class="space-y-3 mb-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Layanan</span>
+                                <span id="summaryService" class="font-semibold text-gray-900">-</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                                <span style="color: #6b7280;">Harga/Sepatu</span>
-                                <span id="summaryPrice" style="font-weight: 600;">Rp 0</span>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Harga/Sepatu</span>
+                                <span id="summaryPrice" class="font-semibold text-gray-900">Rp 0</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                                <span style="color: #6b7280;">Jumlah</span>
-                                <span id="summaryQuantity" style="font-weight: 600;">1 pasang</span>
-                            </div>
-                            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 1rem 0;">
-                            <div style="display: flex; justify-content: space-between; font-size: 1.1rem;">
-                                <span style="font-weight: 600;">Total</span>
-                                <span id="summaryTotal" style="font-weight: 700; color: #3b82f6;">Rp 0</span>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Jumlah</span>
+                                <span id="summaryQuantity" class="font-semibold text-gray-900">1 pasang</span>
                             </div>
                         </div>
+                        
+                        <hr class="border-gray-300 my-4">
+                        
+                        <div class="flex justify-between items-center mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 transition-all duration-300 hover:shadow-md">
+                            <span class="font-bold text-gray-900 text-xl">Total</span>
+                            <span id="summaryTotal" class="font-bold text-blue-600 text-2xl">Rp 0</span>
+                        </div>
 
-                        <div style="background: #eff6ff; border: 1px solid #3b82f6; border-radius: 0.5rem; padding: 1rem; margin-top: 1.5rem;">
-                            <div style="display: flex; gap: 0.5rem;">
-                                <i class="fas fa-info-circle" style="color: #3b82f6; margin-top: 0.25rem;"></i>
-                                <p style="margin: 0; color: #1e40af; font-size: 0.85rem;">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex gap-3">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                                <p class="text-blue-900 text-sm">
                                     Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.
                                 </p>
                             </div>
@@ -329,53 +377,210 @@
 
 <?= $this->endSection() ?>
 
-<?= $this->section('extra_css') ?>
+<?= $this->section('extra_js') ?>
 <style>
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background-color: #e5e7eb;
-    color: #374151;
-    text-decoration: none;
-    border-radius: 0.375rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+/* Button Animation Styles */
+button, a.inline-flex {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-back:hover {
-    background-color: #d1d5db;
+button:active, a.inline-flex:active {
+    transform: scale(0.95);
 }
 
-.service-radio-card {
-    position: relative;
-    display: block;
+button:hover:not(:disabled), a.inline-flex:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Gradient Button Glow Effect */
+button.bg-gradient-to-r:hover,
+button[type="submit"]:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Red Button Glow */
+.bg-red-500:hover {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6), 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Service and Delivery Cards Animation */
+label {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    transition: all 0.3s ease;
-    background: white;
 }
 
-.service-radio-card:hover {
-    border-color: #3b82f6;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+label:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
-.service-radio-card input[type="radio"] {
+label:active {
+    transform: scale(0.98);
+}
+
+/* Ripple Effect */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
     position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    pointer-events: none;
 }
 
-.service-radio-card input[type="radio"]:checked + .service-radio-content {
-    background: #eff6ff;
+.ripple:active::after {
+    animation: ripple 0.6s ease-out;
 }
 
-.service-radio-card input[type="radio"]:checked ~ .service-radio-content::before {
+/* Pulse Animation for Selected Items */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+}
+
+/* Sidebar Menu Animation */
+aside ul li a {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+aside ul li a:hover {
+    transform: translateX(5px);
+}
+
+aside ul li a:active {
+    transform: scale(0.97);
+}
+
+/* Total Section Highlight */
+#summaryTotal {
+    transition: all 0.3s ease;
+}
+
+#summaryTotal:hover {
+    transform: scale(1.05);
+}
+
+/* Smooth transitions for all elements */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading State for Buttons */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+button.loading {
+    position: relative;
+    color: transparent;
+}
+
+button.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Shake Animation for Errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Selected service card styling */
+label:has(input[type="radio"]:checked) {
+    border-color: #3b82f6 !important;
+    background-color: #eff6ff !important;
+    animation: pulse 2s infinite;
+}
+
+label:has(input[type="radio"]:checked)::after {
+    content: '\f058';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #3b82f6;
+    font-size: 1.5rem;
+}
+
+/* Delivery option styling */
+.delivery-option:has(input[type="radio"]:checked) {
+    border-color: #3b82f6 !important;
+    background-color: #eff6ff !important;
+}
+
+.delivery-option:has(input[type="radio"]:checked)::after {
     content: '\f058';
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
@@ -385,120 +590,8 @@
     color: #3b82f6;
     font-size: 1.25rem;
 }
-
-.service-radio-card input[type="radio"]:checked {
-    border-color: #3b82f6;
-}
-
-.service-radio-card:has(input:checked) {
-    border-color: #3b82f6;
-    background: #eff6ff;
-}
-
-.service-radio-content {
-    position: relative;
-    transition: all 0.3s ease;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-}
-
-.btn-quantity {
-    width: 40px;
-    height: 40px;
-    border: 2px solid #e5e7eb;
-    background: white;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #374151;
-}
-
-.btn-quantity:hover {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    background: #eff6ff;
-}
-
-.btn-quantity:active {
-    transform: scale(0.95);
-}
-
-.btn-outline {
-    background: white;
-    border: 1px solid #d1d5db;
-    color: #374151;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.875rem;
-}
-
-.btn-outline:hover {
-    background: #f9fafb;
-    border-color: #9ca3af;
-}
-
-.btn-sm {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8125rem;
-}
-
-.btn-upload {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-upload:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.4);
-}
-
-.btn-upload:active {
-    transform: translateY(0);
-}
-
-.btn-remove-photo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #ef4444;
-    color: white;
-    border: 2px solid white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn-remove-photo:hover {
-    background: #dc2626;
-    transform: scale(1.1);
-}
-
-#uploadArea {
-    cursor: default;
-}
 </style>
-<?= $this->endSection() ?>
 
-<?= $this->section('extra_js') ?>
 <script>
 // Quantity buttons
 document.getElementById('btnMinus').addEventListener('click', () => {
@@ -517,13 +610,35 @@ document.getElementById('btnPlus').addEventListener('click', () => {
     updateSummary();
 });
 
+// Quantity input change
+document.getElementById('quantity').addEventListener('change', updateSummary);
+document.getElementById('quantity').addEventListener('input', updateSummary);
+
 // Service selection
 const serviceRadios = document.querySelectorAll('input[name="service"]');
 serviceRadios.forEach(radio => {
     radio.addEventListener('change', updateSummary);
 });
 
-// Update summary
+// Delivery option handling
+const deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
+const deliveryAddressSection = document.getElementById('deliveryAddressSection');
+const deliveryAddressInput = document.getElementById('delivery_address');
+
+deliveryOptions.forEach(option => {
+    option.addEventListener('change', function() {
+        if (this.value === 'delivery') {
+            deliveryAddressSection.classList.remove('hidden');
+            deliveryAddressInput.required = true;
+        } else {
+            deliveryAddressSection.classList.add('hidden');
+            deliveryAddressInput.required = false;
+            deliveryAddressInput.value = '';
+        }
+    });
+});
+
+// Update summary with animation
 function updateSummary() {
     const selectedService = document.querySelector('input[name="service"]:checked');
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
@@ -532,14 +647,36 @@ function updateSummary() {
         const price = parseInt(selectedService.dataset.price);
         const total = price * quantity;
         
-        // Get service name
-        const serviceCard = selectedService.closest('.service-radio-card');
-        const serviceName = serviceCard.querySelector('h3').textContent;
+        // Get service name - perbaikan: label langsung parent dari input
+        const serviceLabel = selectedService.closest('label');
+        const serviceName = serviceLabel.querySelector('h3').textContent;
         
-        document.getElementById('summaryService').textContent = serviceName;
-        document.getElementById('summaryPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
-        document.getElementById('summaryQuantity').textContent = quantity + ' pasang';
-        document.getElementById('summaryTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        // Animate update
+        const summaryTotal = document.getElementById('summaryTotal');
+        const summaryService = document.getElementById('summaryService');
+        const summaryPrice = document.getElementById('summaryPrice');
+        const summaryQuantity = document.getElementById('summaryQuantity');
+        
+        // Add fade animation
+        [summaryTotal, summaryService, summaryPrice, summaryQuantity].forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(10px)';
+        });
+        
+        setTimeout(() => {
+            summaryService.textContent = serviceName;
+            summaryPrice.textContent = 'Rp ' + price.toLocaleString('id-ID');
+            summaryQuantity.textContent = quantity + ' pasang';
+            summaryTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            
+            [summaryTotal, summaryService, summaryPrice, summaryQuantity].forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.transition = 'all 0.3s ease-out';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        }, 150);
     }
 }
 
@@ -571,6 +708,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!selectedService) {
         e.preventDefault();
         alert('Pilih layanan terlebih dahulu');
+        // Scroll to service section with shake animation
+        const serviceSection = document.querySelector('[name="service"]').closest('.grid');
+        serviceSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        serviceSection.classList.add('shake');
+        setTimeout(() => serviceSection.classList.remove('shake'), 500);
         return;
     }
     
@@ -578,8 +720,32 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!shoePhoto.files || shoePhoto.files.length === 0) {
         e.preventDefault();
         alert('Wajib upload foto sepatu terlebih dahulu');
+        const photoSection = document.getElementById('uploadArea');
+        photoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        photoSection.classList.add('shake');
+        setTimeout(() => photoSection.classList.remove('shake'), 500);
         return;
     }
+    
+    // Check delivery address if delivery option is selected
+    const deliveryOption = document.querySelector('input[name="delivery_option"]:checked');
+    if (deliveryOption && deliveryOption.value === 'delivery') {
+        const deliveryAddress = document.getElementById('delivery_address').value.trim();
+        if (!deliveryAddress) {
+            e.preventDefault();
+            alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
+            const addressInput = document.getElementById('delivery_address');
+            addressInput.focus();
+            addressInput.classList.add('shake');
+            setTimeout(() => addressInput.classList.remove('shake'), 500);
+            return;
+        }
+    }
+    
+    // Add loading state to submit button
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
 });
 
 // File upload handling
@@ -595,6 +761,8 @@ fileInput.addEventListener('change', function(e) {
         if (file.size > 5 * 1024 * 1024) {
             alert('Ukuran file maksimal 5 MB');
             fileInput.value = '';
+            uploadArea.classList.add('shake');
+            setTimeout(() => uploadArea.classList.remove('shake'), 500);
             return;
         }
         
@@ -602,14 +770,18 @@ fileInput.addEventListener('change', function(e) {
         if (!file.type.match('image/(png|jpeg|jpg)')) {
             alert('Format file harus PNG, JPG, atau JPEG');
             fileInput.value = '';
+            uploadArea.classList.add('shake');
+            setTimeout(() => uploadArea.classList.remove('shake'), 500);
             return;
         }
         
-        // Show preview
+        // Show preview with animation
         const reader = new FileReader();
         reader.onload = function(event) {
             previewImg.src = event.target.result;
             uploadArea.style.display = 'none';
+            imagePreview.classList.remove('hidden');
+            imagePreview.classList.add('fade-in');
             imagePreview.style.display = 'block';
         };
         reader.readAsDataURL(file);
@@ -651,5 +823,13 @@ uploadArea.addEventListener('drop', (e) => {
 
 // Initialize
 updateSummary();
+
+// Logout confirmation
+function confirmLogout(e) {
+    e.preventDefault();
+    if (confirm('Apakah Anda yakin ingin logout?')) {
+        window.location.href = '/logout';
+    }
+}
 </script>
 <?= $this->endSection() ?>

@@ -16,6 +16,18 @@ class Auth extends BaseController
     // Show Login Page
     public function login()
     {
+        // Redirect jika sudah login
+        if (session()->get('user_id')) {
+            $user = $this->db->table('users')->where('id', session()->get('user_id'))->get()->getRow();
+            if ($user) {
+                if ($user->role === 'admin') {
+                    return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
+                } else {
+                    return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
+                }
+            }
+        }
+        
         return view('auth/login', ['title' => 'Login - SYH Cleaning']);
     }
 
@@ -54,6 +66,18 @@ class Auth extends BaseController
     // Show Register Page
     public function register()
     {
+        // Redirect jika sudah login
+        if (session()->get('user_id')) {
+            $user = $this->db->table('users')->where('id', session()->get('user_id'))->get()->getRow();
+            if ($user) {
+                if ($user->role === 'admin') {
+                    return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
+                } else {
+                    return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
+                }
+            }
+        }
+        
         return view('auth/register', ['title' => 'Daftar - SYH Cleaning']);
     }
 

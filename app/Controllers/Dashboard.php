@@ -28,6 +28,11 @@ class Dashboard extends BaseController
             return redirect()->to('/login')->with('error', 'User tidak ditemukan');
         }
 
+        // Cek jika user adalah admin, redirect ke halaman admin
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin.');
+        }
+
         // Get booking stats
         $total_bookings = $this->db->table('bookings')
             ->where('id_user', $user_id)

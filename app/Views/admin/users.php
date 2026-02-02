@@ -2,158 +2,191 @@
 
 <?= $this->section('content') ?>
 
-<div class="admin-container">
-    <div class="admin-header">
-        <h1>Pengguna</h1>
-        <p>Kelola pengguna dan akses mereka</p>
-    </div>
+<!-- Page Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Pengguna</h1>
+    <p class="text-gray-600">Kelola pengguna dan akses mereka</p>
+</div>
 
-    <!-- Filter & Search -->
-    <div class="admin-card" style="margin-bottom: 2rem;">
-        <div class="card-body">
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; align-items: end;">
-                <form action="/admin/users" method="GET" style="display: contents;">
-                    <div>
-                        <input 
-                            type="text" 
-                            name="search" 
-                            placeholder="Cari nama, email, nomor telepon..." 
-                            value="<?= $search ?>"
-                            class="form-control"
-                        >
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> Cari
-                    </button>
-                </form>
+<!-- Filter & Search -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+    <form action="/admin/users" method="GET" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pengguna</label>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Cari nama, email, nomor telepon..." 
+                    value="<?= $search ?>"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                >
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
-    </div>
 
-    <!-- Users Table -->
-    <div class="admin-card">
-        <div class="card-body" style="padding: 0;">
-            <?php if (!empty($users)): ?>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Telepon</th>
-                            <th>Bergabung</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($users as $user): ?>
-                            <tr>
-                                <td><strong>#<?= $user['id'] ?></strong></td>
-                                <td>
-                                    <div>
-                                        <strong><?= $user['full_name'] ?></strong>
-                                    </div>
-                                </td>
-                                <td><?= $user['email'] ?></td>
-                                <td><?= $user['phone'] ?></td>
-                                <td><?= date('d M Y', strtotime($user['created_at'])) ?></td>
-                                <td>
-                                    <button 
-                                        class="status-badge <?= $user['is_active'] ? 'active' : 'inactive' ?>"
-                                        onclick="toggleUserActive(this, <?= $user['id'] ?>)"
-                                        title="Click to toggle"
-                                    >
-                                        <i class="fas fa-<?= $user['is_active'] ? 'check-circle' : 'ban' ?>"></i>
-                                        <?= $user['is_active'] ? 'Active' : 'Inactive' ?>
-                                    </button>
-                                </td>
-                                <td>
-                                    <a href="/admin/users/<?= $user['id'] ?>" class="btn-link">
-                                        <i class="fas fa-eye"></i> Lihat
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-                <!-- Total Users -->
-                <div style="padding: 1.5rem; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280;">
-                    Total: <?= count($users) ?> pengguna
-                </div>
-            <?php else: ?>
-                <div style="padding: 2rem; text-align: center; color: #6b7280;">
-                    <i class="fas fa-users" style="font-size: 3rem; color: #d1d5db;"></i>
-                    <p style="margin-top: 1rem;">Tidak ada pengguna</p>
-                </div>
-            <?php endif; ?>
+        <div class="flex items-end">
+            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
+                <i class="fas fa-search"></i>
+                <span>Cari</span>
+            </button>
         </div>
+    </form>
+</div>
+
+<!-- Users Table -->
+<div class="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div class="overflow-x-auto">
+        <?php if (!empty($users)): ?>
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bergabung</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <?php foreach ($users as $user): ?>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="font-semibold text-gray-800">#<?= $user['id'] ?></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold mr-3">
+                                        <?= strtoupper(substr($user['full_name'], 0, 1)) ?>
+                                    </div>
+                                    <span class="font-medium text-gray-800"><?= $user['full_name'] ?></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm text-gray-700"><?= $user['email'] ?></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $user['phone'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-1">
+                                    <i class="fab fa-whatsapp"></i>
+                                    <span class="text-sm"><?= $user['phone'] ?></span>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-700"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button 
+                                    class="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer
+                                        <?= $user['is_active'] ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' ?>"
+                                    onclick="toggleUserActive(this, <?= $user['id'] ?>)"
+                                    title="Click to toggle"
+                                >
+                                    <i class="fas fa-<?= $user['is_active'] ? 'check-circle' : 'ban' ?>"></i>
+                                    <span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></span>
+                                </button>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="/admin/users/<?= $user['id'] ?>" 
+                                   class="inline-flex items-center space-x-1 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Lihat</span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <!-- Total Count -->
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
+                Total: <span class="font-semibold"><?= count($users) ?></span> pengguna
+            </div>
+        <?php else: ?>
+            <div class="p-12 text-center text-gray-500">
+                <i class="fas fa-users text-5xl mb-4 text-gray-300"></i>
+                <p class="text-lg">Tidak ada pengguna</p>
+                <p class="text-sm mt-2">Pengguna akan muncul di sini setelah registrasi</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
 <?= $this->endSection() ?>
 
-<?= $this->section('extra_css') ?>
-<style>
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.375rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.status-badge.active {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.status-badge.active:hover {
-    background-color: #a7f3d0;
-}
-
-.status-badge.inactive {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
-.status-badge.inactive:hover {
-    background-color: #fecaca;
-}
-</style>
-<?= $this->endSection() ?>
-
 <?= $this->section('extra_js') ?>
 <script>
 function toggleUserActive(element, userId) {
-    AdminAPI.post('/users/' + userId + '/toggle', {})
-        .then(data => {
-            // Toggle the status
-            const badge = element;
-            const isNowActive = data.is_active;
-            
-            if (isNowActive) {
-                badge.classList.remove('inactive');
-                badge.classList.add('active');
-                badge.innerHTML = '<i class="fas fa-check-circle"></i> Active';
-            } else {
-                badge.classList.remove('active');
-                badge.classList.add('inactive');
-                badge.innerHTML = '<i class="fas fa-ban"></i> Inactive';
-            }
-            
-            showToast('User status updated', 'success');
-        })
-        .catch(error => {
-            showToast('Failed to update user status', 'danger');
-        });
+    fetch('/admin/users/' + userId + '/toggle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const isNowActive = data.is_active;
+        
+        // Update button appearance
+        element.className = 'inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ' + 
+            (isNowActive ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200');
+        
+        element.innerHTML = `
+            <i class="fas fa-${isNowActive ? 'check-circle' : 'ban'}"></i>
+            <span>${isNowActive ? 'Active' : 'Inactive'}</span>
+        `;
+        
+        showToast('Status pengguna berhasil diupdate', 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Gagal update status pengguna', 'error');
+    });
+}
+
+function showToast(message, type) {
+    const bgColors = {
+        'success': 'bg-green-500',
+        'error': 'bg-red-500'
+    };
+    
+    const icons = {
+        'success': 'fa-check-circle',
+        'error': 'fa-exclamation-circle'
+    };
+    
+    const toast = document.createElement('div');
+    toast.className = `fixed top-20 right-4 ${bgColors[type]} text-white px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 z-50 animate-slide-in`;
+    toast.innerHTML = `
+        <i class="fas ${icons[type]} text-xl"></i>
+        <span class="font-medium">${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 </script>
+
+<style>
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.animate-slide-in {
+    animation: slide-in 0.3s ease;
+}
+</style>
 <?= $this->endSection() ?>

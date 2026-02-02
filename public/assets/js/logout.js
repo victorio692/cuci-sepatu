@@ -1,4 +1,3 @@
-<script>
 // Global logout function for all dashboard pages
 function confirmLogout(e) {
     e.preventDefault();
@@ -6,4 +5,3 @@ function confirmLogout(e) {
         window.location.href = '/logout';
     }
 }
-</script>

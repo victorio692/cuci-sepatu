@@ -191,8 +191,43 @@ const AdminUtils = {
     },
 };
 
+// Print Report Function (Global untuk semua halaman admin)
+function cetakLaporan() {
+    // Add print date to header
+    const header = document.querySelector('.admin-header');
+    if (header) {
+        const now = new Date();
+        const printDate = now.toLocaleDateString('id-ID', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        header.setAttribute('data-print-date', printDate);
+    }
+    
+    // Set page title for print
+    const originalTitle = document.title;
+    const pageName = document.querySelector('.admin-header h1')?.textContent || 'Laporan';
+    document.title = `${pageName} - SYH Cleaning`;
+    
+    // Add print-specific class to body
+    document.body.classList.add('printing');
+    
+    // Print
+    window.print();
+    
+    // Restore after print
+    setTimeout(() => {
+        document.title = originalTitle;
+        document.body.classList.remove('printing');
+    }, 100);
+}
+
 // Export for global use
 window.AdminAPI = AdminAPI;
 window.AdminUtils = AdminUtils;
 window.toggleUserMenu = toggleUserMenu;
 window.updateBookingBadge = updateBookingBadge;
+window.cetakLaporan = cetakLaporan;
