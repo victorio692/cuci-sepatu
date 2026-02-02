@@ -21,12 +21,8 @@ class Notifications extends Controller
             return redirect()->to('/login');
         }
 
-        $notifications = $this->db->table('notifications')
-            ->where('id_user', $userId)
-            ->orderBy('created_at', 'DESC')
-            ->limit(50)
-            ->get()
-            ->getResultArray();
+        // Note: notifications table doesn't exist in current DB
+        $notifications = [];
 
         return view('pages/notifications', [
             'notifications' => $notifications
@@ -41,22 +37,10 @@ class Notifications extends Controller
             return $this->response->setJSON(['count' => 0, 'notifications' => []]);
         }
 
-        $count = $this->db->table('notifications')
-            ->where('id_user', $userId)
-            ->where('dibaca', 0)
-            ->countAllResults();
-
-        $notifications = $this->db->table('notifications')
-            ->where('id_user', $userId)
-            ->where('dibaca', 0)
-            ->orderBy('created_at', 'DESC')
-            ->limit(5)
-            ->get()
-            ->getResultArray();
-
+        // Note: notifications table doesn't exist in current DB
         return $this->response->setJSON([
-            'count' => $count,
-            'notifications' => $notifications
+            'count' => 0,
+            'notifications' => []
         ]);
     }
 
@@ -64,20 +48,7 @@ class Notifications extends Controller
     {
         $userId = session()->get('user_id');
         
-        $notification = $this->db->table('notifications')
-            ->where('id', $id)
-            ->where('id_user', $userId)
-            ->get()
-            ->getRowArray();
-
-        if (!$notification) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Notification not found']);
-        }
-
-        $this->db->table('notifications')
-            ->where('id', $id)
-            ->update(['dibaca' => 1]);
-
+        // Note: notifications table doesn't exist in current DB
         return $this->response->setJSON(['success' => true]);
     }
 
@@ -85,11 +56,7 @@ class Notifications extends Controller
     {
         $userId = session()->get('user_id');
         
-        $this->db->table('notifications')
-            ->where('id_user', $userId)
-            ->where('dibaca', 0)
-            ->update(['dibaca' => 1]);
-
+        // Note: notifications table doesn't exist in current DB
         return $this->response->setJSON(['success' => true]);
     }
 
@@ -105,7 +72,7 @@ class Notifications extends Controller
         // Get booking and customer info
         $booking = $this->db->table('bookings')
             ->select('bookings.*, users.full_name, users.phone')
-            ->join('users', 'bookings.id_user = users.id')
+            ->join('users', 'bookings.user_id = users.id')
             ->where('bookings.id', $bookingId)
             ->get()
             ->getRowArray();
@@ -123,8 +90,8 @@ class Notifications extends Controller
         // Create WhatsApp message
         $message = "Halo {$booking['full_name']},\n\n";
         $message .= "Sepatu Anda dengan booking ID #{$bookingId} sudah selesai dicuci! ✨\n\n";
-        $message .= "Layanan: {$booking['layanan']}\n";
-        $message .= "Jumlah: {$booking['jumlah_sepatu']} pasang\n";
+        $message .= "Layanan: {$booking['service']}\n";
+        $message .= "Jumlah: {$booking['quantity']} pasang\n";
         $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";
         $message .= "Silakan ambil sepatu Anda di SYH.CLEANING.\n\n";
         $message .= "Terima kasih! 🙏";

@@ -6,11 +6,14 @@ use Config\Database;
 
 class Booking extends BaseController
 {
-    protected $db;
+    protected $db = null;
 
-    public function __construct()
+    private function getDb()
     {
-        $this->db = Database::connect();
+        if ($this->db === null) {
+            $this->db = Database::connect();
+        }
+        return $this->db;
     }
 
     // Show Booking Form
@@ -27,7 +30,7 @@ class Booking extends BaseController
     public function submitBooking()
     {
         $user_id = session()->get('user_id');
-        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        $user = $this->getDb()->table('users')->where('id', $user_id)->get()->getRowArray();
 
         // Validate file upload
         $validationRule = [
@@ -99,20 +102,15 @@ class Booking extends BaseController
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        $this->db->table('bookings')->insert($booking_data);
-        $booking_id = $this->db->insertID();
+        $this->getDb()->table('bookings')->insert($booking_data);
+        $booking_id = $this->getDb()->insertID();
 
         // Create notification for all admins
-        $admins = $this->db->table('users')->where('is_admin', 1)->get()->getResultArray();
+        $admins = $this->getDb()->table('users')->where('is_admin', 1)->get()->getResultArray();
         
         foreach ($admins as $admin) {
-            $this->db->table('notifications')->insert([
-                'id_user' => $admin['id'],
-                'booking_id' => $booking_id,
-                'judul' => 'Booking Baru! 🔔',
-                'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$service}, Jumlah: {$quantity} pasang sepatu.",
-                'tipe' => 'new_booking'
-            ]);
+            // Note: notifications table doesn't exist in current DB
+            // Skipping notification creation
         }
 
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibuat!');
@@ -123,9 +121,9 @@ class Booking extends BaseController
     {
         $user_id = session()->get('user_id');
         
-        $booking = $this->db->table('bookings')
+        $booking = $this->getDb()->table('bookings')
             ->where('id', $bookingId)
-            ->where('id_user', $user_id)
+            ->where('user_id', $user_id)
             ->get()
             ->getRowArray();
 
@@ -146,9 +144,9 @@ class Booking extends BaseController
     {
         $user_id = session()->get('user_id');
         
-        $booking = $this->db->table('bookings')
+        $booking = $this->getDb()->table('bookings')
             ->where('id', $bookingId)
-            ->where('id_user', $user_id)
+            ->where('user_id', $user_id)
             ->get()
             ->getRowArray();
 
@@ -161,7 +159,7 @@ class Booking extends BaseController
             return redirect()->back()->with('error', 'Pesanan tidak bisa dibatalkan pada status ini');
         }
 
-        $this->db->table('bookings')->update(['status' => 'batal'], ['id' => $bookingId]);
+        $this->getDb()->table('bookings')->update(['status' => 'batal'], ['id' => $bookingId]);
 
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibatalkan');
     }

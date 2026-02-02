@@ -6,11 +6,14 @@ use Config\Database;
 
 class Dashboard extends BaseController
 {
-    protected $db;
+    protected $db = null;
 
-    public function __construct()
+    private function getDb()
     {
-        $this->db = Database::connect();
+        if ($this->db === null) {
+            $this->db = Database::connect();
+        }
+        return $this->db;
     }
 
     // Dashboard Index
@@ -22,35 +25,35 @@ class Dashboard extends BaseController
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
         
-        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        $user = $this->getDb()->table('users')->where('id', $user_id)->get()->getRowArray();
         
         if (!$user) {
             return redirect()->to('/login')->with('error', 'User tidak ditemukan');
         }
 
         // Get booking stats
-        $total_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $total_bookings = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->countAllResults();
 
-        $active_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $active_bookings = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->whereIn('status', ['pending', 'approved', 'in_progress'])
             ->countAllResults();
 
-        $completed_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $completed_bookings = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->where('status', 'completed')
             ->countAllResults();
 
-        $total_spent = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $total_spent = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->selectSum('total')
             ->get()
             ->getRow();
 
-        $recent_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $recent_bookings = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
@@ -74,8 +77,8 @@ class Dashboard extends BaseController
     {
         $user_id = session()->get('user_id');
 
-        $bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
+        $bookings = $this->getDb()->table('bookings')
+            ->where('user_id', $user_id)
             ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();

@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'SYH Cleaning' ?></title>
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- FontAwesome loading asynchronously to prevent blocking -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <?= $this->renderSection('extra_css') ?>
 </head>
 <body>
     <?php 
     // Check if current page is dashboard/user area
-    $isDashboard = strpos(current_url(), '/dashboard') !== false 
-                || strpos(current_url(), '/my-bookings') !== false 
-                || strpos(current_url(), '/make-booking') !== false 
-                || strpos(current_url(), '/booking-detail') !== false 
-                || strpos(current_url(), '/profile') !== false;
+    $isDashboard = isset($isDashboard) ? $isDashboard : (
+        strpos(current_url(), '/dashboard') !== false 
+        || strpos(current_url(), '/my-bookings') !== false 
+        || strpos(current_url(), '/make-booking') !== false 
+        || strpos(current_url(), '/booking-detail') !== false 
+        || strpos(current_url(), '/profile') !== false
+    );
     ?>
     
     <?php if (!$isDashboard): ?>
@@ -98,7 +102,23 @@
     </footer>
     <?php endif; ?>
 
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js" defer></script>
     <?= $this->renderSection('extra_js') ?>
+    
+    <script>
+    // Performance timing
+    window.addEventListener('load', function() {
+        const perfData = window.performance.timing;
+        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+        const connectTime = perfData.responseEnd - perfData.requestStart;
+        const renderTime = perfData.domComplete - perfData.domLoading;
+        
+        console.log('Page Performance Metrics:');
+        console.log('Total Load Time: ' + pageLoadTime + 'ms');
+        console.log('Server Response Time: ' + connectTime + 'ms');
+        console.log('DOM Render Time: ' + renderTime + 'ms');
+        console.log('Time to First Paint: ' + (perfData.responseStart - perfData.navigationStart) + 'ms');
+    });
+    </script>
 </body>
 </html>

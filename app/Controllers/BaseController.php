@@ -41,5 +41,16 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
+        
+        // Check if current page is dashboard/user area - compute once at controller level
+        $currentUrl = current_url();
+        $view = service('renderer');
+        $view->setData(['isDashboard' => (
+            strpos($currentUrl, '/dashboard') !== false 
+            || strpos($currentUrl, '/my-bookings') !== false 
+            || strpos($currentUrl, '/make-booking') !== false 
+            || strpos($currentUrl, '/booking-detail') !== false 
+            || strpos($currentUrl, '/profile') !== false
+        )]);
     }
 }

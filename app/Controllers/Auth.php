@@ -6,11 +6,14 @@ use Config\Database;
 
 class Auth extends BaseController
 {
-    protected $db;
+    protected $db = null;
 
-    public function __construct()
+    private function getDb()
     {
-        $this->db = Database::connect();
+        if ($this->db === null) {
+            $this->db = Database::connect();
+        }
+        return $this->db;
     }
 
     // Show Login Page
@@ -34,7 +37,7 @@ class Auth extends BaseController
         }
 
         // Find user
-        $user = $this->db->table('users')->where('email', $email)->get()->getRow();
+        $user = $this->getDb()->table('users')->where('email', $email)->get()->getRow();
 
         if (!$user || !password_verify($password, $user->password_hash)) {
             return redirect()->back()->with('error', 'Email atau password salah');
@@ -89,14 +92,14 @@ class Auth extends BaseController
         }
 
         // Check if email exists
-        $existing = $this->db->table('users')->where('email', $data['email'])->get()->getRow();
+        $existing = $this->getDb()->table('users')->where('email', $data['email'])->get()->getRow();
         if ($existing) {
             return redirect()->back()->with('error', 'Email sudah terdaftar');
         }
 
         // Insert user
-        $this->db->table('users')->insert($data);
-        $user_id = $this->db->insertID();
+        $this->getDb()->table('users')->insert($data);
+        $user_id = $this->getDb()->insertID();
 
         // Set session
         session()->set('user_id', $user_id);
@@ -128,7 +131,7 @@ class Auth extends BaseController
         }
 
         // Check if user exists with email and phone number
-        $user = $this->db->table('users')
+        $user = $this->getDb()->table('users')
             ->where('email', $email)
             ->where('phone', $phone)
             ->get()
@@ -185,7 +188,7 @@ class Auth extends BaseController
 
         // Update password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $this->db->table('users')
+        $this->getDb()->table('users')
             ->where('email', $email)
             ->update(['password_hash' => $hashedPassword]);
 

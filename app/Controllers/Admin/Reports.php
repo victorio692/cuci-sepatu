@@ -101,10 +101,10 @@ class Reports extends Controller
 
         // Get all data
         $bookings = $db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as customer_name')
-            ->join('users', 'bookings.id_user = users.id')
-            ->where('bookings.dibuat_pada >=', $startDate)
-            ->where('bookings.dibuat_pada <=', $endDate . ' 23:59:59')
+            ->select('bookings.*, users.full_name as customer_name')
+            ->join('users', 'bookings.user_id = users.id')
+            ->where('bookings.created_at >=', $startDate)
+            ->where('bookings.created_at <=', $endDate . ' 23:59:59')
             ->orderBy('bookings.dibuat_pada', 'DESC')
             ->get()
             ->getResultArray();

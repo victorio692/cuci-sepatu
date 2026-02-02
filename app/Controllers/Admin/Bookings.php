@@ -54,7 +54,7 @@ class Bookings extends Controller
     {
         $booking = $this->db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp as phone, users.alamat as address')
-            ->join('users', 'bookings.id_user = users.id')
+            ->join('users', 'bookings.user_id = users.id')
             ->where('bookings.id', $id)
             ->get()
             ->getRowArray();
@@ -163,33 +163,36 @@ class Bookings extends Controller
 
         $this->db->table('bookings')->where('id', $id)->update($updateData);
 
+        // Note: notifications table doesn't exist in current DB - skipping notification creation
         // Create notification for customer
-        $notificationData = [
-            'id_user' => $booking['id_user'],
-            'booking_id' => $id,
-            'tipe' => 'status_update'
-        ];
+        // $notificationData = [
+        //     'user_id' => $booking['user_id'],
+        //     'booking_id' => $id,
+        //     'tipe' => 'status_update'
+        // ];
 
         switch ($status) {
-            case 'disetujui':
-                $notificationData['judul'] = 'Booking Disetujui! ✅';
-                $notificationData['pesan'] = "Booking ID #{$id} telah disetujui oleh admin. Sepatu Anda akan segera diproses.";
-                break;
-            case 'proses':
-                $notificationData['judul'] = 'Sepatu Sedang Diproses 🧼';
-                $notificationData['pesan'] = "Booking ID #{$id} sedang dalam proses pencucian. Mohon ditunggu ya!";
-                break;
-            case 'selesai':
-                $notificationData['judul'] = 'Sepatu Sudah Selesai! 🎉';
-                $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan ambil sepatu Anda di SYH.CLEANING. Terima kasih!";
-                break;
-            case 'ditolak':
-                $notificationData['judul'] = 'Booking Ditolak ❌';
-                $notificationData['pesan'] = "Booking ID #{$id} ditolak oleh admin. Alasan: {$alasan}";
-                break;
-        }
+        // Note: All notification code is commented as table doesn't exist
+        // switch ($status) {
+        //     case 'disetujui':
+        //         $notificationData['judul'] = 'Booking Disetujui! ✅';
+        //         $notificationData['pesan'] = "Booking ID #{$id} telah disetujui oleh admin. Sepatu Anda akan segera diproses.";
+        //         break;
+        //     case 'proses':
+        //         $notificationData['judul'] = 'Sepatu Sedang Diproses 🧼';
+        //         $notificationData['pesan'] = "Booking ID #{$id} sedang dalam proses pencucian. Mohon ditunggu ya!";
+        //         break;
+        //     case 'selesai':
+        //         $notificationData['judul'] = 'Sepatu Sudah Selesai! 🎉';
+        //         $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan ambil sepatu Anda di SYH.CLEANING. Terima kasih!";
+        //         break;
+        //     case 'ditolak':
+        //         $notificationData['judul'] = 'Booking Ditolak ❌';
+        //         $notificationData['pesan'] = "Booking ID #{$id} ditolak oleh admin. Alasan: {$alasan}";
+        //         break;
+        // }
 
-        $this->db->table('notifications')->insert($notificationData);
+        // $this->db->table('notifications')->insert($notificationData);
 
         return $this->response->setJSON([
             'success' => true,

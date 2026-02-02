@@ -64,8 +64,8 @@ class Users extends Controller
         $user['kode_pos'] = '-';
 
         $bookings = $this->db->table('bookings')
-            ->where('id_user', $id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->where('user_id', $id)
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
