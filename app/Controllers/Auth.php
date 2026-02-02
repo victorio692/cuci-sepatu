@@ -43,7 +43,15 @@ class Auth extends BaseController
         // Set session
         session()->set('user_id', $user->id);
 
-        return redirect()->to('/dashboard')->with('success', 'Selamat datang!');
+        // Set session
+        session()->set('is_admin', $user->is_admin);
+
+        // Redirect based on role
+        if ($user->is_admin) {
+            return redirect()->to('/admin')->with('success', 'Selamat datang, Admin!');
+        } else {
+            return redirect()->to('/dashboard')->with('success', 'Selamat datang!');
+        }
     }
 
     // Show Register Page
@@ -64,8 +72,10 @@ class Auth extends BaseController
             'city' => '',
             'province' => '',
             'zip_code' => '',
-            'is_active' => 1,
             'is_admin' => 0,
+            'is_active' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         // Validate
@@ -99,6 +109,91 @@ class Auth extends BaseController
     {
         session()->destroy();
         return redirect()->to('/')->with('success', 'Anda telah logout.');
+    }
+
+    // Forgot Password
+    public function forgotPassword()
+    {
+        return view('auth/forgot_password');
+    }
+
+    public function forgotPasswordSubmit()
+    {
+        $email = $this->request->getPost('email');
+        $phone = $this->request->getPost('phone');
+
+        // Validate
+        if (empty($email) || empty($phone)) {
+            return redirect()->back()->with('error', 'Email dan nomor HP harus diisi');
+        }
+
+        // Check if user exists with email and phone number
+        $user = $this->db->table('users')
+            ->where('email', $email)
+            ->where('phone', $phone)
+            ->get()
+            ->getRowArray();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Email atau nomor HP tidak sesuai dengan data kami');
+        }
+
+        // Generate reset token
+        $token = bin2hex(random_bytes(32));
+        
+        // Store token in session (simplified for local app without email)
+        session()->set('reset_token', $token);
+        session()->set('reset_email', $email);
+        session()->setTempdata('reset_token', $token, 1800); // 30 minutes
+
+        return redirect()->to('/reset-password/' . $token)->with('success', 'Silakan reset password Anda');
+    }
+
+    public function resetPassword($token = null)
+    {
+        if (!$token || $token !== session()->get('reset_token')) {
+            return redirect()->to('/forgot-password')->with('error', 'Token tidak valid atau sudah kadaluarsa');
+        }
+
+        $email = session()->get('reset_email');
+        
+        return view('auth/reset_password', ['email' => $email, 'token' => $token]);
+    }
+
+    public function resetPasswordSubmit()
+    {
+        $token = $this->request->getPost('token');
+        $password = $this->request->getPost('password');
+        $confirmPassword = $this->request->getPost('confirm_password');
+
+        // Validate token
+        if ($token !== session()->get('reset_token')) {
+            return redirect()->to('/forgot-password')->with('error', 'Token tidak valid');
+        }
+
+        // Validate password
+        if (strlen($password) < 6) {
+            return redirect()->back()->with('error', 'Password minimal 6 karakter');
+        }
+
+        if ($password !== $confirmPassword) {
+            return redirect()->back()->with('error', 'Konfirmasi password tidak sesuai');
+        }
+
+        // Get email from session
+        $email = session()->get('reset_email');
+
+        // Update password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $this->db->table('users')
+            ->where('email', $email)
+            ->update(['password_hash' => $hashedPassword]);
+
+        // Clear session
+        session()->remove('reset_token');
+        session()->remove('reset_email');
+
+        return redirect()->to('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru Anda.');
     }
 }
 

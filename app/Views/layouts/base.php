@@ -9,12 +9,22 @@
     <?= $this->renderSection('extra_css') ?>
 </head>
 <body>
+    <?php 
+    // Check if current page is dashboard/user area
+    $isDashboard = strpos(current_url(), '/dashboard') !== false 
+                || strpos(current_url(), '/my-bookings') !== false 
+                || strpos(current_url(), '/make-booking') !== false 
+                || strpos(current_url(), '/booking-detail') !== false 
+                || strpos(current_url(), '/profile') !== false;
+    ?>
+    
+    <?php if (!$isDashboard): ?>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="navbar-content">
                 <a href="/" class="navbar-logo">
-                    <img src="/assets/images/logo.png" alt="SYH Cleaning" class="logo-img">
+                    <img src="/assets/images/SYH.CLEANING.png" alt="SYH Cleaning" class="logo-img">
                     <span class="logo-text">SYH CLEANING</span>
                 </a>
                 <button class="navbar-toggle">
@@ -31,12 +41,14 @@
             </div>
         </div>
     </nav>
+    <?php endif; ?>
 
     <!-- Main Content -->
     <main>
         <?= $this->renderSection('content') ?>
     </main>
 
+    <?php if (!$isDashboard): ?>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -57,11 +69,12 @@
                         <li><a href="#services">Fast Cleaning</a></li>
                         <li><a href="#services">Deep Cleaning</a></li>
                         <li><a href="#services">White Shoes</a></li>
-                        <li><a href="#services">Coating</a></li>
+                        <li><a href="#services">Suede Treatment</a></li>
+                        <li><a href="#services">Unyelowing</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Perusahaan</h4>
+                    <h4>Informasi</h4>
                     <ul>
                         <li><a href="/tentang">Tentang Kami</a></li>
                         <li><a href="/kebijakan">Kebijakan Privasi</a></li>
@@ -72,17 +85,18 @@
                 <div class="footer-section">
                     <h4>Kontak</h4>
                     <ul>
-                        <li><a href="tel:+6281234567890"><i class="fas fa-phone"></i> +62 812-3456-7890</a></li>
-                        <li><a href="mailto:info@syhcleaning.com"><i class="fas fa-envelope"></i> info@syhcleaning.com</a></li>
-                        <li><i class="fas fa-map-marker-alt"></i> Jl. tebak No. 123</li>
+                        <li><a href="tel:+6281234567890"><i class="fas fa-phone"></i> 08985709532</a></li>
+                        <li><a href="mailto:info@syhcleaning.com"><i class="fas fa-envelope"></i> syhcleaning@gmail.com</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Desa Paten RT04, Sumberaguung, Jetis, Bantul</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 SYH Cleaning. Semua hak dilindungi.</p>
+                <p>&copy; 2026 SYH Cleaning.</p>
             </div>
         </div>
     </footer>
+    <?php endif; ?>
 
     <script src="/assets/js/main.js"></script>
     <?= $this->renderSection('extra_js') ?>

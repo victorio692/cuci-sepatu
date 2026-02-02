@@ -81,14 +81,24 @@
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    class="form-control" 
-                    placeholder="Minimal 6 karakter"
-                    required
-                >
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-control" 
+                        placeholder="Minimal 6 karakter"
+                        style="padding-right: 3rem;"
+                        required
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePassword('password', this)" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; padding: 0.5rem;"
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
                 <small style="color: #6b7280; display: block; margin-top: 0.25rem;">
                     <i class="fas fa-info-circle"></i> Minimal 6 karakter, kombinasi huruf dan angka lebih aman
                 </small>
@@ -101,14 +111,24 @@
 
             <div class="form-group">
                 <label for="confirm_password">Konfirmasi Password</label>
-                <input 
-                    type="password" 
-                    id="confirm_password" 
-                    name="confirm_password" 
-                    class="form-control" 
-                    placeholder="Ulangi password"
-                    required
-                >
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        class="form-control" 
+                        placeholder="Ulangi password"
+                        style="padding-right: 3rem;"
+                        required
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePassword('confirm_password', this)" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #6b7280; cursor: pointer; padding: 0.5rem;"
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
                 <?php if (session()->getFlashdata('confirm_password_error')): ?>
                     <small style="color: #ef4444;">
                         <?= session()->getFlashdata('confirm_password_error') ?>
@@ -139,4 +159,23 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('extra_js') ?>
+<script>
+function togglePassword(fieldId, button) {
+    const field = document.getElementById(fieldId);
+    const icon = button.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 <?= $this->endSection() ?>

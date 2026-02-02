@@ -33,7 +33,10 @@ class Dashboard extends Controller
             ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
         $completed_bookings = $db->table('bookings')
-            ->where('status', 'completed')
+            ->where('status', 'selesai')
+            ->countAllResults();
+        $proses_bookings = $db->table('bookings')
+            ->where('status', 'proses')
             ->countAllResults();
 
         // Revenue
@@ -45,12 +48,11 @@ class Dashboard extends Controller
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
 
-        // Recent bookings
+        // Recent bookings - tampilkan semua
         $recent_bookings = $db->table('bookings')
-            ->select('bookings.*, users.full_name as customer_name')
+            ->select('bookings.*, users.full_name as customer_name, users.phone')
             ->join('users', 'bookings.user_id = users.id')
             ->orderBy('bookings.created_at', 'DESC')
-            ->limit(5)
             ->get()
             ->getResultArray();
 
@@ -90,6 +92,7 @@ class Dashboard extends Controller
             'total_bookings' => $total_bookings,
             'bookings_this_month' => $bookings_this_month,
             'completed_bookings' => $completed_bookings,
+            'proses_bookings' => $proses_bookings,
             'total_revenue' => $total_revenue,
             'recent_bookings' => $recent_bookings,
             'pending_bookings' => $pending_bookings,

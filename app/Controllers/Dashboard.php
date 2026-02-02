@@ -17,31 +17,40 @@ class Dashboard extends BaseController
     public function index()
     {
         $user_id = session()->get('user_id');
-        $user = $this->db->table('users')->find($user_id);
+        
+        if (!$user_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+        
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        
+        if (!$user) {
+            return redirect()->to('/login')->with('error', 'User tidak ditemukan');
+        }
 
         // Get booking stats
         $total_bookings = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->countAllResults();
 
         $active_bookings = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->whereIn('status', ['pending', 'approved', 'in_progress'])
             ->countAllResults();
 
         $completed_bookings = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->where('status', 'completed')
             ->countAllResults();
 
         $total_spent = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->selectSum('total')
             ->get()
             ->getRow();
 
         $recent_bookings = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
@@ -66,7 +75,7 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
 
         $bookings = $this->db->table('bookings')
-            ->where('user_id', $user_id)
+            ->where('id_user', $user_id)
             ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
@@ -83,7 +92,7 @@ class Dashboard extends BaseController
     public function profile()
     {
         $user_id = session()->get('user_id');
-        $user = $this->db->table('users')->find($user_id);
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
         $data = [
             'title' => 'Profil - SYH Cleaning',
@@ -102,14 +111,66 @@ class Dashboard extends BaseController
             'full_name' => $this->request->getPost('full_name'),
             'phone' => $this->request->getPost('phone'),
             'address' => $this->request->getPost('address'),
-            'city' => $this->request->getPost('city'),
-            'province' => $this->request->getPost('province'),
-            'zip_code' => $this->request->getPost('zip_code'),
         ];
 
         $this->db->table('users')->update($data, ['id' => $user_id]);
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    // Update Profile Photo
+    public function updateProfilePhoto()
+    {
+        $user_id = session()->get('user_id');
+
+        // Validate file upload
+        $validationRule = [
+            'profile_photo' => [
+                'label' => 'Foto Profil',
+                'rules' => 'uploaded[profile_photo]'
+                    . '|is_image[profile_photo]'
+                    . '|mime_in[profile_photo,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[profile_photo,2048]', // 2MB in KB
+            ],
+        ];
+
+        if (!$this->validate($validationRule)) {
+            return redirect()->back()->with('error', 'Gagal upload foto. Pastikan file format PNG/JPG/JPEG dan maksimal 2MB');
+        }
+
+        // Get old photo
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        $oldPhoto = $user['profile_photo'] ?? null;
+
+        // Handle file upload
+        $file = $this->request->getFile('profile_photo');
+        $fileName = null;
+        
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generate unique filename
+            $fileName = 'profile_' . $user_id . '_' . time() . '.' . $file->getExtension();
+            // Move to public/uploads directory
+            $uploadPath = FCPATH . 'uploads';
+            
+            // Create directory if not exists
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            
+            $file->move($uploadPath, $fileName);
+
+            // Delete old photo if exists
+            if ($oldPhoto && file_exists($uploadPath . '/' . $oldPhoto)) {
+                unlink($uploadPath . '/' . $oldPhoto);
+            }
+        }
+
+        // Update database
+        $this->db->table('users')->update([
+            'profile_photo' => $fileName
+        ], ['id' => $user_id]);
+
+        return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
     }
 
     // Change Password
@@ -120,7 +181,7 @@ class Dashboard extends BaseController
         $new_password = $this->request->getPost('new_password');
 
         // Get user
-        $user = $this->db->table('users')->find($user_id);
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
         // Verify current password
         if (!password_verify($current_password, $user['password_hash'])) {

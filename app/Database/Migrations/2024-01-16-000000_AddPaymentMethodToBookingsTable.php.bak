@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class AddPaymentMethodToBookingsTable extends Migration
+{
+    public function up()
+    {
+        // Check if column exists before adding
+        $fields = $this->db->getFieldData('bookings');
+        $columnExists = false;
+
+        foreach ($fields as $field) {
+            if ($field->name === 'payment_method') {
+                $columnExists = true;
+                break;
+            }
+        }
+
+        if (!$columnExists) {
+            $this->forge->addColumn('bookings', [
+                'payment_method' => [
+                    'type' => 'ENUM',
+                    'constraint' => ['bank_transfer', 'e_wallet', 'cash'],
+                    'null' => true,
+                    'after' => 'total_harga',
+                ],
+            ]);
+        }
+    }
+
+    public function down()
+    {
+        $this->forge->dropColumn('bookings', 'payment_method');
+    }
+}

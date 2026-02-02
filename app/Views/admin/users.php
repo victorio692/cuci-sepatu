@@ -79,9 +79,9 @@
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
-                <div style="padding: 1.5rem; border-top: 1px solid #e5e7eb; text-align: center;">
-                    <?= $pager->links() ?>
+                <!-- Total Users -->
+                <div style="padding: 1.5rem; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280;">
+                    Total: <?= count($users) ?> pengguna
                 </div>
             <?php else: ?>
                 <div style="padding: 2rem; text-align: center; color: #6b7280;">
