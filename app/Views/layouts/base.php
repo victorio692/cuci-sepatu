@@ -43,9 +43,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
-                <a href="/" class="flex items-center space-x-3 group">
-                    <img src="/assets/images/SYH.CLEANING.png" alt="SYH Cleaning" class="w-12 h-12 transform group-hover:scale-110 transition-transform duration-300">
-                    <span class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">SYH CLEANING</span>
+                <a href="/" class="flex items-center space-x-2 sm:space-x-3 group">
+                    <img src="/assets/images/SYH.CLEANING.png" alt="SYH Cleaning" class="w-10 h-10 sm:w-12 sm:h-12 transform group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-base sm:text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 whitespace-nowrap">SYH CLEANING</span>
                 </a>
                 
                 <!-- Mobile Menu Button -->
