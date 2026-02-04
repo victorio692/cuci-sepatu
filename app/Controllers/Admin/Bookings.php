@@ -29,24 +29,31 @@ class Bookings extends Controller
 
         $status = $this->request->getVar('status');
         $search = $this->request->getVar('search');
+        $page = $this->request->getVar('page') ?? 1;
+        $perPage = 10;
 
-        $query = $this->db->table('bookings')
+        $builder = $this->db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp')
             ->join('users', 'bookings.id_user = users.id');
 
         if ($status) {
-            $query->where('bookings.status', $status);
+            $builder->where('bookings.status', $status);
         }
 
         if ($search) {
-            $query->groupStart()
+            $builder->groupStart()
                 ->like('users.nama_lengkap', $search)
                 ->orLike('users.email', $search)
                 ->orLike('bookings.layanan', $search)
                 ->groupEnd();
         }
 
-        $bookings = $query->orderBy('bookings.dibuat_pada', 'DESC')
+        // Get total count for pagination
+        $totalBookings = $builder->countAllResults(false);
+        
+        // Get paginated results
+        $bookings = $builder->orderBy('bookings.dibuat_pada', 'DESC')
+            ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
         
@@ -56,11 +63,20 @@ class Bookings extends Controller
             $booking['created_at'] = $booking['dibuat_pada'];
         }
 
+        // Calculate pagination
+        $totalPages = ceil($totalBookings / $perPage);
+
         $data = [
             'title' => 'Pesanan - Admin SYH Cleaning',
             'bookings' => $bookings,
             'status' => $status,
             'search' => $search,
+            'pager' => [
+                'currentPage' => (int)$page,
+                'perPage' => $perPage,
+                'total' => $totalBookings,
+                'totalPages' => $totalPages,
+            ],
         ];
 
         return view('admin/bookings', $data);
@@ -248,29 +264,31 @@ class Bookings extends Controller
         // Create notification for customer
         $notificationData = [
             'id_user' => $booking['id_user'],
-            'booking_id' => $id,
-            'tipe' => 'status_update'
+            'id_booking' => $id,
+            'dibaca' => 0,
+            'dibuat_pada' => date('Y-m-d H:i:s')
         ];
 
         switch ($status) {
             case 'disetujui':
                 $notificationData['judul'] = 'Booking Disetujui! ✅';
-                $notificationData['pesan'] = "Booking ID #{$id} telah disetujui oleh admin. Sepatu Anda akan segera diproses.";
+                $notificationData['pesan'] = "Booking ID #{$id} telah disetujui. Sepatu Anda akan segera diproses.";
+                $notificationData['tipe'] = 'success';
                 break;
             case 'proses':
                 $notificationData['judul'] = 'Sepatu Sedang Diproses 🧼';
-                $notificationData['pesan'] = "Booking ID #{$id} sedang dalam proses pencucian. Mohon ditunggu ya!";
+                $notificationData['pesan'] = "Booking ID #{$id} sedang dalam proses pencucian. Mohon ditunggu!";
+                $notificationData['tipe'] = 'info';
                 break;
             case 'selesai':
                 $notificationData['judul'] = 'Sepatu Sudah Selesai! 🎉';
-                $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan lihat hasilnya dan ambil sepatu Anda di SYH.CLEANING. Terima kasih!";
-                if (isset($newName)) {
-                    $notificationData['foto_hasil'] = $newName;
-                }
+                $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan ambil sepatu Anda!";
+                $notificationData['tipe'] = 'success';
                 break;
             case 'ditolak':
                 $notificationData['judul'] = 'Booking Ditolak ❌';
-                $notificationData['pesan'] = "Booking ID #{$id} ditolak oleh admin. Alasan: {$alasan}";
+                $notificationData['pesan'] = "Booking ID #{$id} ditolak. Alasan: {$alasan}";
+                $notificationData['tipe'] = 'danger';
                 break;
         }
 

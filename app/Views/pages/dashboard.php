@@ -5,29 +5,34 @@
 <div class="flex min-h-screen bg-gray-50">
     <!-- Sidebar -->
     <aside class="w-64 bg-white shadow-lg fixed h-full">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+        <div class="p-6 border-b border-gray-200 group">
+            <h2 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">Dashboard</h2>
         </div>
         <nav class="py-4">
-            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-900 bg-gray-100 border-l-4 border-blue-500">
-                <i class="fas fa-home mr-3"></i>
-                <span>Dashboard</span>
+            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <i class="fas fa-home mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
+                <span class="relative z-10">Dashboard</span>
             </a>
-            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-calendar-check mr-3"></i>
-                <span>Pesanan Saya</span>
+            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <i class="fas fa-calendar-check mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
+                <span class="relative z-10">Pesanan Saya</span>
             </a>
-            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-plus-circle mr-3"></i>
-                <span>Pesan Baru</span>
+            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <i class="fas fa-plus-circle mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
+                <span class="relative z-10">Pesan Baru</span>
             </a>
-            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-user-circle mr-3"></i>
-                <span>Profil</span>
+            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <i class="fas fa-user-circle mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
+                <span class="relative z-10">Profil</span>
             </a>
-            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition">
-                <i class="fas fa-sign-out-alt mr-3"></i>
-                <span>Logout</span>
+            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 hover:border-l-4 hover:border-red-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                <i class="fas fa-sign-out-alt mr-3 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300 relative z-10"></i>
+                <span class="relative z-10">Logout</span>
             </a>
         </nav>
     </aside>
@@ -73,23 +78,70 @@
                 </div>
             </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
-                    <div class="text-sm font-medium text-blue-600 mb-1">Total Pesanan</div>
-                    <div class="text-3xl font-bold text-blue-900"><?= $total_bookings ?></div>
+            <!-- Services Section -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Layanan Kami</h2>
+                        <p class="text-gray-600 mt-1">Pilih layanan terbaik untuk sepatu Anda</p>
+                    </div>
                 </div>
-                <div class="bg-orange-50 rounded-lg p-6 border-l-4 border-orange-500">
-                    <div class="text-sm font-medium text-orange-600 mb-1">Pesanan Aktif</div>
-                    <div class="text-3xl font-bold text-orange-900"><?= $active_bookings ?></div>
-                </div>
-                <div class="bg-green-50 rounded-lg p-6 border-l-4 border-green-500">
-                    <div class="text-sm font-medium text-green-600 mb-1">Selesai</div>
-                    <div class="text-3xl font-bold text-green-900"><?= $completed_bookings ?></div>
-                </div>
-                <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
-                    <div class="text-sm font-medium text-purple-600 mb-1">Total Pengeluaran</div>
-                    <div class="text-3xl font-bold text-purple-900">Rp <?= number_format($total_spent, 0, ',', '.') ?></div>
+
+                <!-- Services Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <?php 
+                    $serviceIcons = [
+                        'fast-cleaning' => 'fa-clock',
+                        'deep-cleaning' => 'fa-spray-can',
+                        'white-shoes' => 'fa-shoe-prints',
+                        'suede-treatment' => 'fa-tshirt',
+                        'unyellowing' => 'fa-sun'
+                    ];
+                    
+                    foreach ($services as $service): 
+                        $icon = $serviceIcons[$service['kode_layanan']] ?? 'fa-shoe-prints';
+                    ?>
+                    <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group transform hover:-translate-y-2">
+                        <!-- Service Header with Gradient -->
+                        <div class="bg-blue-600 p-6 text-white relative">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
+                            <div class="relative z-10">
+                                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mb-4 backdrop-blur-sm">
+                                    <i class="fas <?= $icon ?> text-3xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
+                                <p class="text-sm opacity-90"><?= $service['durasi_hari'] ?> hari pengerjaan</p>
+                            </div>
+                        </div>
+
+                        <!-- Service Body -->
+                        <div class="p-6">
+                            <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                                <?= htmlspecialchars($service['deskripsi']) ?>
+                            </p>
+
+                            <!-- Price Section -->
+                            <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-100">
+                                <div>
+                                    <span class="text-sm text-gray-500">Mulai dari</span>
+                                    <div class="text-2xl font-bold text-gray-900">
+                                        Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                            </div>
+
+                            <!-- CTA Button -->
+                            <a href="/make-booking?service=<?= $service['kode_layanan'] ?>" 
+                               class="block w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white text-center rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                                <i class="fas fa-shopping-cart mr-2"></i>
+                                Pesan Sekarang
+                            </a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 

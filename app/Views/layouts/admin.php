@@ -41,6 +41,67 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .notification-dropdown { animation: slideDown 0.2s ease; }
+        
+        /* Bell swing animation */
+        @keyframes swing {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+        .animate-swing { animation: swing 0.5s ease-in-out; }
+        
+        /* Sidebar menu hover shine effect */
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Logout Animation Styles */
+        @keyframes bounce-slow {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+        
+        .animate-spin-slow {
+            animation: spin-slow 2s linear infinite;
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 0.8s ease-out forwards;
+        }
+        
+        .animate-fade-in-delay {
+            animation: fade-in 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>
@@ -52,12 +113,12 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Left: Logo & Menu Toggle -->
                 <div class="flex items-center space-x-4">
-                    <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-gray-800 focus:outline-none">
+                    <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg focus:outline-none transition-all duration-300">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <a href="<?= base_url('admin') ?>" class="flex items-center space-x-3">
-                        <img src="<?= base_url('assets/images/SYH.CLEANING.png') ?>" alt="SYH Cleaning" class="h-10 w-10">
-                        <span class="hidden md:block text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">ADMIN SYH.CLEANING</span>
+                    <a href="<?= base_url('admin') ?>" class="flex items-center space-x-3 group">
+                        <img src="<?= base_url('assets/images/SYH.CLEANING.png') ?>" alt="SYH Cleaning" class="h-10 w-10 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                        <span class="hidden md:block text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-500 transition-all duration-300">ADMIN SYH.CLEANING</span>
                     </a>
                 </div>
                 
@@ -65,9 +126,9 @@
                 <div class="flex items-center space-x-4">
                     <!-- Notification Bell -->
                     <div class="relative">
-                        <button onclick="toggleNotifications()" class="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span id="notificationBadge" class="absolute top-1 right-1 hidden items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">0</span>
+                        <button onclick="toggleNotifications()" class="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transform hover:scale-110 transition-all duration-300 group">
+                            <i class="fas fa-bell text-xl group-hover:animate-swing"></i>
+                            <span id="notificationBadge" class="absolute top-1 right-1 hidden items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">0</span>
                         </button>
                         
                         <!-- Notification Dropdown -->
@@ -86,8 +147,8 @@
                     </div>
                     
                     <!-- Print Report Button -->
-                    <button onclick="cetakLaporan()" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium">
-                        <i class="fas fa-print"></i>
+                    <button onclick="cetakLaporan()" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 font-medium group">
+                        <i class="fas fa-print group-hover:rotate-12 transition-transform duration-300"></i>
                         <span>Cetak Laporan</span>
                     </button>
                 </div>
@@ -100,36 +161,52 @@
         <!-- Sidebar -->
         <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <!-- Menu Items -->
+            <?php
+            $currentPath = uri_string();
+            $isDashboard = ($currentPath == 'admin' || $currentPath == 'admin/');
+            $isServices = (strpos($currentPath, 'admin/services') !== false);
+            $isBookings = (strpos($currentPath, 'admin/bookings') !== false || strpos($currentPath, 'admin/booking-detail') !== false);
+            $isUsers = (strpos($currentPath, 'admin/users') !== false || strpos($currentPath, 'admin/user') !== false);
+            $isReports = (strpos($currentPath, 'admin/reports') !== false);
+            $isProfile = (strpos($currentPath, 'admin/profile') !== false);
+            ?>
             <nav class="p-4 space-y-1">
-                <a href="<?= base_url('admin') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-home w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Dashboard</span>
+                <a href="<?= base_url('admin') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isDashboard ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-home w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Dashboard</span>
                 </a>
-                <a href="<?= base_url('admin/services') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-list w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Layanan</span>
+                <a href="<?= base_url('admin/services') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isServices ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-list w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Layanan</span>
                 </a>
-                <a href="<?= base_url('admin/bookings') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-shopping-bag w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Booking</span>
+                <a href="<?= base_url('admin/bookings') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isBookings ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-shopping-bag w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Booking</span>
                 </a>
-                <a href="<?= base_url('admin/users') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-users w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Customers</span>
+                <a href="<?= base_url('admin/users') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isUsers ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-users w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Customers</span>
                 </a>
-                <a href="<?= base_url('admin/reports') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-chart-bar w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Laporan</span>
+                <a href="<?= base_url('admin/reports') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isReports ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-chart-bar w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Laporan</span>
                 </a>
-                <a href="<?= base_url('admin/profile') ?>" class="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 rounded-lg font-medium group">
-                    <i class="fas fa-user-circle w-5 text-center group-hover:scale-110 transition"></i>
-                    <span>Profil</span>
+                <a href="<?= base_url('admin/profile') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isProfile ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                    <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                    <i class="fas fa-user-circle w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+                    <span class="relative">Profil</span>
                 </a>
                 
                 <div class="pt-4 border-t border-gray-200">
-                    <a href="<?= base_url('logout') ?>" class="flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg font-medium group">
-                        <i class="fas fa-sign-out-alt w-5 text-center group-hover:scale-110 transition"></i>
-                        <span>Logout</span>
+                    <a href="#" onclick="showAdminLogoutAnimation(event)" class="flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                        <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
+                        <i class="fas fa-sign-out-alt w-5 text-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300"></i>
+                        <span class="relative">Logout</span>
                     </a>
                 </div>
             </nav>
@@ -155,6 +232,29 @@
         <main class="flex-1 p-4 lg:p-8 min-h-screen">
             <?= $this->renderSection('content') ?>
         </main>
+    </div>
+
+    <!-- Admin Logout Animation Overlay -->
+    <div id="adminLogoutOverlay" class="hidden fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex-col items-center justify-center">
+        <div class="relative">
+            <!-- Icon dengan background lingkaran -->
+            <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+                <i class="fas fa-sign-out-alt text-blue-600 text-4xl"></i>
+            </div>
+            <!-- Rotating circle border -->
+            <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>
+        </div>
+        
+        <!-- Text -->
+        <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Logging Out...</h2>
+        <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Sampai jumpa lagi, Admin!</p>
+        
+        <!-- Loading dots -->
+        <div class="flex space-x-2 mt-6">
+            <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
+            <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+        </div>
     </div>
 
     <!-- Scripts -->
@@ -320,6 +420,22 @@
         // Print Report Function
         function cetakLaporan() {
             window.open('<?= base_url("admin/reports/print") ?>', '_blank');
+        }
+        
+        // Show Admin Logout Animation
+        function showAdminLogoutAnimation(event) {
+            event.preventDefault();
+            
+            const overlay = document.getElementById('adminLogoutOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+                
+                // Redirect after animation (1.5 seconds)
+                setTimeout(function() {
+                    window.location.href = '<?= base_url("logout") ?>';
+                }, 1500);
+            }
         }
     </script>
     

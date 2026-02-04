@@ -145,18 +145,20 @@
                                             case 'proses': echo 'bg-orange-100 text-orange-800'; break;
                                             case 'selesai': echo 'bg-green-100 text-green-800'; break;
                                             case 'ditolak': echo 'bg-red-100 text-red-800'; break;
+                                            case 'batal': echo 'bg-gray-100 text-gray-800'; break;
                                         }
                                         ?>"
                                     data-booking-id="<?= $booking['id'] ?>"
                                     data-original-status="<?= $booking['status'] ?>"
                                     onchange="updateBookingStatus(this)"
-                                    <?= in_array($booking['status'], ['selesai', 'ditolak']) ? 'disabled' : '' ?>
+                                    <?= in_array($booking['status'], ['selesai', 'ditolak', 'batal']) ? 'disabled' : '' ?>
                                 >
                                     <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
                                     <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
                                     <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
                                     <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
                                     <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
+                                    <option value="batal" <?= $booking['status'] === 'batal' ? 'selected' : '' ?>>Dibatalkan</option>
                                 </select>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -184,6 +186,13 @@
             </div>
         <?php endif; ?>
     </div>
+    
+    <!-- Pagination -->
+    <?php if (!empty($recent_bookings)): ?>
+        <div class="px-6 py-4 border-t border-gray-200">
+            <?= $pager->links('default', 'custom_pagination') ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?= $this->endSection() ?>

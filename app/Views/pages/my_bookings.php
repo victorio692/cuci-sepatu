@@ -2,57 +2,34 @@
 
 <?= $this->section('content') ?>
 
-<div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg fixed h-full">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+<!-- Main Content Without Sidebar -->
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="/" class="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all duration-300 font-medium shadow-sm hover:shadow-md transform hover:-translate-x-1">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
         </div>
-        <nav class="py-4">
-            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-home mr-3"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-900 bg-gray-100 border-l-4 border-blue-500">
-                <i class="fas fa-calendar-check mr-3"></i>
-                <span>Pesanan Saya</span>
-            </a>
-            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-plus-circle mr-3"></i>
-                <span>Pesan Baru</span>
-            </a>
-            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-user-circle mr-3"></i>
-                <span>Profil</span>
-            </a>
-            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition">
-                <i class="fas fa-sign-out-alt mr-3"></i>
-                <span>Logout</span>
-            </a>
-        </nav>
-    </aside>
+        
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">
+                <i class="fas fa-calendar-check text-blue-600 mr-3"></i>
+                Pesanan Saya
+            </h1>
+            <p class="text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
+        </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 ml-64">
-        <div class="p-8">
-            <!-- Header -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">
-                    <i class="fas fa-calendar-check text-blue-600 mr-3"></i>
-                    Pesanan Saya
-                </h1>
-                <p class="text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
-            </div>
-
-            <?php if (!empty($bookings)): ?>
-                <!-- Bookings Table -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gradient-to-r from-blue-50 to-blue-100">
-                                <tr>
-                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                        No Pesanan
+        <?php if (!empty($bookings)): ?>
+            <!-- Bookings Table -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gradient-to-r from-blue-50 to-blue-100">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    No Pesanan
                                     </th>
                                     <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                         Layanan
@@ -81,6 +58,7 @@
                                         'proses' => 'bg-purple-100 text-purple-800',
                                         'selesai' => 'bg-green-100 text-green-800',
                                         'ditolak' => 'bg-red-100 text-red-800',
+                                        'batal' => 'bg-gray-100 text-gray-800',
                                         default => 'bg-gray-100 text-gray-800'
                                     };
                                     
@@ -91,6 +69,7 @@
                                         'proses' => 'Diproses',
                                         'selesai' => 'Selesai',
                                         'ditolak' => 'Ditolak',
+                                        'batal' => 'Dibatalkan',
                                         default => $booking['status']
                                     };
                                     

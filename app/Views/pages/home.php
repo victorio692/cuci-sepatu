@@ -29,7 +29,7 @@
             
             <!-- Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="/login" class="inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
+                <a href="<?= session()->get('user_id') ? '/make-booking' : '/login' ?>" class="inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
                     <i class="fas fa-shopping-cart mr-2"></i> Pesan Sekarang
                 </a>
                 <a href="#services" class="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition duration-300">
@@ -59,9 +59,9 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Fast Cleaning</h3>
                 <p class="text-gray-600 mb-6">Mencuci sepatu hanya bagian luarnya saja (outsole, midsole, upper).</p>
                 <div class="text-3xl font-bold text-blue-600 mb-6">Rp 20.000</div>
-                <button onclick="openBookingModal('fast-cleaning')" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
-                    Pesan
-                </button>
+                <a href="/make-booking?service=fast-cleaning" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Pesan
+                </a>
             </div>
             
             <!-- Deep Cleaning -->
@@ -72,9 +72,9 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Deep Cleaning</h3>
                 <p class="text-gray-600 mb-6">Mencuci sepatu secara keseluruhan (outsole, midsole, insole, upper).</p>
                 <div class="text-3xl font-bold text-blue-600 mb-6">Rp 25.000</div>
-                <button onclick="openBookingModal('deep-cleaning')" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
-                    Pesan
-                </button>
+                <a href="/make-booking?service=deep-cleaning" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Pesan
+                </a>
             </div>
             
             <!-- White Shoes -->
@@ -85,9 +85,9 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">White Shoes</h3>
                 <p class="text-gray-600 mb-6">Mencuci sepatu putih berbahan canvas secara keseluruhan agar tetap putih bersih.</p>
                 <div class="text-3xl font-bold text-blue-600 mb-6">Rp 30.000</div>
-                <button onclick="openBookingModal('white-shoes')" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
-                    Pesan
-                </button>
+                <a href="/make-booking?service=white-shoes" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Pesan
+                </a>
             </div>
             
             <!-- Suede Treatment -->
@@ -98,9 +98,9 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Suede Treatment</h3>
                 <p class="text-gray-600 mb-6">Mencuci sepatu berbahan suede secara keseluruhan</p>
                 <div class="text-3xl font-bold text-blue-600 mb-6">Rp 30.000</div>
-                <button onclick="openBookingModal('coating')" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
-                    Pesan
-                </button>
+                <a href="/make-booking?service=suede-treatment" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Pesan
+                </a>
             </div>
             
             <!-- Unyelowing -->
@@ -111,9 +111,9 @@
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">Unyelowing</h3>
                 <p class="text-gray-600 mb-6">Membersihkan kembali mid sol sepatu yang menguning</p>
                 <div class="text-3xl font-bold text-blue-600 mb-6">Rp 35.000</div>
-                <button onclick="openBookingModal('dyeing')" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
-                    Pesan
-                </button>
+                <a href="/make-booking?service=unyellowing" class="block w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2"></i>Pesan
+                </a>
             </div>
         </div>
     </div>
@@ -194,8 +194,8 @@
         <p class="text-xl mb-10 text-blue-100">
             Jangan tunggu lagi, pesan layanan cuci sepatu kami sekarang dan dapatkan diskon spesial!
         </p>
-        <a href="/login" class="inline-block px-10 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
-            Pesan Sekarang
+        <a href="/make-booking" class="inline-block px-10 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
+            <i class="fas fa-shopping-cart mr-2"></i> Pesan Sekarang
         </a>
     </div>
 </section>

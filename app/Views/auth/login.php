@@ -87,7 +87,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                <button type="submit" onclick="showLoginAnimation(event)" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
                     <i class="fas fa-sign-in-alt mr-2"></i> Login
                 </button>
 
@@ -104,7 +104,56 @@
         </div>
     </div>
 </div>
+<!-- Login Animation Overlay -->
+<div id="loginOverlay" class="hidden fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex-col items-center justify-center">
+    <div class="relative">
+        <!-- Icon dengan background lingkaran -->
+        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+            <i class="fas fa-sign-in-alt text-blue-600 text-4xl"></i>
+        </div>
+        <!-- Rotating circle border -->
+        <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>
+    </div>
+    
+    <!-- Text -->
+    <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Logging In...</h2>
+    <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Mohon tunggu sebentar</p>
+    
+    <!-- Loading dots -->
+    <div class="flex space-x-2 mt-6">
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+    </div>
+</div>
 
+<script>
+function showLoginAnimation(event) {
+    const form = event.target.closest('form');
+    
+    // Validate form first
+    const email = form.querySelector('#email');
+    const password = form.querySelector('#password');
+    
+    if (!email.value || !password.value) {
+        return; // Let default validation handle it
+    }
+    
+    // Prevent default and show animation
+    event.preventDefault();
+    
+    const overlay = document.getElementById('loginOverlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        
+        // Submit form after short animation (1 second)
+        setTimeout(function() {
+            form.submit();
+        }, 1000);
+    }
+}
+</script>
 <?= $this->endSection() ?>
 
 <?= $this->section('extra_js') ?>

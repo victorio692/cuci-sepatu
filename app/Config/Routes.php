@@ -36,6 +36,7 @@ $routes->group('', ['filter' => 'auth'], static function($routes) {
     $routes->post('/submit-booking', 'Booking::submitBooking');
     $routes->get('/booking-detail/(:num)', 'Booking::detail/$1');
     $routes->get('/booking/cancel/(:num)', 'Booking::cancelBooking/$1');
+    $routes->post('/booking/cancel/(:num)', 'Booking::cancelBooking/$1');
 });
 
 // Admin Routes (Protected)
@@ -52,11 +53,22 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function($routes) {
     
     // Users
     $routes->get('users', 'Admin\Users::index');
+    $routes->get('users/create', 'Admin\Users::create');
+    $routes->post('users/store', 'Admin\Users::store');
+    $routes->get('users/edit/(:num)', 'Admin\Users::edit/$1');
+    $routes->post('users/update/(:num)', 'Admin\Users::update/$1');
+    $routes->get('users/delete/(:num)', 'Admin\Users::delete/$1');
     $routes->get('users/(:num)', 'Admin\Users::detail/$1');
     $routes->post('users/(:num)/toggle', 'Admin\Users::toggleActive/$1');
     
     // Services
     $routes->get('services', 'Admin\Services::index');
+    $routes->get('services/create', 'Admin\Services::create');
+    $routes->post('services/store', 'Admin\Services::store');
+    $routes->get('services/edit/(:num)', 'Admin\Services::edit/$1');
+    $routes->post('services/update/(:num)', 'Admin\Services::update/$1');
+    $routes->post('services/delete/(:num)', 'Admin\Services::delete/$1');
+    $routes->post('services/(:num)/toggle', 'Admin\Services::toggleActive/$1');
     $routes->post('services/price', 'Admin\Services::updatePrice');
     
     // Reports

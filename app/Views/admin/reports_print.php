@@ -242,7 +242,7 @@
         <div class="signature">
             <p>Mengetahui,</p>
             <div class="signature-line">
-                <strong>Manager SYH Cleaning</strong>
+                <strong>Owner SYH Cleaning</strong>
             </div>
         </div>
     </div>

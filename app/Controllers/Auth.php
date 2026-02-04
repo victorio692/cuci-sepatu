@@ -59,7 +59,7 @@ class Auth extends BaseController
         if ($user->role === 'admin') {
             return redirect()->to('/admin')->with('success', 'Selamat datang, Admin!');
         } else {
-            return redirect()->to('/dashboard')->with('success', 'Selamat datang!');
+            return redirect()->to('/')->with('success', 'Selamat datang!');
         }
     }
 
@@ -73,7 +73,7 @@ class Auth extends BaseController
                 if ($user->role === 'admin') {
                     return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
                 } else {
-                    return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
+                    return redirect()->to('/')->with('info', 'Anda sudah login');
                 }
             }
         }
@@ -118,7 +118,7 @@ class Auth extends BaseController
         // Set session
         session()->set('user_id', $user_id);
 
-        return redirect()->to('/dashboard')->with('success', 'Pendaftaran berhasil! Selamat datang!');
+        return redirect()->to('/')->with('success', 'Pendaftaran berhasil! Selamat datang!');
     }
 
     // Logout

@@ -2,56 +2,26 @@
 
 <?= $this->section('content') ?>
 
-<div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg fixed h-full">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+<!-- Main Content Without Sidebar -->
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="/" class="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all duration-300 font-medium shadow-sm hover:shadow-md transform hover:-translate-x-1">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
         </div>
-        <nav class="py-4">
-            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-home mr-3"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-calendar-check mr-3"></i>
-                <span>Pesanan Saya</span>
-            </a>
-            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-900 bg-gray-100 border-l-4 border-blue-500">
-                <i class="fas fa-plus-circle mr-3"></i>
-                <span>Pesan Baru</span>
-            </a>
-            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition">
-                <i class="fas fa-user-circle mr-3"></i>
-                <span>Profil</span>
-            </a>
-            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-50 transition">
-                <i class="fas fa-sign-out-alt mr-3"></i>
-                <span>Logout</span>
-            </a>
-        </nav>
-    </aside>
 
-    <!-- Main Content -->
-    <div class="flex-1 ml-64">
-        <div class="p-8">
-            <!-- Back Button -->
-            <div class="mb-6">
-                <a href="/dashboard" class="ripple inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-                </a>
-            </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Buat Booking Baru</h1>
 
-            <h1 class="text-3xl font-bold text-gray-900 mb-6">Buat Booking Baru</h1>
-
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-                        <span class="text-green-800"><?= session()->getFlashdata('success') ?></span>
-                    </div>
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+                    <span class="text-green-800"><?= session()->getFlashdata('success') ?></span>
                 </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
@@ -72,91 +42,41 @@
 
                         <!-- Service Selection -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                        <!-- Fast Cleaning -->
+                        <?php 
+                        $serviceIcons = [
+                            'fast-cleaning' => 'fa-running',
+                            'deep-cleaning' => 'fa-socks',
+                            'white-shoes' => 'fa-shoe-prints',
+                            'suede-treatment' => 'fa-mitten',
+                            'unyellowing' => 'fa-star'
+                        ];
+                        
+                        // Get service from URL parameter
+                        $selectedService = $_GET['service'] ?? '';
+                        
+                        foreach ($services as $index => $service): 
+                            $icon = $serviceIcons[$service['kode_layanan']] ?? 'fa-shoe-prints';
+                            // Check if this service should be selected
+                            $isSelected = ($selectedService === $service['kode_layanan']) || ($index === 0 && empty($selectedService));
+                        ?>
+                        <!-- <?= htmlspecialchars($service['nama_layanan']) ?> -->
                         <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
-                            <input type="radio" name="service" value="fast-cleaning" data-price="15000" required class="absolute opacity-0">
+                            <input type="radio" name="service" value="<?= $service['kode_layanan'] ?>" data-price="<?= intval($service['harga_dasar']) ?>" <?= $isSelected ? 'checked' : '' ?> <?= $index === 0 ? 'required' : '' ?> class="absolute opacity-0">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
-                                    <h3 class="text-lg font-bold text-gray-900">Fast Cleaning</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Layanan cuci cepat yang praktis</p>
+                                    <h3 class="text-lg font-bold text-gray-900"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
+                                    <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($service['deskripsi']) ?></p>
                                 </div>
-                                <i class="fas fa-star text-yellow-400 text-xl"></i>
+                                <i class="fas <?= $icon ?> text-blue-500 text-xl"></i>
                             </div>
                             <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp 15,000</span>
+                                <span class="text-blue-600 font-semibold text-lg">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
                                 <span class="text-gray-400 text-sm">/pasang</span>
                             </div>
-                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
+                            <div class="text-gray-400 text-xs mt-2"><?= $service['durasi_hari'] ?> hari pengerjaan</div>
                         </label>
-
-                        <!-- Deep Cleaning -->
-                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
-                            <input type="radio" name="service" value="deep-cleaning" data-price="20000" class="absolute opacity-0">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">Deep Cleaning</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Layanan cuci full yang lebih detail</p>
-                                </div>
-                                <i class="fas fa-star text-yellow-400 text-xl"></i>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp 20,000</span>
-                                <span class="text-gray-400 text-sm">/pasang</span>
-                            </div>
-                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
-                        </label>
-
-                        <!-- Suede Treatment -->
-                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
-                            <input type="radio" name="service" value="suede-treatment" data-price="30000" class="absolute opacity-0">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">Suede Treatment</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Layanan Khusus untuk sepatu Bahan Suede</p>
-                                </div>
-                                <i class="fas fa-star text-yellow-400 text-xl"></i>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp 30,000</span>
-                                <span class="text-gray-400 text-sm">/pasang</span>
-                            </div>
-                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
-                        </label>
-
-                        <!-- White Shoes -->
-                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
-                            <input type="radio" name="service" value="white-shoes" data-price="35000" class="absolute opacity-0">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">White Shoes</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Layanan khusus untuk sepatu white midsole</p>
-                                </div>
-                                <i class="fas fa-star text-yellow-400 text-xl"></i>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp 35,000</span>
-                                <span class="text-gray-400 text-sm">/pasang</span>
-                            </div>
-                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
-                        </label>
-
-                        <!-- Unyellowing -->
-                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
-                            <input type="radio" name="service" value="unyellowing" data-price="30000" class="absolute opacity-0">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">Unyellowing</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Layanan penyegaran/kuningan midsole</p>
-                                </div>
-                                <i class="fas fa-star text-yellow-400 text-xl"></i>
-                            </div>
-                            <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp 30,000</span>
-                                <span class="text-gray-400 text-sm">/pasang</span>
-                            </div>
-                            <div class="text-gray-400 text-xs mt-2">1 hari</div>
-                        </label>
-                    </div>
+                        <?php endforeach; ?>
+                        </div>
 
                     <!-- Hidden fields for shoe details -->
                     <input type="hidden" name="shoe_type" value="sneaker">
@@ -643,6 +563,11 @@ function updateSummary() {
     const selectedService = document.querySelector('input[name="service"]:checked');
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
     
+    const summaryTotal = document.getElementById('summaryTotal');
+    const summaryService = document.getElementById('summaryService');
+    const summaryPrice = document.getElementById('summaryPrice');
+    const summaryQuantity = document.getElementById('summaryQuantity');
+    
     if (selectedService) {
         const price = parseInt(selectedService.dataset.price);
         const total = price * quantity;
@@ -650,12 +575,6 @@ function updateSummary() {
         // Get service name - perbaikan: label langsung parent dari input
         const serviceLabel = selectedService.closest('label');
         const serviceName = serviceLabel.querySelector('h3').textContent;
-        
-        // Animate update
-        const summaryTotal = document.getElementById('summaryTotal');
-        const summaryService = document.getElementById('summaryService');
-        const summaryPrice = document.getElementById('summaryPrice');
-        const summaryQuantity = document.getElementById('summaryQuantity');
         
         // Add fade animation
         [summaryTotal, summaryService, summaryPrice, summaryQuantity].forEach(el => {
@@ -677,6 +596,12 @@ function updateSummary() {
                 }, index * 50);
             });
         }, 150);
+    } else {
+        // Jika belum ada layanan dipilih
+        summaryService.textContent = '-';
+        summaryPrice.textContent = 'Rp 0';
+        summaryQuantity.textContent = quantity + ' pasang';
+        summaryTotal.textContent = 'Rp 0';
     }
 }
 
@@ -821,8 +746,31 @@ uploadArea.addEventListener('drop', (e) => {
     }
 });
 
-// Initialize
-updateSummary();
+// Auto-select service from URL parameter and Initialize
+window.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+        const serviceRadio = document.querySelector(`input[name="service"][value="${serviceParam}"]`);
+        if (serviceRadio) {
+            serviceRadio.checked = true;
+            // Trigger change event to update summary
+            updateSummary();
+            // Add visual feedback - scroll to service section
+            serviceRadio.closest('label').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    } else {
+        // If no URL parameter, check if there are services and update summary anyway
+        const checkedService = document.querySelector('input[name="service"]:checked');
+        if (checkedService) {
+            updateSummary();
+        } else {
+            // Initialize with default state
+            updateSummary();
+        }
+    }
+});
 
 // Logout confirmation
 function confirmLogout(e) {

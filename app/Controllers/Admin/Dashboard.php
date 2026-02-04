@@ -60,13 +60,26 @@ class Dashboard extends Controller
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
 
-        // Recent bookings - tampilkan semua
+        // Recent bookings - dengan pagination
+        $perPage = 10;
+        $page = $this->request->getVar('page') ?? 1;
+        $offset = ($page - 1) * $perPage;
+        
+        // Get total records
+        $totalBookings = $db->table('bookings')->countAllResults(false);
+        
+        // Get paginated data
         $recent_bookings = $db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as customer_name, users.no_hp')
             ->join('users', 'bookings.id_user = users.id')
             ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->limit($perPage, $offset)
             ->get()
             ->getResultArray();
+        
+        // Create pager
+        $pager = \Config\Services::pager();
+        $pager->store('default', $page, $perPage, $totalBookings);
 
         // Pending bookings
         $pending_count = $db->table('bookings')
@@ -107,6 +120,7 @@ class Dashboard extends Controller
             'proses_bookings' => $proses_bookings,
             'total_revenue' => $total_revenue,
             'recent_bookings' => $recent_bookings,
+            'pager' => $pager,
             'pending_bookings' => $pending_bookings,
             'pending_count' => $pending_count,
             'service_stats' => $service_stats,

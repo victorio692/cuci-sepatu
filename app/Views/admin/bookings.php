@@ -99,8 +99,8 @@
                                             case 'disetujui': echo 'bg-blue-100 text-blue-800'; break;
                                             case 'proses': echo 'bg-orange-100 text-orange-800'; break;
                                             case 'selesai': echo 'bg-green-100 text-green-800'; break;
-                                            case 'ditolak': 
-                                            case 'batal': echo 'bg-red-100 text-red-800'; break;
+                                            case 'ditolak': echo 'bg-red-100 text-red-800'; break;
+                                            case 'batal': echo 'bg-gray-100 text-gray-800'; break;
                                         }
                                         ?>" 
                                     data-booking-id="<?= $booking['id'] ?>"
@@ -112,15 +112,24 @@
                                     <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
                                     <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
                                     <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
-                                    <option value="batal" <?= in_array($booking['status'], ['batal', 'ditolak']) ? 'selected' : '' ?>>Ditolak</option>
+                                    <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
+                                    <option value="batal" <?= $booking['status'] === 'batal' ? 'selected' : '' ?>>Dibatalkan</option>
                                 </select>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="/admin/bookings/<?= $booking['id'] ?>" 
-                                   class="inline-flex items-center space-x-1 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Lihat</span>
-                                </a>
+                                <div class="flex items-center space-x-2">
+                                    <a href="/admin/bookings/<?= $booking['id'] ?>" 
+                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Lihat</span>
+                                    </a>
+                                    <a href="/admin/bookings/<?= $booking['id'] ?>" 
+                                       onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus pesanan ini?')) { deleteBooking(<?= $booking['id'] ?>); }"
+                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Hapus</span>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -129,8 +138,85 @@
 
             <!-- Total Count -->
             <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
-                Total: <span class="font-semibold"><?= count($bookings) ?></span> pesanan
+                Total: <span class="font-semibold"><?= $pager['total'] ?></span> pesanan
+                <?php if ($pager['total'] > 0): ?>
+                    | Menampilkan <?= (($pager['currentPage'] - 1) * $pager['perPage']) + 1 ?> - <?= min($pager['currentPage'] * $pager['perPage'], $pager['total']) ?>
+                <?php endif; ?>
             </div>
+            
+            <!-- Pagination -->
+            <?php if ($pager['totalPages'] > 1): ?>
+            <div class="px-6 py-4 border-t border-gray-200 bg-white">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        Halaman <?= $pager['currentPage'] ?> dari <?= $pager['totalPages'] ?>
+                    </div>
+                    <div class="flex space-x-1">
+                        <!-- Previous Button -->
+                        <?php if ($pager['currentPage'] > 1): ?>
+                            <a href="?page=<?= $pager['currentPage'] - 1 ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        <?php endif; ?>
+                        
+                        <!-- Page Numbers -->
+                        <?php 
+                        $startPage = max(1, $pager['currentPage'] - 2);
+                        $endPage = min($pager['totalPages'], $pager['currentPage'] + 2);
+                        
+                        if ($startPage > 1): ?>
+                            <a href="?page=1<?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                1
+                            </a>
+                            <?php if ($startPage > 2): ?>
+                                <span class="px-3 py-2 text-gray-400">...</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                            <?php if ($i == $pager['currentPage']): ?>
+                                <span class="px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold">
+                                    <?= $i ?>
+                                </span>
+                            <?php else: ?>
+                                <a href="?page=<?= $i ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                    <?= $i ?>
+                                </a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        
+                        <?php if ($endPage < $pager['totalPages']): ?>
+                            <?php if ($endPage < $pager['totalPages'] - 1): ?>
+                                <span class="px-3 py-2 text-gray-400">...</span>
+                            <?php endif; ?>
+                            <a href="?page=<?= $pager['totalPages'] ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <?= $pager['totalPages'] ?>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <!-- Next Button -->
+                        <?php if ($pager['currentPage'] < $pager['totalPages']): ?>
+                            <a href="?page=<?= $pager['currentPage'] + 1 ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         <?php else: ?>
             <div class="p-12 text-center text-gray-500">
                 <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
@@ -226,6 +312,30 @@ function showToast(message, type) {
         toast.style.transform = 'translateX(100%)';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+// Delete booking function
+function deleteBooking(id) {
+    fetch(`/admin/bookings/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Pesanan berhasil dihapus', 'success');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast(data.message || 'Gagal menghapus pesanan', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Terjadi kesalahan', 'error');
+    });
 }
 </script>
 

@@ -3,9 +3,15 @@
 <?= $this->section('content') ?>
 
 <!-- Page Header -->
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Pengguna</h1>
-    <p class="text-gray-600">Kelola pengguna dan akses mereka</p>
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Pengguna</h1>
+        <p class="text-gray-600">Kelola pengguna dan akses mereka</p>
+    </div>
+    <a href="/admin/users/create" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center space-x-2">
+        <i class="fas fa-plus"></i>
+        <span>Tambah User</span>
+    </a>
 </div>
 
 <!-- Filter & Search -->
@@ -88,11 +94,24 @@
                                 </button>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="/admin/users/<?= $user['id'] ?>" 
-                                   class="inline-flex items-center space-x-1 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Lihat</span>
-                                </a>
+                                <div class="flex items-center space-x-2">
+                                    <a href="/admin/users/<?= $user['id'] ?>" 
+                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Lihat</span>
+                                    </a>
+                                    <a href="/admin/users/edit/<?= $user['id'] ?>" 
+                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition text-sm">
+                                        <i class="fas fa-edit"></i>
+                                        <span>Edit</span>
+                                    </a>
+                                    <a href="/admin/users/delete/<?= $user['id'] ?>" 
+                                       onclick="return confirm('Yakin ingin menghapus user ini?')"
+                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Hapus</span>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -101,8 +120,85 @@
 
             <!-- Total Count -->
             <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
-                Total: <span class="font-semibold"><?= count($users) ?></span> pengguna
+                Total: <span class="font-semibold"><?= $pager['total'] ?></span> pengguna
+                <?php if ($pager['total'] > 0): ?>
+                    | Menampilkan <?= (($pager['currentPage'] - 1) * $pager['perPage']) + 1 ?> - <?= min($pager['currentPage'] * $pager['perPage'], $pager['total']) ?>
+                <?php endif; ?>
             </div>
+            
+            <!-- Pagination -->
+            <?php if ($pager['totalPages'] > 1): ?>
+            <div class="px-6 py-4 border-t border-gray-200 bg-white">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                        Halaman <?= $pager['currentPage'] ?> dari <?= $pager['totalPages'] ?>
+                    </div>
+                    <div class="flex space-x-1">
+                        <!-- Previous Button -->
+                        <?php if ($pager['currentPage'] > 1): ?>
+                            <a href="?page=<?= $pager['currentPage'] - 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        <?php endif; ?>
+                        
+                        <!-- Page Numbers -->
+                        <?php 
+                        $startPage = max(1, $pager['currentPage'] - 2);
+                        $endPage = min($pager['totalPages'], $pager['currentPage'] + 2);
+                        
+                        if ($startPage > 1): ?>
+                            <a href="?page=1<?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                1
+                            </a>
+                            <?php if ($startPage > 2): ?>
+                                <span class="px-3 py-2 text-gray-400">...</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                            <?php if ($i == $pager['currentPage']): ?>
+                                <span class="px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold">
+                                    <?= $i ?>
+                                </span>
+                            <?php else: ?>
+                                <a href="?page=<?= $i ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                    <?= $i ?>
+                                </a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        
+                        <?php if ($endPage < $pager['totalPages']): ?>
+                            <?php if ($endPage < $pager['totalPages'] - 1): ?>
+                                <span class="px-3 py-2 text-gray-400">...</span>
+                            <?php endif; ?>
+                            <a href="?page=<?= $pager['totalPages'] ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <?= $pager['totalPages'] ?>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <!-- Next Button -->
+                        <?php if ($pager['currentPage'] < $pager['totalPages']): ?>
+                            <a href="?page=<?= $pager['currentPage'] + 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
+                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php else: ?>
+                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         <?php else: ?>
             <div class="p-12 text-center text-gray-500">
                 <i class="fas fa-users text-5xl mb-4 text-gray-300"></i>

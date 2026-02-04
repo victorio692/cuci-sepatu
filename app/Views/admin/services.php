@@ -2,10 +2,37 @@
 
 <?= $this->section('content') ?>
 
+<!-- Flash Messages -->
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md flex items-center" role="alert">
+        <i class="fas fa-check-circle text-2xl mr-3"></i>
+        <div>
+            <p class="font-semibold">Berhasil!</p>
+            <p><?= session()->getFlashdata('success') ?></p>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="mb-6 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md flex items-center" role="alert">
+        <i class="fas fa-exclamation-circle text-2xl mr-3"></i>
+        <div>
+            <p class="font-semibold">Gagal!</p>
+            <p><?= session()->getFlashdata('error') ?></p>
+        </div>
+    </div>
+<?php endif; ?>
+
 <!-- Page Header -->
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Layanan</h1>
-    <p class="text-gray-600">Kelola layanan dan harga SYH Cleaning</p>
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Layanan</h1>
+        <p class="text-gray-600">Kelola layanan dan harga SYH Cleaning</p>
+    </div>
+    <a href="/admin/services/create" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center space-x-2">
+        <i class="fas fa-plus"></i>
+        <span>Tambah Layanan</span>
+    </a>
 </div>
 
 <!-- Services Grid -->
@@ -29,17 +56,23 @@
                         <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">Per Pasang</span>
                     </div>
                     <div class="text-3xl font-bold text-gray-800">
-                        Rp <?= number_format($service['price'], 0, ',', '.') ?>
+                        Rp <?= isset($service['base_price']) ? number_format($service['base_price'], 0, ',', '.') : number_format($service['price'], 0, ',', '.') ?>
                     </div>
                 </div>
 
-                <button 
-                    onclick="openEditPrice('<?= $service['id'] ?>', '<?= $service['name'] ?>', <?= $service['price'] ?>)"
-                    class="w-full px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2"
-                >
-                    <i class="fas fa-edit"></i>
-                    <span>Ubah Harga</span>
-                </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="/admin/services/edit/<?= $service['id'] ?>" 
+                       class="px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit</span>
+                    </a>
+                    <button type="button" 
+                       onclick="confirmDelete(<?= $service['id'] ?>, '<?= addslashes($service['name']) ?>')"
+                       class="px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
+                        <i class="fas fa-trash"></i>
+                        <span>Hapus</span>
+                    </button>
+                </div>
             </div>
         </div>
     <?php endforeach; ?>
@@ -101,6 +134,28 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+function confirmDelete(serviceId, serviceName) {
+    if (confirm('Yakin ingin menghapus layanan "' + serviceName + '"?\n\nLayanan yang sudah digunakan dalam pesanan tidak dapat dihapus.')) {
+        // Create form dynamically
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/admin/services/delete/' + serviceId;
+        
+        // Add CSRF token if using CSRF protection
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = csrfToken.content;
+            form.appendChild(csrfInput);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
 function openEditPrice(serviceId, serviceName, currentPrice) {
     document.getElementById('serviceId').value = serviceId;
     document.getElementById('serviceName').textContent = serviceName;

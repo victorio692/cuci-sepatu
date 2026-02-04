@@ -33,20 +33,8 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin.');
         }
 
-        // Get booking stats
-        $total_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
-            ->countAllResults();
-
-        $active_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
-            ->whereIn('status', ['pending', 'approved', 'in_progress'])
-            ->countAllResults();
-
-        $completed_bookings = $this->db->table('bookings')
-            ->where('id_user', $user_id)
-            ->where('status', 'completed')
-            ->countAllResults();
+        // Redirect pelanggan ke landing page karena tidak ada lagi halaman dashboard terpisah
+        return redirect()->to('/')->with('info', 'Selamat datang! Gunakan menu dropdown profil untuk navigasi.');
 
         $total_spent = $this->db->table('bookings')
             ->where('id_user', $user_id)
@@ -61,6 +49,13 @@ class Dashboard extends BaseController
             ->get()
             ->getResultArray();
 
+        // Get services untuk ditampilkan
+        $services = $this->db->table('services')
+            ->where('aktif', 1)
+            ->orderBy("FIELD(kode_layanan, 'fast-cleaning', 'deep-cleaning', 'white-shoes', 'suede-treatment', 'unyellowing')", '', false)
+            ->get()
+            ->getResultArray();
+
         $data = [
             'title' => 'Dashboard - SYH Cleaning',
             'user' => $user,
@@ -69,6 +64,7 @@ class Dashboard extends BaseController
             'completed_bookings' => $completed_bookings,
             'total_spent' => $total_spent->total ?? 0,
             'recent_bookings' => $recent_bookings,
+            'services' => $services,
         ];
 
         return view('pages/dashboard', $data);

@@ -31,8 +31,16 @@ class Booking extends BaseController
             return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
         }
 
+        // Get services dari database
+        $services = $this->db->table('services')
+            ->where('aktif', 1)
+            ->orderBy("FIELD(kode_layanan, 'fast-cleaning', 'deep-cleaning', 'white-shoes', 'suede-treatment', 'unyellowing')", '', false)
+            ->get()
+            ->getResultArray();
+
         $data = [
             'title' => 'Pesan Layanan - SYH Cleaning',
+            'services' => $services,
         ];
 
         return view('pages/booking', $data);
@@ -176,7 +184,20 @@ class Booking extends BaseController
             return redirect()->back()->with('error', 'Pesanan tidak bisa dibatalkan pada status ini');
         }
 
-        $this->db->table('bookings')->update(['status' => 'batal'], ['id' => $bookingId]);
+        // Get alasan pembatalan from POST request
+        $alasan_pembatalan = $this->request->getPost('alasan_pembatalan');
+        
+        // Validate alasan pembatalan
+        if (empty($alasan_pembatalan) || strlen(trim($alasan_pembatalan)) < 10) {
+            return redirect()->back()->with('error', 'Alasan pembatalan minimal 10 karakter');
+        }
+
+        // Update booking with status batal and alasan pembatalan
+        $this->db->table('bookings')->update([
+            'status' => 'batal',
+            'alasan_pembatalan' => trim($alasan_pembatalan),
+            'diupdate_pada' => date('Y-m-d H:i:s')
+        ], ['id' => $bookingId]);
 
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibatalkan');
     }
@@ -184,15 +205,19 @@ class Booking extends BaseController
     // Get Service Price
     private function getServicePrice($service)
     {
-        $prices = [
-            'fast-cleaning' => 15000,
-            'deep-cleaning' => 20000,
-            'white-shoes' => 35000,
-            'suede-treatment' => 30000,
-            'unyellowing' => 30000,
-        ];
+        // Get price from services table
+        $serviceData = $this->db->table('services')
+            ->where('kode_layanan', $service)
+            ->where('aktif', 1)
+            ->get()
+            ->getRowArray();
 
-        return $prices[$service] ?? 0;
+        if ($serviceData) {
+            return intval($serviceData['harga_dasar']);
+        }
+
+        // Fallback jika service tidak ditemukan
+        return 0;
     }
 }
 

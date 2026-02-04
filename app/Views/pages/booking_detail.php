@@ -38,6 +38,7 @@
                             'proses' => 'Sedang Diproses',
                             'selesai' => 'Selesai',
                             'ditolak' => 'Ditolak Admin',
+                            'batal' => 'Dibatalkan',
                             default => $booking['status']
                         };
                         
@@ -48,6 +49,7 @@
                             'proses' => 'bg-gradient-to-r from-purple-500 to-pink-500',
                             'selesai' => 'bg-gradient-to-r from-green-500 to-emerald-500',
                             'ditolak' => 'bg-gradient-to-r from-red-500 to-rose-500',
+                            'batal' => 'bg-gradient-to-r from-gray-500 to-slate-500',
                             default => 'bg-gradient-to-r from-gray-500 to-gray-600'
                         };
                         
@@ -57,6 +59,7 @@
                             'proses' => 'fa-spinner',
                             'selesai' => 'fa-check-double',
                             'ditolak' => 'fa-times-circle',
+                            'batal' => 'fa-ban',
                             default => 'fa-info-circle'
                         };
                         ?>
@@ -86,6 +89,19 @@
                                     <div>
                                         <strong class="text-red-900 text-lg block mb-3 font-bold">Alasan Penolakan:</strong>
                                         <p class="text-red-800 leading-relaxed"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <!-- Alasan Pembatalan (jika dibatalkan customer) -->
+                        <?php if ($booking['status'] === 'batal' && !empty($booking['alasan_pembatalan'])): ?>
+                            <div class="mt-6 p-6 bg-gradient-to-r from-gray-50 to-slate-50 border-l-4 border-gray-500 rounded-xl shadow-md">
+                                <div class="flex gap-4">
+                                    <i class="fas fa-info-circle text-gray-500 text-3xl mt-1"></i>
+                                    <div>
+                                        <strong class="text-gray-900 text-lg block mb-3 font-bold">Alasan Pembatalan:</strong>
+                                        <p class="text-gray-800 leading-relaxed"><?= nl2br(htmlspecialchars($booking['alasan_pembatalan'], ENT_QUOTES, 'UTF-8')) ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -318,6 +334,62 @@
     </div>
 </div>
 
+<!-- Cancel Booking Modal -->
+<div id="cancelModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8" onclick="event.stopPropagation()">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-times-circle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900">Batalkan Pesanan</h3>
+            </div>
+            
+            <p class="text-gray-600 mb-6">
+                Mohon berikan alasan pembatalan pesanan Anda. Informasi ini akan membantu kami meningkatkan layanan.
+            </p>
+            
+            <form id="cancelForm" onsubmit="submitCancelBooking(event)">
+                <div class="mb-6">
+                    <label for="alasan_pembatalan" class="block text-sm font-medium text-gray-700 mb-2">
+                        Alasan Pembatalan <span class="text-red-500">*</span>
+                    </label>
+                    <textarea 
+                        id="alasan_pembatalan" 
+                        name="alasan_pembatalan" 
+                        rows="4"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                        placeholder="Contoh: Berubah pikiran, menemukan layanan lebih murah, dll."
+                        required
+                        minlength="10"
+                    ></textarea>
+                    <p class="mt-1 text-sm text-gray-500">
+                        <i class="fas fa-info-circle"></i> Minimal 10 karakter
+                    </p>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button 
+                        type="submit" 
+                        class="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-lg font-bold hover:from-red-600 hover:to-rose-600 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-check"></i>
+                        Ya, Batalkan
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="closeCancelModal()"
+                        class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-all duration-200 flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Image Modal -->
 <div id="imageModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-95 backdrop-blur-sm" onclick="closeImageModal()">
     <div class="absolute top-8 right-12">
@@ -339,10 +411,45 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+let bookingIdToCancel = null;
+
 function cancelBooking(id) {
-    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
-        window.location.href = '/booking/cancel/' + id;
+    bookingIdToCancel = id;
+    const modal = document.getElementById('cancelModal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCancelModal() {
+    const modal = document.getElementById('cancelModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    document.getElementById('alasan_pembatalan').value = '';
+    bookingIdToCancel = null;
+}
+
+function submitCancelBooking(event) {
+    event.preventDefault();
+    const alasan = document.getElementById('alasan_pembatalan').value.trim();
+    
+    if (alasan.length < 10) {
+        alert('Alasan pembatalan minimal 10 karakter');
+        return;
     }
+    
+    // Create form and submit
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/booking/cancel/' + bookingIdToCancel;
+    
+    const alasanInput = document.createElement('input');
+    alasanInput.type = 'hidden';
+    alasanInput.name = 'alasan_pembatalan';
+    alasanInput.value = alasan;
+    form.appendChild(alasanInput);
+    
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function openImageModal(src) {
