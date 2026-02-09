@@ -88,9 +88,6 @@
                                     'white-shoes' => 'White Shoes',
                                     'suede-treatment' => 'Suede Treatment',
                                     'unyellowing' => 'Unyellowing',
-                                    'repair' => 'Repair',
-                                    'coating' => 'Coating',
-                                    'dyeing' => 'Dyeing',
                                     default => $booking['layanan']
                                 };
                                 echo $serviceName;
@@ -131,33 +128,6 @@
                     <?php endif; ?>
                 </div>
 
-                <!-- Foto Hasil Cucian (Setelah) - Dari Admin -->
-                <?php if (!empty($booking['foto_hasil']) && $booking['status'] === 'selesai'): ?>
-                    <div class="bg-white border border-gray-300 p-6">
-                        <div class="mb-3">
-                            <h3 class="font-bold text-lg flex items-center gap-2">
-                                <span class="text-2xl">✨</span>
-                                <span>Hasil Cucian Sepatu Anda</span>
-                            </h3>
-                            <p class="text-sm text-gray-600 mt-1">Sepatu Anda sudah selesai dicuci dengan sempurna!</p>
-                        </div>
-                        <div class="relative">
-                            <img 
-                                src="<?= base_url('uploads/' . $booking['foto_hasil']) ?>" 
-                                alt="Foto Hasil Cucian" 
-                                class="w-full h-auto border-4 border-green-500 shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                                onclick="openImageModal(this.src)"
-                            >
-                            <div class="absolute top-2 right-2 bg-green-500 text-white px-3 py-1 text-xs font-bold shadow-md">
-                                SELESAI ✓
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-2 text-center">
-                            <i class="fas fa-info-circle"></i> Klik gambar untuk memperbesar
-                        </p>
-                    </div>
-                <?php endif; ?>
-
                 <!-- Foto Sepatu (from cart) -->
                 <?php if (!empty($booking['foto_sepatu'])): ?>
                     <div class="bg-white border border-gray-300 p-6">
@@ -165,6 +135,19 @@
                         <img 
                             src="<?= base_url('uploads/' . $booking['foto_sepatu']) ?>" 
                             alt="Foto Sepatu" 
+                            class="max-w-full h-auto border border-gray-300 cursor-pointer"
+                            onclick="openImageModal(this.src)"
+                        >
+                    </div>
+                <?php endif; ?>
+
+                <!-- Foto Setelah -->
+                <?php if (!empty($booking['foto_setelah'])): ?>
+                    <div class="bg-white border border-gray-300 p-6">
+                        <h3 class="font-bold mb-3">Foto Sepatu (Setelah)</h3>
+                        <img 
+                            src="<?= base_url('uploads/' . $booking['foto_setelah']) ?>" 
+                            alt="Foto Sepatu Setelah" 
                             class="max-w-full h-auto border border-gray-300 cursor-pointer"
                             onclick="openImageModal(this.src)"
                         >
@@ -212,12 +195,22 @@
                     
                     <div class="space-y-2 text-sm">
                         <div>
+                            <label class="text-gray-600 block">Nama:</label>
+                            <span class="font-semibold"><?= htmlspecialchars($booking['nama'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        
+                        <div>
+                            <label class="text-gray-600 block">No. WhatsApp:</label>
+                            <span class="font-semibold"><?= htmlspecialchars($booking['no_wa'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        
+                        <div>
                             <label class="text-gray-600 block">Opsi Pengiriman:</label>
                             <span class="font-semibold">
                                 <?php
-                                $deliveryMethod = match($booking['opsi_kirim'] ?? 'pickup') {
-                                    'pickup' => 'Ambil di Tempat',
-                                    'home' => 'Diantar ke Rumah',
+                                $deliveryMethod = match($booking['opsi_kirim'] ?? 'langsung') {
+                                    'langsung' => 'Ambil di Tempat',
+                                    'antar' => 'Diantar ke Rumah',
                                     default => 'Ambil di Tempat'
                                 };
                                 echo $deliveryMethod;
@@ -225,7 +218,7 @@
                             </span>
                         </div>
                         
-                        <?php if (($booking['opsi_kirim'] ?? 'pickup') === 'home' && !empty($booking['alamat_kirim'])): ?>
+                        <?php if (($booking['opsi_kirim'] ?? 'langsung') === 'antar' && !empty($booking['alamat_kirim'])): ?>
                         <div>
                             <label class="text-gray-600 block">Alamat Pengiriman:</label>
                             <span class="font-semibold"><?= nl2br(htmlspecialchars($booking['alamat_kirim'], ENT_QUOTES, 'UTF-8')) ?></span>
@@ -240,19 +233,19 @@
                     
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Subtotal</span>
-                            <span class="font-semibold">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                            <span class="text-gray-600">Harga Layanan</span>
+                            <span class="font-semibold">Rp <?= number_format($booking['harga'], 0, ',', '.') ?></span>
                         </div>
                         
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Biaya Pengiriman</span>
-                            <span class="font-semibold">Rp <?= number_format($booking['biaya_kirim'], 0, ',', '.') ?></span>
+                            <span class="text-gray-600">Jumlah</span>
+                            <span class="font-semibold"><?= $booking['jumlah'] ?> Pasang</span>
                         </div>
                         
                         <div class="border-t border-gray-300 pt-2 mt-2">
                             <div class="flex justify-between">
                                 <span class="font-bold">Total</span>
-                                <span class="font-bold text-lg">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                                <span class="font-bold text-lg">Rp <?= number_format($booking['total_harga'], 0, ',', '.') ?></span>
                             </div>
                         </div>
                     </div>

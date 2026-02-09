@@ -3,16 +3,16 @@
 <?= $this->section('content') ?>
 
 <!-- Main Content Without Sidebar -->
-<div class="min-h-screen bg-gray-50 py-12">
+<div class="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
-        <div class="mb-6">
-            <a href="/" class="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all duration-300 font-medium shadow-sm hover:shadow-md transform hover:-translate-x-1">
+        <div class="mb-4 sm:mb-6">
+            <a href="/" class="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all duration-300 font-medium shadow-sm hover:shadow-md transform hover:-translate-x-1 text-sm sm:text-base">
                 <i class="fas fa-arrow-left"></i> Kembali ke Beranda
             </a>
         </div>
 
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">Buat Booking Baru</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Buat Booking Baru</h1>
 
         <?php if (session()->getFlashdata('success')): ?>
             <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg">
@@ -32,16 +32,16 @@
                 </div>
             <?php endif; ?>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Left Column: Form -->
                 <div class="lg:col-span-2">
-                    <form action="/submit-booking" method="POST" id="bookingForm" enctype="multipart/form-data" class="bg-white rounded-xl shadow-lg p-6">
+                    <form action="/submit-booking" method="POST" id="bookingForm" enctype="multipart/form-data" class="bg-white rounded-xl shadow-lg p-4 sm:p-6">
                         <?= csrf_field() ?>
 
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Pilih Layanan</h2>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Pilih Layanan</h2>
 
                         <!-- Service Selection -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                         <?php 
                         $serviceIcons = [
                             'fast-cleaning' => 'fa-running',
@@ -60,20 +60,20 @@
                             $isSelected = ($selectedService === $service['kode_layanan']) || ($index === 0 && empty($selectedService));
                         ?>
                         <!-- <?= htmlspecialchars($service['nama_layanan']) ?> -->
-                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-xl p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
+                        <label class="relative block cursor-pointer border-2 border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 transition hover:border-blue-500 hover:shadow-lg bg-white group">
                             <input type="radio" name="service" value="<?= $service['kode_layanan'] ?>" data-price="<?= intval($service['harga_dasar']) ?>" <?= $isSelected ? 'checked' : '' ?> <?= $index === 0 ? 'required' : '' ?> class="absolute opacity-0">
-                            <div class="flex justify-between items-start mb-3">
+                            <div class="flex justify-between items-start mb-2 sm:mb-3">
                                 <div>
-                                    <h3 class="text-lg font-bold text-gray-900"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
-                                    <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($service['deskripsi']) ?></p>
+                                    <h3 class="text-base sm:text-lg font-bold text-gray-900"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
+                                    <p class="text-xs sm:text-sm text-gray-600 mt-1"><?= htmlspecialchars($service['deskripsi']) ?></p>
                                 </div>
-                                <i class="fas <?= $icon ?> text-blue-500 text-xl"></i>
+                                <i class="fas <?= $icon ?> text-blue-500 text-lg sm:text-xl"></i>
                             </div>
-                            <div class="mt-3">
-                                <span class="text-blue-600 font-semibold text-lg">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
-                                <span class="text-gray-400 text-sm">/pasang</span>
+                            <div class="mt-2 sm:mt-3">
+                                <span class="text-blue-600 font-semibold text-base sm:text-lg">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
+                                <span class="text-gray-400 text-xs sm:text-sm">/pasang</span>
                             </div>
-                            <div class="text-gray-400 text-xs mt-2"><?= $service['durasi_hari'] ?> hari pengerjaan</div>
+                            <div class="text-gray-400 text-xs mt-1 sm:mt-2"><?= $service['durasi_hari'] ?> hari pengerjaan</div>
                         </label>
                         <?php endforeach; ?>
                         </div>
@@ -82,7 +82,7 @@
                     <input type="hidden" name="shoe_type" value="sneaker">
                     <input type="hidden" name="shoe_condition" value="normal">
 
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6 mt-8">Detail Pesanan</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 mt-6 sm:mt-8">Detail Pesanan</h2>
 
                     <!-- Jumlah Sepatu -->
                     <div class="mb-6">
@@ -179,6 +179,8 @@
                             type="time" 
                             id="booking_time" 
                             name="booking_time" 
+                            min="12:00"
+                            max="23:59"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
@@ -200,27 +202,27 @@
                     </div>
 
                     <!-- Foto Sepatu -->
-                    <div class="mb-8">
-                        <label class="block text-gray-700 font-medium mb-2">
+                    <div class="mb-6 sm:mb-8">
+                        <label class="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
                             Foto Sepatu <span class="text-red-500">*</span>
                         </label>
                         <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required class="hidden">
                         
-                        <div id="uploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50 transition hover:border-blue-500 hover:bg-blue-50">
-                            <div class="mb-4">
-                                <i class="fas fa-image text-6xl text-blue-500"></i>
+                        <div id="uploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-gray-50 transition hover:border-blue-500 hover:bg-blue-50">
+                            <div class="mb-3 sm:mb-4">
+                                <i class="fas fa-image text-4xl sm:text-5xl md:text-6xl text-blue-500"></i>
                             </div>
-                            <p class="text-gray-800 font-medium mb-1">Upload Foto Sepatu Anda</p>
-                            <p class="text-gray-600 text-sm mb-4">PNG, JPG, JPEG (Maks. 5 MB)</p>
+                            <p class="text-gray-800 font-medium mb-1 text-sm sm:text-base">Upload Foto Sepatu Anda</p>
+                            <p class="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">PNG, JPG, JPEG (Maks. 5 MB)</p>
                             
-                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
+                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition text-sm sm:text-base">
                                 <i class="fas fa-camera"></i> Pilih Foto
                             </button>
                             
-                            <p class="text-gray-400 text-xs mt-4">
+                            <p class="text-gray-400 text-xs mt-3 sm:mt-4">
                                 <i class="fas fa-hand-pointer"></i> atau seret file kesini
                             </p>
-                            <p class="text-red-500 text-sm mt-2">
+                            <p class="text-red-500 text-xs sm:text-sm mt-2">
                                 <i class="fas fa-exclamation-circle"></i> Wajib upload foto sepatu
                             </p>
                         </div>
@@ -243,47 +245,47 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="ripple w-full px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-bold text-lg hover:shadow-xl transform hover:-translate-y-0.5 transition">
-                        <i class="fas fa-check-circle mr-2"></i> Buat Booking
+                    <button type="submit" class="ripple w-full px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-bold text-base sm:text-lg hover:shadow-xl transform hover:-translate-y-0.5 transition hover:from-blue-600 hover:to-blue-700">
+                        <i class="fas fa-check-circle mr-2"></i> Booking Sekarang
                     </button>
                 </form>
             </div>
 
             <!-- Right Column: Summary -->
             <div>
-                <div class="bg-white rounded-xl shadow-lg sticky top-8 overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-xl p-6">
-                        <h3 class="text-xl font-bold flex items-center gap-2">
+                <div class="bg-white rounded-xl shadow-lg lg:sticky lg:top-8 overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-xl p-4 sm:p-5 md:p-6">
+                        <h3 class="text-lg sm:text-xl font-bold flex items-center gap-2">
                             <i class="fas fa-clipboard-list"></i> Ringkasan Booking
                         </h3>
                     </div>
-                    <div class="p-6">
-                        <div class="space-y-3 mb-4">
-                            <div class="flex justify-between items-center">
+                    <div class="p-4 sm:p-5 md:p-6">
+                        <div class="space-y-2.5 sm:space-y-3 mb-4">
+                            <div class="flex justify-between items-center text-sm sm:text-base">
                                 <span class="text-gray-600">Layanan</span>
                                 <span id="summaryService" class="font-semibold text-gray-900">-</span>
                             </div>
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center text-sm sm:text-base">
                                 <span class="text-gray-600">Harga/Sepatu</span>
                                 <span id="summaryPrice" class="font-semibold text-gray-900">Rp 0</span>
                             </div>
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center text-sm sm:text-base">
                                 <span class="text-gray-600">Jumlah</span>
                                 <span id="summaryQuantity" class="font-semibold text-gray-900">1 pasang</span>
                             </div>
                         </div>
                         
-                        <hr class="border-gray-300 my-4">
+                        <hr class="border-gray-300 my-3 sm:my-4">
                         
-                        <div class="flex justify-between items-center mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 transition-all duration-300 hover:shadow-md">
-                            <span class="font-bold text-gray-900 text-xl">Total</span>
-                            <span id="summaryTotal" class="font-bold text-blue-600 text-2xl">Rp 0</span>
+                        <div class="flex justify-between items-center mb-4 sm:mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 rounded-lg border border-blue-200 transition-all duration-300 hover:shadow-md">
+                            <span class="font-bold text-gray-900 text-lg sm:text-xl">Total</span>
+                            <span id="summaryTotal" class="font-bold text-blue-600 text-xl sm:text-2xl">Rp 0</span>
                         </div>
 
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <div class="flex gap-3">
-                                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
-                                <p class="text-blue-900 text-sm">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                            <div class="flex gap-2 sm:gap-3">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5 text-sm sm:text-base"></i>
+                                <p class="text-blue-900 text-xs sm:text-sm">
                                     Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.
                                 </p>
                             </div>

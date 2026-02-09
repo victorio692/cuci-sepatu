@@ -103,7 +103,7 @@ echo password_hash('admin123', PASSWORD_BCRYPT);
    - Pickup at Store (Gratis)
    - Home Delivery (Rp 5,000)
 5. Review order summary
-6. Click "Buat Pesanan"
+6. Click "Booking Sekarang"
 7. Pesanan akan muncul di "Pesanan Saya"
 
 ### 4️⃣ Lihat Pesanan Saya (`/my-bookings`)

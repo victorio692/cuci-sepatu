@@ -2,52 +2,173 @@
 
 <?= $this->section('content') ?>
 
-<div class="flex min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg fixed h-full">
-        <div class="p-6 border-b border-gray-200 group">
-            <h2 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">Dashboard</h2>
-        </div>
-        <nav class="py-4">
-            <a href="/dashboard" class="flex items-center px-6 py-3 text-gray-900 bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                <i class="fas fa-home mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
-                <span class="relative z-10">Dashboard</span>
-            </a>
-            <a href="/my-bookings" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                <i class="fas fa-calendar-check mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
-                <span class="relative z-10">Pesanan Saya</span>
-            </a>
-            <a href="/make-booking" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                <i class="fas fa-plus-circle mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
-                <span class="relative z-10">Pesan Baru</span>
-            </a>
-            <a href="/profile" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:border-l-4 hover:border-blue-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-                <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                <i class="fas fa-user-circle mr-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
-                <span class="relative z-10">Profil</span>
-            </a>
-            <a href="#" onclick="confirmLogout(event)" class="flex items-center px-6 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 hover:border-l-4 hover:border-red-400 transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-                <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
-                <i class="fas fa-sign-out-alt mr-3 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300 relative z-10"></i>
-                <span class="relative z-10">Logout</span>
-            </a>
-        </nav>
-    </aside>
+<!-- User Dashboard - Shopee Style -->
+<div class="min-h-screen bg-gray-50 pt-24 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Profile Section - Clickable -->
+        <a href="/profile" class="block bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg p-6 mb-6 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <?php if (!empty($user['foto_profil'])): ?>
+                        <img src="<?= base_url('uploads/' . $user['foto_profil']) ?>" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white shadow-lg">
+                    <?php else: ?>
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-blue-600 text-2xl sm:text-3xl font-bold border-4 border-white shadow-lg">
+                            <?= strtoupper(substr($user['full_name'] ?? $user['nama_lengkap'] ?? 'U', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    <!-- Online Badge -->
+                    <div class="absolute bottom-0 right-0 w-4 h-4 sm:w-5 sm:h-5 bg-green-400 border-2 border-white rounded-full"></div>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-white font-bold text-lg sm:text-xl"><?= $user['full_name'] ?? $user['nama_lengkap'] ?? 'User' ?></h2>
+                    <p class="text-blue-100 text-sm"><?= $user['email'] ?></p>
+                </div>
+                <i class="fas fa-chevron-right text-white text-xl"></i>
+            </div>
+        </a>
 
-    <!-- Main Content -->
-    <div class="flex-1 ml-64">
-        <div class="p-8">
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang, <?= $user['nama_lengkap'] ?? 'Guest' ?>!</h1>
-                <p class="text-gray-600">Kelola pesanan dan layanan cuci sepatu Anda</p>
+        <!-- Pesanan Saya Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-shopping-bag text-blue-600"></i>
+                    Pesanan Saya
+                </h3>
+                <a href="/my-bookings" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+                    Lihat Semua
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
             </div>
 
-            <!-- Action Bar -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <!-- Order Status Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+                <!-- Menunggu Konfirmasi -->
+                <a href="/my-bookings?status=pending" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['pending'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['pending'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-clock text-blue-600 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Menunggu Konfirmasi</span>
+                </a>
+
+                <!-- Dikonfirmasi -->
+                <a href="/my-bookings?status=disetujui" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['disetujui'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['disetujui'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-check-circle text-blue-500 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Dikonfirmasi</span>
+                </a>
+
+                <!-- Proses -->
+                <a href="/my-bookings?status=proses" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['proses'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['proses'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-purple-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-sync-alt text-purple-500 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Proses</span>
+                </a>
+
+                <!-- Selesai -->
+                <a href="/my-bookings?status=selesai" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['selesai'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['selesai'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-check-double text-green-500 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Selesai</span>
+                </a>
+
+                <!-- Dibatalkan -->
+                <a href="/my-bookings?status=batal" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['batal'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['batal'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-times-circle text-gray-500 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Dibatalkan</span>
+                </a>
+
+                <!-- Ditolak -->
+                <a href="/my-bookings?status=ditolak" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-red-400 hover:bg-red-50 transition-all duration-300 group cursor-pointer">
+                    <?php if ($statusCounts['ditolak'] > 0): ?>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['ditolak'] ?></span>
+                    <?php endif; ?>
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-red-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-ban text-red-500 text-xl sm:text-2xl"></i>
+                    </div>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Ditolak</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+            <!-- Booking Baru -->
+            <a href="/make-booking" class="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-blue-400">
+                <div class="flex flex-col items-center text-center gap-2">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-plus text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Booking Baru</span>
+                </div>
+            </a>
+
+            <!-- Keranjang -->
+            <a href="/cart" class="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-purple-400">
+                <div class="flex flex-col items-center text-center gap-2">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shopping-cart text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Keranjang</span>
+                </div>
+            </a>
+
+            <!-- Layanan -->
+            <a href="/#services" class="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-green-400">
+                <div class="flex flex-col items-center text-center gap-2">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-list text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Layanan</span>
+                </div>
+            </a>
+
+            <!-- Hubungi Kami -->
+            <a href="/kontak" class="bg-white rounded-xl shadow-sm p-4 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border-2 border-transparent hover:border-pink-400">
+                <div class="flex flex-col items-center text-center gap-2">
+                    <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-headset text-white text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">Hubungi Kami</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Info Banner -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <h3 class="text-lg font-bold mb-1">Promo Spesial!</h3>
+                    <p class="text-sm text-white/90">Dapatkan diskon 20% untuk layanan Deep Cleaning</p>
+                </div>
+                <a href="/#services" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-50 transition-colors whitespace-nowrap">
+                    Lihat Detail
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-4">
                         <!-- Notification Bell -->
@@ -73,7 +194,7 @@
                         </div>
                     </div>
                     <a href="/make-booking" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i> Pesan Sekarang
+                        <i class="fas fa-plus mr-2"></i> Booking Sekarang
                     </a>
                 </div>
             </div>
@@ -137,7 +258,7 @@
                             <a href="/make-booking?service=<?= $service['kode_layanan'] ?>" 
                                class="block w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white text-center rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
                                 <i class="fas fa-shopping-cart mr-2"></i>
-                                Pesan Sekarang
+                                Booking Sekarang
                             </a>
                         </div>
                     </div>
@@ -152,7 +273,7 @@
                     <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
                     <p class="text-gray-600 mb-4">Anda belum memiliki pesanan.</p>
                     <a href="/make-booking" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
-                        Pesan Sekarang
+                        Booking Sekarang
                     </a>
                 </div>
             </div>
@@ -305,10 +426,11 @@ function confirmLogout(e) {
 function getStatusBadgeClass(status) {
     const classes = {
         'pending': 'warning',
-        'approved': 'info',
-        'in_progress': 'info',
-        'completed': 'success',
-        'cancelled': 'danger'
+        'disetujui': 'info',
+        'proses': 'info',
+        'selesai': 'success',
+        'batal': 'danger',
+        'ditolak': 'danger'
     };
     return classes[status] || 'primary';
 }
@@ -316,20 +438,14 @@ function getStatusBadgeClass(status) {
 function getStatusLabel(status) {
     const labels = {
         'pending': 'Menunggu Persetujuan',
-        'approved': 'Disetujui',
-        'in_progress': 'Sedang Diproses',
-        'completed': 'Selesai',
-        'cancelled': 'Dibatalkan'
+        'disetujui': 'Disetujui',
+        'proses': 'Sedang Diproses',
+        'selesai': 'Selesai',
+        'batal': 'Dibatalkan',
+        'ditolak': 'Ditolak'
     };
     return labels[status] || status;
 }
-
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
 </script>
+
 <?= $this->endSection() ?>

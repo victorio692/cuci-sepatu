@@ -73,7 +73,7 @@
             <h2>Hubungi Kami</h2>
             <p>
                 Jika Anda memiliki pertanyaan tentang Syarat dan Ketentuan ini, silakan hubungi kami di:<br>
-                Email: <a href="mailto:legal@syhcleaning.com">legal@syhcleaning.com</a><br>
+                Email: <a href="mailto:legal@syhhcleaning@gmail.com">legal@syhhcleaning@gmail.com</a><br>
                 Telepon: <a href="tel:+6281234567890">+62 812-3456-7890</a>
             </p>
         </div>

@@ -24,8 +24,8 @@ class UserSeeder extends Seeder
         // Admin 2 - Manager
         $this->db->table('users')->insert([
             'nama_lengkap' => 'Sarah Wijaya',
-            'email' => 'admin@syhcleaning.com',
-            'no_hp' => '081234567890',
+            'email' => 'admin@syhhcleaning@gmailcom',
+            'no_hp' => '089898765432',
             'password_hash' => password_hash('admin123', PASSWORD_BCRYPT),
             'foto_profil' => null,
             'alamat' => 'Jl. Sudirman No. 88, Jakarta Pusat',
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
         // Petugas 1
         $this->db->table('users')->insert([
             'nama_lengkap' => 'Andi Prasetyo',
-            'email' => 'andi@syhcleaning.com',
+            'email' => 'andi@syhhcleaning.gmail.com',
             'no_hp' => '082123456789',
             'password_hash' => password_hash('petugas123', PASSWORD_BCRYPT),
             'foto_profil' => null,

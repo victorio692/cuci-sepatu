@@ -49,7 +49,7 @@
                 name="kode_layanan" 
                 value="<?= old('kode_layanan') ?>"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder="fast-cleaning"
+                placeholder=""
                 required
             >
             <p class="mt-1 text-sm text-gray-500">Gunakan format: huruf-kecil-dengan-tanda-hubung</p>
@@ -66,7 +66,7 @@
                 name="nama_layanan" 
                 value="<?= old('nama_layanan') ?>"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder="Fast Cleaning"
+                placeholder=""
                 required
             >
         </div>
@@ -81,7 +81,7 @@
                 name="deskripsi" 
                 rows="3"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder="Pembersihan cepat untuk sepatu"
+                placeholder=""
                 required
             ><?= old('deskripsi') ?></textarea>
         </div>
@@ -97,7 +97,7 @@
                 id="harga_dasar_display" 
                 value="<?= old('harga_dasar') ? number_format(old('harga_dasar'), 0, ',', '.') : '' ?>"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder="15.000"
+                placeholder=""
                 onkeyup="formatRupiah(this)"
                 required
             >
@@ -113,9 +113,9 @@
                     type="number" 
                     id="durasi_hari" 
                     name="durasi_hari" 
-                    value="<?= old('durasi_hari', 1) ?>"
+                    value="<?= old('durasi_hari') ?>"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                    placeholder="1"
+                    placeholder=""
                     min="1"
                     required
                 >

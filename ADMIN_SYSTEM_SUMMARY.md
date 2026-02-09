@@ -138,7 +138,7 @@ Admin dashboard sudah siap untuk testing lengkap:
 ### Testing User Features
 1. **Register** user baru
 2. **Login** dengan email/password
-3. **Buat pesanan** - multi-step form
+3. **Booking Sekarang** - multi-step form
 4. **Lihat pesanan** di my-bookings
 5. **Update profil** dan password
 6. **View booking detail**

@@ -352,7 +352,7 @@ Semua validasi juga harus dilakukan di backend untuk keamanan.
 ## 🔄 Workflow Contoh
 
 ### Booking Workflow
-1. User click "Pesan Sekarang" di home
+1. User click "Booking Sekarang" di home
 2. Redirect ke login jika belum login
 3. Pilih service → update summary
 4. Isi detail booking

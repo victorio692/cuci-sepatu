@@ -25,6 +25,8 @@ $routes->group('', ['filter' => 'auth'], static function($routes) {
     $routes->get('/dashboard', 'Dashboard::index');
     $routes->get('/my-bookings', 'Dashboard::myBookings');
     $routes->get('/profile', 'Dashboard::profile');
+    $routes->get('/profile/detail', 'Dashboard::profileDetail');
+    $routes->get('/profile/change-password', 'Dashboard::changePasswordPage');
     $routes->post('/update-profile', 'Dashboard::updateProfile');
     $routes->post('/update-profile-photo', 'Dashboard::updateProfilePhoto');
     $routes->post('/change-password', 'Dashboard::changePassword');
@@ -34,9 +36,22 @@ $routes->group('', ['filter' => 'auth'], static function($routes) {
 $routes->group('', ['filter' => 'auth'], static function($routes) {
     $routes->get('/make-booking', 'Booking::makeBooking');
     $routes->post('/submit-booking', 'Booking::submitBooking');
+    $routes->get('/quick-booking', 'Booking::quickBooking');
+    $routes->post('/quick-booking/submit', 'Booking::submitQuickBooking');
+    $routes->get('/checkout', 'Booking::checkout');
+    $routes->post('/checkout/submit', 'Booking::submitCheckout');
     $routes->get('/booking-detail/(:num)', 'Booking::detail/$1');
     $routes->get('/booking/cancel/(:num)', 'Booking::cancelBooking/$1');
     $routes->post('/booking/cancel/(:num)', 'Booking::cancelBooking/$1');
+});
+
+// Cart Routes (Protected)
+$routes->group('', ['filter' => 'auth'], static function($routes) {
+    $routes->get('/cart', 'Cart::viewCart');
+    $routes->post('/cart/add', 'Cart::addToCart');
+    $routes->get('/cart/remove/(:num)', 'Cart::removeFromCart/$1');
+    $routes->post('/cart/update-quantity', 'Cart::updateQuantity');
+    $routes->post('/cart/checkout', 'Cart::checkout');
 });
 
 // Admin Routes (Protected)
@@ -105,5 +120,6 @@ $routes->group('api', static function($routes) {
 $routes->get('/tentang', 'Pages::about');
 $routes->get('/kontak', 'Pages::contact');
 $routes->post('/kontak', 'Pages::submitContact');
+$routes->get('/faq', 'Pages::faq');
 $routes->get('/kebijakan', 'Pages::privacy');
 $routes->get('/syarat', 'Pages::terms');

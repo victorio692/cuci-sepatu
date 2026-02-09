@@ -111,9 +111,17 @@ class Bookings extends Controller
         $booking['subtotal'] = $booking['subtotal'] ?? $booking['total'];
         $booking['delivery_fee'] = $booking['biaya_kirim'] ?? 0;
 
+        // Get uploaded photos from customer
+        $photos = $this->db->table('booking_photos')
+            ->where('booking_id', $id)
+            ->orderBy('id', 'ASC')
+            ->get()
+            ->getResultArray();
+
         $data = [
             'title' => 'Detail Pesanan - Admin SYH Cleaning',
             'booking' => $booking,
+            'photos' => $photos,
         ];
 
         return view('admin/booking_detail', $data);
@@ -264,7 +272,7 @@ class Bookings extends Controller
         // Create notification for customer
         $notificationData = [
             'id_user' => $booking['id_user'],
-            'id_booking' => $id,
+            'booking_id' => $id,
             'dibaca' => 0,
             'dibuat_pada' => date('Y-m-d H:i:s')
         ];

@@ -81,12 +81,12 @@
     </div>
 
     <!-- Pending Card -->
-    <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+    <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-amber-100 text-sm font-medium">Pending</p>
+                <p class="text-blue-100 text-sm font-medium">Pending</p>
                 <h3 class="text-3xl font-bold mt-2"><?= $pending_bookings ?></h3>
-                <p class="text-amber-100 text-xs mt-1">Menunggu proses</p>
+                <p class="text-blue-100 text-xs mt-1">Menunggu proses</p>
             </div>
             <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
                 <i class="fas fa-clock text-2xl"></i>

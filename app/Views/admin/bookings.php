@@ -97,7 +97,7 @@
                                         switch($booking['status']) {
                                             case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
                                             case 'disetujui': echo 'bg-blue-100 text-blue-800'; break;
-                                            case 'proses': echo 'bg-orange-100 text-orange-800'; break;
+                                            case 'proses': echo 'bg-purple-100 text-purple-800'; break;
                                             case 'selesai': echo 'bg-green-100 text-green-800'; break;
                                             case 'ditolak': echo 'bg-red-100 text-red-800'; break;
                                             case 'batal': echo 'bg-gray-100 text-gray-800'; break;
@@ -106,14 +106,13 @@
                                     data-booking-id="<?= $booking['id'] ?>"
                                     data-original-status="<?= $booking['status'] ?>"
                                     onchange="updateBookingStatus(this)"
-                                    <?= in_array($booking['status'], ['selesai', 'ditolak', 'batal']) ? 'disabled' : '' ?>
+                                    <?= in_array($booking['status'], ['selesai', 'ditolak']) ? 'disabled' : '' ?>
                                 >
                                     <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
                                     <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
                                     <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
                                     <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
                                     <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
-                                    <option value="batal" <?= $booking['status'] === 'batal' ? 'selected' : '' ?>>Dibatalkan</option>
                                 </select>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

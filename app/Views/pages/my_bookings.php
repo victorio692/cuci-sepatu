@@ -2,23 +2,63 @@
 
 <?= $this->section('content') ?>
 
-<!-- Main Content Without Sidebar -->
-<div class="min-h-screen bg-gray-50 py-12">
+<!-- Main Content -->
+<div class="min-h-screen bg-gray-50 pt-24 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Back Button -->
-        <div class="mb-6">
-            <a href="/" class="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-blue-400 hover:text-blue-600 transition-all duration-300 font-medium shadow-sm hover:shadow-md transform hover:-translate-x-1">
-                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
-            </a>
-        </div>
-        
         <!-- Header -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">
-                <i class="fas fa-calendar-check text-blue-600 mr-3"></i>
-                Pesanan Saya
-            </h1>
-            <p class="text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">
+                        <i class="fas fa-calendar-check text-blue-600 mr-3"></i>
+                        Pesanan Saya
+                    </h1>
+                    <p class="text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
+                </div>
+                <div>
+                    <a href="/profile" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition shadow-sm">
+                        <i class="fas fa-arrow-left"></i>
+                        <span class="hidden sm:inline">Kembali ke Profil</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Tabs Navigation -->
+        <div class="bg-white rounded-xl shadow-lg mb-6 overflow-hidden">
+            <div class="border-b border-gray-200">
+                <nav class="flex overflow-x-auto" aria-label="Tabs">
+                    <?php 
+                    $currentStatus = $_GET['status'] ?? 'all';
+                    $tabs = [
+                        'all' => ['label' => 'Semua', 'icon' => 'fa-list', 'count' => count($allBookings ?? $bookings)],
+                        'pending' => ['label' => 'Menunggu', 'icon' => 'fa-clock', 'count' => $statusCounts['pending'] ?? 0],
+                        'disetujui' => ['label' => 'Dikonfirmasi', 'icon' => 'fa-check-circle', 'count' => $statusCounts['disetujui'] ?? 0],
+                        'proses' => ['label' => 'Proses', 'icon' => 'fa-sync-alt', 'count' => $statusCounts['proses'] ?? 0],
+                        'selesai' => ['label' => 'Selesai', 'icon' => 'fa-check-double', 'count' => $statusCounts['selesai'] ?? 0],
+                        'batal' => ['label' => 'Dibatalkan', 'icon' => 'fa-times-circle', 'count' => $statusCounts['batal'] ?? 0],
+                        'ditolak' => ['label' => 'Ditolak', 'icon' => 'fa-ban', 'count' => $statusCounts['ditolak'] ?? 0],
+                    ];
+                    ?>
+                    
+                    <?php foreach ($tabs as $status => $tab): ?>
+                        <a href="/my-bookings<?= $status !== 'all' ? '?status=' . $status : '' ?>" 
+                           class="<?= $currentStatus === $status 
+                                ? 'border-blue-600 text-blue-600 font-semibold' 
+                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' 
+                            ?> whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm flex items-center gap-2 transition">
+                            <i class="fas <?= $tab['icon'] ?>"></i>
+                            <span><?= $tab['label'] ?></span>
+                            <span class="<?= $currentStatus === $status 
+                                ? 'bg-blue-100 text-blue-600' 
+                                : 'bg-gray-100 text-gray-600' 
+                            ?> ml-2 py-0.5 px-2 rounded-full text-xs font-semibold">
+                                <?= $tab['count'] ?>
+                            </span>
+                        </a>
+                    <?php endforeach; ?>
+                </nav>
+            </div>
         </div>
 
         <?php if (!empty($bookings)): ?>
@@ -144,22 +184,11 @@
                     <a href="/make-booking" 
                        class="inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition">
                         <i class="fas fa-plus mr-2"></i>
-                        Pesan Sekarang
+                        Booking Sekarang
                     </a>
                 </div>
             <?php endif; ?>
-        </div>
     </div>
 </div>
-
-<script>
-// Logout confirmation
-function confirmLogout(e) {
-    e.preventDefault();
-    if (confirm('Apakah Anda yakin ingin logout?')) {
-        window.location.href = '/logout';
-    }
-}
-</script>
 
 <?= $this->endSection() ?>

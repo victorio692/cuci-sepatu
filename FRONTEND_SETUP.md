@@ -162,7 +162,7 @@ http://localhost:8080
 5. User login dengan email & password
 
 ### Booking Workflow
-1. User klik "Pesan Sekarang" di home
+1. User klik "Booking Sekarang" di home
 2. Jika belum login → redirect ke login
 3. Pilih service dari 6 pilihan
 4. Fill detail booking (shoe type, quantity, date)
@@ -267,7 +267,7 @@ Update service list di:
 ## 🤝 Support
 
 Untuk bantuan tambahan:
-- Email: `info@syhcleaning.com`
+- Email: `info@syhhcleaning@gmail.com`
 - Phone: `+62 812-3456-7890`
 
 ---

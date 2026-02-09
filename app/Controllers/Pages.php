@@ -42,4 +42,9 @@ class Pages extends BaseController
     {
         return view('pages/terms', ['title' => 'Syarat & Ketentuan - SYH Cleaning']);
     }
+
+    public function faq()
+    {
+        return view('pages/faq', ['title' => 'FAQ - SYH Cleaning']);
+    }
 }

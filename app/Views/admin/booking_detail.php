@@ -140,7 +140,35 @@
                 </div>
             </div>
 
-            <!-- Foto Sepatu -->
+            <!-- Foto Sepatu dari Customer -->
+            <?php if (!empty($photos) && count($photos) > 0): ?>
+                <div class="admin-card" style="margin-bottom: 1.5rem;">
+                    <div class="card-header">
+                        <h3 style="margin: 0; color: #1f2937;">
+                            <i class="fas fa-camera"></i> Foto Sepatu dari Customer (<?= count($photos) ?>)
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                            <?php foreach ($photos as $photo): ?>
+                                <div style="position: relative; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;" onclick="openPhotoModal('<?= base_url('uploads/' . $photo['photo_path']) ?>')">
+                                    <img 
+                                        src="<?= base_url('uploads/' . $photo['photo_path']) ?>" 
+                                        alt="Foto Sepatu" 
+                                        style="width: 100%; height: 200px; object-fit: cover;"
+                                        onerror="this.src='<?= base_url('assets/images/no-image.png') ?>'"
+                                    >
+                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 0.5rem; color: white; font-size: 0.75rem;">
+                                        <i class="fas fa-search-plus"></i> Klik untuk memperbesar
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <!-- Foto Sepatu Lama -->
             <?php if (!empty($booking['foto_sepatu'])): ?>
                 <div class="admin-card" style="margin-bottom: 1.5rem;">
                     <div class="card-header">
@@ -158,6 +186,30 @@
                             >
                             <p style="margin: 1rem 0 0; color: #6b7280; font-size: 0.9rem;">
                                 <i class="fas fa-info-circle"></i> Klik gambar untuk memperbesar
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Foto Hasil Cucian (Setelah) -->
+            <?php if (!empty($booking['foto_hasil']) && $booking['status'] === 'selesai'): ?>
+                <div class="admin-card" style="margin-bottom: 1.5rem; border: 2px solid #10b981;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <h3 style="margin: 0; color: white;">
+                            <i class="fas fa-check-circle"></i> Foto Hasil Cucian (Dikirim ke Customer)
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="text-align: center;">
+                            <img 
+                                src="<?= base_url('uploads/' . $booking['foto_hasil']) ?>" 
+                                alt="Foto Hasil Cucian" 
+                                style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); cursor: pointer;"
+                                onclick="openPhotoModal(this.src)"
+                            >
+                            <p style="margin: 1rem 0 0; color: #059669; font-size: 0.9rem; font-weight: 600;">
+                                <i class="fas fa-check-double"></i> Foto ini sudah dikirim ke customer
                             </p>
                         </div>
                     </div>
@@ -272,7 +324,7 @@
                     </div>
 
                     <?php
-                    $statuses = ['pending' => 'Pending', 'approved' => 'Disetujui', 'in_progress' => 'Sedang Diproses', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan'];
+                    $statuses = ['pending' => 'Pending', 'approved' => 'Disetujui', 'in_progress' => 'Sedang Diproses', 'completed' => 'Selesai'];
                     $status_order = ['pending', 'approved', 'in_progress', 'completed'];
                     $current_status = $booking['status'];
                     ?>

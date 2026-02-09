@@ -11,7 +11,7 @@
 
 ### Admin 2 - Manager
 - **Nama:** Sarah Wijaya
-- **Email:** `admin@syhcleaning.com`
+- **Email:** `admin@syhhcleaning@gmail.com`
 - **Password:** `admin123`
 - **Role:** `admin`
 - **Deskripsi:** Manager yang mengelola operasional
@@ -22,7 +22,7 @@
 
 ### Petugas 1
 - **Nama:** Andi Prasetyo
-- **Email:** `andi@syhcleaning.com`
+- **Email:** `andi@syhhcleaning@gmail.com`
 - **Password:** `petugas123`
 - **Role:** `petugas`
 - **Deskripsi:** Staff operasional yang menangani pesanan

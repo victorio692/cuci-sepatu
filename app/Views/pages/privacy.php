@@ -42,7 +42,7 @@
             <h2>Hubungi Kami</h2>
             <p>
                 Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami di:<br>
-                Email: <a href="mailto:privacy@syhcleaning.com">privacy@syhcleaning.com</a><br>
+                Email: <a href="mailto:privacy@syhhcleaning@gmail.com">privacy@syhhcleaning@gmail.com</a><br>
                 Telepon: <a href="tel:+6281234567890">+62 812-3456-7890</a>
             </p>
         </div>

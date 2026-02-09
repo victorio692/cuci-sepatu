@@ -33,8 +33,23 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin.');
         }
 
-        // Redirect pelanggan ke landing page karena tidak ada lagi halaman dashboard terpisah
-        return redirect()->to('/')->with('info', 'Selamat datang! Gunakan menu dropdown profil untuk navigasi.');
+        // Hitung jumlah pesanan berdasarkan status
+        $statusCounts = [
+            'pending' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'pending'])->countAllResults(),
+            'disetujui' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'disetujui'])->countAllResults(),
+            'proses' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'proses'])->countAllResults(),
+            'selesai' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'selesai'])->countAllResults(),
+            'batal' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'batal'])->countAllResults(),
+            'ditolak' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'ditolak'])->countAllResults(),
+        ];
+
+        $data = [
+            'title' => 'Dashboard Saya',
+            'user' => $user,
+            'statusCounts' => $statusCounts
+        ];
+
+        return view('pages/dashboard', $data);
 
         $total_spent = $this->db->table('bookings')
             ->where('id_user', $user_id)
@@ -75,15 +90,56 @@ class Dashboard extends BaseController
     {
         $user_id = session()->get('user_id');
 
-        $bookings = $this->db->table('bookings')
+        if (!$user_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Get status filter from query parameter
+        $statusFilter = $this->request->getGet('status');
+
+        // Get all bookings for count
+        $allBookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
             ->orderBy('dibuat_pada', 'DESC')
             ->get()
             ->getResultArray();
 
+        // Filter bookings based on status
+        if ($statusFilter && $statusFilter !== 'all') {
+            $bookings = $this->db->table('bookings')
+                ->where('id_user', $user_id)
+                ->where('status', $statusFilter)
+                ->orderBy('dibuat_pada', 'DESC')
+                ->get()
+                ->getResultArray();
+        } else {
+            $bookings = $allBookings;
+        }
+
+        // Count bookings by status
+        $statusCounts = [
+            'pending' => 0,
+            'disetujui' => 0,
+            'proses' => 0,
+            'selesai' => 0,
+            'batal' => 0,
+            'ditolak' => 0,
+        ];
+
+        foreach ($allBookings as $booking) {
+            if (isset($statusCounts[$booking['status']])) {
+                $statusCounts[$booking['status']]++;
+            }
+        }
+
         $data = [
             'title' => 'Pesanan Saya - SYH Cleaning',
             'bookings' => $bookings,
+            'allBookings' => $allBookings,
+            'statusCounts' => $statusCounts,
+            'user' => $user,
         ];
 
         return view('pages/my_bookings', $data);
@@ -95,12 +151,37 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Hitung jumlah pesanan berdasarkan status
+        $statusCounts = [
+            'pending' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'pending'])->countAllResults(),
+            'disetujui' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'disetujui'])->countAllResults(),
+            'proses' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'proses'])->countAllResults(),
+            'selesai' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'selesai'])->countAllResults(),
+            'batal' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'batal'])->countAllResults(),
+            'ditolak' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'ditolak'])->countAllResults(),
+        ];
+
         $data = [
             'title' => 'Profil - SYH Cleaning',
             'user' => $user,
+            'statusCounts' => $statusCounts
         ];
 
         return view('pages/profile', $data);
+    }
+
+    // Profile Detail (untuk edit detail)
+    public function profileDetail()
+    {
+        $user_id = session()->get('user_id');
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        $data = [
+            'title' => 'Detail Profil - SYH Cleaning',
+            'user' => $user
+        ];
+
+        return view('pages/profile_detail', $data);
     }
 
     // Update Profile
@@ -195,6 +276,20 @@ class Dashboard extends BaseController
         ], ['id' => $user_id]);
 
         return redirect()->back()->with('success', 'Password berhasil diubah!');
+    }
+
+    // Change Password Page
+    public function changePasswordPage()
+    {
+        $user_id = session()->get('user_id');
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        $data = [
+            'title' => 'Ubah Password - SYH Cleaning',
+            'user' => $user
+        ];
+
+        return view('auth/change_password', $data);
     }
 }
 

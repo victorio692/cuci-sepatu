@@ -76,7 +76,7 @@ Menyimpan data pengguna (customer dan admin)
 **Contoh Data:**
 ```sql
 INSERT INTO users (full_name, email, phone, password_hash, is_admin) VALUES
-('Admin SYH', 'admin@syhcleaning.com', '081234567890', '$2y$10$...', 1),
+('Admin SYH', 'admin@syhhcleaning@gmail.com', '081234567890', '$2y$10$...', 1),
 ('John Doe', 'john@example.com', '081234567891', '$2y$10$...', 0);
 ```
 
@@ -271,8 +271,8 @@ class UserSeeder extends Seeder
         // Admin Account
         $this->db->table('users')->insert([
             'full_name' => 'Admin SYH',
-            'email' => 'admin@syhcleaning.com',
-            'phone' => '081234567890',
+            'email' => 'admin@syhhcleaning@gmail.com',
+            'phone' => '08985709532',
             'password_hash' => password_hash('admin123', PASSWORD_BCRYPT),
             'address' => 'Jl. Utama No. 1, Jakarta',
             'city' => 'Jakarta',
@@ -283,7 +283,7 @@ class UserSeeder extends Seeder
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
-
+   
         // Regular User
         $this->db->table('users')->insert([
             'full_name' => 'John Doe',

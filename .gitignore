@@ -63,6 +63,11 @@ writable/uploads/*
 writable/debugbar/*
 !writable/debugbar/index.html
 
+# Public uploads and session files
+public/uploads/*
+!public/uploads/index.html
+public/null/*
+
 php_errors.log
 
 #-------------------------

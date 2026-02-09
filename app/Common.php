@@ -13,3 +13,6 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+// Set default timezone untuk Indonesia (WIB)
+date_default_timezone_set('Asia/Jakarta');
