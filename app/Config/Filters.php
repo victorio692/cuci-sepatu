@@ -21,6 +21,13 @@ class Filters extends BaseFilters
 
         // Force HTTPS only in production to avoid local HTTP redirect loops during login
         $this->required['before'] = ENVIRONMENT === 'production' ? ['forcehttps'] : [];
+
+        // Pagecache moved from "before" to "after" to avoid caching login redirects
+        $this->required['after'] = [
+            'pagecache',   // Web Page Caching
+            'performance', // Performance Metrics
+            'toolbar',     // Debug Toolbar
+        ];
     }
 
     /**
@@ -59,14 +66,9 @@ class Filters extends BaseFilters
      * @var array{before: list<string>, after: list<string>}
      */
     public array $required = [
-        // "before" filters are intentionally left empty here; __construct() assigns them based on environment
+        // "before" and "after" filters are populated in __construct() for clarity
         'before' => [],
-        'after' => [
-            // Pagecache moved from the "before" stack to the "after" stack to avoid caching login redirects
-            'pagecache',   // Web Page Caching
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
-        ],
+        'after' => [],
     ];
 
     /**
