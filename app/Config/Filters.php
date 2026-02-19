@@ -15,6 +15,21 @@ use CodeIgniter\Filters\SecureHeaders;
 
 class Filters extends BaseFilters
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Force HTTPS only in production to avoid local HTTP redirect loops during login
+        $this->required['before'] = ENVIRONMENT === 'production' ? ['forcehttps'] : [];
+
+        // Pagecache moved from "before" to "after" to avoid caching login redirects
+        $this->required['after'] = [
+            'pagecache',   // Web Page Caching
+            'performance', // Performance Metrics
+            'toolbar',     // Debug Toolbar
+        ];
+    }
+
     /**
      * Configures aliases for Filter classes to
      * make reading things nicer and simpler.
@@ -51,15 +66,9 @@ class Filters extends BaseFilters
      * @var array{before: list<string>, after: list<string>}
      */
     public array $required = [
-        'before' => [
-            'forcehttps', // Force Global Secure Requests
-            'pagecache',  // Web Page Caching
-        ],
-        'after' => [
-            'pagecache',   // Web Page Caching
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
-        ],
+        // "before" and "after" filters are populated in __construct() for clarity
+        'before' => [],
+        'after' => [],
     ];
 
     /**
