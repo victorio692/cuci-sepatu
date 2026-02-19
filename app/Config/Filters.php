@@ -59,6 +59,7 @@ class Filters extends BaseFilters
      * @var array{before: list<string>, after: list<string>}
      */
     public array $required = [
+        // "before" filters are assigned in __construct() for environment-based HTTPS handling
         // Page caching kept in the "after" stack to avoid caching login redirects
         'before' => [],
         'after' => [
