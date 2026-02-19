@@ -62,10 +62,9 @@ class Filters extends BaseFilters
      */
     public array $required = [
         // "before" filters are intentionally left empty here; __construct() assigns them based on environment
-        // Pagecache was moved here from the "before" stack to avoid caching login redirects
         'before' => [],
         'after' => [
-            // Page caching kept in the "after" stack to avoid caching login redirects
+            // Pagecache moved from the "before" stack to the "after" stack to avoid caching login redirects
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
             'toolbar',     // Debug Toolbar
