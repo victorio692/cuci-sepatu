@@ -20,9 +20,8 @@ class Filters extends BaseFilters
         parent::__construct();
 
         // Force HTTPS only in production to avoid local HTTP redirect loops during login
-        $existingBefore = $this->required['before'] ?? [];
         $httpsEnforcement = ENVIRONMENT === 'production' ? ['forcehttps'] : [];
-        $this->required['before'] = array_merge($existingBefore, $httpsEnforcement);
+        $this->required['before'] = $httpsEnforcement;
     }
 
     /**
@@ -62,6 +61,7 @@ class Filters extends BaseFilters
      */
     public array $required = [
         // "before" filters are assigned (and overwritten) in __construct() for environment-based HTTPS handling
+        // Pagecache was moved here from the "before" stack to avoid caching login redirects
         'before' => [],
         'after' => [
             // Page caching kept in the "after" stack to avoid caching login redirects
