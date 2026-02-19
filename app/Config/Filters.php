@@ -60,9 +60,9 @@ class Filters extends BaseFilters
      */
     public array $required = [
         // "before" filters are assigned in __construct() for environment-based HTTPS handling
-        // Page caching kept in the "after" stack to avoid caching login redirects
         'before' => [],
         'after' => [
+            // Page caching kept in the "after" stack to avoid caching login redirects
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
             'toolbar',     // Debug Toolbar
