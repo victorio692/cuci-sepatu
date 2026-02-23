@@ -87,7 +87,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" onclick="showLoginAnimation(event)" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-sign-in-alt mr-2"></i> Login
                 </button>
 
@@ -128,31 +128,37 @@
 </div>
 
 <script>
-function showLoginAnimation(event) {
-    const form = event.target.closest('form');
-    
-    // Validate form first
-    const email = form.querySelector('#email');
-    const password = form.querySelector('#password');
-    
-    if (!email.value || !password.value) {
-        return; // Let default validation handle it
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.querySelector('form[action="/login"]');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            // Validate email and password exist
+            const email = loginForm.querySelector('#email').value.trim();
+            const password = loginForm.querySelector('#password').value.trim();
+            
+            if (!email || !password) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Show loading overlay
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+            
+            // Disable button
+            const btn = document.getElementById('loginBtn');
+            if (btn) {
+                btn.disabled = true;
+            }
+            
+            // Allow form to submit normally
+            return true;
+        });
     }
-    
-    // Prevent default and show animation
-    event.preventDefault();
-    
-    const overlay = document.getElementById('loginOverlay');
-    if (overlay) {
-        overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
-        
-        // Submit form after short animation (1 second)
-        setTimeout(function() {
-            form.submit();
-        }, 1000);
-    }
-}
+});
 </script>
 <?= $this->endSection() ?>
 

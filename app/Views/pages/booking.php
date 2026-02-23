@@ -181,11 +181,12 @@
                             name="booking_time" 
                             min="12:00"
                             max="23:59"
+                            placeholder="HH:MM"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             required
                         >
                         <small class="text-gray-500 text-sm mt-1 block">
-                            Waktu saat ini: <span id="currentTime"></span>
+                            Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
                         </small>
                     </div>
 
@@ -607,11 +608,11 @@ function updateSummary() {
     }
 }
 
-// Set minimum date (today)
+// Set minimum date (today) - Execute immediately
 const today = new Date();
 document.getElementById('delivery_date').min = today.toISOString().split('T')[0];
 
-// Update current time every second
+// Update current time display every second
 function updateCurrentTime() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -620,26 +621,99 @@ function updateCurrentTime() {
     document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
 }
 
-updateCurrentTime();
-setInterval(updateCurrentTime, 1000);
+// Function to use current time
+function useCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('booking_time').value = `${hours}:${minutes}`;
+}
 
-// Set default time to current time
-const now = new Date();
-const currentHours = String(now.getHours()).padStart(2, '0');
-const currentMinutes = String(now.getMinutes()).padStart(2, '0');
-document.getElementById('booking_time').value = `${currentHours}:${currentMinutes}`;
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize booking time with current time
+    useCurrentTime();
+    
+    // Update current time display
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+    
+    // Auto-select service from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+        const serviceRadio = document.querySelector(`input[name="service"][value="${serviceParam}"]`);
+        if (serviceRadio) {
+            serviceRadio.checked = true;
+            updateSummary();
+            setTimeout(() => {
+                serviceRadio.closest('label').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    } else {
+        const checkedService = document.querySelector('input[name="service"]:checked');
+        if (checkedService) {
+            updateSummary();
+        } else {
+            updateSummary();
+        }
+    }
+});
 
 // Form submission
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
+    // Fallback: ensure booking_time has value if empty
+    const bookingTimeInput = document.getElementById('booking_time');
+    if (!bookingTimeInput.value) {
+        useCurrentTime();
+    }
+    
     const selectedService = document.querySelector('input[name="service"]:checked');
     if (!selectedService) {
         e.preventDefault();
         alert('Pilih layanan terlebih dahulu');
-        // Scroll to service section with shake animation
         const serviceSection = document.querySelector('[name="service"]').closest('.grid');
         serviceSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         serviceSection.classList.add('shake');
         setTimeout(() => serviceSection.classList.remove('shake'), 500);
+        return;
+    }
+    
+    // Check delivery date
+    const deliveryDate = document.getElementById('delivery_date').value.trim();
+    if (!deliveryDate) {
+        e.preventDefault();
+        alert('Tanggal masuk wajib dipilih');
+        const dateInput = document.getElementById('delivery_date');
+        dateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        dateInput.focus();
+        dateInput.classList.add('shake');
+        setTimeout(() => dateInput.classList.remove('shake'), 500);
+        return;
+    }
+    
+    // Check booking time
+    const bookingTime = document.getElementById('booking_time').value.trim();
+    if (!bookingTime) {
+        e.preventDefault();
+        alert('Jam booking wajib diisi');
+        const timeInput = document.getElementById('booking_time');
+        timeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        timeInput.focus();
+        timeInput.classList.add('shake');
+        setTimeout(() => timeInput.classList.remove('shake'), 500);
+        return;
+    }
+    
+    // Validate time range (12:00 - 23:59)
+    const [hours, minutes] = bookingTime.split(':').map(Number);
+    if (hours < 12 || (hours === 23 && minutes > 59) || hours > 23) {
+        e.preventDefault();
+        alert('Jam booking harus antara 12:00 - 23:59');
+        const timeInput = document.getElementById('booking_time');
+        timeInput.value = '';
+        timeInput.focus();
         return;
     }
     
@@ -662,6 +736,7 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
             e.preventDefault();
             alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
             const addressInput = document.getElementById('delivery_address');
+            addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             addressInput.focus();
             addressInput.classList.add('shake');
             setTimeout(() => addressInput.classList.remove('shake'), 500);
@@ -745,32 +820,6 @@ uploadArea.addEventListener('drop', (e) => {
     if (files.length > 0) {
         fileInput.files = files;
         fileInput.dispatchEvent(new Event('change'));
-    }
-});
-
-// Auto-select service from URL parameter and Initialize
-window.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const serviceParam = urlParams.get('service');
-    
-    if (serviceParam) {
-        const serviceRadio = document.querySelector(`input[name="service"][value="${serviceParam}"]`);
-        if (serviceRadio) {
-            serviceRadio.checked = true;
-            // Trigger change event to update summary
-            updateSummary();
-            // Add visual feedback - scroll to service section
-            serviceRadio.closest('label').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    } else {
-        // If no URL parameter, check if there are services and update summary anyway
-        const checkedService = document.querySelector('input[name="service"]:checked');
-        if (checkedService) {
-            updateSummary();
-        } else {
-            // Initialize with default state
-            updateSummary();
-        }
     }
 });
 

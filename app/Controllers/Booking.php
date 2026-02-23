@@ -185,8 +185,21 @@ class Booking extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
-        // Validate file upload
+        // Get form data
+        $service = $this->request->getPost('service');
+        $quantity = $this->request->getPost('quantity');
+        $delivery_date = $this->request->getPost('delivery_date');
+        $booking_time = $this->request->getPost('booking_time');
+        $delivery_option = $this->request->getPost('delivery_option');
+        $delivery_address = $this->request->getPost('delivery_address');
+
+        // Validate all required fields
         $validationRule = [
+            'service' => 'required',
+            'quantity' => 'required|numeric|greater_than[0]',
+            'delivery_date' => 'required|valid_date[Y-m-d]',
+            'booking_time' => 'required|regex_match[/^([01][0-9]|2[0-3]):[0-5][0-9]$/]',
+            'delivery_option' => 'required|in_list[pickup,delivery]',
             'shoe_photo' => [
                 'label' => 'Foto Sepatu',
                 'rules' => 'uploaded[shoe_photo]'
@@ -196,10 +209,33 @@ class Booking extends BaseController
             ],
         ];
 
+        // Add delivery address validation if delivery option is selected
+        if ($delivery_option === 'delivery') {
+            $validationRule['delivery_address'] = 'required|min_length[10]';
+        }
+
         if (!$this->validate($validationRule)) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Foto sepatu wajib diupload (format PNG/JPG/JPEG, maksimal 5MB)');
+                ->with('errors', $this->validator->getErrors());
+        }
+
+        // Validate booking time range (12:00 - 23:59)
+        [$hours, $minutes] = explode(':', $booking_time);
+        $hours = (int)$hours;
+        $minutes = (int)$minutes;
+        
+        if ($hours < 12 || $hours > 23) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Jam booking harus antara 12:00 - 23:59');
+        }
+
+        // Validate delivery date is today or future
+        if (strtotime($delivery_date) < strtotime(date('Y-m-d'))) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Tanggal pengiriman harus hari ini atau hari berikutnya');
         }
 
         // Handle file upload
@@ -220,18 +256,15 @@ class Booking extends BaseController
             $file->move($uploadPath, $fileName);
         }
 
-        $service = $this->request->getPost('service');
         $shoe_condition = $this->request->getPost('shoe_condition');
-        $quantity = $this->request->getPost('quantity');
-        $delivery_date = $this->request->getPost('delivery_date');
-        $booking_time = $this->request->getPost('booking_time');
-        $delivery_option = $this->request->getPost('delivery_option');
-        $delivery_address = $this->request->getPost('delivery_address') ?? $user['alamat'];
         $notes = $this->request->getPost('notes');
+        if (!$delivery_address) {
+            $delivery_address = $user['alamat'];
+        }
 
         // Get service price
         $servicePrice = $this->getServicePrice($service);
-        $delivery_fee = $delivery_option === 'home' ? 5000 : 0;
+        $delivery_fee = $delivery_option === 'delivery' ? 5000 : 0;
         $subtotal = $servicePrice * $quantity;
         $total = $subtotal + $delivery_fee;
 

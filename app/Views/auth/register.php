@@ -161,7 +161,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300">
+                <button type="submit" id="registerBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-user-check mr-2"></i> Daftar Sekarang
                 </button>
 
@@ -173,6 +173,25 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+<!-- Register Loading Overlay -->
+<div id="registerOverlay" class="hidden fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex flex-col items-center justify-center">
+    <div class="relative">
+        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+            <i class="fas fa-user-check text-blue-600 text-4xl"></i>
+        </div>
+        <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>
+    </div>
+    
+    <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Mendaftar...</h2>
+    <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Mohon tunggu sebentar</p>
+    
+    <div class="flex space-x-2 mt-6">
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
     </div>
 </div>
 
@@ -194,5 +213,53 @@ function togglePassword(fieldId, button) {
         icon.classList.add('fa-eye');
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.querySelector('form[action="/register"]');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            // Validate required fields
+            const fullName = registerForm.querySelector('#full_name').value.trim();
+            const email = registerForm.querySelector('#email').value.trim();
+            const phone = registerForm.querySelector('#phone').value.trim();
+            const password = registerForm.querySelector('#password').value.trim();
+            const confirmPassword = registerForm.querySelector('#confirm_password').value.trim();
+            const terms = registerForm.querySelector('#terms').checked;
+            
+            if (!fullName || !email || !phone || !password || !confirmPassword) {
+                e.preventDefault();
+                return false;
+            }
+            
+            if (!terms) {
+                e.preventDefault();
+                alert('Anda harus setuju dengan Syarat & Ketentuan');
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Konfirmasi password tidak sesuai');
+                return false;
+            }
+            
+            // Show loading overlay
+            const overlay = document.getElementById('registerOverlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+            
+            // Disable button
+            const btn = document.getElementById('registerBtn');
+            if (btn) {
+                btn.disabled = true;
+            }
+            
+            // Allow form to submit normally
+            return true;
+        });
+    }
+});
 </script>
 <?= $this->endSection() ?>
