@@ -171,9 +171,13 @@
                         <!-- Profile Dropdown -->
                         <li class="relative">
                             <button onclick="toggleProfileDropdown()" class="flex items-center space-x-2 px-3 py-2 hover:bg-blue-50 rounded-lg transition-all duration-300 group">
-                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold transform group-hover:scale-110 transition-transform duration-300">
-                                    <?= strtoupper(substr($user['nama_lengkap'], 0, 1)) ?>
-                                </div>
+                                <?php if (!empty($user['foto_profil'])): ?>
+                                    <img src="<?= base_url('uploads/' . $user['foto_profil']) ?>?t=<?= time() ?>" alt="<?= $user['nama_lengkap'] ?>" class="w-10 h-10 rounded-full object-cover border-2 border-blue-500 transform group-hover:scale-110 transition-transform duration-300">
+                                <?php else: ?>
+                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold transform group-hover:scale-110 transition-transform duration-300">
+                                        <?= strtoupper(substr($user['nama_lengkap'], 0, 1)) ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="text-left hidden lg:block">
                                     <div class="font-medium text-gray-800 text-sm"><?= substr($user['nama_lengkap'], 0, 15) ?><?= strlen($user['nama_lengkap']) > 15 ? '...' : '' ?></div>
                                 </div>

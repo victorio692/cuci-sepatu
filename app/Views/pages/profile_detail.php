@@ -427,7 +427,22 @@ document.getElementById('profilePhoto').addEventListener('change', function(e) {
         reader.readAsDataURL(file);
         
         // Auto submit form
-        document.getElementById('profilePhotoForm').submit();
+        const form = document.getElementById('profilePhotoForm');
+        const formData = new FormData(form);
+        
+        // Submit with AJAX and reload after success
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Wait a moment for database update, then reload
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            }
+        });
     }
 });
 </script>
