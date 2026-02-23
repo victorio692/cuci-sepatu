@@ -8,7 +8,7 @@
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Tentang SYH Cleaning</h1>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">TENTANG SYH CLEANING</h1>
                 <div class="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto mb-6"></div>
                 <p class="text-lg md:text-xl text-gray-700 leading-relaxed">
                     SYH Cleaning adalah layanan cuci sepatu profesional yang berdedikasi memberikan 

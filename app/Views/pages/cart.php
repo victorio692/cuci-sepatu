@@ -54,6 +54,37 @@ function getCartKey() {
     <?php endif; ?>
 }
 
+// Get service-specific style (icon and background color)
+function getServiceStyle(serviceCode) {
+    const styles = {
+        'fast-cleaning': {
+            icon: '⚡',
+            bg: 'bg-gradient-to-br from-yellow-400 to-yellow-200'
+        },
+        'deep-cleaning': {
+            icon: '🧹',
+            bg: 'bg-gradient-to-br from-purple-400 to-purple-200'
+        },
+        'white-shoes': {
+            icon: '⚪',
+            bg: 'bg-gradient-to-br from-white/80 to-gray-100'
+        },
+        'suede-treatment': {
+            icon: '✨',
+            bg: 'bg-gradient-to-br from-pink-400 to-pink-200'
+        },
+        'unyellowing': {
+            icon: '🌟',
+            bg: 'bg-gradient-to-br from-blue-400 to-blue-200'
+        }
+    };
+    
+    return styles[serviceCode] || {
+        icon: '👟',
+        bg: 'bg-gradient-to-br from-blue-400 to-blue-200'
+    };
+}
+
 // Load cart from localStorage
 function loadCart() {
     const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
@@ -94,6 +125,10 @@ function loadCart() {
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         const isChecked = item.selected !== false ? 'checked' : ''; // Default checked
+        
+        // Get service-specific styling
+        const serviceStyles = getServiceStyle(item.service_code || item.kode_layanan);
+        
         cartHTML += `
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition">
                 <div class="flex gap-4">
@@ -106,9 +141,9 @@ function loadCart() {
                                class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
                     </div>
                     
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
+                    <div class="w-20 h-20 ${serviceStyles.bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent"></div>
-                        <div class="relative z-10 text-4xl">👟</div>
+                        <div class="relative z-10 text-4xl">${serviceStyles.icon}</div>
                     </div>
                     
                     <div class="flex-1">
