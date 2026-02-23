@@ -62,25 +62,25 @@ function getServiceStyle(serviceCode) {
             bg: 'bg-blue-600'
         },
         'deep-cleaning': {
-            icon: '🌊',
+            icon: '≈',
             bg: 'bg-blue-600'
         },
         'white-shoes': {
-            icon: '⭐',
+            icon: '★',
             bg: 'bg-blue-600'
         },
         'suede-treatment': {
-            icon: '👐',
+            icon: '◎',
             bg: 'bg-blue-600'
         },
         'unyellowing': {
-            icon: '🖊️',
+            icon: '✎',
             bg: 'bg-blue-600'
         }
     };
     
     return styles[serviceCode] || {
-        icon: '👟',
+        icon: '●',
         bg: 'bg-blue-600'
     };
 }

@@ -122,12 +122,12 @@ class Notifications extends Controller
 
         // Create WhatsApp message
         $message = "Halo {$booking['nama_lengkap']},\n\n";
-        $message .= "Sepatu Anda dengan booking ID #{$bookingId} sudah selesai dicuci! ✨\n\n";
+        $message .= "Sepatu Anda dengan booking ID #{$bookingId} sudah selesai dicuci!\n\n";
         $message .= "Layanan: {$booking['layanan']}\n";
         $message .= "Jumlah: {$booking['jumlah_sepatu']} pasang\n";
         $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";
         $message .= "Silakan ambil sepatu Anda di SYH.CLEANING.\n\n";
-        $message .= "Terima kasih! 🙏";
+        $message .= "Terima kasih!";
 
         $waLink = "https://wa.me/" . $phone . "?text=" . urlencode($message);
 

@@ -168,7 +168,7 @@ class Booking extends BaseController
             $this->db->table('notifications')->insert([
                 'id_user' => $admin['id'],
                 'booking_id' => $booking_id,
-                'judul' => 'Booking Baru! 🔔',
+                'judul' => 'Booking Baru!',
                 'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$service}, Jumlah: {$quantity} pasang sepatu.",
                 'tipe' => 'new_booking',
                 'dibaca' => 0,
@@ -298,7 +298,7 @@ class Booking extends BaseController
             $this->db->table('notifications')->insert([
                 'id_user' => $admin['id'],
                 'booking_id' => $booking_id,
-                'judul' => 'Booking Baru! 🔔',
+                'judul' => 'Booking Baru!',
                 'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$service}, Jumlah: {$quantity} pasang sepatu.",
                 'tipe' => 'new_booking',
                 'dibaca' => 0,

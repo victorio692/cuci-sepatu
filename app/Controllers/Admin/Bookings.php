@@ -279,22 +279,22 @@ class Bookings extends Controller
 
         switch ($status) {
             case 'disetujui':
-                $notificationData['judul'] = 'Booking Disetujui! ✅';
+                $notificationData['judul'] = 'Booking Disetujui!';
                 $notificationData['pesan'] = "Booking ID #{$id} telah disetujui. Sepatu Anda akan segera diproses.";
                 $notificationData['tipe'] = 'success';
                 break;
             case 'proses':
-                $notificationData['judul'] = 'Sepatu Sedang Diproses 🧼';
+                $notificationData['judul'] = 'Sepatu Sedang Diproses';
                 $notificationData['pesan'] = "Booking ID #{$id} sedang dalam proses pencucian. Mohon ditunggu!";
                 $notificationData['tipe'] = 'info';
                 break;
             case 'selesai':
-                $notificationData['judul'] = 'Sepatu Sudah Selesai! 🎉';
+                $notificationData['judul'] = 'Sepatu Sudah Selesai!';
                 $notificationData['pesan'] = "Booking ID #{$id} sudah selesai dicuci. Silakan ambil sepatu Anda!";
                 $notificationData['tipe'] = 'success';
                 break;
             case 'ditolak':
-                $notificationData['judul'] = 'Booking Ditolak ❌';
+                $notificationData['judul'] = 'Booking Ditolak';
                 $notificationData['pesan'] = "Booking ID #{$id} ditolak. Alasan: {$alasan}";
                 $notificationData['tipe'] = 'danger';
                 break;

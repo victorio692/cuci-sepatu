@@ -10,7 +10,7 @@
         <div class="text-center mb-8">
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
                 <i class="fas fa-question-circle text-blue-600"></i>
-                Pertanyaan yang Sering Diajukan
+                Pertanyaan yang sering diajukan
             </h1>
             <p class="text-gray-600">Temukan jawaban untuk pertanyaan umum tentang layanan kami</p>
         </div>
