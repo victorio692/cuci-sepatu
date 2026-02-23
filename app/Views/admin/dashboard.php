@@ -9,58 +9,58 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     <!-- Total Booking Card -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
         <div class="flex items-center justify-between">
-            <div>
-                <p class="text-blue-100 text-sm font-medium">Total Booking</p>
-                <h3 class="text-3xl font-bold mt-2"><?= $total_bookings ?? 0 ?></h3>
-                <p class="text-blue-100 text-xs mt-1">Total semua pesanan</p>
+            <div class="flex-1">
+                <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Booking</p>
+                <h3 class="text-4xl font-bold mt-2"><?= $total_bookings ?? 0 ?></h3>
+                <p class="text-blue-100 text-xs mt-2">Total semua pesanan</p>
             </div>
-            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-shopping-bag text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Dalam Proses Card -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
         <div class="flex items-center justify-between">
-            <div>
-                <p class="text-blue-100 text-sm font-medium">Dalam Proses</p>
-                <h3 class="text-3xl font-bold mt-2"><?= $proses_bookings ?? 0 ?></h3>
-                <p class="text-blue-100 text-xs mt-1">Sedang dikerjakan</p>
+            <div class="flex-1">
+                <p class="text-cyan-100 text-xs font-semibold uppercase tracking-wide">Dalam Proses</p>
+                <h3 class="text-4xl font-bold mt-2"><?= $proses_bookings ?? 0 ?></h3>
+                <p class="text-cyan-100 text-xs mt-2">Sedang dikerjakan</p>
             </div>
-            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <i class="fas fa-spinner text-2xl"></i>
+            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-cog text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Selesai Card -->
-    <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
         <div class="flex items-center justify-between">
-            <div>
-                <p class="text-green-100 text-sm font-medium">Selesai</p>
-                <h3 class="text-3xl font-bold mt-2"><?= $completed_bookings ?? 0 ?></h3>
-                <p class="text-green-100 text-xs mt-1">Siap diambil</p>
+            <div class="flex-1">
+                <p class="text-emerald-100 text-xs font-semibold uppercase tracking-wide">Selesai</p>
+                <h3 class="text-4xl font-bold mt-2"><?= $completed_bookings ?? 0 ?></h3>
+                <p class="text-emerald-100 text-xs mt-2">Siap diambil</p>
             </div>
-            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-check-circle text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Total Pendapatan Card -->
-    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
+    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
         <div class="flex items-center justify-between">
-            <div>
-                <p class="text-purple-100 text-sm font-medium">Total Pendapatan</p>
+            <div class="flex-1">
+                <p class="text-violet-100 text-xs font-semibold uppercase tracking-wide">Total Pendapatan</p>
                 <h3 class="text-2xl font-bold mt-2">Rp <?= number_format($total_revenue ?? 0, 0, ',', '.') ?></h3>
-                <p class="text-purple-100 text-xs mt-1">Dari pesanan selesai</p>
+                <p class="text-violet-100 text-xs mt-2">Dari pesanan selesai</p>
             </div>
-            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-money-bill-wave text-2xl"></i>
             </div>
         </div>
@@ -68,20 +68,20 @@
 </div>
 
 <!-- Data Booking Table -->
-<div class="bg-white rounded-xl shadow-lg overflow-hidden">
+<div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
     <!-- Card Header -->
-    <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50">
         <div>
-            <h3 class="text-xl font-bold text-gray-800">Data Booking</h3>
+            <h3 class="text-lg font-bold text-gray-900">Data Booking</h3>
             <p class="text-sm text-gray-600 mt-1">Kelola semua pesanan customer</p>
         </div>
-        <div class="relative">
+        <div class="relative w-full sm:w-64">
             <input 
                 type="text" 
                 id="searchBooking" 
                 placeholder="Cari booking..." 
                 onkeyup="searchTable()"
-                class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             >
             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
@@ -91,53 +91,53 @@
     <div class="overflow-x-auto">
         <?php if (!empty($recent_bookings)): ?>
             <table class="w-full" id="bookingTable">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-100 border-b-2 border-gray-200">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontak</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Total</th>
+                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                        <th class="px-5 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="divide-y divide-gray-200">
                     <?php foreach ($recent_bookings as $booking): ?>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800">BK<?= str_pad($booking['id'], 3, '0', STR_PAD_LEFT) ?></span>
+                        <tr class="hover:bg-blue-50 transition duration-200">
+                            <td class="px-5 py-4 whitespace-nowrap">
+                                <span class="font-semibold text-gray-800 text-sm">BK<?= str_pad($booking['id'], 3, '0', STR_PAD_LEFT) ?></span>
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold mr-3">
+                            <td class="px-5 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                                         <?= strtoupper(substr($booking['customer_name'], 0, 1)) ?>
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-800"><?= $booking['customer_name'] ?></div>
+                                        <div class="font-medium text-gray-900 text-sm"><?= $booking['customer_name'] ?></div>
                                         <div class="text-xs text-gray-500"><?= date('d M Y', strtotime($booking['dibuat_pada'])) ?></div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $booking['no_hp'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-1">
+                            <td class="px-5 py-4 whitespace-nowrap">
+                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $booking['no_hp'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm">
                                     <i class="fab fa-whatsapp"></i>
-                                    <span class="text-sm"><?= $booking['no_hp'] ?? '-' ?></span>
+                                    <span><?= $booking['no_hp'] ?? '-' ?></span>
                                 </a>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-5 py-4">
                                 <span class="text-sm text-gray-700"><?= ucfirst(str_replace('-', ' ', $booking['layanan'])) ?></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700"><?= $booking['jumlah'] ?? 1 ?> Pasang</span>
+                            <td class="px-5 py-4 whitespace-nowrap text-center">
+                                <span class="text-sm text-gray-700 font-medium"><?= $booking['jumlah'] ?? 1 ?></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                            <td class="px-5 py-4 whitespace-nowrap text-right">
+                                <span class="font-semibold text-gray-900 text-sm">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-5 py-4">
                                 <select 
-                                    class="px-3 py-1.5 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
+                                    class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
                                         <?php 
                                         switch($booking['status']) {
                                             case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
@@ -160,17 +160,17 @@
                                     <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
                                 </select>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center space-x-2">
+                            <td class="px-5 py-4 whitespace-nowrap text-center">
+                                <div class="flex items-center justify-center space-x-1">
                                     <a href="<?= base_url('admin/bookings/' . $booking['id']) ?>" 
-                                       class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                       class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
                                        title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye text-sm"></i>
                                     </a>
                                     <button onclick="deleteBooking(<?= $booking['id'] ?>)" 
-                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                            class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"
                                             title="Hapus">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-trash text-sm"></i>
                                     </button>
                                 </div>
                             </td>
@@ -179,16 +179,16 @@
                 </tbody>
             </table>
         <?php else: ?>
-            <div class="p-12 text-center text-gray-500">
-                <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                <p class="text-lg">Belum ada booking</p>
+            <div class="p-16 text-center">
+                <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+                <p class="text-gray-600 text-lg font-medium">Belum ada booking</p>
             </div>
         <?php endif; ?>
     </div>
     
     <!-- Pagination -->
     <?php if (!empty($recent_bookings)): ?>
-        <div class="px-6 py-4 border-t border-gray-200">
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <?= $pager->links('default', 'custom_pagination') ?>
         </div>
     <?php endif; ?>
