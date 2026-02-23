@@ -20,10 +20,10 @@
             background: #fafafa;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             color: #777;
-            font-weight: 300;
+            font-weight: 400;
         }
         h1 {
-            font-weight: lighter;
+            font-weight: 400;
             letter-spacing: normal;
             font-size: 3rem;
             margin-top: 0;

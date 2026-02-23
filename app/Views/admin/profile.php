@@ -146,7 +146,7 @@
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 0.375rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
