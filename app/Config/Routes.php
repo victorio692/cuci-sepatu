@@ -119,6 +119,20 @@ $routes->group('api', static function($routes) {
     $routes->put('auth/profile', 'Api\AuthApi::updateProfile');
     $routes->post('auth/change-password', 'Api\AuthApi::changePassword');
 });
+// apiservice
+$routes->group('api', function($routes) {
+    $routes->resource('services', [
+        'controller' => 'Api\ServicesApi'
+    ]);
+});
+
+// bookingapi
+$routes->group('api/booking', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->post('create', 'BookingApi::create');
+    $routes->get('my-bookings', 'BookingApi::myBookings');
+    $routes->get('detail/(:num)', 'BookingApi::detail/$1');
+    $routes->post('cancel/(:num)', 'BookingApi::cancel/$1');
+});
 
 // Static Pages
 $routes->get('/tentang', 'Pages::about');
