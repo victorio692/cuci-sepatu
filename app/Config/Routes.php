@@ -27,9 +27,13 @@ $routes->group('', ['filter' => 'auth'], static function($routes) {
     $routes->get('/profile', 'Dashboard::profile');
     $routes->get('/profile/detail', 'Dashboard::profileDetail');
     $routes->get('/profile/change-password', 'Dashboard::changePasswordPage');
+    $routes->get('/profile/change-email', 'Dashboard::changeEmailPage');
+    $routes->get('/profile/change-phone', 'Dashboard::changePhonePage');
     $routes->post('/update-profile', 'Dashboard::updateProfile');
     $routes->post('/update-profile-photo', 'Dashboard::updateProfilePhoto');
     $routes->post('/change-password', 'Dashboard::changePassword');
+    $routes->post('/change-email', 'Dashboard::changeEmail');
+    $routes->post('/change-phone', 'Dashboard::changePhone');
 });
 
 // Booking (Protected)

@@ -291,5 +291,86 @@ class Dashboard extends BaseController
 
         return view('auth/change_password', $data);
     }
+
+    // Change Email Page
+    public function changeEmailPage()
+    {
+        $user_id = session()->get('user_id');
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        $data = [
+            'title' => 'Ubah Email - SYH Cleaning',
+            'user' => $user
+        ];
+
+        return view('pages/change_email', $data);
+    }
+
+    // Change Email
+    public function changeEmail()
+    {
+        $user_id = session()->get('user_id');
+        $new_email = $this->request->getPost('new_email');
+        $current_password = $this->request->getPost('current_password');
+
+        // Get user
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Verify current password
+        if (!password_verify($current_password, $user['password_hash'])) {
+            return redirect()->back()->with('error', 'Password tidak sesuai');
+        }
+
+        // Check if email already exists
+        $emailExists = $this->db->table('users')->where('email', $new_email)->where('id !=', $user_id)->countAllResults();
+        if ($emailExists) {
+            return redirect()->back()->with('error', 'Email sudah terdaftar');
+        }
+
+        // Update email
+        $this->db->table('users')->update([
+            'email' => $new_email
+        ], ['id' => $user_id]);
+
+        return redirect()->to('/profile/detail')->with('success', 'Email berhasil diubah!');
+    }
+
+    // Change Phone Page
+    public function changePhonePage()
+    {
+        $user_id = session()->get('user_id');
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        $data = [
+            'title' => 'Ubah Nomor Telepon - SYH Cleaning',
+            'user' => $user
+        ];
+
+        return view('pages/change_phone', $data);
+    }
+
+    // Change Phone
+    public function changePhone()
+    {
+        $user_id = session()->get('user_id');
+        $new_phone = $this->request->getPost('new_phone');
+        $current_password = $this->request->getPost('current_password');
+
+        // Get user
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Verify current password
+        if (!password_verify($current_password, $user['password_hash'])) {
+            return redirect()->back()->with('error', 'Password tidak sesuai');
+        }
+
+        // Update phone
+        $this->db->table('users')->update([
+            'phone' => $new_phone,
+            'no_telepon' => $new_phone
+        ], ['id' => $user_id]);
+
+        return redirect()->to('/profile/detail')->with('success', 'Nomor telepon berhasil diubah!');
+    }
 }
 
