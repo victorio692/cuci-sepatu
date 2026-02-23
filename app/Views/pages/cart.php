@@ -59,29 +59,29 @@ function getServiceStyle(serviceCode) {
     const styles = {
         'fast-cleaning': {
             icon: '⚡',
-            bg: 'bg-gradient-to-br from-yellow-400 to-yellow-200'
+            bg: 'bg-blue-600'
         },
         'deep-cleaning': {
-            icon: '🧹',
-            bg: 'bg-gradient-to-br from-purple-400 to-purple-200'
+            icon: '🌊',
+            bg: 'bg-blue-600'
         },
         'white-shoes': {
-            icon: '⚪',
-            bg: 'bg-gradient-to-br from-white/80 to-gray-100'
+            icon: '⭐',
+            bg: 'bg-blue-600'
         },
         'suede-treatment': {
-            icon: '✨',
-            bg: 'bg-gradient-to-br from-pink-400 to-pink-200'
+            icon: '👐',
+            bg: 'bg-blue-600'
         },
         'unyellowing': {
-            icon: '🌟',
-            bg: 'bg-gradient-to-br from-blue-400 to-blue-200'
+            icon: '🖊️',
+            bg: 'bg-blue-600'
         }
     };
     
     return styles[serviceCode] || {
         icon: '👟',
-        bg: 'bg-gradient-to-br from-blue-400 to-blue-200'
+        bg: 'bg-blue-600'
     };
 }
 
