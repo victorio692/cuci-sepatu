@@ -144,6 +144,12 @@ $routes->group('api/booking', ['namespace' => 'App\Controllers\Api'], function($
     $routes->post('cancel/(:num)', 'BookingApi::cancel/$1');
 });
 
+// dashboardapi
+$routes->group('api/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('stats', 'DashboardApi::stats');
+    $routes->get('recent-bookings', 'DashboardApi::recentBookings');
+});
+
 // Static Pages
 $routes->get('/tentang', 'Pages::about');
 $routes->get('/kontak', 'Pages::contact');
