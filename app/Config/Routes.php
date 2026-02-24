@@ -152,6 +152,15 @@ $routes->group('api', function($routes) {
     $routes->delete('cart/(:segment)', 'Api\Cart::remove/$1');
     $routes->delete('cart', 'Api\Cart::clear');
 });
+// usersapi
+$routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'UsersApi::index');
+    $routes->get('statistics', 'UsersApi::statistics');
+    $routes->get('(:num)', 'UsersApi::detail/$1');
+    $routes->post('/', 'UsersApi::create');
+    $routes->put('(:num)', 'UsersApi::update/$1');
+    $routes->delete('(:num)', 'UsersApi::delete/$1');
+});
 
 // Static Pages
 $routes->get('/tentang', 'Pages::about');

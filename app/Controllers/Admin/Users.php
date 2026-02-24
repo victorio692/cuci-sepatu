@@ -9,6 +9,7 @@ class Users extends Controller
 {
     protected $db;
 
+
     public function __construct()
     {
         $this->db = Database::connect();
@@ -92,22 +93,6 @@ class Users extends Controller
         ];
 
         return view('admin/user_detail', $data);
-    }
-
-    public function toggleActive($id)
-    {
-        $user = $this->db->table('users')->where('id', $id)->get()->getRowArray();
-
-        if (!$user) {
-            return $this->response->setJSON(['success' => false, 'message' => 'User not found']);
-        }
-
-        // For now, just return success (aktif column removed from schema)
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Status updated',
-            'is_active' => true,
-        ]);
     }
 
     /**
