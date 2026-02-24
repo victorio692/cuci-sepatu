@@ -1,0 +1,673 @@
+/**
+ * MODERN CARD SYSTEM - CSS REFERENCE GUIDE
+ * 
+ * Comprehensive modern card styling system untuk project
+ * Konsisten, responsive, dan professional design
+ * 
+ * Version: 1.0
+ * Author: Design Audit 2026
+ * 
+ * === COMPONENT VARIANTS ===
+ * 
+ * 1. .card                 - Standard card (default)
+ * 2. .card-elevated        - Emphasized / highlighted card
+ * 3. .card-flat            - Minimal style dengan border
+ * 4. .service-card         - Service/feature card dengan icon
+ * 5. .auth-card            - Authentication card
+ * 6. .admin-card           - Admin panel card
+ * 7. .stat-card            - Statistics/dashboard card
+ * 
+ * === GRID SYSTEM ===
+ * 
+ * 1. .card-grid            - Standard responsive grid
+ * 2. .card-grid.wide       - Wider card grid
+ * 3. .card-grid.compact    - Compact grid untuk list
+ * 
+ */
+
+/* =========================================
+   DESIGN TOKENS
+   ========================================= */
+
+:root {
+  /* Shadow System - 3 levels */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.15);
+  
+  /* Border Radius */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  /* Spacing Scale (8px base) */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 1rem;      /* 16px */
+  --space-md: 1.5rem;    /* 24px */
+  --space-lg: 2rem;      /* 32px */
+  --space-xl: 3rem;      /* 48px */
+  
+  /* Transition */
+  --transition: all 0.3s ease;
+  
+  /* Z-index */
+  --z-dropdown: 1000;
+  --z-modal: 1001;
+}
+
+/* =========================================
+   BASE CARD STYLES
+   ========================================= */
+
+/**
+ * .card
+ * 
+ * Standard card component
+ * Usage: Main card wrapper untuk content
+ * 
+ * Example:
+ * <div class="card">
+ *   <div class="card-header"><h3>Title</h3></div>
+ *   <div class="card-body">Content</div>
+ * </div>
+ */
+.card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  padding: var(--space-md);
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.card-header h1,
+.card-header h2,
+.card-header h3,
+.card-header h4,
+.card-header h5,
+.card-header h6 {
+  margin: 0;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.card-body {
+  padding: var(--space-md);
+  color: #374151;
+  line-height: 1.6;
+}
+
+.card-footer {
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+/* =========================================
+   CARD VARIANTS
+   ========================================= */
+
+/**
+ * .card-elevated
+ * 
+ * Elevated/emphasized card variant
+ * Usage: For highlighted atau featured content
+ * 
+ * Apply to card untuk elevation effect
+ */
+.card-elevated {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.card-elevated:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+/**
+ * .card-flat
+ * 
+ * Flat card dengan border minimal
+ * Usage: Alternative style untuk card
+ */
+.card-flat {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.card-flat .card-body {
+  padding: var(--space-md);
+}
+
+/* =========================================
+   SERVICE CARD - Feature/Service Display
+   ========================================= */
+
+/**
+ * .service-card
+ * 
+ * Untuk showcase services, features, atau products
+ * Biasanya dengan icon, title, description, dan price
+ * 
+ * Sub-elements:
+ * .service-icon   - Icon holder (3rem font-size)
+ * h3              - Service title
+ * p               - Description
+ * .service-price  - Price display
+ * 
+ * Example:
+ * <div class="service-card">
+ *   <div class="service-icon">📞</div>
+ *   <h3>Dry Cleaning</h3>
+ *   <p>Description...</p>
+ *   <div class="service-price">Rp 50.000</div>
+ * </div>
+ */
+.service-card {
+  background: white;
+  padding: var(--space-md);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  text-align: center;
+  max-width: 100%;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.service-card h3 {
+  margin: var(--space-md) 0 var(--space-sm);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+.service-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin: var(--space-md) 0 0;
+}
+
+/* =========================================
+   AUTH CARD - Authentication Forms
+   ========================================= */
+
+/**
+ * .auth-card
+ * 
+ * Untuk login, register, dan password reset forms
+ * Centered layout dengan max-width container
+ * 
+ * Example:
+ * <div class="auth-card">
+ *   <div class="auth-card-header">
+ *     <div class="auth-icon">🔐</div>
+ *     <h1>Login</h1>
+ *   </div>
+ *   <form><!-- form content --></form>
+ * </div>
+ */
+.auth-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.auth-card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.auth-card h1 {
+  font-size: 1.8rem;
+  margin: 0 0 0.5rem;
+  color: #1f2937;
+}
+
+.auth-card-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* =========================================
+   ADMIN CARD - Admin Panel Cards
+   ========================================= */
+
+/**
+ * .admin-card
+ * 
+ * Untuk admin panel dengan structured layout
+ * Support header dengan title dan body content
+ * 
+ * Example:
+ * <div class="admin-card">
+ *   <div class="card-header">
+ *     <h3><i class="fas fa-user"></i> Admin Info</h3>
+ *   </div>
+ *   <div class="card-body">Content</div>
+ * </div>
+ */
+.admin-card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: var(--transition);
+  border: 1px solid #f3f4f6;
+}
+
+.admin-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #e5e7eb;
+}
+
+.admin-card .card-header {
+  padding: var(--space-md);
+  border-bottom: 1px solid #e5e7eb;
+  background: #fafbfc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-card .card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.admin-card .card-header h3 i {
+  color: #4F7CF7;
+}
+
+.admin-card .card-body {
+  padding: var(--space-md);
+  color: #374151;
+}
+
+/* Info Row - untuk key-value display */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row label {
+  font-weight: 600;
+  color: #6b7280;
+  min-width: 150px;
+}
+
+.info-row span {
+  color: #1f2937;
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+}
+
+/* =========================================
+   STAT CARD - Statistics Dashboard
+   ========================================= */
+
+/**
+ * .stat-card
+ * 
+ * Untuk dashboard statistics display
+ * Icon + content layout (horizontal, flex directioncolumn di mobile)
+ * 
+ * Sub-elements:
+ * .stat-icon        - Icon holder (circular)
+ * .stat-content     - Content wrapper
+ * .stat-label       - Label text
+ * .stat-number      - Large number display
+ * .stat-change      - Change/trend info
+ * .stat-sublabel    - Additional info
+ * 
+ * Example:
+ * <div class="stat-card">
+ *   <div class="stat-icon" style="background: #10b981;">
+ *     <i class="fas fa-check"></i>
+ *   </div>
+ *   <div class="stat-content">
+ *     <div class="stat-label">Total Orders</div>
+ *     <div class="stat-number">1,234</div>
+ *     <div class="stat-change">↑ 12% than last month</div>
+ *   </div>
+ * </div>
+ */
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  transition: var(--transition);
+  border: 1px solid #f3f4f6;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  background: #3b82f6;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: var(--space-sm);
+  font-weight: 600;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: var(--space-xs);
+}
+
+.stat-change {
+  font-size: 0.85rem;
+  color: #10b981;
+  margin-top: var(--space-xs);
+}
+
+.stat-sublabel {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: var(--space-sm);
+}
+
+/* =========================================
+   GRID SYSTEM
+   ========================================= */
+
+/**
+ * .card-grid
+ * 
+ * Responsive grid untuk card layout
+ * Auto-fit dengan minimum 280px per card
+ * 
+ * Variants:
+ * .card-grid.wide     - Lebih lebar (350px min)
+ * .card-grid.compact  - Lebih compact (250px min)
+ * 
+ * Example:
+ * <div class="card-grid">
+ *   <div class="card">...</div>
+ *   <div class="card">...</div>
+ * </div>
+ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.card-grid.wide {
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+.card-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-sm);
+}
+
+/* Service Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+/* Admin Grid */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-md);
+}
+
+.admin-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-sm);
+}
+
+/* =========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================= */
+
+/* Tablet: 768px and below */
+@media (max-width: 768px) {
+  /* Grid adjustments */
+  .services-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-sm);
+  }
+  
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Card adjustments */
+  .service-card {
+    padding: 1.25rem;
+  }
+  
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: 1.25rem;
+  }
+  
+  /* Admin card adjustments */
+  .admin-card .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+  
+  /* Info row adjustments */
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+  
+  .info-row label {
+    min-width: auto;
+  }
+  
+  .info-row span {
+    text-align: left;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  /* Card padding */
+  .service-card {
+    padding: var(--space-sm);
+  }
+  
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: var(--space-sm);
+  }
+  
+  .auth-card {
+    padding: 1.5rem;
+  }
+  
+  /* Stat card - stack vertically */
+  .stat-card {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  /* Admin stats grid */
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Admin grid */
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   UTILITY CLASSES
+   ========================================= */
+
+/* Add these utilities untuk styling flexibility */
+
+.card-no-hover:hover {
+  box-shadow: var(--shadow-sm);
+  transform: none;
+}
+
+.card-shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.card-border {
+  border: 1px solid #e5e7eb;
+}
+
+/* Color variants untuk stat icons */
+.stat-icon.danger {
+  background: #ef4444;
+}
+
+.stat-icon.success {
+  background: #10b981;
+}
+
+.stat-icon.warning {
+  background: #f59e0b;
+}
+
+.stat-icon.info {
+  background: #3b82f6;
+}
+
+.stat-icon.purple {
+  background: #8b5cf6;
+}
+
+/* =========================================
+   NOTE: Backward Compatibility
+   ========================================= */
+
+/**
+ * Semua changes di atas adalah improvements
+ * ke existing styles. Existing HTML structure
+ * tetap compatible dan akan automatically mendapat
+ * benefit dari improved styling.
+ * 
+ * Old classes masih berfungsi, tapi dengan
+ * improved styling version.
+ */
+

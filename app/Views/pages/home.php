@@ -245,7 +245,7 @@
     left: 210px;
     background: #fbbf24;
     color: #1e3a8a;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 11px;
     padding: 6px 14px;
     border-radius: 20px;
@@ -263,7 +263,7 @@
 
 .discount-text {
     font-size: 42px;
-    font-weight: 900;
+    font-weight: 700;
     color: #2563eb;
     letter-spacing: 3px;
     line-height: 1;
@@ -272,7 +272,7 @@
 
 .discount-amount {
     font-size: 120px;
-    font-weight: 900;
+    font-weight: 700;
     color: #2563eb;
     letter-spacing: -5px;
     line-height: 0.9;
@@ -289,7 +289,7 @@
 
 .gratis-text, .ongkir-text {
     font-size: 56px;
-    font-weight: 900;
+    font-weight: 700;
     color: #fff;
     letter-spacing: 3px;
     line-height: 0.9;
@@ -333,7 +333,7 @@
 
 .desc-text {
     font-size: 32px;
-    font-weight: 900;
+    font-weight: 700;
     color: white;
     line-height: 1.1;
     letter-spacing: 1px;
@@ -358,7 +358,7 @@
     display: inline-block;
     background: #fbbf24;
     color: #1e3a8a;
-    font-weight: 900;
+    font-weight: 700;
     font-size: 9px;
     padding: 6px 20px;
     border-radius: 15px;
@@ -409,7 +409,7 @@
     top: 20px;
     right: 30px;
     font-size: 28px;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: 1px;
     opacity: 0.3;
 }

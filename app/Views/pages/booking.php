@@ -489,7 +489,7 @@ label:has(input[type="radio"]:checked) {
 label:has(input[type="radio"]:checked)::after {
     content: '\f058';
     font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
+    font-weight: 700;
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -506,7 +506,7 @@ label:has(input[type="radio"]:checked)::after {
 .delivery-option:has(input[type="radio"]:checked)::after {
     content: '\f058';
     font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
+    font-weight: 700;
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
