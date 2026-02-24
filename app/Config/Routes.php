@@ -144,13 +144,13 @@ $routes->group('api/booking', ['namespace' => 'App\Controllers\Api'], function($
     $routes->post('cancel/(:num)', 'BookingApi::cancel/$1');
 });
 
-<<<<<<< HEAD
-// dashboardapi
+// Dashboard API
 $routes->group('api/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
     $routes->get('stats', 'DashboardApi::stats');
     $routes->get('recent-bookings', 'DashboardApi::recentBookings');
-=======
-//cartapi
+});
+
+// Cart API
 $routes->group('api', function($routes) {
     $routes->get('cart', 'Api\Cart::index');
     $routes->post('cart', 'Api\Cart::add');
@@ -158,7 +158,8 @@ $routes->group('api', function($routes) {
     $routes->delete('cart/(:segment)', 'Api\Cart::remove/$1');
     $routes->delete('cart', 'Api\Cart::clear');
 });
-// usersapi
+
+// Users API
 $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($routes) {
     $routes->get('/', 'UsersApi::index');
     $routes->get('statistics', 'UsersApi::statistics');
@@ -166,7 +167,6 @@ $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($ro
     $routes->post('/', 'UsersApi::create');
     $routes->put('(:num)', 'UsersApi::update/$1');
     $routes->delete('(:num)', 'UsersApi::delete/$1');
->>>>>>> bff58b31eaea5bd40a4d0f59d1573c61cbdda45b
 });
 
 // Static Pages
