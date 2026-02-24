@@ -134,6 +134,15 @@ $routes->group('api/booking', ['namespace' => 'App\Controllers\Api'], function($
     $routes->post('cancel/(:num)', 'BookingApi::cancel/$1');
 });
 
+//cartapi
+$routes->group('api', function($routes) {
+    $routes->get('cart', 'Api\Cart::index');
+    $routes->post('cart', 'Api\Cart::add');
+    $routes->put('cart/(:segment)', 'Api\Cart::update/$1');
+    $routes->delete('cart/(:segment)', 'Api\Cart::remove/$1');
+    $routes->delete('cart', 'Api\Cart::clear');
+});
+
 // Static Pages
 $routes->get('/tentang', 'Pages::about');
 $routes->get('/kontak', 'Pages::contact');

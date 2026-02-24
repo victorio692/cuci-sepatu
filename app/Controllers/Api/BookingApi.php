@@ -16,10 +16,6 @@ class BookingApi extends BaseController
         $this->db = \Config\Database::connect();
     }
 
-    /**
-     * Create new booking - Customer only
-     * POST /api/booking/create
-     */
     public function create()
     {
         // Check authentication
