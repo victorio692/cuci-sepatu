@@ -23,7 +23,7 @@
             font-weight: 400;
         }
         h1 {
-            font-weight: 400;
+            font-weight: 700;
             letter-spacing: normal;
             font-size: 3rem;
             margin-top: 0;

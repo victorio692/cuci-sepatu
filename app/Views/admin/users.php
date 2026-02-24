@@ -47,69 +47,66 @@
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bergabung</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bergabung</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php foreach ($users as $user): ?>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800">#<?= $user['id'] ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="font-semibold text-xs text-gray-800">#<?= $user['id'] ?></span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-3">
                                 <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold mr-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xs mr-2">
                                         <?= strtoupper(substr($user['full_name'], 0, 1)) ?>
                                     </div>
-                                    <span class="font-medium text-gray-800"><?= $user['full_name'] ?></span>
+                                    <span class="font-medium text-sm text-gray-800"><?= $user['full_name'] ?></span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm text-gray-700"><?= $user['email'] ?></span>
+                            <td class="px-3 py-3">
+                                <span class="text-xs text-gray-700"><?= $user['email'] ?></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $user['phone'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-1">
-                                    <i class="fab fa-whatsapp"></i>
-                                    <span class="text-sm"><?= $user['phone'] ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $user['phone'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-0.5">
+                                    <i class="fab fa-whatsapp text-sm"></i>
+                                    <span class="text-xs"><?= $user['phone'] ?></span>
                                 </a>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="text-xs text-gray-700"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-3">
                                 <button 
-                                    class="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer
+                                    class="inline-flex items-center space-x-1 px-2 py-1 rounded text-xs font-medium transition cursor-pointer
                                         <?= $user['is_active'] ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' ?>"
                                     onclick="toggleUserActive(this, <?= $user['id'] ?>)"
                                     title="Click to toggle"
                                 >
-                                    <i class="fas fa-<?= $user['is_active'] ? 'check-circle' : 'ban' ?>"></i>
+                                    <i class="fas fa-<?= $user['is_active'] ? 'check-circle' : 'ban' ?>" style="font-size: 0.7rem;"></i>
                                     <span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></span>
                                 </button>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center space-x-2">
+                            <td class="px-2 py-3 whitespace-nowrap">
+                                <div class="flex items-center space-x-0.5">
                                     <a href="/admin/users/<?= $user['id'] ?>" 
-                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm">
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
                                         <i class="fas fa-eye"></i>
-                                        <span>Lihat</span>
                                     </a>
                                     <a href="/admin/users/edit/<?= $user['id'] ?>" 
-                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition text-sm">
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-yellow-50 text-yellow-600 rounded hover:bg-yellow-100 transition text-xs" title="Edit">
                                         <i class="fas fa-edit"></i>
-                                        <span>Edit</span>
                                     </a>
                                     <a href="/admin/users/delete/<?= $user['id'] ?>" 
                                        onclick="return confirm('Yakin ingin menghapus user ini?')"
-                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm">
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
                                         <i class="fas fa-trash"></i>
-                                        <span>Hapus</span>
                                     </a>
                                 </div>
                             </td>

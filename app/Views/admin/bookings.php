@@ -55,44 +55,44 @@
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php foreach ($bookings as $booking): ?>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800">#<?= $booking['id'] ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="font-semibold text-xs text-gray-800">#<?= $booking['id'] ?></span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-3">
                                 <div class="flex items-center">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold mr-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs mr-2">
                                         <?= strtoupper(substr($booking['full_name'], 0, 1)) ?>
                                     </div>
                                     <div>
-                                        <div class="font-medium text-gray-800"><?= $booking['full_name'] ?></div>
+                                        <div class="font-medium text-sm text-gray-800"><?= $booking['full_name'] ?></div>
                                         <div class="text-xs text-gray-500"><?= $booking['email'] ?></div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm text-gray-700"><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
+                            <td class="px-3 py-3">
+                                <span class="text-xs text-gray-700"><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm text-gray-700"><?= date('d M Y', strtotime($booking['created_at'])) ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="text-xs text-gray-700"><?= date('d M Y', strtotime($booking['created_at'])) ?></span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="font-semibold text-xs text-gray-800">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-3">
                                 <select 
-                                    class="px-3 py-1.5 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
+                                    class="px-2 py-1 rounded text-xs font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
                                         <?php 
                                         switch($booking['status']) {
                                             case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
@@ -115,18 +115,16 @@
                                     <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
                                 </select>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center space-x-2">
+                            <td class="px-2 py-3 whitespace-nowrap">
+                                <div class="flex items-center space-x-0.5">
                                     <a href="/admin/bookings/<?= $booking['id'] ?>" 
-                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition text-sm">
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
                                         <i class="fas fa-eye"></i>
-                                        <span>Lihat</span>
                                     </a>
                                     <a href="/admin/bookings/<?= $booking['id'] ?>" 
                                        onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus pesanan ini?')) { deleteBooking(<?= $booking['id'] ?>); }"
-                                       class="inline-flex items-center space-x-1 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm">
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
                                         <i class="fas fa-trash"></i>
-                                        <span>Hapus</span>
                                     </a>
                                 </div>
                             </td>
