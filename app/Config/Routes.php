@@ -118,6 +118,16 @@ $routes->group('api', static function($routes) {
     $routes->get('auth/profile', 'Api\AuthApi::profile');
     $routes->put('auth/profile', 'Api\AuthApi::updateProfile');
     $routes->post('auth/change-password', 'Api\AuthApi::changePassword');
+    
+    // Notifications API
+    $routes->get('notifications', 'Api\NotificationsApi::index');
+    $routes->get('notifications/unread', 'Api\NotificationsApi::unread');
+    $routes->get('notifications/count', 'Api\NotificationsApi::count');
+    $routes->get('notifications/(:num)', 'Api\NotificationsApi::show/$1');
+    $routes->put('notifications/(:num)/read', 'Api\NotificationsApi::markAsRead/$1');
+    $routes->put('notifications/read-all', 'Api\NotificationsApi::markAllAsRead');
+    $routes->delete('notifications/(:num)', 'Api\NotificationsApi::delete/$1');
+    $routes->delete('notifications/clear', 'Api\NotificationsApi::clear');
 });
 // apiservice
 $routes->group('api', function($routes) {
