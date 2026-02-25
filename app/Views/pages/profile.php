@@ -36,7 +36,7 @@
                 </h3>
                 <a href="/my-bookings" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
                     Lihat Riwayat Pesanan
-                    <i class="fas fa-arrow-right text-xs"></i>
+                    
                 </a>
             </div>
 

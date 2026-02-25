@@ -44,12 +44,12 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                         <?php 
                         $serviceIcons = [
-                            'fast-cleaning' => 'fa-running',
-                            'deep-cleaning' => 'fa-socks',
-                            'white-shoes' => 'fa-shoe-prints',
-                            'suede-treatment' => 'fa-mitten',
-                            'unyellowing' => 'fa-star'
-                        ];
+    'fast-cleaning'     => 'fa-bolt',
+    'deep-cleaning'     => 'fa-droplets',
+    'white-shoes'       => 'fa-star',
+    'suede-treatment'   => 'fa-wand-magic-sparkles',
+    'unyellowing'       => 'fa-sun'
+];
                         
                         // Get service from URL parameter
                         $selectedService = $_GET['service'] ?? '';
@@ -67,7 +67,18 @@
                                     <h3 class="text-base sm:text-lg font-bold text-gray-900"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
                                     <p class="text-xs sm:text-sm text-gray-600 mt-1"><?= htmlspecialchars($service['deskripsi']) ?></p>
                                 </div>
-                                <i class="fas <?= $icon ?> text-blue-500 text-lg sm:text-xl"></i>
+                                <span style="font-size: 1.5rem;">
+                                    <?php 
+                                    $emojiMap = [
+                                        'fast-cleaning' => '',
+                                        'deep-cleaning' => '',
+                                        'white-shoes' => '',
+                                        'suede-treatment' => '',
+                                        'unyellowing' => ''
+                                    ];
+                                    echo $emojiMap[$service['kode_layanan']] ?? '👟';
+                                    ?>
+                                </span>
                             </div>
                             <div class="mt-2 sm:mt-3">
                                 <span class="text-blue-600 font-semibold text-base sm:text-lg">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>

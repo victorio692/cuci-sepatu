@@ -58,33 +58,32 @@ function getCartKey() {
 function getServiceStyle(serviceCode) {
     const styles = {
         'fast-cleaning': {
-            icon: '⚡',
+            icon: 'fa-bolt',
             bg: 'bg-blue-600'
         },
         'deep-cleaning': {
-            icon: '≈',
+            icon: 'fa-water',
             bg: 'bg-blue-600'
         },
         'white-shoes': {
-            icon: '★',
+            icon: 'fa-star',
             bg: 'bg-blue-600'
         },
         'suede-treatment': {
-            icon: '◎',
+            icon: 'fa-shoe-prints',
             bg: 'bg-blue-600'
         },
         'unyellowing': {
-            icon: '✎',
+            icon: 'fa-magic',
             bg: 'bg-blue-600'
         }
     };
-    
+
     return styles[serviceCode] || {
-        icon: '●',
+        icon: 'fa-circle',
         bg: 'bg-blue-600'
     };
 }
-
 // Load cart from localStorage
 function loadCart() {
     const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
@@ -143,7 +142,7 @@ function loadCart() {
                     
                     <div class="w-20 h-20 ${serviceStyles.bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent"></div>
-                        <div class="relative z-10 text-4xl">${serviceStyles.icon}</div>
+                        <i class="fas ${serviceStyles.icon} text-white text-4xl relative z-10"></i>
                     </div>
                     
                     <div class="flex-1">
@@ -157,7 +156,7 @@ function loadCart() {
                         <div class="flex items-center justify-between mt-3">
                             <div class="flex items-center space-x-3">
                                 <button type="button" onclick="updateQuantity(${index}, -1)" class="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-minus text-xs"></i>
+                                    <span class="text-sm font-bold">−</span>
                                 </button>
                                 <span class="font-semibold text-gray-900 w-8 text-center">${item.quantity}</span>
                                 <button type="button" onclick="updateQuantity(${index}, 1)" class="w-8 h-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center">
