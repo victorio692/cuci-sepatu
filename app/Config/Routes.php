@@ -119,6 +119,16 @@ $routes->group('api', static function($routes) {
     $routes->get('auth/profile', 'Api\AuthApi::profile');
     $routes->put('auth/profile', 'Api\AuthApi::updateProfile');
     $routes->post('auth/change-password', 'Api\AuthApi::changePassword');
+    
+    // Notifications API
+    $routes->get('notifications', 'Api\NotificationsApi::index');
+    $routes->get('notifications/unread', 'Api\NotificationsApi::unread');
+    $routes->get('notifications/count', 'Api\NotificationsApi::count');
+    $routes->get('notifications/(:num)', 'Api\NotificationsApi::show/$1');
+    $routes->put('notifications/(:num)/read', 'Api\NotificationsApi::markAsRead/$1');
+    $routes->put('notifications/read-all', 'Api\NotificationsApi::markAllAsRead');
+    $routes->delete('notifications/(:num)', 'Api\NotificationsApi::delete/$1');
+    $routes->delete('notifications/clear', 'Api\NotificationsApi::clear');
 });
 // apiservice
 $routes->group('api', function($routes) {
@@ -135,6 +145,31 @@ $routes->group('api/booking', ['namespace' => 'App\Controllers\Api'], function($
     $routes->post('cancel/(:num)', 'BookingApi::cancel/$1');
 });
 
+// Dashboard API
+$routes->group('api/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('stats', 'DashboardApi::stats');
+    $routes->get('recent-bookings', 'DashboardApi::recentBookings');
+});
+
+// Cart API
+$routes->group('api', function($routes) {
+    $routes->get('cart', 'Api\Cart::index');
+    $routes->post('cart', 'Api\Cart::add');
+    $routes->put('cart/(:segment)', 'Api\Cart::update/$1');
+    $routes->delete('cart/(:segment)', 'Api\Cart::remove/$1');
+    $routes->delete('cart', 'Api\Cart::clear');
+});
+
+// Users API
+$routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'UsersApi::index');
+    $routes->get('statistics', 'UsersApi::statistics');
+    $routes->get('(:num)', 'UsersApi::detail/$1');
+    $routes->post('/', 'UsersApi::create');
+    $routes->put('(:num)', 'UsersApi::update/$1');
+    $routes->delete('(:num)', 'UsersApi::delete/$1');
+});
+
 // Static Pages
 $routes->get('/tentang', 'Pages::about');
 $routes->get('/kontak', 'Pages::contact');
@@ -142,3 +177,14 @@ $routes->post('/kontak', 'Pages::submitContact');
 $routes->get('/faq', 'Pages::faq');
 $routes->get('/kebijakan', 'Pages::privacy');
 $routes->get('/syarat', 'Pages::terms');
+
+// Admin Services API
+$routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminServicesApi::index');
+    $routes->get('(:num)', 'AdminServicesApi::show/$1');
+    $routes->post('/', 'AdminServicesApi::create');
+    $routes->put('(:num)', 'AdminServicesApi::update/$1');
+    $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
+    $routes->put('(:num)/toggle', 'AdminServicesApi::toggle/$1');
+    $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
+});

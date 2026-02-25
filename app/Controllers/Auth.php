@@ -73,7 +73,7 @@ class Auth extends BaseController
                 if ($user->role === 'admin') {
                     return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
                 } else {
-                    return redirect()->to('/')->with('info', 'Anda sudah login');
+                    return redirect()->to('/')->with('info', message: 'Anda sudah login');
                 }
             }
         }
