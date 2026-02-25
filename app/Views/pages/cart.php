@@ -115,7 +115,7 @@ function loadCart() {
     cartHTML += `
         <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <label class="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="w-5 h-5 text-blue-600 border-2 border-gray-400 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer appearance-none bg-white checked:bg-blue-600 checked:border-blue-600 transition">
                 <span class="font-semibold text-gray-900">Pilih Semua (${cart.length} Layanan)</span>
             </label>
         </div>
@@ -132,12 +132,12 @@ function loadCart() {
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition">
                 <div class="flex gap-4">
                     <!-- Checkbox -->
-                    <div class="flex items-start pt-1">
+                    <div class="flex items-start pt-2">
                         <input type="checkbox" 
                                id="item-${index}" 
                                onchange="toggleItemSelection(${index})" 
                                ${isChecked}
-                               class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer">
+                               class="w-5 h-5 text-blue-600 border-2 border-gray-400 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer appearance-none bg-white checked:bg-blue-600 checked:border-blue-600 transition">
                     </div>
                     
                     <div class="w-20 h-20 ${serviceStyles.bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
@@ -397,6 +397,24 @@ document.addEventListener('DOMContentLoaded', loadCart);
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Custom checkbox styling */
+input[type="checkbox"] {
+    accent-color: #2563eb;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+input[type="checkbox"]:checked::after {
+    content: "✓";
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>
 
