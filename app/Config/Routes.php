@@ -169,6 +169,14 @@ $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($ro
     $routes->put('(:num)', 'UsersApi::update/$1');
     $routes->delete('(:num)', 'UsersApi::delete/$1');
 });
+//adminbookingapi
+$routes->group('api/admin/bookings', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminBookingsApi::index');
+    $routes->get('statistics', 'AdminBookingsApi::statistics');
+    $routes->get('(:num)', 'AdminBookingsApi::detail/$1');
+    $routes->post('(:num)/status', 'AdminBookingsApi::updateStatus/$1');
+    $routes->delete('(:num)', 'AdminBookingsApi::delete/$1');
+});
 
 // Static Pages
 $routes->get('/tentang', 'Pages::about');
@@ -187,4 +195,13 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
     $routes->put('(:num)/toggle', 'AdminServicesApi::toggle/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
+});
+
+
+// Admin Reports API
+$routes->group('api/admin/reports', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminReportsApi::index');                // GET statistik laporan utama
+    $routes->get('bookings', 'AdminReportsApi::bookings');      // GET detail bookings untuk print
+    $routes->get('revenue', 'AdminReportsApi::revenue');        // GET laporan revenue
+    $routes->get('customers', 'AdminReportsApi::customers');    // GET statistik customer
 });
