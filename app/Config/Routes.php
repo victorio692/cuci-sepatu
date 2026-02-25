@@ -176,3 +176,14 @@ $routes->post('/kontak', 'Pages::submitContact');
 $routes->get('/faq', 'Pages::faq');
 $routes->get('/kebijakan', 'Pages::privacy');
 $routes->get('/syarat', 'Pages::terms');
+
+// Admin Services API
+$routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminServicesApi::index');
+    $routes->get('(:num)', 'AdminServicesApi::show/$1');
+    $routes->post('/', 'AdminServicesApi::create');
+    $routes->put('(:num)', 'AdminServicesApi::update/$1');
+    $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
+    $routes->put('(:num)/toggle', 'AdminServicesApi::toggle/$1');
+    $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
+});
