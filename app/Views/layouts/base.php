@@ -61,6 +61,248 @@
             background: #ef4444;
             animation: pulse-ring 1.5s ease-out infinite;
         }
+
+        /* ============================================
+           SOLUSI FINAL: HILANGKAN OUTLINE BIRU GANDA
+           ============================================ */
+
+        /* HARD RESET - SEMUA OUTLINE */
+        html,
+        body,
+        * {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            outline-color: transparent !important;
+            outline-offset: 0 !important;
+        }
+
+        /* FOCUS STATES - SEMUA ELEMEN */
+        *:focus,
+        *:focus-visible,
+        *:focus-within,
+        *:active,
+        *::focus,
+        *::focus-visible {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            outline-color: transparent !important;
+            outline-offset: 0 !important;
+            box-shadow: none !important;
+            border-color: inherit !important;
+            text-decoration: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+            -ms-outline: none !important;
+            -o-outline: none !important;
+        }
+
+        /* BUTTON ELEMENTS */
+        button {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            border: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+        }
+
+        button:any-link,
+        button:focus,
+        button:focus-visible,
+        button:focus-within,
+        button:hover,
+        button:active {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        button::-moz-focus-inner {
+            border: 0 !important;
+            padding: 0 !important;
+            outline: 0 !important;
+        }
+
+        /* ANCHOR LINKS */
+        a {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            text-decoration: none !important;
+        }
+
+        a:any-link,
+        a:link,
+        a:visited,
+        a:active,
+        a:focus,
+        a:focus-visible,
+        a:focus-within,
+        a:hover {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            box-shadow: none !important;
+            text-decoration: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        a::-moz-focus-inner {
+            border: 0 !important;
+            outline: 0 !important;
+        }
+
+        /* INPUT FORM ELEMENTS */
+        input,
+        textarea,
+        select {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+        }
+
+        input:any-link,
+        input:focus,
+        input:focus-visible,
+        input:focus-within,
+        input:active,
+        textarea:focus,
+        textarea:focus-visible,
+        textarea:focus-within,
+        textarea:active,
+        select:focus,
+        select:focus-visible,
+        select:focus-within,
+        select:active {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            box-shadow: none !important;
+            border-color: inherit !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        input::-moz-focus-inner,
+        textarea::-moz-focus-inner,
+        select::-moz-focus-inner {
+            border: 0 !important;
+            padding: 0 !important;
+            outline: 0 !important;
+        }
+
+        /* WEBKIT/CHROME/SAFARI */
+        *::-webkit-outer-spin-button,
+        *::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+
+        *::-webkit-search-cancel-button,
+        *::-webkit-search-results-button,
+        *::-webkit-search-results-decoration {
+            -webkit-appearance: none !important;
+        }
+
+        *::-webkit-focus-ring-color {
+            color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-focus-ring-color: transparent !important;
+        }
+
+        /* ROLE BUTTON ELEMENTS */
+        [role="button"],
+        [role="link"],
+        [role="tab"],
+        [role="menuitem"],
+        [role="button"]:focus,
+        [role="button"]:focus-visible,
+        [role="button"]:active,
+        [role="link"]:focus,
+        [role="link"]:focus-visible,
+        [role="link"]:active {
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            box-shadow: none !important;
+            -webkit-outline: none !important;
+            -moz-outline: none !important;
+        }
+
+        /* TAILWIND FOCUS - COMPREHENSIVE */
+        [class*="focus"]:focus,
+        [class*="focus-ring"],
+        [class*="focus-visible"],
+        .focus\:outline-none,
+        .focus\:outline-none:focus,
+        .focus\:ring,
+        .focus\:ring:focus,
+        .focus\:ring-0,
+        .focus\:ring-1,
+        .focus\:ring-2,
+        .focus\:ring-4,
+        .focus\:ring-8,
+        .focus\:ring-offset,
+        .focus\:ring-offset-0,
+        .focus\:ring-offset-1,
+        .focus\:ring-offset-2,
+        .focus\:ring-offset-4,
+        .focus\:border-blue-400,
+        .focus\:border-blue-500,
+        .focus\:border-blue-600 {
+            outline: 0 !important;
+            box-shadow: none !important;
+            border-color: inherit !important;
+        }
+
+        /* OVERRIDE INLINE STYLES */
+        [style*="outline"],
+        [style*="box-shadow"] {
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* CUSTOM FOCUS RULE - FINAL FALLBACK */
+        html:focus,
+        html:focus-visible,
+        body:focus,
+        body:focus-visible,
+        main:focus,
+        main:focus-visible,
+        section:focus,
+        section:focus-visible,
+        div:focus,
+        div:focus-visible,
+        span:focus,
+        span:focus-visible {
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* DOUBLE NEGATIVE - ENSURE REMOVAL */
+        *:not(:focus):not(:focus-visible):not(:active),
+        *:focus,
+        *:focus-visible,
+        *:active {
+            -webkit-outline: 0 !important;
+            outline: 0 !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            outline-color: transparent !important;
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>
@@ -184,7 +426,7 @@
                                 <div class="text-left hidden lg:block">
                                     <div class="font-medium text-gray-800 text-sm"><?= substr($user['nama_lengkap'], 0, 15) ?><?= strlen($user['nama_lengkap']) > 15 ? '...' : '' ?></div>
                                 </div>
-                                <i class="fas fa-chevron-down text-gray-600 text-xs group-hover:rotate-180 transition-transform duration-300"></i>
+                            
                             </button>
                             
                             <!-- Dropdown Menu -->

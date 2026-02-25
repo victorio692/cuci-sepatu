@@ -65,6 +65,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function($routes) {
     
     // Bookings
     $routes->get('bookings', 'Admin\Bookings::index');
+    $routes->get('bookings/detail/(:num)', 'Admin\Bookings::detail/$1');
     $routes->get('bookings/(:num)', 'Admin\Bookings::detail/$1');
     $routes->put('bookings/(:num)/status', 'Admin\Bookings::updateStatus/$1');
     $routes->post('bookings/(:num)/status', 'Admin\Bookings::updateStatus/$1'); // For file upload
@@ -167,6 +168,14 @@ $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($ro
     $routes->post('/', 'UsersApi::create');
     $routes->put('(:num)', 'UsersApi::update/$1');
     $routes->delete('(:num)', 'UsersApi::delete/$1');
+});
+//adminbookingapi
+$routes->group('api/admin/bookings', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminBookingsApi::index');
+    $routes->get('statistics', 'AdminBookingsApi::statistics');
+    $routes->get('(:num)', 'AdminBookingsApi::detail/$1');
+    $routes->post('(:num)/status', 'AdminBookingsApi::updateStatus/$1');
+    $routes->delete('(:num)', 'AdminBookingsApi::delete/$1');
 });
 
 // Static Pages
