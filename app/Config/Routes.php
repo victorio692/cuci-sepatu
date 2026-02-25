@@ -187,3 +187,12 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->put('(:num)/toggle', 'AdminServicesApi::toggle/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
 });
+
+
+// Admin Reports API
+$routes->group('api/admin/reports', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminReportsApi::index');                // GET statistik laporan utama
+    $routes->get('bookings', 'AdminReportsApi::bookings');      // GET detail bookings untuk print
+    $routes->get('revenue', 'AdminReportsApi::revenue');        // GET laporan revenue
+    $routes->get('customers', 'AdminReportsApi::customers');    // GET statistik customer
+});
