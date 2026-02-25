@@ -426,7 +426,7 @@
                                 <div class="text-left hidden lg:block">
                                     <div class="font-medium text-gray-800 text-sm"><?= substr($user['nama_lengkap'], 0, 15) ?><?= strlen($user['nama_lengkap']) > 15 ? '...' : '' ?></div>
                                 </div>
-                            
+                                <i id="dropdownIcon" class="fas fa-chevron-down chevron-icon text-gray-600 hidden lg:inline-block group-hover:text-blue-600" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
                             </button>
                             
                             <!-- Dropdown Menu -->
@@ -670,6 +670,7 @@
         function toggleProfileDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             const notifDropdown = document.getElementById('landingNotificationDropdown');
+            const icon = document.getElementById('dropdownIcon');
             
             // Close notification dropdown if open
             if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
@@ -678,6 +679,19 @@
             
             if (dropdown) {
                 dropdown.classList.toggle('hidden');
+                
+                // Toggle chevron icon between down and up
+                if (icon) {
+                    if (dropdown.classList.contains('hidden')) {
+                        // Dropdown is closed, show chevron down
+                        icon.classList.remove('fa-chevron-up', 'chevron-rotated');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        // Dropdown is open, show chevron up
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up', 'chevron-rotated');
+                    }
+                }
             }
         }
         
@@ -685,10 +699,15 @@
         function toggleLandingNotifications() {
             const dropdown = document.getElementById('landingNotificationDropdown');
             const profileDropdown = document.getElementById('profileDropdown');
+            const dropdownIcon = document.getElementById('dropdownIcon');
             
             // Close profile dropdown if open
             if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
                 profileDropdown.classList.add('hidden');
+                if (dropdownIcon) {
+                    dropdownIcon.classList.remove('fa-chevron-up', 'chevron-rotated');
+                    dropdownIcon.classList.add('fa-chevron-down');
+                }
             }
             
             if (dropdown) {
@@ -876,8 +895,13 @@
             // Check if click is outside profile dropdown
             if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
                 const profileButton = event.target.closest('button[onclick=\"toggleProfileDropdown()\"]');
+                const dropdownIcon = document.getElementById('dropdownIcon');
                 if (!profileButton && !profileDropdown.contains(event.target)) {
                     profileDropdown.classList.add('hidden');
+                    if (dropdownIcon) {
+                        dropdownIcon.classList.remove('fa-chevron-up', 'chevron-rotated');
+                        dropdownIcon.classList.add('fa-chevron-down');
+                    }
                 }
             }
             
@@ -955,6 +979,16 @@
             .animate-fade-in-delay {
                 animation: fade-in 0.8s ease-out 0.3s forwards;
                 opacity: 0;
+            }
+
+            /* Chevron Icon Animation */
+            .chevron-icon {
+                transition: transform 0.3s ease;
+                display: inline-block;
+            }
+
+            .chevron-rotated {
+                transform: rotate(180deg);
             }
         `;
         document.head.appendChild(style);
