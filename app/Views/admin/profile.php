@@ -94,7 +94,7 @@
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
                 <div>
                     <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem;">Role:</label>
-                    <span style="display: inline-block; background: #7c3aed; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">
+                    <span style="display: inline-block; background: #5d00ff; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">
                         <?= ucfirst($user['role']) ?>
                     </span>
                 </div>
@@ -138,7 +138,7 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #7c3aed;
+    border-color: #5d00ff;
     box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
@@ -155,12 +155,12 @@
 }
 
 .btn-primary {
-    background: #7c3aed;
+    background: #2563eb;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #6d28d9;
+    background: #2563eb;
 }
 
 .alert {

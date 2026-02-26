@@ -1083,7 +1083,7 @@ function showSlide(n) {
                         <i class="fas fa-truck text-xl md:text-2xl"></i>
                     </div>
                     <div class="flex-1 md:flex-initial">
-                        <h3 class="font-bold text-base md:text-lg">Layanan Antar-Jemput GRATIS</h3>
+                        <h3 class="font-bold text-base md:text-lg text-white"> Layanan Antar-Jemput GRATIS</h3>
                         <p class="text-blue-100 text-xs md:text-sm">Untuk radius 5 km dari lokasi toko kami</p>
                     </div>
                 </div>

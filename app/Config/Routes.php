@@ -195,3 +195,24 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
 });
+
+
+// Admin Reports API
+$routes->group('api/admin/reports', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminReportsApi::index');                // GET statistik laporan utama
+    $routes->get('bookings', 'AdminReportsApi::bookings');      // GET detail bookings untuk print
+    $routes->get('revenue', 'AdminReportsApi::revenue');        // GET laporan revenue
+    $routes->get('customers', 'AdminReportsApi::customers');    // GET statistik customer
+});
+
+
+// Admin Dashboard API
+$routes->group('api/admin/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminDashboardApi::index');                          // GET statistik utama
+    $routes->get('recent-bookings', 'AdminDashboardApi::recentBookings');   // GET booking terbaru
+    $routes->get('pending-bookings', 'AdminDashboardApi::pendingBookings'); // GET pending bookings
+    $routes->get('service-stats', 'AdminDashboardApi::serviceStats');       // GET statistik layanan
+    $routes->get('recent-users', 'AdminDashboardApi::recentUsers');         // GET user terbaru
+    $routes->get('monthly-chart', 'AdminDashboardApi::monthlyChart');       // GET data chart bulanan
+    $routes->get('status-breakdown', 'AdminDashboardApi::statusBreakdown'); // GET breakdown status
+});
