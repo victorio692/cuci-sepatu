@@ -205,3 +205,15 @@ $routes->group('api/admin/reports', ['namespace' => 'App\Controllers\Api'], func
     $routes->get('revenue', 'AdminReportsApi::revenue');        // GET laporan revenue
     $routes->get('customers', 'AdminReportsApi::customers');    // GET statistik customer
 });
+
+
+// Admin Dashboard API
+$routes->group('api/admin/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
+    $routes->get('/', 'AdminDashboardApi::index');                          // GET statistik utama
+    $routes->get('recent-bookings', 'AdminDashboardApi::recentBookings');   // GET booking terbaru
+    $routes->get('pending-bookings', 'AdminDashboardApi::pendingBookings'); // GET pending bookings
+    $routes->get('service-stats', 'AdminDashboardApi::serviceStats');       // GET statistik layanan
+    $routes->get('recent-users', 'AdminDashboardApi::recentUsers');         // GET user terbaru
+    $routes->get('monthly-chart', 'AdminDashboardApi::monthlyChart');       // GET data chart bulanan
+    $routes->get('status-breakdown', 'AdminDashboardApi::statusBreakdown'); // GET breakdown status
+});

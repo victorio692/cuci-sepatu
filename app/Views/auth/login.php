@@ -106,10 +106,10 @@
 </div>
 <!-- Login Animation Overlay -->
 <div id="loginOverlay" class="hidden fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex-col items-center justify-center">
-    <div class="relative">
+    <div class="relative w-32 h-32">
         <!-- Icon dengan background lingkaran -->
-        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
-            <i class="fas fa-sign-in-alt text-blue-600 text-4xl"></i>
+        <div class="absolute inset-0 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+            <i class="fas fa-arrow-right-from-bracket text-blue-600 text-5xl"></i>
         </div>
         <!-- Rotating circle border -->
         <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>

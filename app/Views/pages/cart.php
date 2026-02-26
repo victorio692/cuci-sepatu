@@ -401,7 +401,24 @@ document.addEventListener('DOMContentLoaded', loadCart);
 
 /* Custom checkbox styling */
 input[type="checkbox"] {
-    accent-color: #2563eb;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #9ca3af;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+input[type="checkbox"]:hover {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 input[type="checkbox"]:checked {
@@ -412,9 +429,9 @@ input[type="checkbox"]:checked {
 input[type="checkbox"]:checked::after {
     content: "✓";
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
 }
 </style>
 
