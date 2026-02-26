@@ -662,6 +662,21 @@ class Booking extends BaseController
                         'created_at' => date('Y-m-d H:i:s')
                     ]);
                 }
+                
+                // Create notification for all admins
+                $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
+                
+                foreach ($admins as $admin) {
+                    $this->db->table('notifications')->insert([
+                        'id_user' => $admin['id'],
+                        'booking_id' => $bookingId,
+                        'judul' => 'Booking Baru!',
+                        'pesan' => "Ada booking baru dari customer dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                        'tipe' => 'new_booking',
+                        'dibaca' => 0,
+                        'dibuat_pada' => date('Y-m-d H:i:s')
+                    ]);
+                }
             }
         }
 
