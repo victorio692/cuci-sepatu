@@ -193,7 +193,6 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->post('/', 'AdminServicesApi::create');
     $routes->put('(:num)', 'AdminServicesApi::update/$1');
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
-    $routes->put('(:num)/toggle', 'AdminServicesApi::toggle/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
 });
 

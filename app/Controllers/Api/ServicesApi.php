@@ -19,10 +19,10 @@ class ServicesApi extends ResourceController
     public function index()
     {
         $services = $this->db->table('services')
-            ->orderBy("FIELD(kode_layanan, 'fast-cleaning', 'deep-cleaning', 'white-shoes', 'suede-treatment', 'unyellowing')", '', false)
+            ->orderBy('id', 'DESC')
             ->get()
             ->getResultArray();
-
+        
         return $this->respond($services);
     }
 

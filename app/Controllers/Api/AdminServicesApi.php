@@ -125,7 +125,7 @@ class AdminServicesApi extends BaseController
         try {
             if (!$id) {
                 return $this->response->setJSON([
-                    'code' => 400,
+                      'code' => 400,
                     'message' => 'ID Tidak Boleh Kosong'
                 ]);
             }
@@ -223,50 +223,6 @@ class AdminServicesApi extends BaseController
         }
     }
 
-    // POST /api/admin/services/{id}/toggle
-    public function toggleActive($id = null): ResponseInterface
-    {
-        try {
-            if (!$id) {
-                return $this->response->setJSON([
-                    'code' => 400,
-                    'message' => 'ID Tidak Boleh Kosong'
-                ]);
-            }
-
-            $layanan = $this->db->table('services')
-            ->where('id', $id)
-            ->get()
-            ->getRow();
-
-            if (!$layanan) {
-                return $this->response->setJSON([
-                    'code' => 404,
-                    'message' => 'Layanan Tidak Ditemukan'
-                ]);
-            }
-
-            $statusBaru = $layanan->aktif == 1 ? 0 : 1;
-
-            $this->db->table('services')
-            ->where('id', $id)
-            ->update([
-                'aktif' => $statusBaru, 
-                'diupdate_pada' => date('Y-m-d H:i:s')
-            ]);
-
-            return $this->response->setJSON([
-                'code' => 200,
-                'message' => 'Status berhasil diubah',
-                'data' => [ 'aktif' => $statusBaru ]
-            ]);
-        } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'code' => 500,
-                'message' => 'Gagal ubah status: ' . $e->getMessage()
-            ]);
-        }
-    }
 
     //PUT /api/admin/services/{id}/price
     public function updatePrice($id = null): ResponseInterface

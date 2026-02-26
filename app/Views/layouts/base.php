@@ -683,16 +683,16 @@
 
 <div id="logoutOverlay" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 hidden items-center justify-center z-[9999]">
     <div class="text-center">
-        <!-- Animated Icon - DIPERBAIKI mengikuti struktur login -->
+        <!-- Animated Icon --->
         <div class="mb-8 flex justify-center">
-            <!-- Container dengan relative - SATU PARENT UNTUK SEMUA -->
+            <!-- Container dengan relative --->
             <div class="relative w-32 h-32">
                 <!-- Icon (background putih) -->
                 <div class="absolute inset-0 bg-white rounded-full flex items-center justify-center animate-bounce-slow shadow-2xl">
                     <i class="fas fa-arrow-right-from-bracket text-5xl text-blue-600 animate-pulse"></i>
                 </div>
 
-                <!-- Rotating Circle - SEKARANG DALAM 1 CONTAINER -->
+                <!-- Rotating Circle --->
                 <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>
             </div>
         </div>

@@ -119,7 +119,7 @@ class Users extends Controller
             'email' => 'required|valid_email|is_unique[users.email]',
             'no_hp' => 'required|min_length[10]',
             'password' => 'required|min_length[6]',
-            'role' => 'required|in_list[customer,admin]',
+            'role' => 'required|in_list[pelanggan,admin]',
         ], [
             'nama_lengkap' => [
                 'required' => 'Nama lengkap harus diisi',
@@ -202,7 +202,7 @@ class Users extends Controller
             'nama_lengkap' => 'required|min_length[3]',
             'email' => "required|valid_email|is_unique[users.email,id,{$id}]",
             'no_hp' => 'required|min_length[10]',
-            'role' => 'required|in_list[customer,admin]',
+            'role' => 'required|in_list[pelanggan,admin]',
         ];
 
         // Only validate password if provided
