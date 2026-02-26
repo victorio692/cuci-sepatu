@@ -83,7 +83,7 @@
 
                 <!-- Submit Button -->
                 <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-paper-plane mr-2"></i> Kirim Link Reset
+                    <i class="fas fa-paper-plane mr-2"></i> Kirim Permintaan Reset
                 </button>
 
                 <!-- Footer Links -->

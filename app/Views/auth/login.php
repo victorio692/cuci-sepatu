@@ -81,9 +81,9 @@
                         type="checkbox" 
                         id="remember" 
                         name="remember"
-                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        class="w-5 h-5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
                     >
-                    <label for="remember" class="ml-2 text-sm text-gray-700">Ingat saya</label>
+                    <label for="remember" class="ml-3 text-sm text-gray-700 cursor-pointer">Ingat saya</label>
                 </div>
 
                 <!-- Submit Button -->
@@ -106,10 +106,10 @@
 </div>
 <!-- Login Animation Overlay -->
 <div id="loginOverlay" class="hidden fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 z-50 flex-col items-center justify-center">
-    <div class="relative">
+    <div class="relative w-32 h-32">
         <!-- Icon dengan background lingkaran -->
-        <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
-            <i class="fas fa-sign-in-alt text-blue-600 text-4xl"></i>
+        <div class="absolute inset-0 bg-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+            <i class="fas fa-arrow-right-from-bracket text-blue-600 text-5xl"></i>
         </div>
         <!-- Rotating circle border -->
         <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>

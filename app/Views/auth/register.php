@@ -152,10 +152,10 @@
                         type="checkbox" 
                         id="terms" 
                         name="terms"
-                        class="w-4 h-4 mt-1 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        class="w-5 h-5 mt-0.5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
                         required
                     >
-                    <label for="terms" class="ml-2 text-sm text-gray-700">
+                    <label for="terms" class="ml-3 text-sm text-gray-700 cursor-pointer">
                         Saya setuju dengan <a href="/syarat" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Syarat & Ketentuan</a> dan <a href="/kebijakan" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Kebijakan Privasi</a>
                     </label>
                 </div>

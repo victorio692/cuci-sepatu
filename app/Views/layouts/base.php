@@ -303,6 +303,55 @@
             outline-style: none !important;
             outline-color: transparent !important;
         }
+
+        /* ============================================
+           CUSTOM CHECKBOX STYLING
+           ============================================ */
+        input[type="checkbox"],
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        input[type="checkbox"]:hover,
+        .custom-checkbox:hover {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        input[type="checkbox"]:checked,
+        .custom-checkbox:checked {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        input[type="checkbox"]:checked::after,
+        .custom-checkbox:checked::after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: #2563eb;
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>
@@ -600,30 +649,66 @@
     </footer>
     <?php endif; ?>
 
-    <!-- Logout Animation Overlay -->
-    <div id="logoutOverlay" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 hidden items-center justify-center z-[9999]">
-        <div class="text-center">
-            <!-- Animated Icon -->
-            <div class="mb-8 relative">
-                <div class="w-32 h-32 mx-auto bg-white rounded-full flex items-center justify-center animate-bounce-slow">
-                    <i class="fas fa-sign-out-alt text-6xl text-blue-600 animate-pulse"></i>
+   <!-- animasi logout -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    @keyframes spin-slow {
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 3s linear infinite;
+    }
+    
+    @keyframes bounce-slow {
+        0%, 100% { transform: translateY(-5%); }
+        50% { transform: translateY(0); }
+    }
+    .animate-bounce-slow {
+        animation: bounce-slow 2s ease-in-out infinite;
+    }
+    
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fade-in 0.5s ease-out forwards;
+    }
+    .animate-fade-in-delay {
+        animation: fade-in 0.5s ease-out 0.3s forwards;
+        opacity: 0;
+    }
+</style>
+
+<div id="logoutOverlay" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 hidden items-center justify-center z-[9999]">
+    <div class="text-center">
+        <!-- Animated Icon --->
+        <div class="mb-8 flex justify-center">
+            <!-- Container dengan relative --->
+            <div class="relative w-32 h-32">
+                <!-- Icon (background putih) -->
+                <div class="absolute inset-0 bg-white rounded-full flex items-center justify-center animate-bounce-slow shadow-2xl">
+                    <i class="fas fa-arrow-right-from-bracket text-5xl text-blue-600 animate-pulse"></i>
                 </div>
-                <!-- Rotating Circle -->
+
+                <!-- Rotating Circle --->
                 <div class="absolute inset-0 border-4 border-white border-t-transparent rounded-full animate-spin-slow"></div>
             </div>
-            
-            <!-- Text -->
-            <h2 class="text-3xl font-bold text-white mb-4 animate-fade-in">Logging Out...</h2>
-            <p class="text-blue-100 text-lg animate-fade-in-delay">Terima kasih telah menggunakan layanan kami</p>
-            
-            <!-- Loading Dots -->
-            <div class="flex justify-center space-x-2 mt-8">
-                <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
-                <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-            </div>
+        </div>
+        
+        <!-- Text -->
+        <h2 class="text-3xl font-bold text-white mb-4 animate-fade-in">Logging Out...</h2>
+        <p class="text-blue-100 text-lg animate-fade-in-delay">Terima kasih telah menggunakan layanan kami</p>
+        
+        <!-- Loading Dots -->
+        <div class="flex justify-center space-x-2 mt-8">
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0s"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-3 h-3 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
         </div>
     </div>
+</div>
 
     <!-- Mobile Menu Toggle Script -->
     <script>
