@@ -119,7 +119,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
                                             <div class="flex items-center gap-2">
-                                                <input type="text" value="*********<?= substr($user['phone'] ?? $user['no_telepon'] ?? '00', -2) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
+                                                <input type="text" value="*********<?= substr($user['no_hp'] ?? '00', -2) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
                                                 <a href="/profile/change-phone" class="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap">Ubah</a>
                                             </div>
                                         </div>

@@ -85,7 +85,7 @@ class Bookings extends Controller
     public function detail($id)
     {
         $booking = $this->db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp as phone, users.alamat as address')
+            ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp, users.alamat as address')
             ->join('users', 'bookings.id_user = users.id')
             ->where('bookings.id', $id)
             ->get()
