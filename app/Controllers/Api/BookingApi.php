@@ -150,14 +150,14 @@ class BookingApi extends BaseController
             // Create notification for all admins
             $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
             
-            $customerName = $user['nama'] ?? $user['username'] ?? $user['email'] ?? 'Customer';
+            $pelangganName = $user['nama'] ?? $user['username'] ?? $user['email'] ?? 'pelanggan';
             
             foreach ($admins as $admin) {
                 $this->db->table('notifications')->insert([
                     'id_user' => $admin['id'],
                     'booking_id' => $booking_id,
                     'judul' => 'Booking Baru!',
-                    'pesan' => "Ada booking baru dari customer {$customerName} dengan ID #{$booking_id}. Layanan: {$layanan}, Jumlah: {$jumlah} pasang sepatu.",
+                    'pesan' => "Ada booking baru dari pelanggan {$pelangganName} dengan ID #{$booking_id}. Layanan: {$layanan}, Jumlah: {$jumlah} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
                     'dibuat_pada' => date('Y-m-d H:i:s')

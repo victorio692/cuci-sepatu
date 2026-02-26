@@ -76,7 +76,7 @@
                                         'suede-treatment' => '',
                                         'unyellowing' => ''
                                     ];
-                                    echo $emojiMap[$service['kode_layanan']] ?? '👟';
+                                    echo $emojiMap[$service['kode_layanan']] ?? '';
                                     ?>
                                 </span>
                             </div>

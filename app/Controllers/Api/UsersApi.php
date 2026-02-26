@@ -154,7 +154,7 @@ class UsersApi extends BaseController
             'email' => 'required|valid_email|is_unique[users.email]',
             'no_hp' => 'required|min_length[10]',
             'password' => 'required|min_length[6]',
-            'role' => 'required|in_list[customer,admin]',
+            'role' => 'required|in_list[pelanggan,admin]',
         ];
 
         if (!$this->validate($rules)) {
@@ -217,7 +217,7 @@ class UsersApi extends BaseController
             'nama_lengkap' => 'required|min_length[3]',
             'email' => "required|valid_email|is_unique[users.email,id,{$id}]",
             'no_hp' => 'required|min_length[10]',
-            'role' => 'required|in_list[customer,admin]',
+            'role' => 'required|in_list[pelanggan,admin]',
         ];
 
         if (isset($json['password']) && !empty($json['password'])) {
@@ -302,32 +302,6 @@ class UsersApi extends BaseController
         }
     }
 
-    
-    public function toggleActive($id)
-    {
-        // Check if admin
-        $user_id = session()->get('user_id');
-        if (!$user_id) {
-            return $this->failUnauthorized('Silakan login terlebih dahulu');
-        }
-
-        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
-        if (!$user || $user['role'] !== 'admin') {
-            return $this->failForbidden('Akses ditolak. Hanya admin yang bisa mengakses');
-        }
-
-        $targetUser = $this->db->table('users')->where('id', $id)->get()->getRowArray();
-        if (!$targetUser) {
-            return $this->failNotFound('User tidak ditemukan');
-        }
-
-        return $this->respond([
-            'success' => true,
-            'message' => 'Status updated',
-            'is_active' => true
-        ]);
-    }
-
     public function statistics()
     {
         
@@ -342,7 +316,7 @@ class UsersApi extends BaseController
         }
 
         $totalUsers = $this->db->table('users')->countAllResults();
-        $totalCustomers = $this->db->table('users')->where('role', 'customer')->countAllResults();
+        $totalPelanggans = $this->db->table('users')->where('role', 'pelanggan')->countAllResults();
         $totalAdmins = $this->db->table('users')->where('role', 'admin')->countAllResults();
 
         $firstDayOfMonth = date('Y-m-01 00:00:00');
@@ -354,7 +328,7 @@ class UsersApi extends BaseController
             'success' => true,
             'data' => [
                 'total_users' => $totalUsers,
-                'total_customers' => $totalCustomers,
+                'total_pelanggan' => $totalPelanggans,
                 'total_admins' => $totalAdmins,
                 'new_users_this_month' => $newUsersThisMonth
             ]
