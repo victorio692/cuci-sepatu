@@ -119,14 +119,26 @@ class BookingApi extends BaseController
         }
 
         $harga_dasar = intval($serviceData['harga_dasar']);
-        $biaya_kirim = ($opsi_kirim === 'delivery' || $opsi_kirim === 'home') ? 5000 : 0;
+        $namaLayanan = $serviceData['nama_layanan'];
         $subtotal = $harga_dasar * $jumlah;
+
+        // Calculate additional fees
+        $biaya_kirim = 0;
+        
+        // Delivery charge (only for 1 shoe, free for 2+)
+        if (($opsi_kirim === 'delivery' || $opsi_kirim === 'home') && $jumlah == 1) {
+            $biaya_kirim = 5000;
+        } elseif ($opsi_kirim === 'pickup' && $jumlah == 1) {
+            // Single shoe pickup charge
+            $biaya_kirim = 5000;
+        }
+
         $total = $subtotal + $biaya_kirim;
 
         // Insert booking
         $booking_data = [
             'id_user' => $user_id,
-            'layanan' => $layanan,
+            'layanan' => $namaLayanan,
             'kondisi_sepatu' => $kondisi_sepatu,
             'jumlah' => $jumlah,
             'tanggal_kirim' => $tanggal_kirim,
@@ -157,7 +169,7 @@ class BookingApi extends BaseController
                     'id_user' => $admin['id'],
                     'booking_id' => $booking_id,
                     'judul' => 'Booking Baru!',
-                    'pesan' => "Ada booking baru dari pelanggan {$pelangganName} dengan ID #{$booking_id}. Layanan: {$layanan}, Jumlah: {$jumlah} pasang sepatu.",
+                    'pesan' => "Ada booking baru dari pelanggan {$pelangganName} dengan ID #{$booking_id}. Layanan: {$namaLayanan}, Jumlah: {$jumlah} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
                     'dibuat_pada' => date('Y-m-d H:i:s')

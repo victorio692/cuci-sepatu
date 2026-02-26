@@ -32,6 +32,22 @@
                 </div>
             <?php endif; ?>
 
+            <?php if (session()->getFlashdata('errors')): ?>
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-semibold text-red-800 mb-2">Validasi gagal:</h4>
+                            <ul class="text-red-800 text-sm space-y-1">
+                                <?php foreach (session()->getFlashdata('errors') as $field => $error): ?>
+                                    <li>• <?= htmlspecialchars($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 <!-- Left Column: Form -->
                 <div class="lg:col-span-2">
@@ -118,6 +134,67 @@
                         </div>
                     </div>
 
+                    <!-- Opsi Barang Masuk -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-3">
+                            <i class="fas fa-box text-purple-500 mr-1"></i> Opsi Barang Masuk <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Diantar ke Tempat -->
+                            <label class="item-entry-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                                <input type="radio" name="item_entry_option" value="dropoff" checked required class="absolute opacity-0">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-user-check text-purple-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">Diantar ke Tempat</h4>
+                                        <p class="text-sm text-gray-600">Saya antar barang ke SYH.CLEANING</p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Dijemput -->
+                            <label class="item-entry-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                                <input type="radio" name="item_entry_option" value="pickup" required class="absolute opacity-0">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-truck text-indigo-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900">Dijemput</h4>
+                                        <p class="text-sm text-gray-600">Tim kami jemput barang Anda</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Penjemputan (conditional) -->
+                    <div id="pickupAddressSection" class="mb-6 hidden">
+                        <label for="pickup_address" class="block text-gray-700 font-medium mb-2">
+                            <i class="fas fa-map-marker-alt text-indigo-500 mr-1"></i> Alamat Penjemputan <span class="text-red-500">*</span>
+                        </label>
+                        <textarea 
+                            id="pickup_address" 
+                            name="pickup_address" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                            rows="3" 
+                            placeholder="Masukkan alamat lengkap untuk penjemputan..."
+                        ></textarea>
+                        <small class="text-gray-500 text-sm mt-1 block">
+                            <i class="fas fa-info-circle"></i> Pastikan alamat lengkap dan jelas agar barang dapat dijemput dengan tepat
+                        </small>
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
+                            <div class="flex gap-2">
+                                <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5 text-sm"></i>
+                                <p class="text-amber-800 text-sm">
+                                    <span class="font-semibold">Biaya penjemputan: Rp 5.000</span> diterapkan untuk 1 sepatu. Gratis untuk 2 sepatu atau lebih.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Opsi Pengiriman -->
                     <div class="mb-6">
                         <label class="block text-gray-700 font-medium mb-3">
@@ -169,6 +246,14 @@
                         <small class="text-gray-500 text-sm mt-1 block">
                             <i class="fas fa-info-circle"></i> Pastikan alamat lengkap dan jelas agar sepatu dapat diantar dengan tepat
                         </small>
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
+                            <div class="flex gap-2">
+                                <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5 text-sm"></i>
+                                <p class="text-amber-800 text-sm">
+                                    <span class="font-semibold">Biaya pengiriman: Rp 5.000</span> diterapkan untuk 1 sepatu. Gratis untuk 2 sepatu atau lebih.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Tanggal Masuk -->
@@ -287,11 +372,29 @@
                             </div>
                         </div>
                         
-                        <hr class="border-gray-300 my-3 sm:my-4">
+                        <div class="space-y-2.5 sm:space-y-3 mb-4 pb-4 border-b border-gray-300">
+                            <div class="flex justify-between items-center text-sm sm:text-base">
+                                <span class="text-gray-600">Subtotal</span>
+                                <span id="summarySubtotal" class="font-semibold text-gray-900">Rp 0</span>
+                            </div>
+                            <div id="additionalFeeSection" class="flex justify-between items-center text-sm sm:text-base hidden">
+                                <span class="text-gray-600">Biaya Tambahan</span>
+                                <span id="summaryAdditionalFee" class="font-semibold text-orange-600">Rp 0</span>
+                            </div>
+                        </div>
                         
                         <div class="flex justify-between items-center mb-4 sm:mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 rounded-lg border border-blue-200 transition-all duration-300 hover:shadow-md">
                             <span class="font-bold text-gray-900 text-lg sm:text-xl">Total</span>
                             <span id="summaryTotal" class="font-bold text-blue-600 text-xl sm:text-2xl">Rp 0</span>
+                        </div>
+
+                        <div id="feeInfoSection" class="bg-orange-50 border border-orange-200 rounded-lg p-3 sm:p-4 hidden">
+                            <div class="flex gap-2 sm:gap-3">
+                                <i class="fas fa-info-circle text-orange-500 mt-0.5 text-sm sm:text-base"></i>
+                                <p class="text-orange-900 text-xs sm:text-sm">
+                                    <span id="feeInfoText"></span>
+                                </p>
+                            </div>
                         </div>
 
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
@@ -524,6 +627,23 @@ label:has(input[type="radio"]:checked)::after {
     color: #3b82f6;
     font-size: 1.25rem;
 }
+
+/* Item entry option styling */
+.item-entry-option:has(input[type="radio"]:checked) {
+    border-color: #3b82f6 !important;
+    background-color: #eff6ff !important;
+}
+
+.item-entry-option:has(input[type="radio"]:checked)::after {
+    content: '\f058';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 700;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    color: #3b82f6;
+    font-size: 1.25rem;
+}
 </style>
 
 <script>
@@ -569,6 +689,26 @@ deliveryOptions.forEach(option => {
             deliveryAddressInput.required = false;
             deliveryAddressInput.value = '';
         }
+        updateSummary();
+    });
+});
+
+// Item entry option handling
+const itemEntryOptions = document.querySelectorAll('input[name="item_entry_option"]');
+const pickupAddressSection = document.getElementById('pickupAddressSection');
+const pickupAddressInput = document.getElementById('pickup_address');
+
+itemEntryOptions.forEach(option => {
+    option.addEventListener('change', function() {
+        if (this.value === 'pickup') {
+            pickupAddressSection.classList.remove('hidden');
+            pickupAddressInput.required = true;
+        } else {
+            pickupAddressSection.classList.add('hidden');
+            pickupAddressInput.required = false;
+            pickupAddressInput.value = '';
+        }
+        updateSummary();
     });
 });
 
@@ -576,22 +716,47 @@ deliveryOptions.forEach(option => {
 function updateSummary() {
     const selectedService = document.querySelector('input[name="service"]:checked');
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
+    const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked')?.value;
+    const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value;
     
     const summaryTotal = document.getElementById('summaryTotal');
     const summaryService = document.getElementById('summaryService');
     const summaryPrice = document.getElementById('summaryPrice');
     const summaryQuantity = document.getElementById('summaryQuantity');
+    const summarySubtotal = document.getElementById('summarySubtotal');
+    const summaryAdditionalFee = document.getElementById('summaryAdditionalFee');
+    const additionalFeeSection = document.getElementById('additionalFeeSection');
+    const feeInfoSection = document.getElementById('feeInfoSection');
+    const feeInfoText = document.getElementById('feeInfoText');
     
     if (selectedService) {
         const price = parseInt(selectedService.dataset.price);
-        const total = price * quantity;
+        const subtotal = price * quantity;
         
-        // Get service name - perbaikan: label langsung parent dari input
+        // Calculate additional fees
+        let additionalFee = 0;
+        let feeReasons = [];
+        
+        // Single shoe pickup fee
+        if (itemEntryOption === 'pickup' && quantity === 1) {
+            additionalFee += 5000;
+            feeReasons.push('Penjemputan 1 sepatu');
+        }
+        
+        // Delivery fee (only for 1 shoe, free for 2+)
+        if (deliveryOption === 'delivery' && quantity === 1) {
+            additionalFee += 5000;
+            feeReasons.push('Pengiriman ke rumah');
+        }
+        
+        const total = subtotal + additionalFee;
+        
+        // Get service name
         const serviceLabel = selectedService.closest('label');
         const serviceName = serviceLabel.querySelector('h3').textContent;
         
         // Add fade animation
-        [summaryTotal, summaryService, summaryPrice, summaryQuantity].forEach(el => {
+        [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee].forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(10px)';
         });
@@ -600,14 +765,28 @@ function updateSummary() {
             summaryService.textContent = serviceName;
             summaryPrice.textContent = 'Rp ' + price.toLocaleString('id-ID');
             summaryQuantity.textContent = quantity + ' pasang';
+            summarySubtotal.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
             summaryTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
             
-            [summaryTotal, summaryService, summaryPrice, summaryQuantity].forEach((el, index) => {
+            // Show or hide additional fee section
+            if (additionalFee > 0) {
+                summaryAdditionalFee.textContent = 'Rp ' + additionalFee.toLocaleString('id-ID');
+                additionalFeeSection.classList.remove('hidden');
+                
+                // Update fee info
+                feeInfoText.textContent = 'Biaya tambahan: ' + feeReasons.join(' + ');
+                feeInfoSection.classList.remove('hidden');
+            } else {
+                additionalFeeSection.classList.add('hidden');
+                feeInfoSection.classList.add('hidden');
+            }
+            
+            [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee].forEach((el, index) => {
                 setTimeout(() => {
                     el.style.transition = 'all 0.3s ease-out';
                     el.style.opacity = '1';
                     el.style.transform = 'translateY(0)';
-                }, index * 50);
+                }, index * 30);
             });
         }, 150);
     } else {
@@ -615,7 +794,10 @@ function updateSummary() {
         summaryService.textContent = '-';
         summaryPrice.textContent = 'Rp 0';
         summaryQuantity.textContent = quantity + ' pasang';
+        summarySubtotal.textContent = 'Rp 0';
         summaryTotal.textContent = 'Rp 0';
+        additionalFeeSection.classList.add('hidden');
+        feeInfoSection.classList.add('hidden');
     }
 }
 
@@ -669,6 +851,13 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             updateSummary();
         }
+    }
+
+    // Initialize item entry option state
+    const selectedItemEntry = document.querySelector('input[name="item_entry_option"]:checked');
+    if (selectedItemEntry && selectedItemEntry.value === 'pickup') {
+        pickupAddressSection.classList.remove('hidden');
+        pickupAddressInput.required = true;
     }
 });
 
@@ -747,6 +936,22 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
             e.preventDefault();
             alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
             const addressInput = document.getElementById('delivery_address');
+            addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            addressInput.focus();
+            addressInput.classList.add('shake');
+            setTimeout(() => addressInput.classList.remove('shake'), 500);
+            return;
+        }
+    }
+
+    // Check pickup address if item entry option is pickup
+    const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked');
+    if (itemEntryOption && itemEntryOption.value === 'pickup') {
+        const pickupAddress = document.getElementById('pickup_address').value.trim();
+        if (!pickupAddress) {
+            e.preventDefault();
+            alert('Alamat penjemputan wajib diisi jika memilih opsi Dijemput');
+            const addressInput = document.getElementById('pickup_address');
             addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             addressInput.focus();
             addressInput.classList.add('shake');
