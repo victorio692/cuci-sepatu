@@ -359,18 +359,36 @@ class Dashboard extends BaseController
         // Get user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        if (!$user) {
+            return redirect()->back()->with('error', 'User tidak ditemukan');
+        }
+
         // Verify current password
         if (!password_verify($current_password, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password tidak sesuai');
         }
 
-        // Update phone
-        $this->db->table('users')->update([
-            'phone' => $new_phone,
-            'no_telepon' => $new_phone
-        ], ['id' => $user_id]);
+        // Validate phone format
+        if (empty($new_phone)) {
+            return redirect()->back()->with('error', 'Nomor telepon tidak boleh kosong');
+        }
 
-        return redirect()->to('/profile/detail')->with('success', 'Nomor telepon berhasil diubah!');
+        // Remove non-numeric characters for validation
+        $phone_digits = preg_replace('/\D/', '', $new_phone);
+        
+        // Check if phone starts with 08 and has at least 11 digits
+        if (!preg_match('/^08\d{9,}$/', $phone_digits)) {
+            return redirect()->back()->with('error', 'Nomor telepon harus dimulai dengan 08 dan minimal 11 digit');
+        }
+
+        // Update phone
+        if ($this->db->table('users')->update([
+            'no_hp' => $new_phone
+        ], ['id' => $user_id])) {
+            return redirect()->to('/profile/detail')->with('success', 'Nomor telepon berhasil diubah!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengubah nomor telepon');
     }
 }
 

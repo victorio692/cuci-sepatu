@@ -81,7 +81,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon Saat Ini</label>
                                     <input 
                                         type="text" 
-                                        value="<?= $user['phone'] ?? $user['no_telepon'] ?? '-' ?>" 
+                                        value="<?= $user['no_hp']?? '-' ?>" 
                                         disabled 
                                         class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-600 cursor-not-allowed"
                                     >
