@@ -94,7 +94,7 @@
                                         id="new_phone" 
                                         name="new_phone" 
                                         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Contoh: 081234567890"
+                                        placeholder="Masukkan nomor telepon baru anda"
                                         required
                                     >
                                     <p class="text-xs text-gray-500 mt-1">Gunakan format 08xxxxx dengan minimal 11 digit</p>

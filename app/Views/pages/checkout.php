@@ -590,26 +590,38 @@ function submitCheckout() {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
     
+    // Determine delivery method based on options
+    let deliveryMethod = 'langsung'; // default
+    if (itemEntryOption.value === 'pickup' && deliveryOption.value === 'pickup') {
+        deliveryMethod = 'dijemput'; // picked up but self pickup result
+    } else if (itemEntryOption.value === 'pickup' && deliveryOption.value === 'delivery') {
+        deliveryMethod = 'dijemput-diantar'; // picked up and delivered
+    } else if (itemEntryOption.value === 'dropoff' && deliveryOption.value === 'delivery') {
+        deliveryMethod = 'diantar'; // self dropoff but delivered
+    } else if (itemEntryOption.value === 'dropoff' && deliveryOption.value === 'pickup') {
+        deliveryMethod = 'langsung'; // self dropoff and self pickup
+    }
+    
+    // Determine address to send
+    let address = '';
+    if (deliveryOption.value === 'delivery') {
+        // Priority to delivery address if delivery is selected
+        address = document.getElementById('delivery_address').value;
+    } else if (itemEntryOption.value === 'pickup') {
+        // Otherwise use pickup address if pickup is selected
+        address = document.getElementById('pickup_address').value;
+    }
+    
     // Prepare form data for file upload
     const formData = new FormData();
     formData.append('items', JSON.stringify(checkoutItems));
-    formData.append('item_entry_option', itemEntryOption.value);
-    formData.append('delivery_option', deliveryOption.value);
-    formData.append('delivery_date', deliveryDate);
-    formData.append('booking_time', bookingTime);
+    formData.append('pickup_date', deliveryDate);
+    formData.append('delivery_method', deliveryMethod);
+    formData.append('address', address);
     formData.append('notes', notes);
-    formData.append('additional_fee', additionalFee);
     
-    // Add conditional addresses
-    if (itemEntryOption.value === 'pickup') {
-        formData.append('pickup_address', document.getElementById('pickup_address').value);
-    }
-    if (deliveryOption.value === 'delivery') {
-        formData.append('delivery_address', document.getElementById('delivery_address').value);
-    }
-    
-    // Append photo
-    formData.append('shoe_photo', shoePhoto);
+    // Append photo (as shoe_photos for backend compatibility)
+    formData.append('shoe_photos', shoePhoto);
     
     // Submit to server
     fetch('/checkout/submit', {
