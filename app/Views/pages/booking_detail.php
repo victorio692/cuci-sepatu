@@ -210,24 +210,55 @@
                 <div class="bg-white border border-gray-300 p-6">
                     <h3 class="font-bold mb-3">Informasi Pengiriman</h3>
                     
-                    <div class="space-y-2 text-sm">
-                        <div>
-                            <label class="text-gray-600 block">Opsi Pengiriman:</label>
-                            <span class="font-semibold">
-                                <?php
-                                $deliveryMethod = match($booking['opsi_kirim'] ?? 'pickup') {
-                                    'pickup' => 'Ambil di Tempat',
-                                    'home' => 'Diantar ke Rumah',
-                                    default => 'Ambil di Tempat'
-                                };
-                                echo $deliveryMethod;
-                                ?>
+                    <div class="space-y-3 text-sm">
+                        <?php
+                        // Parse delivery_method to determine both options
+                        $deliveryMethodCode = $booking['delivery_method'] ?? $booking['opsi_kirim'] ?? 'langsung';
+                        
+                        // Determine item entry option (Opsi Barang Masuk)
+                        $itemEntry = 'Antar Sendiri';
+                        $itemEntryIcon = 'fa-user';
+                        $itemEntryColor = 'text-blue-600';
+                        
+                        if (stripos($deliveryMethodCode, 'jemput') !== false) {
+                            $itemEntry = 'Dijemput';
+                            $itemEntryIcon = 'fa-truck';
+                            $itemEntryColor = 'text-green-600';
+                        }
+                        
+                        // Determine delivery option (Opsi Pengiriman)
+                        $deliveryOption = 'Ambil di Tempat';
+                        $deliveryIcon = 'fa-box';
+                        $deliveryColor = 'text-purple-600';
+                        
+                        if (stripos($deliveryMethodCode, 'antar') !== false || $deliveryMethodCode === 'home') {
+                            $deliveryOption = 'Diantar ke Rumah';
+                            $deliveryIcon = 'fa-home';
+                            $deliveryColor = 'text-orange-600';
+                        }
+                        ?>
+                        
+                        <div class="pb-2 border-b border-gray-200">
+                            <label class="text-gray-600 block mb-1">Opsi Barang Masuk:</label>
+                            <span class="font-semibold flex items-center gap-2">
+                                <i class="fas <?= $itemEntryIcon ?> <?= $itemEntryColor ?>"></i>
+                                <?= $itemEntry ?>
                             </span>
                         </div>
                         
-                        <?php if (($booking['opsi_kirim'] ?? 'pickup') === 'home' && !empty($booking['alamat_kirim'])): ?>
+                        <div class="pb-2 border-b border-gray-200">
+                            <label class="text-gray-600 block mb-1">Opsi Pengiriman:</label>
+                            <span class="font-semibold flex items-center gap-2">
+                                <i class="fas <?= $deliveryIcon ?> <?= $deliveryColor ?>"></i>
+                                <?= $deliveryOption ?>
+                            </span>
+                        </div>
+                        
+                        <?php if (!empty($booking['alamat_kirim'])): ?>
                         <div>
-                            <label class="text-gray-600 block">Alamat Pengiriman:</label>
+                            <label class="text-gray-600 block mb-1">
+                                <?= $itemEntry === 'Dijemput' ? 'Alamat Penjemputan:' : 'Alamat Pengiriman:' ?>
+                            </label>
                             <span class="font-semibold"><?= nl2br(htmlspecialchars($booking['alamat_kirim'], ENT_QUOTES, 'UTF-8')) ?></span>
                         </div>
                         <?php endif; ?>
@@ -238,21 +269,41 @@
                 <div class="bg-white border border-gray-300 p-6">
                     <h3 class="font-bold mb-3">Ringkasan Harga</h3>
                     
+                    <?php
+                    // Handle old bookings that don't have subtotal and biaya_kirim
+                    $subtotal = $booking['subtotal'] ?? 0;
+                    $biayaKirim = $booking['biaya_kirim'] ?? 0;
+                    $total = $booking['total'] ?? 0;
+                    
+                    // If subtotal is 0 or empty, calculate from total
+                    if ($subtotal == 0 && $total > 0) {
+                        // Assume no delivery fee for old bookings
+                        $subtotal = $total;
+                        $biayaKirim = 0;
+                    }
+                    ?>
+                    
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-semibold">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                            <span class="font-semibold">Rp <?= number_format($subtotal, 0, ',', '.') ?></span>
                         </div>
                         
                         <div class="flex justify-between">
                             <span class="text-gray-600">Biaya Pengiriman</span>
-                            <span class="font-semibold">Rp <?= number_format($booking['biaya_kirim'], 0, ',', '.') ?></span>
+                            <span class="font-semibold <?= $biayaKirim == 0 ? 'text-green-600' : '' ?>">
+                                <?php if ($biayaKirim == 0): ?>
+                                    FREE
+                                <?php else: ?>
+                                    Rp <?= number_format($biayaKirim, 0, ',', '.') ?>
+                                <?php endif; ?>
+                            </span>
                         </div>
                         
                         <div class="border-t border-gray-300 pt-2 mt-2">
                             <div class="flex justify-between">
                                 <span class="font-bold">Total</span>
-                                <span class="font-bold text-lg">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                                <span class="font-bold text-lg">Rp <?= number_format($total, 0, ',', '.') ?></span>
                             </div>
                         </div>
                     </div>
