@@ -19,36 +19,35 @@
             <!-- Form Section -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Opsi Barang Masuk -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-box-open text-blue-600 mr-2"></i>Opsi Barang Masuk <span class="text-red-500">*</span>
-                    </h2>
-                    
+                <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+                    <span class="block text-gray-700 font-medium mb-3">
+                        <i class="fas fa-box text-purple-500 mr-1"></i> Opsi Barang Masuk <span class="text-red-500">*</span>
+                    </span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Diantar ke Tempat (Dropoff) -->
-                        <label class="relative cursor-pointer group item-entry-option">
-                            <input type="radio" name="item_entry_option" value="dropoff" class="peer hidden" checked>
-                            <div class="flex items-start gap-4 p-5 border-2 border-gray-200 rounded-xl transition-all duration-300 peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-blue-400 shadow-md hover:shadow-xl peer-checked:shadow-2xl peer-checked:shadow-blue-200 hover:-translate-y-1 transform">
-                                <div class="flex-shrink-0 w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center transition-all duration-300 peer-checked:bg-blue-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
-                                    <i class="fas fa-user text-2xl text-blue-600 transition-all peer-checked:text-white"></i>
+                        <!-- Diantar ke Tempat -->
+                        <label class="item-entry-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                            <input type="radio" name="item_entry_option" value="dropoff" checked required class="absolute opacity-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user-check text-purple-600 text-xl"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900 mb-1 text-lg">Diantar ke Tempat</h3>
-                                    <p class="text-sm text-gray-500">Saya antar barang ke SYH.CLEANING</p>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Diantar ke Tempat</h4>
+                                    <p class="text-sm text-gray-600">Saya antar barang ke SYH.CLEANING</p>
                                 </div>
                             </div>
                         </label>
 
-                        <!-- Dijemput (Pickup) -->
-                        <label class="relative cursor-pointer group item-entry-option">
-                            <input type="radio" name="item_entry_option" value="pickup" class="peer hidden">
-                            <div class="flex items-start gap-4 p-5 border-2 border-gray-200 rounded-xl transition-all duration-300 peer-checked:border-purple-500 peer-checked:bg-purple-50 hover:border-purple-400 shadow-md hover:shadow-xl peer-checked:shadow-2xl peer-checked:shadow-purple-200 hover:-translate-y-1 transform">
-                                <div class="flex-shrink-0 w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center transition-all duration-300 peer-checked:bg-purple-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
-                                    <i class="fas fa-truck text-2xl text-purple-600 transition-all peer-checked:text-white"></i>
+                        <!-- Dijemput -->
+                        <label class="item-entry-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                            <input type="radio" name="item_entry_option" value="pickup" required class="absolute opacity-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-truck text-indigo-600 text-xl"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900 mb-1 text-lg">Dijemput</h3>
-                                    <p class="text-sm text-gray-500">Tim kami jemput barang Anda</p>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Dijemput</h4>
+                                    <p class="text-sm text-gray-600">Tim kami jemput barang Anda</p>
                                 </div>
                             </div>
                         </label>
@@ -56,54 +55,60 @@
                 </div>
 
                 <!-- Alamat Penjemputan (conditional) -->
-                <div id="pickupAddressSection" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>Alamat Penjemputan <span class="text-red-500">*</span>
-                    </h2>
+                <div id="pickupAddressSection" class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 hidden">
+                    <span for="pickup_address" class="block text-gray-700 font-medium mb-2">
+                        <i class="fas fa-map-marker-alt text-indigo-500 mr-1"></i> Alamat Penjemputan <span class="text-red-500">*</span>
+                    </span>
                     <textarea 
                         id="pickup_address" 
                         name="pickup_address" 
-                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                        rows="3" 
                         placeholder="Masukkan alamat lengkap untuk penjemputan..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     ></textarea>
-                    <small class="text-gray-500 text-sm mt-1 block">Masukkan alamat lengkap dan detail (nama jalan, nomor rumah, patokan)</small>
+                    <small class="text-gray-500 text-sm mt-1 block">
+                        <i class="fas fa-info-circle"></i> Pastikan alamat lengkap dan jelas agar barang dapat dijemput dengan tepat
+                    </small>
                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
-                        <p class="text-sm text-amber-800"><i class="fas fa-info-circle mr-2"></i><strong>Biaya Penjemputan:</strong> Rp 5.000 (untuk 1 sepatu), GRATIS untuk 2+ sepatu</p>
+                        <div class="flex gap-2">
+                            <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5 text-sm"></i>
+                            <p class="text-amber-800 text-sm">
+                                <span class="font-semibold">Biaya penjemputan: Rp 5.000</span> diterapkan untuk 1 sepatu. Gratis untuk 2 sepatu atau lebih.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Opsi Pengiriman -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-truck text-blue-600 mr-2"></i>Opsi Pengiriman Barang <span class="text-red-500">*</span>
-                    </h2>
-                    
+                <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+                    <span class="block text-gray-700 font-medium mb-3">
+                        <i class="fas fa-shipping-fast text-blue-500 mr-1"></i> Opsi Pengiriman <span class="text-red-500">*</span>
+                    </span>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Ambil di Tempat (Pickup) -->
-                        <label class="relative cursor-pointer group delivery-option">
-                            <input type="radio" name="delivery_option" value="pickup" class="peer hidden" checked>
-                            <div class="flex items-start gap-4 p-5 border-2 border-gray-200 rounded-xl transition-all duration-300 peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:border-blue-400 shadow-md hover:shadow-xl peer-checked:shadow-2xl peer-checked:shadow-blue-200 hover:-translate-y-1 transform">
-                                <div class="flex-shrink-0 w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center transition-all duration-300 peer-checked:bg-blue-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
-                                    <i class="fas fa-box text-2xl text-blue-600 transition-all peer-checked:text-white"></i>
+                        <!-- Ambil di Tempat -->
+                        <label class="delivery-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                            <input type="radio" name="delivery_option" value="pickup" checked required class="absolute opacity-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-store text-blue-600 text-xl"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900 mb-1 text-lg">Ambil di Tempat</h3>
-                                    <p class="text-sm text-gray-500">Ambil sendiri di SYH.CLEANING</p>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Ambil di Tempat</h4>
+                                    <p class="text-sm text-gray-600">Ambil sendiri di SYH.CLEANING</p>
                                 </div>
                             </div>
                         </label>
 
-                        <!-- Diantar (Delivery) -->
-                        <label class="relative cursor-pointer group delivery-option">
-                            <input type="radio" name="delivery_option" value="delivery" class="peer hidden">
-                            <div class="flex items-start gap-4 p-5 border-2 border-gray-200 rounded-xl transition-all duration-300 peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-green-400 shadow-md hover:shadow-xl peer-checked:shadow-2xl peer-checked:shadow-green-200 hover:-translate-y-1 transform">
-                                <div class="flex-shrink-0 w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center transition-all duration-300 peer-checked:bg-green-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
-                                    <i class="fas fa-home text-2xl text-green-600 transition-all peer-checked:text-white"></i>
+                        <!-- Diantar ke Rumah -->
+                        <label class="delivery-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
+                            <input type="radio" name="delivery_option" value="delivery" required class="absolute opacity-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-home text-green-600 text-xl"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900 mb-1 text-lg">Diantar ke Rumah</h3>
-                                    <p class="text-sm text-gray-500">Kami antar ke alamat Anda</p>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Diantar ke Rumah</h4>
+                                    <p class="text-sm text-gray-600">Kami antar ke alamat Anda</p>
                                 </div>
                             </div>
                         </label>
@@ -111,118 +116,116 @@
                 </div>
 
                 <!-- Alamat Pengiriman (conditional) -->
-                <div id="deliveryAddressSection" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-map-marker-alt text-green-600 mr-2"></i>Alamat Pengiriman <span class="text-red-500">*</span>
-                    </h2>
+                <div id="deliveryAddressSection" class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 hidden">
+                    <span for="delivery_address" class="block text-gray-700 font-medium mb-2">
+                        <i class="fas fa-map-marker-alt text-green-500 mr-1"></i> Alamat Pengiriman <span class="text-red-500">*</span>
+                    </span>
                     <textarea 
                         id="delivery_address" 
                         name="delivery_address" 
-                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                        rows="3" 
                         placeholder="Masukkan alamat lengkap untuk pengiriman..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     ><?= $user['address'] ?? $user['alamat'] ?? '' ?></textarea>
-                    <small class="text-gray-500 text-sm mt-1 block">Masukkan alamat lengkap dan detail (nama jalan, nomor rumah, patokan)</small>
+                    <small class="text-gray-500 text-sm mt-1 block">
+                        <i class="fas fa-info-circle"></i> Pastikan alamat lengkap dan jelas agar sepatu dapat diantar dengan tepat
+                    </small>
                     <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
-                        <p class="text-sm text-amber-800"><i class="fas fa-info-circle mr-2"></i><strong>Biaya Pengiriman:</strong> Rp 5.000 (untuk 1 sepatu), GRATIS untuk 2+ sepatu</p>
+                        <div class="flex gap-2">
+                            <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5 text-sm"></i>
+                            <p class="text-amber-800 text-sm">
+                                <span class="font-semibold">Biaya pengiriman: Rp 5.000</span> diterapkan untuk 1 sepatu. Gratis untuk 2 sepatu atau lebih.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Shipping Information -->
-                <form id="checkoutForm" class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">
-                        <i class="fas fa-clipboard-list text-blue-600 mr-2"></i>Informasi Booking
-                    </h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label for="delivery_date" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>Tanggal Masuk <span class="text-red-500">*</span>
-                            </label>
+                <!-- Informasi Booking -->
+                <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Informasi Booking</h2>
+
+                    <form id="checkoutForm">
+                        <div class="mb-6">
+                            <span for="delivery_date" class="block text-gray-700 font-medium mb-2">Tanggal masuk</span>
                             <input 
                                 type="date" 
                                 id="delivery_date" 
                                 name="delivery_date" 
-                                required
-                                min="<?= date('Y-m-d') ?>"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                required
                             >
-                            <p class="text-xs text-gray-500 mt-1">Tanggal barang masuk ke SYH.CLEANING</p>
                         </div>
 
-                        <div>
-                            <label for="booking_time" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-clock text-blue-600 mr-2"></i>Jam Booking <span class="text-red-500">*</span>
-                            </label>
-                            <div class="flex gap-2">
-                                <input 
-                                    type="time" 
-                                    id="booking_time" 
-                                    name="booking_time" 
-                                    required
-                                    min="12:00"
-                                    max="23:59"
-                                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                >
-                                <button 
-                                    type="button" 
-                                    onclick="useCurrentTime()" 
-                                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition whitespace-nowrap"
-                                >
-                                    <i class="fas fa-clock mr-1"></i> Waktu Sekarang
-                                </button>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Jam booking (12:00 - 23:59). Waktu sekarang: <span id="currentTime"></span></p>
+                        <div class="mb-6">
+                            <span for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</span>
+                            <input 
+                                type="time" 
+                                id="booking_time" 
+                                name="booking_time" 
+                                min="12:00"
+                                max="23:59"
+                                placeholder="HH:MM"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
+                                style="-webkit-calendar-picker-indicator: none;"
+                                required
+                            >
+                            <small class="text-gray-500 text-sm mt-1 block">
+                                Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
+                            </small>
                         </div>
 
-                        <div>
-                            <label for="notes" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-sticky-note text-blue-600 mr-2"></i>Catatan (Opsional)
-                            </label>
+                        <div class="mb-6">
+                            <span for="notes" class="block text-gray-700 font-medium mb-2">Catatan</span>
                             <textarea 
                                 id="notes" 
                                 name="notes" 
-                                rows="3"
-                                placeholder="Tambahkan catatan khusus untuk pesanan Anda"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                rows="4" 
+                                placeholder="Tulis catatan di sini..."
                             ></textarea>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
 
-                <!-- Shoe Photos -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">
-                        <i class="fas fa-camera text-blue-600 mr-2"></i>Foto Sepatu <span class="text-red-500">*</span>
-                    </h2>
+                <!-- Foto Sepatu -->
+                <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+                    <span class="block text-gray-700 font-medium mb-3 text-sm sm:text-base">
+                        Foto Sepatu <span class="text-red-500">*</span>
+                    </span>
+                    <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required class="hidden">
                     
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Upload Foto Sepatu (Maksimal 1 foto)
-                            </label>
-                            <input 
-                                type="file" 
-                                id="shoe_photo" 
-                                name="shoe_photo" 
-                                accept="image/png,image/jpg,image/jpeg"
-                                required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                            <p class="text-xs text-gray-500 mt-1">Format: PNG, JPG, JPEG - Maksimal 5MB</p>
+                    <div id="uploadArea" class="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center bg-gray-50 transition hover:border-blue-500 hover:bg-blue-50">
+                        <div class="mb-3 sm:mb-4">
+                            <i class="fas fa-image text-4xl sm:text-5xl md:text-6xl text-blue-500"></i>
                         </div>
+                        <p class="text-gray-800 font-medium mb-1 text-sm sm:text-base">Upload Foto Sepatu Anda</p>
+                        <p class="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">PNG, JPG, JPEG (Maks. 5 MB)</p>
                         
-                        <div id="photoPreview" class="hidden">
-                            <div class="relative group">
-                                <img id="previewImg" src="" class="w-full h-48 object-cover rounded-lg border-2 border-gray-200">
-                                <button 
-                                    type="button" 
-                                    onclick="removePhoto()" 
-                                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                                >
+                        <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition text-sm sm:text-base">
+                            <i class="fas fa-camera"></i> Pilih Foto
+                        </button>
+                        
+                        <p class="text-gray-400 text-xs mt-3 sm:mt-4">
+                            <i class="fas fa-hand-pointer"></i> atau seret file kesini
+                        </p>
+                        <p class="text-red-500 text-xs sm:text-sm mt-2">
+                            <i class="fas fa-exclamation-circle"></i> Wajib upload foto sepatu
+                        </p>
+                    </div>
+                    
+                    <div id="imagePreview" class="hidden mt-4">
+                        <div class="relative inline-block">
+                            <img id="previewImg" src="" class="max-w-full max-h-80 rounded-lg border-2 border-blue-500 shadow-lg">
+                            <div class="absolute -top-2 -right-2">
+                                <button type="button" onclick="removeImage()" class="ripple w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center border-2 border-white shadow-md transition hover:scale-110">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+                                <i class="fas fa-sync-alt"></i> Ganti Foto
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -366,50 +369,65 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Photo preview
-document.getElementById('shoe_photo').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('photoPreview');
-    const previewImg = document.getElementById('previewImg');
+const uploadArea = document.getElementById('uploadArea');
+const imagePreview = document.getElementById('imagePreview');
+const shoePhotoInput = document.getElementById('shoe_photo');
+
+function handlePhotoFile(file) {
+    if (!file) return;
     
-    if (!file) {
-        preview.classList.add('hidden');
-        return;
-    }
-    
-    // Check file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
         alert('Ukuran file terlalu besar. Maksimal 5MB');
-        this.value = '';
-        preview.classList.add('hidden');
         return;
     }
     
-    // Check file type
     const validTypes = ['image/png', 'image/jpg', 'image/jpeg'];
     if (!validTypes.includes(file.type)) {
         alert('Format file harus PNG, JPG, atau JPEG');
-        this.value = '';
-        preview.classList.add('hidden');
         return;
     }
     
-    // Show preview
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file);
+    shoePhotoInput.files = dataTransfer.files;
+    
     const reader = new FileReader();
     reader.onload = function(event) {
-        previewImg.src = event.target.result;
-        preview.classList.remove('hidden');
+        document.getElementById('previewImg').src = event.target.result;
+        uploadArea.classList.add('hidden');
+        imagePreview.classList.remove('hidden');
     };
     reader.readAsDataURL(file);
+}
+
+shoePhotoInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) handlePhotoFile(file);
 });
 
-function removePhoto() {
+uploadArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadArea.classList.add('border-blue-500', 'bg-blue-100');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('border-blue-500', 'bg-blue-100');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-blue-500', 'bg-blue-100');
+    const file = e.dataTransfer.files[0];
+    if (file) handlePhotoFile(file);
+});
+
+function removeImage() {
     const input = document.getElementById('shoe_photo');
-    const preview = document.getElementById('photoPreview');
-    const previewImg = document.getElementById('previewImg');
-    
-    input.value = '';
-    previewImg.src = '';
-    preview.classList.add('hidden');
+    const dataTransfer = new DataTransfer();
+    input.files = dataTransfer.files;
+    document.getElementById('previewImg').src = '';
+    uploadArea.classList.remove('hidden');
+    imagePreview.classList.add('hidden');
 }
 
 // Load checkout items
