@@ -112,8 +112,11 @@
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 mt-6 sm:mt-8">Detail Pesanan</h2>
 
                     <!-- Jumlah Sepatu -->
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-2">Jumlah Sepatu</label>
+                <div class="mb-6">
+    <span class="block text-gray-700 font-medium mb-2" 
+          style="transition: none; animation: none; transform: none;">
+        Jumlah Sepatu
+    </span>
                         <div class="flex items-center gap-4">
                             <button type="button" id="btnMinus" class="ripple w-10 h-10 border-2 border-gray-300 bg-white rounded-lg hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition flex items-center justify-center">
                                 <i class="fas fa-minus"></i>
@@ -136,9 +139,9 @@
 
                     <!-- Opsi Barang Masuk -->
                     <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-3">
+                        <span class="block text-gray-700 font-medium mb-3">
                             <i class="fas fa-box text-purple-500 mr-1"></i> Opsi Barang Masuk <span class="text-red-500">*</span>
-                        </label>
+                        </span>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Diantar ke Tempat -->
                             <label class="item-entry-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
@@ -172,9 +175,9 @@
 
                     <!-- Alamat Penjemputan (conditional) -->
                     <div id="pickupAddressSection" class="mb-6 hidden">
-                        <label for="pickup_address" class="block text-gray-700 font-medium mb-2">
+                        <span for="pickup_address" class="block text-gray-700 font-medium mb-2">
                             <i class="fas fa-map-marker-alt text-indigo-500 mr-1"></i> Alamat Penjemputan <span class="text-red-500">*</span>
-                        </label>
+                        </span>
                         <textarea 
                             id="pickup_address" 
                             name="pickup_address" 
@@ -197,9 +200,9 @@
 
                     <!-- Opsi Pengiriman -->
                     <div class="mb-6">
-                        <label class="block text-gray-700 font-medium mb-3">
+                        <span class="block text-gray-700 font-medium mb-3">
                             <i class="fas fa-shipping-fast text-blue-500 mr-1"></i> Opsi Pengiriman <span class="text-red-500">*</span>
-                        </label>
+                        </span>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- Ambil di Tempat -->
                             <label class="delivery-option relative block cursor-pointer border-2 border-gray-300 rounded-lg p-4 transition hover:border-blue-500 hover:shadow-md bg-white">
@@ -233,9 +236,9 @@
 
                     <!-- Alamat Pengiriman (conditional) -->
                     <div id="deliveryAddressSection" class="mb-6 hidden">
-                        <label for="delivery_address" class="block text-gray-700 font-medium mb-2">
+                        <span for="delivery_address" class="block text-gray-700 font-medium mb-2">
                             <i class="fas fa-map-marker-alt text-green-500 mr-1"></i> Alamat Pengiriman <span class="text-red-500">*</span>
-                        </label>
+                        </span>
                         <textarea 
                             id="delivery_address" 
                             name="delivery_address" 
@@ -258,7 +261,7 @@
 
                     <!-- Tanggal Masuk -->
                     <div class="mb-6">
-                        <label for="delivery_date" class="block text-gray-700 font-medium mb-2">Tanggal masuk</label>
+                        <span for="delivery_date" class="block text-gray-700 font-medium mb-2">Tanggal masuk</span>
                         <input 
                             type="date" 
                             id="delivery_date" 
@@ -270,7 +273,7 @@
 
                     <!-- Jam Booking -->
                     <div class="mb-6">
-                        <label for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</label>
+                        <span for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</span>
                         <input 
                             type="time" 
                             id="booking_time" 
@@ -278,7 +281,8 @@
                             min="12:00"
                             max="23:59"
                             placeholder="HH:MM"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
+                            style="-webkit-calendar-picker-indicator: none;"
                             required
                         >
                         <small class="text-gray-500 text-sm mt-1 block">
@@ -288,7 +292,7 @@
 
                     <!-- Catatan -->
                     <div class="mb-6">
-                        <label for="notes" class="block text-gray-700 font-medium mb-2">Catatan</label>
+                        <span for="notes" class="block text-gray-700 font-medium mb-2">Catatan</span>
                         <textarea 
                             id="notes" 
                             name="notes" 
@@ -300,7 +304,7 @@
 
                     <!-- Foto Sepatu -->
                     <div class="mb-6 sm:mb-8">
-                        <label class="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
+                        <span class="block text-gray-700 font-medium mb-2 text-sm sm:text-base">
                             Foto Sepatu <span class="text-red-500">*</span>
                         </label>
                         <input type="file" id="shoe_photo" name="shoe_photo" accept="image/png,image/jpeg,image/jpg" required class="hidden">
