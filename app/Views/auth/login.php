@@ -81,9 +81,9 @@
                         type="checkbox" 
                         id="remember" 
                         name="remember"
-                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        class="w-5 h-5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
                     >
-                    <label for="remember" class="ml-2 text-sm text-gray-700">Ingat saya</label>
+                    <label for="remember" class="ml-3 text-sm text-gray-700 cursor-pointer">Ingat saya</label>
                 </div>
 
                 <!-- Submit Button -->

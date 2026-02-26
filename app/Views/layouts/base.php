@@ -303,6 +303,55 @@
             outline-style: none !important;
             outline-color: transparent !important;
         }
+
+        /* ============================================
+           CUSTOM CHECKBOX STYLING
+           ============================================ */
+        input[type="checkbox"],
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        input[type="checkbox"]:hover,
+        .custom-checkbox:hover {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        input[type="checkbox"]:checked,
+        .custom-checkbox:checked {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        input[type="checkbox"]:checked::after,
+        .custom-checkbox:checked::after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            border-color: #2563eb;
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>
