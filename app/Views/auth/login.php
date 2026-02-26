@@ -15,6 +15,16 @@
                 <p class="text-gray-600 mt-2">Masuk untuk melanjutkan</p>
             </div>
 
+            <!-- Success Alert -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                        <span class="text-green-700"><?= session()->getFlashdata('success') ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <!-- Error Alert -->
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
