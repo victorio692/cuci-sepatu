@@ -96,6 +96,11 @@ class Dashboard extends BaseController
 
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin, redirect ke halaman admin bookings
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin/bookings')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin untuk melihat semua bookings.');
+        }
+
         // Get status filter from query parameter
         $statusFilter = $this->request->getGet('status');
 

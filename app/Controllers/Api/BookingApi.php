@@ -214,6 +214,28 @@ class BookingApi extends BaseController
         $limit = $this->request->getGet('limit') ?? 20;
         $offset = $this->request->getGet('offset') ?? 0;
 
+        // Get all bookings for status counts
+        $allBookings = $this->db->table('bookings')
+            ->where('id_user', $user_id)
+            ->get()
+            ->getResultArray();
+
+        // Count bookings by status
+        $statusCounts = [
+            'pending' => 0,
+            'disetujui' => 0,
+            'proses' => 0,
+            'selesai' => 0,
+            'batal' => 0,
+            'ditolak' => 0,
+        ];
+
+        foreach ($allBookings as $booking) {
+            if (isset($statusCounts[$booking['status']])) {
+                $statusCounts[$booking['status']]++;
+            }
+        }
+
         $builder = $this->db->table('bookings')
             ->where('id_user', $user_id);
 
@@ -230,12 +252,11 @@ class BookingApi extends BaseController
 
         return $this->respond([
             'success' => true,
-            'data' => [
-                'bookings' => $bookings,
-                'total' => $total,
-                'limit' => $limit,
-                'offset' => $offset
-            ]
+            'bookings' => $bookings,
+            'status_counts' => $statusCounts,
+            'total' => $total,
+            'limit' => $limit,
+            'offset' => $offset
         ]);
     }
 
