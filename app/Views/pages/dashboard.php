@@ -304,7 +304,9 @@ document.addEventListener('click', function(event) {
 
 async function loadCustomerNotifications() {
     try {
-        const response = await fetch('/api/notifications/unread');
+        const response = await fetch('/api/notifications/unread', {
+            credentials: 'include'
+        });
         const data = await response.json();
         
         const badge = document.getElementById('notificationBadgeCustomer');
@@ -376,7 +378,8 @@ function getTimeAgo(datetime) {
 async function markAsReadCustomer(id, bookingId) {
     try {
         await fetch(`/api/notifications/${id}/read`, {
-            method: 'PUT'
+            method: 'PUT',
+            credentials: 'include'
         });
         
         if (bookingId) {
@@ -394,7 +397,8 @@ async function markAllAsReadCustomer(event) {
     
     try {
         await fetch('/api/notifications/read-all', {
-            method: 'PUT'
+            method: 'PUT',
+            credentials: 'include'
         });
         loadCustomerNotifications();
     } catch (error) {
@@ -439,7 +443,9 @@ function getStatusLabel(status) {
 async function loadDashboardStats() {
     try {
         console.log('🚀 Loading dashboard stats from API...');
-        const response = await fetch('/api/dashboard/stats');
+        const response = await fetch('/api/dashboard/stats', {
+            credentials: 'include'
+        });
         const result = await response.json();
         
         console.log('📊 Dashboard Stats Response:', result);

@@ -155,65 +155,77 @@ function renderBookingsTable(bookings, pagination = {}) {
     };
     
     let tableHTML = `
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b-2 border-gray-200">
+                <tr>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Total</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
     `;
     
     bookings.forEach(booking => {
+        const bookingId = String(booking.id).padStart(3, '0');
+        const customerName = booking.full_name || booking.customer_name || '?';
+        const customerInitial = customerName.charAt(0).toUpperCase();
         const statusClass = statusClasses[booking.status] || 'bg-gray-100 text-gray-800';
         const isDisabled = ['selesai', 'ditolak'].includes(booking.status);
-        const customerInitial = (booking.full_name || booking.customer_name || '?').charAt(0).toUpperCase();
         
         // Format date
         const date = new Date(booking.created_at || booking.dibuat_pada);
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
         
+        // Format phone number for WhatsApp
+        const phone = (booking.no_hp || '').replace(/[^0-9]/g, '');
+        
         // Format service name
-        const serviceName = (booking.service || booking.layanan || '').split('-').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
+        const serviceName = booking.service || booking.layanan ? 
+            (booking.service || booking.layanan).split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ') : '-';
         
         tableHTML += `
-            <tr class="hover:bg-gray-50 transition">
-                <td class="px-3 py-3 whitespace-nowrap">
-                    <span class="font-semibold text-xs text-gray-800">#${booking.id}</span>
+            <tr class="hover:bg-blue-50 transition duration-200">
+                <td class="px-5 py-4 whitespace-nowrap">
+                    <span class="font-semibold text-gray-800 text-sm">BK${bookingId}</span>
                 </td>
-                <td class="px-3 py-3">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs mr-2">
+                <td class="px-5 py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                             ${customerInitial}
                         </div>
                         <div>
-                            <div class="font-medium text-sm text-gray-800">${booking.full_name || booking.customer_name || '-'}</div>
-                            <div class="text-xs text-gray-500">${booking.email || '-'}</div>
+                            <div class="font-medium text-gray-900 text-sm">${customerName}</div>
+                            <div class="text-xs text-gray-500">${formattedDate}</div>
                         </div>
                     </div>
                 </td>
-                <td class="px-3 py-3">
-                    <span class="text-xs text-gray-700">${serviceName}</span>
+                <td class="px-5 py-4 whitespace-nowrap">
+                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm" title="Hubungi via WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>${booking.no_hp || '-'}</span>
+                    </a>
                 </td>
-                <td class="px-3 py-3 whitespace-nowrap">
-                    <span class="text-xs text-gray-700">${formattedDate}</span>
+                <td class="px-5 py-4">
+                    <span class="text-sm text-gray-700">${serviceName}</span>
                 </td>
-                <td class="px-3 py-3 whitespace-nowrap">
-                    <span class="font-semibold text-xs text-gray-800">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                <td class="px-5 py-4 whitespace-nowrap text-center">
+                    <span class="text-sm text-gray-700 font-medium">${booking.quantity || booking.jumlah || 1}</span>
                 </td>
-                <td class="px-3 py-3">
+                <td class="px-5 py-4 whitespace-nowrap text-right">
+                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                </td>
+                <td class="px-5 py-4">
                     <select 
-                        class="px-2 py-1 rounded text-xs font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
+                        class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
                         data-booking-id="${booking.id}"
                         data-original-status="${booking.status}"
                         onchange="updateBookingStatus(this)"
@@ -226,77 +238,64 @@ function renderBookingsTable(bookings, pagination = {}) {
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>
                 </td>
-                <td class="px-2 py-3 whitespace-nowrap">
-                    <div class="flex items-center space-x-0.5">
+                <td class="px-5 py-4 whitespace-nowrap text-center">
+                    <div class="flex items-center justify-center space-x-1">
                         <a href="/admin/bookings/${booking.id}" 
-                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
-                            <i class="fas fa-eye"></i>
+                           class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
+                           title="Lihat Detail">
+                            <i class="fas fa-eye text-sm"></i>
                         </a>
-                        <button onclick="deleteBooking(${booking.id})"
-                           class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
-                            <i class="fas fa-trash"></i>
+                        <button onclick="deleteBooking(${booking.id})" 
+                                class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"
+                                title="Hapus">
+                            <i class="fas fa-trash text-sm"></i>
                         </button>
                     </div>
                 </td>
             </tr>
         `;
     });
-    
-    // Handle pagination
-    const currentPage = pagination.current_page || 1;
-    const totalPages = pagination.total_pages || 1;
-    const totalData = pagination.total || 0;
-    const perPage = pagination.per_page || 10;
-    const startItem = (currentPage - 1) * perPage + 1;
-    const endItem = Math.min(currentPage * perPage, totalData);
-    
     tableHTML += `
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
         
-        <!-- Info & Pagination -->
+        <!-- Pagination & Info -->
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <!-- Info Text -->
                 <div class="text-sm text-gray-600">
-                    Total: <span class="font-semibold">${totalData} pesanan</span> | Menampilkan <span class="font-semibold">${startItem} - ${endItem}</span>
+                    Total: <span class="font-semibold">${pagination.total || 0} pesanan</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.total_pages || 1}</span>
                 </div>
                 
                 <!-- Pagination Controls -->
                 <div class="flex items-center gap-2">
                     <!-- Previous Button -->
-                    ${currentPage > 1 ? `
-                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${currentPage - 1})" 
-                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                    ${pagination.current_page > 1 ? `
+                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${pagination.current_page - 1})" 
+                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium text-xs">
                             <i class="fas fa-chevron-left"></i>
                         </button>
                     ` : `
-                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium text-xs">
+                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium text-xs">
                             <i class="fas fa-chevron-left"></i>
                         </button>
                     `}
                     
                     <!-- Page Numbers -->
-                    ${generatePageNumbers(currentPage, totalPages)}
+                    ${generatePageNumbers(pagination.current_page || 1, pagination.total_pages || 1)}
                     
                     <!-- Next Button -->
-                    ${currentPage < totalPages ? `
-                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${currentPage + 1})" 
-                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                    ${pagination.current_page < pagination.total_pages ? `
+                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${pagination.current_page + 1})" 
+                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium text-xs">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     ` : `
-                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium text-xs">
+                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium text-xs">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     `}
                 </div>
-            </div>
-            
-            <!-- Page Info -->
-            <div class="text-center mt-3 text-sm text-gray-600">
-                Halaman <span class="font-semibold">${currentPage}</span> dari <span class="font-semibold">${totalPages}</span>
             </div>
         </div>
     `;
@@ -358,16 +357,14 @@ function generatePageNumbers(currentPage, totalPages) {
     
     return html;
 }
-}
 
 // Render empty bookings
 function renderEmptyBookings() {
     const container = document.getElementById('bookingsTableContainer');
     container.innerHTML = `
-        <div class="p-12 text-center text-gray-500">
-            <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-            <p class="text-lg">Tidak ada pesanan</p>
-            <p class="text-sm mt-2">Pesanan akan muncul di sini setelah customer melakukan booking</p>
+        <div class="p-16 text-center">
+            <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+            <p class="text-gray-600 text-lg font-medium">Belum ada booking</p>
         </div>
     `;
 }

@@ -1,4 +1,4 @@
-    <?= $this->extend('layouts/base') ?>
+<?= $this->extend('layouts/base') ?>
 
     <?= $this->section('content') ?>
 
@@ -31,13 +31,13 @@
                         <?php 
                         $currentStatus = $_GET['status'] ?? 'all';
                         $tabs = [
-                            'all' => ['label' => 'Semua', 'icon' => 'fa-list', 'count' => count($allBookings ?? $bookings)],
-                            'pending' => ['label' => 'Menunggu', 'icon' => 'fa-clock', 'count' => $statusCounts['pending'] ?? 0],
-                            'disetujui' => ['label' => 'Dikonfirmasi', 'icon' => 'fa-check-circle', 'count' => $statusCounts['disetujui'] ?? 0],
-                            'proses' => ['label' => 'Proses', 'icon' => 'fa-sync-alt', 'count' => $statusCounts['proses'] ?? 0],
-                            'selesai' => ['label' => 'Selesai', 'icon' => 'fa-check-double', 'count' => $statusCounts['selesai'] ?? 0],
-                            'batal' => ['label' => 'Dibatalkan', 'icon' => 'fa-times-circle', 'count' => $statusCounts['batal'] ?? 0],
-                            'ditolak' => ['label' => 'Ditolak', 'icon' => 'fa-ban', 'count' => $statusCounts['ditolak'] ?? 0],
+                            'all' => ['label' => 'Semua', 'icon' => 'fa-list', 'count' => 0],
+                            'pending' => ['label' => 'Menunggu', 'icon' => 'fa-clock', 'count' => 0],
+                            'disetujui' => ['label' => 'Dikonfirmasi', 'icon' => 'fa-check-circle', 'count' => 0],
+                            'proses' => ['label' => 'Proses', 'icon' => 'fa-sync-alt', 'count' => 0],
+                            'selesai' => ['label' => 'Selesai', 'icon' => 'fa-check-double', 'count' => 0],
+                            'batal' => ['label' => 'Dibatalkan', 'icon' => 'fa-times-circle', 'count' => 0],
+                            'ditolak' => ['label' => 'Ditolak', 'icon' => 'fa-ban', 'count' => 0],
                         ];
                         ?>
                         
@@ -53,7 +53,7 @@
                                     ? 'bg-blue-100 text-blue-600' 
                                     : 'bg-gray-100 text-gray-600' 
                                 ?> ml-2 py-0.5 px-2 rounded-full text-xs font-semibold">
-                                    <?= $tab['count'] ?>
+                                    0
                                 </span>
                             </a>
                         <?php endforeach; ?>
@@ -143,34 +143,60 @@
         const container = document.getElementById('bookingsContainer');
         
         try {
-            const url = status === 'all' 
-                ? '/api/booking/my-bookings'
-                : `/api/booking/my-bookings?status=${status}`;
-                
-            const response = await fetch(url, {
+            // Fetch all bookings to calculate status counts
+            const allUrl = '/api/booking/my-bookings';
+            const allResponse = await fetch(allUrl, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            if (!allResponse.ok) {
+                throw new Error(`HTTP error! status: ${allResponse.status}`);
+            }
+
+            const allResult = await allResponse.json();
+            console.log('✅ All bookings loaded:', allResult);
+
+            // Extract all bookings and calculate status counts
+            const allBookings = allResult.data?.bookings || [];
+            
+            // Calculate status counts
+            const statusCounts = {
+                all: allBookings.length,
+                pending: 0,
+                disetujui: 0,
+                proses: 0,
+                selesai: 0,
+                batal: 0,
+                ditolak: 0
+            };
+
+            allBookings.forEach(booking => {
+                const s = booking.status || 'pending';
+                if (statusCounts[s] !== undefined) {
+                    statusCounts[s]++;
                 }
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('✅ Bookings loaded:', result);
-
-            // Handle response format
-            const bookings = result.bookings || [];
-            const statusCounts = result.status_counts || {};
+            console.log('📊 Status counts:', statusCounts);
 
             // Update tab counts
             updateTabCounts(statusCounts);
 
+            // Filter bookings by selected status
+            let filteredBookings = allBookings;
+            if (status !== 'all') {
+                filteredBookings = allBookings.filter(b => b.status === status);
+            }
+
+            console.log('📋 Filtered bookings to render:', filteredBookings);
+
             // Render bookings table
-            if (Array.isArray(bookings) && bookings.length > 0) {
-                renderBookingsTable(bookings);
+            if (filteredBookings.length > 0) {
+                renderBookingsTable(filteredBookings);
             } else {
                 renderEmptyState();
             }
@@ -194,12 +220,13 @@
     // Update tab counts
     function updateTabCounts(counts) {
         // Update all tab
-        const allCount = Object.values(counts).reduce((sum, count) => sum + count, 0);
+        const allCount = counts.all || 0;
         const allTab = document.querySelector('[data-tab-count="all"]');
         if (allTab) allTab.textContent = allCount;
 
         // Update individual status tabs
-        Object.keys(counts).forEach(status => {
+        const statuses = ['pending', 'disetujui', 'proses', 'selesai', 'batal', 'ditolak'];
+        statuses.forEach(status => {
             const tab = document.querySelector(`[data-tab-count="${status}"]`);
             if (tab) {
                 tab.textContent = counts[status] || 0;

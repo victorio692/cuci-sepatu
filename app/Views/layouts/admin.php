@@ -313,7 +313,9 @@
 
         async function loadNotifications() {
             try {
-                const response = await fetch('<?= base_url("api/notifications/unread") ?>');
+                const response = await fetch('<?= base_url("api/notifications/unread") ?>', {
+                    credentials: 'include'
+                });
                 const data = await response.json();
                 
                 const badge = document.getElementById('notificationBadge');
@@ -391,7 +393,8 @@
         async function markAsRead(id, bookingId) {
             try {
                 await fetch(`<?= base_url("api/notifications/") ?>${id}/read`, {
-                    method: 'PUT'
+                    method: 'PUT',
+                    credentials: 'include'
                 });
                 
                 if (bookingId) {
@@ -409,7 +412,8 @@
             
             try {
                 await fetch('<?= base_url("api/notifications/read-all") ?>', {
-                    method: 'PUT'
+                    method: 'PUT',
+                    credentials: 'include'
                 });
                 loadNotifications();
             } catch (error) {

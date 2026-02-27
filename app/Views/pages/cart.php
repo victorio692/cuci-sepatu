@@ -391,7 +391,9 @@ document.addEventListener('DOMContentLoaded', function() {
 async function testCartAPI() {
     try {
         console.log(' Testing Cart API...');
-        const response = await fetch('/api/cart');
+        const response = await fetch('/api/cart', {
+            credentials: 'include'
+        });
         const result = await response.json();
         console.log(' Cart API Response:', result);
     } catch (error) {

@@ -156,6 +156,11 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin, redirect ke halaman admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin/profile')->with('info', 'Silakan gunakan dashboard admin.');
+        }
+
         // Hitung jumlah pesanan berdasarkan status
         $statusCounts = [
             'pending' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'pending'])->countAllResults(),
@@ -181,6 +186,11 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin, redirect ke halaman admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin/profile')->with('info', 'Silakan gunakan dashboard admin.');
+        }
+
         $data = [
             'title' => 'Detail Profil - SYH Cleaning',
             'user' => $user
@@ -193,6 +203,12 @@ class Dashboard extends BaseController
     public function updateProfile()
     {
         $user_id = session()->get('user_id');
+
+        // Cek jika user adalah admin
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Akses ditolak.');
+        }
 
         $data = [
             'nama_lengkap' => $this->request->getPost('full_name'),
@@ -209,6 +225,12 @@ class Dashboard extends BaseController
     public function updateProfilePhoto()
     {
         $user_id = session()->get('user_id');
+
+        // Cek jika user adalah admin
+        $checkUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($checkUser && $checkUser['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Akses ditolak.');
+        }
 
         // Validate file upload
         $validationRule = [
@@ -270,6 +292,11 @@ class Dashboard extends BaseController
         // Get user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Akses ditolak.');
+        }
+
         // Verify current password
         if (!password_verify($current_password, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password saat ini salah');
@@ -289,6 +316,11 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('info', 'Silakan gunakan dashboard admin.');
+        }
+
         $data = [
             'title' => 'Ubah Password - SYH Cleaning',
             'user' => $user
@@ -302,6 +334,11 @@ class Dashboard extends BaseController
     {
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Cek jika user adalah admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('info', 'Silakan gunakan dashboard admin.');
+        }
 
         $data = [
             'title' => 'Ubah Email - SYH Cleaning',
@@ -320,6 +357,11 @@ class Dashboard extends BaseController
 
         // Get user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Cek jika user adalah admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Akses ditolak.');
+        }
 
         // Verify current password
         if (!password_verify($current_password, $user['password_hash'])) {
@@ -346,6 +388,11 @@ class Dashboard extends BaseController
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
+        // Cek jika user adalah admin
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('info', 'Silakan gunakan dashboard admin.');
+        }
+
         $data = [
             'title' => 'Ubah Nomor Telepon - SYH Cleaning',
             'user' => $user
@@ -366,6 +413,11 @@ class Dashboard extends BaseController
 
         if (!$user) {
             return redirect()->back()->with('error', 'User tidak ditemukan');
+        }
+
+        // Cek jika user adalah admin
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Akses ditolak.');
         }
 
         // Verify current password

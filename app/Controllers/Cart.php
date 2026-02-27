@@ -21,6 +21,12 @@ class Cart extends BaseController
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa menggunakan keranjang belanja');
+        }
+
         // Validate file upload
         $validationRule = [
             'shoe_photo' => [
@@ -102,6 +108,12 @@ class Cart extends BaseController
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa menggunakan keranjang belanja');
+        }
+
         $cart = session()->get('cart') ?? [];
         $total = 0;
 
@@ -172,6 +184,12 @@ class Cart extends BaseController
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa checkout');
         }
 
         $cart = session()->get('cart') ?? [];

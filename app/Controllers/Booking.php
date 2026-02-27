@@ -59,6 +59,11 @@ class Booking extends BaseController
             return redirect()->to('/login')->with('error', 'User tidak ditemukan');
         }
 
+        // Cek jika admin, redirect ke admin dashboard
+        if ($user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
+        }
+
         // Get service from query parameter
         $serviceCode = $this->request->getGet('service');
         if (!$serviceCode) {
@@ -90,6 +95,11 @@ class Booking extends BaseController
     {
         $user_id = session()->get('user_id');
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        // Cek jika admin, redirect ke admin dashboard
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
+        }
 
         // Validate file upload
         $validationRule = [
@@ -211,6 +221,11 @@ class Booking extends BaseController
             $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
             if (!$user) {
                 return redirect()->to('/login')->with('error', 'User tidak ditemukan');
+            }
+
+            // Cek jika admin, redirect ke admin dashboard
+            if ($user['role'] === 'admin') {
+                return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
             }
 
             // Get form data
@@ -409,6 +424,12 @@ class Booking extends BaseController
     {
         $user_id = session()->get('user_id');
         
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin/bookings/detail/' . $bookingId)->with('info', 'Gunakan dashboard admin untuk melihat detail booking.');
+        }
+        
         $booking = $this->db->table('bookings')
             ->where('id', $bookingId)
             ->where('id_user', $user_id)
@@ -439,6 +460,12 @@ class Booking extends BaseController
     public function cancelBooking($bookingId)
     {
         $user_id = session()->get('user_id');
+        
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return redirect()->to('/admin')->with('error', 'Admin tidak bisa membatalkan booking melalui halaman ini');
+        }
         
         $booking = $this->db->table('bookings')
             ->where('id', $bookingId)
@@ -523,6 +550,15 @@ class Booking extends BaseController
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        // Cek jika admin, redirect ke admin dashboard
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if ($user && $user['role'] === 'admin') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Admin tidak bisa membuat booking'
+            ]);
         }
 
         // Get data from form
