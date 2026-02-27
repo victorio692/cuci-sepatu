@@ -1184,7 +1184,9 @@ async function loadServices() {
     
     try {
         console.log('🚀 Loading services from API...');
-        const response = await fetch('/api/services');
+        const response = await fetch('/api/services', {
+            credentials: 'include'
+        });
         const services = await response.json();
         
         console.log('✅ Services loaded:', services);

@@ -838,7 +838,9 @@
         
         // Load notifications via AJAX
         function loadNotifications() {
-            fetch('/api/notifications/unread')
+            fetch('/api/notifications/unread', {
+                credentials: 'include'
+            })
                 .then(response => response.json())
                 .then(data => {
                     const notifList = document.getElementById('landingNotificationList');
@@ -912,6 +914,7 @@
         function markAsRead(notifId) {
             fetch(`/api/notifications/${notifId}/read`, {
                 method: 'PUT',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
@@ -929,6 +932,7 @@
         function markAllNotificationsAsRead() {
             fetch('/api/notifications/read-all', {
                 method: 'PUT',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
