@@ -405,7 +405,7 @@ class Booking extends BaseController
     }
 
     // Booking Detail
-    public function detail($bookingId)
+        public function detail($bookingId)
     {
         $user_id = session()->get('user_id');
         
@@ -532,15 +532,27 @@ class Booking extends BaseController
         $notes = $this->request->getPost('notes') ?? '';
         $deliveryMethod = $this->request->getPost('delivery_method');
 
-        // Handle photo uploads
+        // Handle photo uploads - support both single and multiple files
         $uploadedPhotos = [];
+        
+        // Try getting multiple files first
         $photoFiles = $this->request->getFileMultiple('shoe_photos');
         
-        if ($photoFiles) {
+        // If no multiple files or empty, try single file
+        if (empty($photoFiles) || (count($photoFiles) === 1 && !$photoFiles[0]->isValid())) {
+            $singleFile = $this->request->getFile('shoe_photos');
+            if ($singleFile && $singleFile->isValid()) {
+                $photoFiles = [$singleFile];
+            } else {
+                $photoFiles = [];
+            }
+        }
+        
+        if (!empty($photoFiles)) {
             foreach ($photoFiles as $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
                     // Validate file
-                    if ($file->getSize() > 2 * 1024 * 1024) { // 2MB max
+                    if ($file->getSize() > 5 * 1024 * 1024) { // 5MB max
                         continue;
                     }
                     
@@ -574,6 +586,30 @@ class Booking extends BaseController
             ]);
         }
 
+        // Calculate total quantity for fee calculation
+        $totalQuantity = 0;
+        foreach ($items as $item) {
+            $totalQuantity += intval($item['quantity']);
+        }
+
+        // Calculate biaya kirim (only for 1 shoe with pickup/delivery)
+        $biayaKirim = 0;
+        if ($totalQuantity === 1) {
+            // Rp 5,000 untuk pickup (dijemput)
+            if (stripos($deliveryMethod, 'jemput') !== false) {
+                $biayaKirim += 5000;
+            }
+            // Rp 5,000 untuk delivery (diantar)
+            if (stripos($deliveryMethod, 'antar') !== false) {
+                $biayaKirim += 5000;
+            }
+            // Possible values:
+            // - langsung (antar sendiri + ambil sendiri) = 0
+            // - dijemput (pickup only) = 5000
+            // - diantar (delivery only) = 5000
+            // - dijemput-diantar (pickup + delivery) = 10000
+        }
+
         // Insert each item as separate booking
         $successCount = 0;
         $bookingIds = [];
@@ -582,12 +618,27 @@ class Booking extends BaseController
             $serviceCode = $item['service_code'];
             $quantity = intval($item['quantity']);
             $price = $this->getServicePrice($serviceCode);
-            $total = $price * $quantity;
+            $subtotal = $price * $quantity;
+            
+            // Get service name from database
+            $serviceData = $this->db->table('services')
+                ->where('kode_layanan', $serviceCode)
+                ->where('aktif', 1)
+                ->get()
+                ->getRowArray();
+            
+            $serviceName = $serviceData ? $serviceData['nama_layanan'] : $serviceCode;
+            
+            // Distribute biaya_kirim proportionally if multiple items (but usually only 1 item in checkout)
+            $itemBiayaKirim = count($items) === 1 ? $biayaKirim : round($biayaKirim * ($quantity / $totalQuantity));
+            $total = $subtotal + $itemBiayaKirim;
 
             $bookingData = [
                 'id_user' => $user_id,
-                'layanan' => $serviceCode,
+                'layanan' => $serviceName,
                 'jumlah' => $quantity,
+                'subtotal' => $subtotal,
+                'biaya_kirim' => $itemBiayaKirim,
                 'total' => $total,
                 'alamat_kirim' => $address,
                 'tanggal_kirim' => $pickupDate,
@@ -609,6 +660,21 @@ class Booking extends BaseController
                         'booking_id' => $bookingId,
                         'photo_path' => $photo,
                         'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+                
+                // Create notification for all admins
+                $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
+                
+                foreach ($admins as $admin) {
+                    $this->db->table('notifications')->insert([
+                        'id_user' => $admin['id'],
+                        'booking_id' => $bookingId,
+                        'judul' => 'Booking Baru!',
+                        'pesan' => "Ada booking baru dari customer dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                        'tipe' => 'new_booking',
+                        'dibaca' => 0,
+                        'dibuat_pada' => date('Y-m-d H:i:s')
                     ]);
                 }
             }

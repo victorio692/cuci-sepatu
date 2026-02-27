@@ -115,10 +115,8 @@ class Auth extends BaseController
         $this->db->table('users')->insert($data);
         $user_id = $this->db->insertID();
 
-        // Set session
-        session()->set('user_id', $user_id);
-
-        return redirect()->to('/')->with('success', 'Pendaftaran berhasil! Selamat datang!');
+        // Don't auto-login, redirect to login page for security
+        return redirect()->to('/login')->with('success', 'Pendaftaran berhasil! Silakan login dengan akun Anda.');
     }
 
     // Logout

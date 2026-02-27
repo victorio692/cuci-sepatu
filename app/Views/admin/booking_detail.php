@@ -9,91 +9,90 @@
         </a>
     </div>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-        <!-- Main Details -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <!-- Kolom Kiri -->
         <div>
             <!-- Order Header -->
-            <div class="admin-card" style="margin-bottom: 1.5rem;">
-                <div class="card-body">
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
-                        <div>
-                            <h1 style="margin: 0 0 0.5rem 0; color: #1f2937;">
-                                Pesanan #<?= $booking['id'] ?>
-                            </h1>
-                            <p style="margin: 0; color: #6b7280;">
-                                <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
-                            </p>
-                            <?php
-                            $statusLabels = [
-                                'pending' => 'Menunggu Persetujuan',
-                                'disetujui' => 'Disetujui',
-                                'proses' => 'Sedang Diproses',
-                                'selesai' => 'Selesai',
-                                'ditolak' => 'Ditolak'
-                            ];
-                            $statusColors = [
-                                'pending' => '#f59e0b',
-                                'disetujui' => '#3b82f6',
-                                'proses' => '#8b5cf6',
-                                'selesai' => '#10b981',
-                                'ditolak' => '#ef4444'
-                            ];
-                            ?>
-                            <div style="margin-top: 1rem;">
-                                <span style="background: <?= $statusColors[$booking['status']] ?? '#6b7280' ?>; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; display: inline-block;">
-                                    <?= $statusLabels[$booking['status']] ?? ucfirst($booking['status']) ?>
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <!-- Action Buttons -->
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <?php if ($booking['status'] === 'pending'): ?>
-                                <button onclick="approveBooking()" class="btn" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
-                                    <i class="fas fa-check"></i> Setujui
-                                </button>
-                                <button onclick="showRejectModal()" class="btn" style="background: #ef4444; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);">
-                                    <i class="fas fa-times"></i> Tolak
-                                </button>
-                            <?php elseif ($booking['status'] === 'disetujui'): ?>
-                                <button onclick="changeStatus('proses')" class="btn" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3);">
-                                    <i class="fas fa-cog"></i> Mulai Proses
-                                </button>
-                            <?php elseif ($booking['status'] === 'proses'): ?>
-                                <button onclick="showCompleteModal()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 30px rgba(16, 185, 129, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 20px rgba(16, 185, 129, 0.4)'">
-                                    <i class="fas fa-check-circle"></i> Upload Foto & Tandai Selesai
-                                </button>
-                            <?php elseif ($booking['status'] === 'selesai'): ?>
-                                <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; box-shadow: 0 4px 6px rgba(37, 211, 102, 0.3);">
-                                    <i class="fab fa-whatsapp"></i> Kabari via WhatsApp
-                                </button>
-                            <?php endif; ?>
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                    <div>
+                        <h1 style="margin: 0 0 0.5rem 0; color: #1f2937;">
+                            Pesanan #<?= $booking['id'] ?>
+                        </h1>
+                        <p style="margin: 0; color: #6b7280;">
+                            <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
+                        </p>
+                        <?php
+                        $statusLabels = [
+                            'pending' => 'Menunggu Persetujuan',
+                            'disetujui' => 'Disetujui',
+                            'proses' => 'Sedang Diproses',
+                            'selesai' => 'Selesai',
+                            'ditolak' => 'Ditolak'
+                        ];
+                        $statusColors = [
+                            'pending' => '#f59e0b',
+                            'disetujui' => '#10b981',
+                            'proses' => '#8b5cf6',
+                            'selesai' => '#10b981',
+                            'ditolak' => '#ef4444'
+                        ];
+                        ?>
+                        <div style="margin-top: 1rem;">
+                            <span style="background: <?= $statusColors[$booking['status']] ?? '#6b7280' ?>; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; display: inline-block;">
+                                <?= $statusLabels[$booking['status']] ?? ucfirst($booking['status']) ?>
+                            </span>
                         </div>
                     </div>
                     
-                    <!-- Alasan Penolakan (jika ditolak) -->
-                    <?php if ($booking['status'] === 'ditolak' && !empty($booking['alasan_penolakan'])): ?>
-                        <div style="margin-top: 1.5rem; padding: 1rem; background: #fee2e2; border-left: 4px solid #ef4444; border-radius: 0.375rem;">
-                            <div style="display: flex; align-items: start; gap: 0.75rem;">
-                                <i class="fas fa-exclamation-circle" style="color: #ef4444; margin-top: 0.25rem;"></i>
-                                <div>
-                                    <strong style="color: #991b1b;">Alasan Penolakan:</strong>
-                                    <p style="margin: 0.5rem 0 0; color: #7f1d1d;"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
-                                </div>
+                    <!-- Action Buttons -->
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <?php if ($booking['status'] === 'pending'): ?>
+                            <button onclick="approveBooking()" class="btn" style="background: #10b981; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
+                                <i class="fas fa-check"></i> Setujui
+                            </button>
+                            <button onclick="showRejectModal()" class="btn" style="background: #ef4444; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                                <i class="fas fa-times"></i> Tolak
+                            </button>
+                        <?php elseif ($booking['status'] === 'disetujui'): ?>
+                            <button onclick="changeStatus('proses')" class="btn" style="background: #8b5cf6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);">
+                                <i class="fas fa-cog"></i> Mulai Proses
+                            </button>
+                        <?php elseif ($booking['status'] === 'proses'): ?>
+                            <button onclick="showCompleteModal()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 700; font-size: 0.875rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
+                                <i class="fas fa-check-circle"></i> Upload Foto
+                            </button>
+                        <?php elseif ($booking['status'] === 'selesai'): ?>
+                            <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);">
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <!-- Alasan Penolakan (jika ditolak) -->
+                <?php if ($booking['status'] === 'ditolak' && !empty($booking['alasan_penolakan'])): ?>
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: #fee2e2; border-left: 4px solid #ef4444; border-radius: 0.375rem;">
+                        <div style="display: flex; align-items: start; gap: 0.75rem;">
+                            <i class="fas fa-exclamation-circle" style="color: #ef4444; margin-top: 0.25rem;"></i>
+                            <div>
+                                <strong style="color: #991b1b;">Alasan Penolakan:</strong>
+                                <p style="margin: 0.5rem 0 0; color: #7f1d1d;"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
                             </div>
                         </div>
-                    <?php endif; ?>
-                </div>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- Customer Info -->
-            <div class="admin-card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-user"></i> Informasi Pelanggan
-                    </h3>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Pelanggan</h3>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div style="padding: 1.5rem;">
                     <div class="info-row">
                         <label>Nama:</label>
                         <span><?= $booking['full_name'] ?></span>
@@ -117,14 +116,15 @@
                 </div>
             </div>
 
-            <!-- Service & Items -->
-            <div class="admin-card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-shopping-bag"></i> Detail Pesanan
-                    </h3>
+            <!-- Detail Pesanan -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-shopping-bag" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail Pesanan</h3>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div style="padding: 1.5rem;">
                     <div class="info-row">
                         <label>Layanan:</label>
                         <span><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
@@ -137,187 +137,79 @@
                         <label>Jumlah:</label>
                         <span><?= $booking['quantity'] ?> pasang</span>
                     </div>
-                </div>
-            </div>
-
-            <!-- Foto Sepatu dari Customer -->
-            <?php if (!empty($photos) && count($photos) > 0): ?>
-                <div class="admin-card" style="margin-bottom: 1.5rem;">
-                    <div class="card-header">
-                        <h3 style="margin: 0; color: #1f2937;">
-                            <i class="fas fa-camera"></i> Foto Sepatu dari Customer (<?= count($photos) ?>)
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-                            <?php foreach ($photos as $photo): ?>
-                                <div style="position: relative; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;" onclick="openPhotoModal('<?= base_url('uploads/' . $photo['photo_path']) ?>')">
-                                    <img 
-                                        src="<?= base_url('uploads/' . $photo['photo_path']) ?>" 
-                                        alt="Foto Sepatu" 
-                                        style="width: 100%; height: 200px; object-fit: cover;"
-                                        onerror="this.src='<?= base_url('assets/images/no-image.png') ?>'"
-                                    >
-                                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 0.5rem; color: white; font-size: 0.75rem;">
-                                        <i class="fas fa-search-plus"></i> Klik untuk memperbesar
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-            
-            <!-- Foto Sepatu Lama -->
-            <?php if (!empty($booking['foto_sepatu'])): ?>
-                <div class="admin-card" style="margin-bottom: 1.5rem;">
-                    <div class="card-header">
-                        <h3 style="margin: 0; color: #1f2937;">
-                            <i class="fas fa-camera"></i> Foto Kondisi Sepatu
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="text-align: center;">
-                            <img 
-                                src="<?= base_url('uploads/' . $booking['foto_sepatu']) ?>" 
-                                alt="Foto Sepatu" 
-                                style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;"
-                                onclick="openPhotoModal(this.src)"
-                            >
-                            <p style="margin: 1rem 0 0; color: #6b7280; font-size: 0.9rem;">
-                                <i class="fas fa-info-circle"></i> Klik gambar untuk memperbesar
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <!-- Foto Hasil Cucian (Setelah) -->
-            <?php if (!empty($booking['foto_hasil']) && $booking['status'] === 'selesai'): ?>
-                <div class="admin-card" style="margin-bottom: 1.5rem; border: 2px solid #10b981;">
-                    <div class="card-header" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                        <h3 style="margin: 0; color: white;">
-                            <i class="fas fa-check-circle"></i> Foto Hasil Cucian (Dikirim ke Customer)
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div style="text-align: center;">
-                            <img 
-                                src="<?= base_url('uploads/' . $booking['foto_hasil']) ?>" 
-                                alt="Foto Hasil Cucian" 
-                                style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); cursor: pointer;"
-                                onclick="openPhotoModal(this.src)"
-                            >
-                            <p style="margin: 1rem 0 0; color: #059669; font-size: 0.9rem; font-weight: 600;">
-                                <i class="fas fa-check-double"></i> Foto ini sudah dikirim ke customer
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <!-- Delivery Info -->
-            <div class="admin-card">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-truck"></i> Pengiriman
-                    </h3>
-                </div>
-                <div class="card-body">
                     <div class="info-row">
-                        <label>Tipe Pengiriman:</label>
+                        <label>Pengiriman:</label>
                         <span><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Tanggal Pengiriman:</label>
-                        <span><?= date('d M Y', strtotime($booking['delivery_date'])) ?></span>
-                    </div>
-                    <div class="info-row">
-                        <label>Alamat Pengiriman:</label>
-                        <span><?= $booking['delivery_address'] ?></span>
-                    </div>
-                    <?php if (!empty($booking['notes'])): ?>
-                        <div class="info-row">
-                            <label>Catatan:</label>
-                            <span><?= $booking['notes'] ?></span>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar Summary -->
+        <!-- Kolom Kanan -->
         <div>
             <!-- Price Summary -->
-            <div class="admin-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border: none; border-radius: 1rem; overflow: hidden;">
-                <div style="padding: 1.5rem;">
-                    <h3 style="margin: 0 0 1.5rem 0; color: white; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-receipt"></i> Ringkasan Booking
-                    </h3>
-                    <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                            <span style="color: rgba(255, 255, 255, 0.9);">Layanan:</span>
-                            <span style="color: white; font-weight: 600;">
-                                <?php
-                                $serviceName = match($booking['service']) {
-                                    'fast-cleaning' => 'Fast Cleaning',
-                                    'deep-cleaning' => 'Deep Cleaning',
-                                    'white-shoes' => 'White Shoes',
-                                    'suede-treatment' => 'Suede Treatment',
-                                    'unyellowing' => 'Unyellowing',
-                                    default => $booking['service']
-                                };
-                                echo $serviceName;
-                                ?>
-                            </span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                            <span style="color: rgba(255, 255, 255, 0.9);">Harga/Sepatu</span>
-                            <span style="color: white; font-weight: 600;">Rp <?= number_format($booking['subtotal'] / $booking['quantity'], 0, ',', '.') ?></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: rgba(255, 255, 255, 0.9);">Jumlah</span>
-                            <span style="color: white; font-weight: 600;"><?= $booking['quantity'] ?> pasang</span>
-                        </div>
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 mb-6 text-white">
+                <h3 style="margin: 0 0 1.5rem 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-receipt"></i> Ringkasan Pesanan
+                </h3>
+                <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                        <span style="color: rgba(255, 255, 255, 0.9);">Layanan:</span>
+                        <span style="font-weight: 600;">
+                            <?php
+                            $serviceName = match($booking['service']) {
+                                'fast-cleaning' => 'Fast Cleaning',
+                                'deep-cleaning' => 'Deep Cleaning',
+                                'white-shoes' => 'White Shoes',
+                                'suede-treatment' => 'Suede Treatment',
+                                'unyellowing' => 'Unyellowing',
+                                default => $booking['service']
+                            };
+                            echo $serviceName;
+                            ?>
+                        </span>
                     </div>
-                    <div style="background: white; padding: 1rem; border-radius: 0.5rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="color: #374151;">Subtotal:</span>
-                            <span style="color: #374151; font-weight: 600;">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
-                            <span style="color: #374151;">Biaya Pengiriman:</span>
-                            <span style="color: #374151; font-weight: 600;">Rp <?= number_format($booking['delivery_fee'], 0, ',', '.') ?></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
-                            <span style="color: #374151; font-weight: 700; font-size: 1.1rem;">Total</span>
-                            <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
-                        </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                        <span style="color: rgba(255, 255, 255, 0.9);">Harga/Sepatu:</span>
+                        <span style="font-weight: 600;">Rp <?= number_format($booking['subtotal'] / $booking['quantity'], 0, ',', '.') ?></span>
                     </div>
-                    <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.2); border-radius: 0.5rem; border-left: 4px solid rgba(255, 255, 255, 0.5);">
-                        <p style="margin: 0; color: white; font-size: 0.875rem; display: flex; align-items: start; gap: 0.5rem;">
-                            <i class="fas fa-info-circle" style="margin-top: 0.125rem;"></i>
-                            <span>Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.</span>
-                        </p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: rgba(255, 255, 255, 0.9);">Jumlah:</span>
+                        <span style="font-weight: 600;"><?= $booking['quantity'] ?> pasang</span>
+                    </div>
+                </div>
+                <div style="background: white; color: #374151; padding: 1rem; border-radius: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Subtotal:</span>
+                        <span style="font-weight: 600;">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+                        <span>Biaya Pengiriman:</span>
+                        <span style="font-weight: 600;">Rp <?= number_format($booking['delivery_fee'], 0, ',', '.') ?></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
+                        <span style="font-weight: 700; font-size: 1.1rem;">Total</span>
+                        <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
                     </div>
                 </div>
             </div>
 
             <!-- Status Timeline -->
-            <div class="admin-card">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-clock"></i> Timeline
-                    </h3>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-clock" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Timeline Status</h3>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div style="padding: 1.5rem;">
                     <div class="timeline-item">
                         <div class="timeline-status completed">
                             <i class="fas fa-check"></i>
                         </div>
                         <div>
-                            <strong>Dibuat</strong>
-                            <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.9rem;">
+                            <strong style="color: #1f2937;">Dibuat</strong>
+                            <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
                                 <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
                             </p>
                         </div>
@@ -336,8 +228,8 @@
                                     <i class="fas fa-circle"></i>
                                 </div>
                                 <div>
-                                    <strong><?= $statuses[$status] ?></strong>
-                                    <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.9rem;">
+                                    <strong style="color: #1f2937;"><?= $statuses[$status] ?></strong>
+                                    <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
                                         <?= (array_search($current_status, $status_order) >= array_search($status, $status_order)) ? 'Selesai' : 'Menunggu' ?>
                                     </p>
                                 </div>
@@ -348,7 +240,106 @@
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Foto & Detail Lainnya -->
+    <div style="margin-top: 2rem;">
+            <?php if (!empty($photos) && count($photos) > 0): ?>
+                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-camera" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Foto Sepatu dari Customer (<?= count($photos) ?>)</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                        <?php foreach ($photos as $photo): ?>
+                            <div style="position: relative; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;" onclick="openPhotoModal('<?= base_url('uploads/' . $photo['photo_path']) ?>')">
+                                <img 
+                                    src="<?= base_url('uploads/' . $photo['photo_path']) ?>" 
+                                    alt="Foto Sepatu" 
+                                    style="width: 100%; height: 200px; object-fit: cover;"
+                                    onerror="this.src='<?= base_url('assets/images/no-image.png') ?>'"
+                                >
+                                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 0.5rem; color: white; font-size: 0.75rem;">
+                                    <i class="fas fa-search-plus"></i> Klik untuk memperbesar
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
+            <!-- Foto Sepatu Lama -->
+            <?php if (!empty($booking['foto_sepatu'])): ?>
+                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-camera" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Foto Kondisi Sepatu</h3>
+                    </div>
+                    <div style="text-align: center;">
+                        <img 
+                            src="<?= base_url('uploads/' . $booking['foto_sepatu']) ?>" 
+                            alt="Foto Sepatu" 
+                            style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;"
+                            onclick="openPhotoModal(this.src)"
+                        >
+                        <p style="margin: 1rem 0 0; color: #6b7280; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> Klik gambar untuk memperbesar
+                        </p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Foto Hasil Cucian (Setelah) -->
+            <?php if (!empty($booking['foto_hasil']) && $booking['status'] === 'selesai'): ?>
+                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem; border: 2px solid #10b981;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid #10b981;">
+                        <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #10b981; font-weight: 600; font-size: 1.1rem;">Foto Hasil Cucian (Dikirim ke Customer)</h3>
+                    </div>
+                    <div style="text-align: center;">
+                        <img 
+                            src="<?= base_url('uploads/' . $booking['foto_hasil']) ?>" 
+                            alt="Foto Hasil Cucian" 
+                            style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); cursor: pointer;"
+                            onclick="openPhotoModal(this.src)"
+                        >
+                        <p style="margin: 1rem 0 0; color: #059669; font-size: 0.9rem; font-weight: 600;">
+                            <i class="fas fa-check-double"></i> Foto ini sudah dikirim ke customer
+                        </p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Delivery Info -->
+            <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <i class="fas fa-truck" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                    <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Pengiriman</h3>
+                </div>
+                <div style="padding: 1rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: center;">
+                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Tipe Pengiriman:</label>
+                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: center;">
+                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Tanggal Pengiriman:</label>
+                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= date('d M Y', strtotime($booking['delivery_date'])) ?></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: flex-start;">
+                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Alamat Pengiriman:</label>
+                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= $booking['delivery_address'] ?></span>
+                    </div>
+                    <?php if (!empty($booking['notes'])): ?>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; align-items: flex-start;">
+                            <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Catatan:</label>
+                            <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= $booking['notes'] ?></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+       
+
 
 <!-- Photo Modal -->
 <div id="photoModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);" onclick="closePhotoModal()">
