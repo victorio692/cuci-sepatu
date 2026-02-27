@@ -15,7 +15,7 @@
                             <?php if (!empty($user['foto_profil'])): ?>
                                 <img src="<?= base_url('uploads/' . $user['foto_profil']) ?>" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mb-3">
                             <?php else: ?>
-                                <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-lg mb-3">
+                                <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-lg mb-3">
                                     <?= strtoupper(substr($user['full_name'] ?? $user['nama_lengkap'] ?? 'U', 0, 1)) ?>
                                 </div>
                             <?php endif; ?>
