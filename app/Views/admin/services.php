@@ -178,17 +178,18 @@ document.getElementById('priceForm').addEventListener('submit', function(e) {
     const serviceId = document.getElementById('serviceId').value;
     const price = document.getElementById('newPrice').value;
 
-    fetch('/admin/services/price', {
-        method: 'POST',
+    fetch(`/api/admin/services/${serviceId}/price`, {
+        method: 'PUT',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify({ service: serviceId, price: price })
+        body: JSON.stringify({ harga: price })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.code === 200 || data.success) {
             showToast('Harga berhasil diperbarui', 'success');
             closePriceModal();
             setTimeout(() => location.reload(), 1000);

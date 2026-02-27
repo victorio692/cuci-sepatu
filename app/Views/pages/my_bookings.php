@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/base') ?>
+    <?= $this->extend('layouts/base') ?>
 
     <?= $this->section('content') ?>
 
@@ -143,9 +143,11 @@
         const container = document.getElementById('bookingsContainer');
         
         try {
-            // Fetch all bookings to calculate status counts
-            const allUrl = '/api/booking/my-bookings';
-            const allResponse = await fetch(allUrl, {
+            const url = status === 'all' 
+                ? '/api/booking/my-bookings'
+                : `/api/booking/my-bookings?status=${status}`;
+                
+            const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -153,50 +155,23 @@
                 credentials: 'include'
             });
 
-            if (!allResponse.ok) {
-                throw new Error(`HTTP error! status: ${allResponse.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const allResult = await allResponse.json();
-            console.log('✅ All bookings loaded:', allResult);
+            const result = await response.json();
+            console.log('✅ Bookings loaded:', result);
 
-            // Extract all bookings and calculate status counts
-            const allBookings = allResult.data?.bookings || [];
-            
-            // Calculate status counts
-            const statusCounts = {
-                all: allBookings.length,
-                pending: 0,
-                disetujui: 0,
-                proses: 0,
-                selesai: 0,
-                batal: 0,
-                ditolak: 0
-            };
-
-            allBookings.forEach(booking => {
-                const s = booking.status || 'pending';
-                if (statusCounts[s] !== undefined) {
-                    statusCounts[s]++;
-                }
-            });
-
-            console.log('📊 Status counts:', statusCounts);
+            // Handle different response formats
+            const bookings = result.bookings || result.data || [];
+            const statusCounts = result.status_counts || {};
 
             // Update tab counts
             updateTabCounts(statusCounts);
 
-            // Filter bookings by selected status
-            let filteredBookings = allBookings;
-            if (status !== 'all') {
-                filteredBookings = allBookings.filter(b => b.status === status);
-            }
-
-            console.log('📋 Filtered bookings to render:', filteredBookings);
-
             // Render bookings table
-            if (filteredBookings.length > 0) {
-                renderBookingsTable(filteredBookings);
+            if (bookings.length > 0) {
+                renderBookingsTable(bookings);
             } else {
                 renderEmptyState();
             }
@@ -220,13 +195,12 @@
     // Update tab counts
     function updateTabCounts(counts) {
         // Update all tab
-        const allCount = counts.all || 0;
+        const allCount = Object.values(counts).reduce((sum, count) => sum + count, 0);
         const allTab = document.querySelector('[data-tab-count="all"]');
         if (allTab) allTab.textContent = allCount;
 
         // Update individual status tabs
-        const statuses = ['pending', 'disetujui', 'proses', 'selesai', 'batal', 'ditolak'];
-        statuses.forEach(status => {
+        Object.keys(counts).forEach(status => {
             const tab = document.querySelector(`[data-tab-count="${status}"]`);
             if (tab) {
                 tab.textContent = counts[status] || 0;

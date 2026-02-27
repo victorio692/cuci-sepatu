@@ -199,15 +199,23 @@ class BookingApi extends BaseController
      */
     public function myBookings()
     {
+        log_message('debug', '✅ BookingApi::myBookings called');
+        
         $user_id = session()->get('user_id');
+        log_message('debug', '📌 BookingApi::myBookings - User ID from session: ' . ($user_id ?? 'NULL'));
+        
         if (!$user_id) {
+            log_message('debug', '❌ BookingApi::myBookings - No user_id in session');
             return $this->failUnauthorized('Silakan login terlebih dahulu');
         }
 
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
         if (!$user || $user['role'] === 'admin') {
+            log_message('debug', '❌ BookingApi::myBookings - User validation failed. User exists: ' . (!!$user ? 'yes' : 'no') . ', Role: ' . ($user['role'] ?? 'N/A'));
             return $this->failForbidden('Akses ditolak');
         }
+        
+        log_message('debug', '✅ BookingApi::myBookings - User validated. Email: ' . ($user['email'] ?? 'N/A') . ', Role: ' . $user['role']);
 
         // Get query parameters
         $status = $this->request->getGet('status');
@@ -249,6 +257,15 @@ class BookingApi extends BaseController
             ->limit($limit, $offset)
             ->get()
             ->getResultArray();
+
+        // Debug logging
+        log_message('debug', '📌 BookingApi::myBookings - User ID: ' . $user_id);
+        log_message('debug', '📌 BookingApi::myBookings - Status filter: ' . ($status ?? 'none'));
+        log_message('debug', '📌 BookingApi::myBookings - Found bookings: ' . count($bookings));
+        log_message('debug', '📌 BookingApi::myBookings - Status counts: ' . json_encode($statusCounts));
+        if (count($bookings) > 0) {
+            log_message('debug', '📌 BookingApi::myBookings - First booking: ' . json_encode($bookings[0]));
+        }
 
         return $this->respond([
             'success' => true,
