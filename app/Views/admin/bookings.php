@@ -10,48 +10,152 @@
 
 <!-- Filter & Search -->
 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-    <form action="/admin/bookings" method="GET">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pesanan</label>
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        placeholder="Cari nama, email, layanan..." 
-                        value="<?= $search ?>"
-                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                    >
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Filter Status</label>
-                <select name="status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    <option value="">Semua Status</option>
-                    <option value="pending" <?= $status === 'pending' ? 'selected' : '' ?>>Menunggu</option>
-                    <option value="disetujui" <?= $status === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
-                    <option value="proses" <?= $status === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
-                    <option value="selesai" <?= $status === 'selesai' ? 'selected' : '' ?>>Selesai</option>
-                    <option value="batal" <?= $status === 'batal' ? 'selected' : '' ?>>Ditolak</option>
-                </select>
-            </div>
-
-            <div class="flex items-end">
-                <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
-                    <i class="fas fa-search"></i>
-                    <span>Cari & Filter</span>
-                </button>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pesanan</label>
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Cari nama, email, layanan..." 
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                >
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
-    </form>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filter Status</label>
+            <select id="statusFilter" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                <option value="">Semua Status</option>
+                <option value="pending">Menunggu</option>
+                <option value="disetujui">Disetujui</option>
+                <option value="proses">Sedang Dikerjakan</option>
+                <option value="selesai">Selesai</option>
+                <option value="ditolak">Ditolak</option>
+            </select>
+        </div>
+
+        <div class="flex items-end">
+            <button type="button" onclick="applyFilters()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
+                <i class="fas fa-search"></i>
+                <span>Cari & Filter</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Bookings Table -->
 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="overflow-x-auto">
-        <?php if (!empty($bookings)): ?>
+    <div id="bookingsTableContainer">
+        <div class="p-16 text-center">
+            <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
+            <p class="text-gray-600 text-lg font-medium">Memuat data booking...</p>
+        </div>
+    </div>
+</div>
+
+<?= $this->endSection() ?>
+
+<?= $this->section('extra_js') ?>
+<script>
+// Store pagination and filter state
+let currentFilters = {
+    search: '',
+    status: '',
+    page: 1
+};
+
+// Load bookings on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadBookings();
+});
+
+// Load bookings from API
+async function loadBookings(search = '', status = '', page = 1) {
+    console.log('🚀 Loading bookings...', { search, status, page });
+    
+    // Store current filters and page
+    currentFilters = { search, status, page };
+    
+    const container = document.getElementById('bookingsTableContainer');
+    
+    try {
+        let url = '/api/admin/bookings/';
+        const params = new URLSearchParams();
+        
+        if (search) params.append('search', search);
+        if (status) params.append('status', status);
+        if (page) params.append('page', page);
+        
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Bookings loaded:', result);
+
+        // API returns data.bookings (not result.bookings or result.data)
+        const bookings = result.data?.bookings || [];
+        const pagination = result.data?.pagination || {};
+
+        console.log('📋 Extracted bookings:', bookings);
+        console.log('📄 Pagination:', pagination);
+
+        if (bookings.length > 0) {
+            renderBookingsTable(bookings, pagination);
+        } else {
+            renderEmptyBookings();
+        }
+
+    } catch (error) {
+        console.error('❌ Error loading bookings:', error);
+        container.innerHTML = `
+            <div class="p-16 text-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+                <p class="text-red-600 text-lg font-medium">Gagal memuat data booking</p>
+                <button onclick="loadBookings()" class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
+                    <i class="fas fa-redo mr-2"></i>Coba Lagi
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Apply filters
+function applyFilters() {
+    const search = document.getElementById('searchInput').value;
+    const status = document.getElementById('statusFilter').value;
+    loadBookings(search, status, 1);  // Reset to page 1 when filtering
+}
+
+// Render bookings table
+function renderBookingsTable(bookings, pagination = {}) {
+    const container = document.getElementById('bookingsTableContainer');
+    
+    const statusClasses = {
+        'pending': 'bg-yellow-100 text-yellow-800',
+        'disetujui': 'bg-blue-100 text-blue-800',
+        'proses': 'bg-purple-100 text-purple-800',
+        'selesai': 'bg-green-100 text-green-800',
+        'ditolak': 'bg-red-100 text-red-800',
+        'batal': 'bg-gray-100 text-gray-800'
+    };
+    
+    let tableHTML = `
+        <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
@@ -65,169 +169,209 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <?php foreach ($bookings as $booking): ?>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="font-semibold text-xs text-gray-800">#<?= $booking['id'] ?></span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs mr-2">
-                                        <?= strtoupper(substr($booking['full_name'], 0, 1)) ?>
-                                    </div>
-                                    <div>
-                                        <div class="font-medium text-sm text-gray-800"><?= $booking['full_name'] ?></div>
-                                        <div class="text-xs text-gray-500"><?= $booking['email'] ?></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-3 py-3">
-                                <span class="text-xs text-gray-700"><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
-                            </td>
-                            <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="text-xs text-gray-700"><?= date('d M Y', strtotime($booking['created_at'])) ?></span>
-                            </td>
-                            <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="font-semibold text-xs text-gray-800">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
-                            </td>
-                            <td class="px-3 py-3">
-                                <select 
-                                    class="px-2 py-1 rounded text-xs font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
-                                        <?php 
-                                        switch($booking['status']) {
-                                            case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
-                                            case 'disetujui': echo 'bg-blue-100 text-blue-800'; break;
-                                            case 'proses': echo 'bg-purple-100 text-purple-800'; break;
-                                            case 'selesai': echo 'bg-green-100 text-green-800'; break;
-                                            case 'ditolak': echo 'bg-red-100 text-red-800'; break;
-                                            case 'batal': echo 'bg-gray-100 text-gray-800'; break;
-                                        }
-                                        ?>" 
-                                    data-booking-id="<?= $booking['id'] ?>"
-                                    data-original-status="<?= $booking['status'] ?>"
-                                    onchange="updateBookingStatus(this)"
-                                    <?= in_array($booking['status'], ['selesai', 'ditolak']) ? 'disabled' : '' ?>
-                                >
-                                    <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
-                                    <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
-                                    <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
-                                    <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
-                                    <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
-                                </select>
-                            </td>
-                            <td class="px-2 py-3 whitespace-nowrap">
-                                <div class="flex items-center space-x-0.5">
-                                    <a href="/admin/bookings/<?= $booking['id'] ?>" 
-                                       class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="/admin/bookings/<?= $booking['id'] ?>" 
-                                       onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus pesanan ini?')) { deleteBooking(<?= $booking['id'] ?>); }"
-                                       class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+    `;
+    
+    bookings.forEach(booking => {
+        const statusClass = statusClasses[booking.status] || 'bg-gray-100 text-gray-800';
+        const isDisabled = ['selesai', 'ditolak'].includes(booking.status);
+        const customerInitial = (booking.full_name || booking.customer_name || '?').charAt(0).toUpperCase();
+        
+        // Format date
+        const date = new Date(booking.created_at || booking.dibuat_pada);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        
+        // Format service name
+        const serviceName = (booking.service || booking.layanan || '').split('-').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+        
+        tableHTML += `
+            <tr class="hover:bg-gray-50 transition">
+                <td class="px-3 py-3 whitespace-nowrap">
+                    <span class="font-semibold text-xs text-gray-800">#${booking.id}</span>
+                </td>
+                <td class="px-3 py-3">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs mr-2">
+                            ${customerInitial}
+                        </div>
+                        <div>
+                            <div class="font-medium text-sm text-gray-800">${booking.full_name || booking.customer_name || '-'}</div>
+                            <div class="text-xs text-gray-500">${booking.email || '-'}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-3 py-3">
+                    <span class="text-xs text-gray-700">${serviceName}</span>
+                </td>
+                <td class="px-3 py-3 whitespace-nowrap">
+                    <span class="text-xs text-gray-700">${formattedDate}</span>
+                </td>
+                <td class="px-3 py-3 whitespace-nowrap">
+                    <span class="font-semibold text-xs text-gray-800">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                </td>
+                <td class="px-3 py-3">
+                    <select 
+                        class="px-2 py-1 rounded text-xs font-medium border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
+                        data-booking-id="${booking.id}"
+                        data-original-status="${booking.status}"
+                        onchange="updateBookingStatus(this)"
+                        ${isDisabled ? 'disabled' : ''}
+                    >
+                        <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
+                        <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
+                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Sedang Dikerjakan</option>
+                        <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                        <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
+                    </select>
+                </td>
+                <td class="px-2 py-3 whitespace-nowrap">
+                    <div class="flex items-center space-x-0.5">
+                        <a href="/admin/bookings/${booking.id}" 
+                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button onclick="deleteBooking(${booking.id})"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    // Handle pagination
+    const currentPage = pagination.current_page || 1;
+    const totalPages = pagination.total_pages || 1;
+    const totalData = pagination.total || 0;
+    const perPage = pagination.per_page || 10;
+    const startItem = (currentPage - 1) * perPage + 1;
+    const endItem = Math.min(currentPage * perPage, totalData);
+    
+    tableHTML += `
                 </tbody>
             </table>
-
-            <!-- Total Count -->
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
-                Total: <span class="font-semibold"><?= $pager['total'] ?></span> pesanan
-                <?php if ($pager['total'] > 0): ?>
-                    | Menampilkan <?= (($pager['currentPage'] - 1) * $pager['perPage']) + 1 ?> - <?= min($pager['currentPage'] * $pager['perPage'], $pager['total']) ?>
-                <?php endif; ?>
-            </div>
-            
-            <!-- Pagination -->
-            <?php if ($pager['totalPages'] > 1): ?>
-            <div class="px-6 py-4 border-t border-gray-200 bg-white">
-                <div class="flex items-center justify-between">
-                    <div class="text-sm text-gray-600">
-                        Halaman <?= $pager['currentPage'] ?> dari <?= $pager['totalPages'] ?>
-                    </div>
-                    <div class="flex space-x-1">
-                        <!-- Previous Button -->
-                        <?php if ($pager['currentPage'] > 1): ?>
-                            <a href="?page=<?= $pager['currentPage'] - 1 ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        <?php else: ?>
-                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        <?php endif; ?>
-                        
-                        <!-- Page Numbers -->
-                        <?php 
-                        $startPage = max(1, $pager['currentPage'] - 2);
-                        $endPage = min($pager['totalPages'], $pager['currentPage'] + 2);
-                        
-                        if ($startPage > 1): ?>
-                            <a href="?page=1<?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                1
-                            </a>
-                            <?php if ($startPage > 2): ?>
-                                <span class="px-3 py-2 text-gray-400">...</span>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        
-                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                            <?php if ($i == $pager['currentPage']): ?>
-                                <span class="px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold">
-                                    <?= $i ?>
-                                </span>
-                            <?php else: ?>
-                                <a href="?page=<?= $i ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                    <?= $i ?>
-                                </a>
-                            <?php endif; ?>
-                        <?php endfor; ?>
-                        
-                        <?php if ($endPage < $pager['totalPages']): ?>
-                            <?php if ($endPage < $pager['totalPages'] - 1): ?>
-                                <span class="px-3 py-2 text-gray-400">...</span>
-                            <?php endif; ?>
-                            <a href="?page=<?= $pager['totalPages'] ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <?= $pager['totalPages'] ?>
-                            </a>
-                        <?php endif; ?>
-                        
-                        <!-- Next Button -->
-                        <?php if ($pager['currentPage'] < $pager['totalPages']): ?>
-                            <a href="?page=<?= $pager['currentPage'] + 1 ?><?= $status ? '&status=' . $status : '' ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        <?php else: ?>
-                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        <?php endif; ?>
-                    </div>
+        </div>
+        
+        <!-- Info & Pagination -->
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Info Text -->
+                <div class="text-sm text-gray-600">
+                    Total: <span class="font-semibold">${totalData} pesanan</span> | Menampilkan <span class="font-semibold">${startItem} - ${endItem}</span>
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div class="flex items-center gap-2">
+                    <!-- Previous Button -->
+                    ${currentPage > 1 ? `
+                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${currentPage - 1})" 
+                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    ` : `
+                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium text-xs">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    `}
+                    
+                    <!-- Page Numbers -->
+                    ${generatePageNumbers(currentPage, totalPages)}
+                    
+                    <!-- Next Button -->
+                    ${currentPage < totalPages ? `
+                        <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${currentPage + 1})" 
+                                class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    ` : `
+                        <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed font-medium text-xs">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    `}
                 </div>
             </div>
-            <?php endif; ?>
-        <?php else: ?>
-            <div class="p-12 text-center text-gray-500">
-                <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                <p class="text-lg">Tidak ada pesanan</p>
-                <p class="text-sm mt-2">Pesanan akan muncul di sini setelah customer melakukan booking</p>
+            
+            <!-- Page Info -->
+            <div class="text-center mt-3 text-sm text-gray-600">
+                Halaman <span class="font-semibold">${currentPage}</span> dari <span class="font-semibold">${totalPages}</span>
             </div>
-        <?php endif; ?>
-    </div>
-</div>
+        </div>
+    `;
+    
+    container.innerHTML = tableHTML;
+}
 
-<?= $this->endSection() ?>
+// Generate page numbers
+function generatePageNumbers(currentPage, totalPages) {
+    let html = '';
+    const maxVisible = 5;
+    
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    
+    // Show first page if not visible
+    if (startPage > 1) {
+        html += `
+            <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', 1)" 
+                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                1
+            </button>
+        `;
+        if (startPage > 2) {
+            html += `<span class="px-2 py-2 text-gray-400">...</span>`;
+        }
+    }
+    
+    // Show page numbers
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            html += `
+                <button class="px-3 py-2 bg-blue-600 text-white rounded-lg font-medium text-xs">
+                    ${i}
+                </button>
+            `;
+        } else {
+            html += `
+                <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${i})" 
+                        class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                    ${i}
+                </button>
+            `;
+        }
+    }
+    
+    // Show last page if not visible
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span class="px-2 py-2 text-gray-400">...</span>`;
+        }
+        html += `
+            <button onclick="loadBookings('${currentFilters.search}', '${currentFilters.status}', ${totalPages})" 
+                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                ${totalPages}
+            </button>
+        `;
+    }
+    
+    return html;
+}
+}
 
-<?= $this->section('extra_js') ?>
-<script>
+// Render empty bookings
+function renderEmptyBookings() {
+    const container = document.getElementById('bookingsTableContainer');
+    container.innerHTML = `
+        <div class="p-12 text-center text-gray-500">
+            <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
+            <p class="text-lg">Tidak ada pesanan</p>
+            <p class="text-sm mt-2">Pesanan akan muncul di sini setelah customer melakukan booking</p>
+        </div>
+    `;
+}
+
 function updateBookingStatus(selectElement) {
     const bookingId = selectElement.getAttribute('data-booking-id');
     const newStatus = selectElement.value;
@@ -257,19 +401,25 @@ function updateBookingStatus(selectElement) {
         return;
     }
     
-    fetch('/admin/bookings/' + bookingId + '/status', {
-        method: 'PUT',
+    fetch('/api/admin/bookings/' + bookingId + '/status', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
+        credentials: 'include',
         body: JSON.stringify({ status: newStatus })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.success || data.code === 200) {
+            selectElement.setAttribute('data-original-status', newStatus);
             showToast('Status berhasil diupdate', 'success');
-            setTimeout(() => location.reload(), 1000);
+            
+            // Reload bookings with current filters
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            setTimeout(() => loadBookings(search, status), 500);
         } else {
             showToast(data.message || 'Gagal update status', 'error');
             selectElement.value = originalStatus;
@@ -313,18 +463,27 @@ function showToast(message, type) {
 
 // Delete booking function
 function deleteBooking(id) {
-    fetch(`/admin/bookings/${id}`, {
+    if (!confirm('Yakin ingin menghapus pesanan ini?')) {
+        return;
+    }
+    
+    fetch(`/api/admin/bookings/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
-        }
+        },
+        credentials: 'include'
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.success || data.code === 200) {
             showToast('Pesanan berhasil dihapus', 'success');
-            setTimeout(() => location.reload(), 1500);
+            
+            // Reload bookings with current filters
+            const search = document.getElementById('searchInput').value;
+            const status = document.getElementById('statusFilter').value;
+            setTimeout(() => loadBookings(search, status), 500);
         } else {
             showToast(data.message || 'Gagal menghapus pesanan', 'error');
         }

@@ -54,6 +54,16 @@ class DashboardApi extends BaseController
             ->get()
             ->getRow();
         
+        // Status counts untuk setiap status
+        $statusCounts = [
+            'pending' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'pending'])->countAllResults(),
+            'disetujui' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'disetujui'])->countAllResults(),
+            'proses' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'proses'])->countAllResults(),
+            'selesai' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'selesai'])->countAllResults(),
+            'batal' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'batal'])->countAllResults(),
+            'ditolak' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'ditolak'])->countAllResults(),
+        ];
+        
         return $this->response->setJSON([
             'code' => 200,
             'data' => [
@@ -61,7 +71,8 @@ class DashboardApi extends BaseController
                 'booking_selesai' => $completedBookings,
                 'booking_pending' => $pendingBookings,
                 'total_pengeluaran' => (int)$pengeluaran,
-                'member_sejak' => $user ? date('d/m/Y', strtotime($user->dibuat_pada)) : '-'
+                'member_sejak' => $user ? date('d/m/Y', strtotime($user->dibuat_pada)) : '-',
+                'status_counts' => $statusCounts
             ]
         ]);
     }

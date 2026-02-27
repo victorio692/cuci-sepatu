@@ -15,7 +15,7 @@
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Booking</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $total_bookings ?? 0 ?></h3>
+                <h3 class="text-4xl font-bold mt-2" data-stat="total_bookings">0</h3>
                 <p class="text-blue-100 text-xs mt-2">Total semua pesanan</p>
             </div>
             <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -29,7 +29,7 @@
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-cyan-100 text-xs font-semibold uppercase tracking-wide">Dalam Proses</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $proses_bookings ?? 0 ?></h3>
+                <h3 class="text-4xl font-bold mt-2" data-stat="proses_bookings">0</h3>
                 <p class="text-cyan-100 text-xs mt-2">Sedang dikerjakan</p>
             </div>
             <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -43,7 +43,7 @@
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-emerald-100 text-xs font-semibold uppercase tracking-wide">Selesai</p>
-                <h3 class="text-4xl font-bold mt-2"><?= $completed_bookings ?? 0 ?></h3>
+                <h3 class="text-4xl font-bold mt-2" data-stat="completed_bookings">0</h3>
                 <p class="text-emerald-100 text-xs mt-2">Siap diambil</p>
             </div>
             <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -57,7 +57,7 @@
         <div class="flex items-center justify-between">
             <div class="flex-1">
                 <p class="text-violet-100 text-xs font-semibold uppercase tracking-wide">Total Pendapatan</p>
-                <h3 class="text-2xl font-bold mt-2">Rp <?= number_format($total_revenue ?? 0, 0, ',', '.') ?></h3>
+                <h3 class="text-2xl font-bold mt-2" data-stat="total_revenue">Rp 0</h3>
                 <p class="text-violet-100 text-xs mt-2">Dari pesanan selesai</p>
             </div>
             <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -89,115 +89,268 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        <?php if (!empty($recent_bookings)): ?>
-            <table class="w-full" id="bookingTable">
-                <thead class="bg-gray-100 border-b-2 border-gray-200">
-                    <tr>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Total</th>
-                        <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                        <th class="px-5 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <?php foreach ($recent_bookings as $booking): ?>
-                        <tr class="hover:bg-blue-50 transition duration-200">
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <span class="font-semibold text-gray-800 text-sm">BK<?= str_pad($booking['id'], 3, '0', STR_PAD_LEFT) ?></span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                                        <?= strtoupper(substr($booking['customer_name'], 0, 1)) ?>
-                                    </div>
-                                    <div>
-                                        <div class="font-medium text-gray-900 text-sm"><?= $booking['customer_name'] ?></div>
-                                        <div class="text-xs text-gray-500"><?= date('d M Y', strtotime($booking['dibuat_pada'])) ?></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $booking['no_hp'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm">
-                                    <i class="fab fa-whatsapp"></i>
-                                    <span><?= $booking['no_hp'] ?? '-' ?></span>
-                                </a>
-                            </td>
-                            <td class="px-5 py-4">
-                                <span class="text-sm text-gray-700"><?= ucfirst(str_replace('-', ' ', $booking['layanan'])) ?></span>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap text-center">
-                                <span class="text-sm text-gray-700 font-medium"><?= $booking['jumlah'] ?? 1 ?></span>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap text-right">
-                                <span class="font-semibold text-gray-900 text-sm">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
-                            </td>
-                            <td class="px-5 py-4">
-                                <select 
-                                    class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer
-                                        <?php 
-                                        switch($booking['status']) {
-                                            case 'pending': echo 'bg-yellow-100 text-yellow-800'; break;
-                                            case 'disetujui': echo 'bg-blue-100 text-blue-800'; break;
-                                            case 'proses': echo 'bg-purple-100 text-purple-800'; break;
-                                            case 'selesai': echo 'bg-green-100 text-green-800'; break;
-                                            case 'ditolak': echo 'bg-red-100 text-red-800'; break;
-                                            case 'batal': echo 'bg-gray-100 text-gray-800'; break;
-                                        }
-                                        ?>"
-                                    data-booking-id="<?= $booking['id'] ?>"
-                                    data-original-status="<?= $booking['status'] ?>"
-                                    onchange="updateBookingStatus(this)"
-                                    <?= in_array($booking['status'], ['selesai', 'ditolak']) ? 'disabled' : '' ?>
-                                >
-                                    <option value="pending" <?= $booking['status'] === 'pending' ? 'selected' : '' ?>>Menunggu</option>
-                                    <option value="disetujui" <?= $booking['status'] === 'disetujui' ? 'selected' : '' ?>>Disetujui</option>
-                                    <option value="proses" <?= $booking['status'] === 'proses' ? 'selected' : '' ?>>Sedang Dikerjakan</option>
-                                    <option value="selesai" <?= $booking['status'] === 'selesai' ? 'selected' : '' ?>>Selesai</option>
-                                    <option value="ditolak" <?= $booking['status'] === 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
-                                </select>
-                            </td>
-                            <td class="px-5 py-4 whitespace-nowrap text-center">
-                                <div class="flex items-center justify-center space-x-1">
-                                    <a href="<?= base_url('admin/bookings/' . $booking['id']) ?>" 
-                                       class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
-                                       title="Lihat Detail">
-                                        <i class="fas fa-eye text-sm"></i>
-                                    </a>
-                                    <button onclick="deleteBooking(<?= $booking['id'] ?>)" 
-                                            class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"
-                                            title="Hapus">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
+        <div id="bookingsTableContainer">
             <div class="p-16 text-center">
-                <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
-                <p class="text-gray-600 text-lg font-medium">Belum ada booking</p>
+                <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
+                <p class="text-gray-600 text-lg font-medium">Memuat data booking...</p>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
     
     <!-- Pagination -->
-    <?php if (!empty($recent_bookings)): ?>
-        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <?= $pager->links('default', 'custom_pagination') ?>
-        </div>
-    <?php endif; ?>
+    <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200 bg-gray-50 hidden">
+    </div>
 </div>
 
 <?= $this->endSection() ?>
 
 <?= $this->section('extra_js') ?>
 <script>
+// Load data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardStatistics();
+    loadRecentBookings();
+    
+    // Auto refresh every 30 seconds
+    setInterval(() => {
+        loadDashboardStatistics();
+        loadRecentBookings();
+    }, 30000);
+});
+
+// Load dashboard statistics from API
+async function loadDashboardStatistics() {
+    console.log('🚀 Loading admin dashboard statistics...');
+    
+    try {
+        const response = await fetch('/api/admin/dashboard/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Dashboard statistics loaded:', result);
+
+        const data = result.data || result;
+        
+        // Update statistics cards - match API response structure
+        document.querySelector('[data-stat="total_bookings"]').textContent = (data.booking?.total || 0);
+        document.querySelector('[data-stat="proses_bookings"]').textContent = (data.booking?.proses || 0);
+        document.querySelector('[data-stat="completed_bookings"]').textContent = (data.booking?.selesai || 0);
+        
+        // Format currency for revenue
+        const revenue = parseInt(data.pendapatan?.total || 0);
+        document.querySelector('[data-stat="total_revenue"]').textContent = 'Rp ' + revenue.toLocaleString('id-ID');
+        
+        console.log('📊 Cards updated:', {
+            total: data.booking?.total,
+            proses: data.booking?.proses,
+            selesai: data.booking?.selesai,
+            revenue: revenue
+        });
+
+    } catch (error) {
+        console.error('❌ Error loading dashboard statistics:', error);
+    }
+}
+
+// Load recent bookings from API
+async function loadRecentBookings() {
+    console.log('🚀 Loading recent bookings...');
+    
+    const container = document.getElementById('bookingsTableContainer');
+    
+    try {
+        const response = await fetch('/api/admin/dashboard/recent-bookings', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Recent bookings loaded:', result);
+
+        // Extract bookings from API response - API returns data.booking
+        const bookings = result.data?.booking || result.bookings || [];
+
+        console.log('📋 Bookings to render:', bookings);
+
+        if (bookings.length > 0) {
+            renderBookingsTable(bookings);
+        } else {
+            renderEmptyBookings();
+        }
+
+    } catch (error) {
+        console.error('❌ Error loading bookings:', error);
+        container.innerHTML = `
+            <div class="p-16 text-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+                <p class="text-red-600 text-lg font-medium">Gagal memuat data booking</p>
+                <button onclick="loadRecentBookings()" class="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
+                    <i class="fas fa-redo mr-2"></i>Coba Lagi
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Render bookings table
+function renderBookingsTable(bookings) {
+    const container = document.getElementById('bookingsTableContainer');
+    
+    const statusClasses = {
+        'pending': 'bg-yellow-100 text-yellow-800',
+        'disetujui': 'bg-blue-100 text-blue-800',
+        'proses': 'bg-purple-100 text-purple-800',
+        'selesai': 'bg-green-100 text-green-800',
+        'ditolak': 'bg-red-100 text-red-800',
+        'batal': 'bg-gray-100 text-gray-800'
+    };
+    
+    const statusLabels = {
+        'pending': 'Menunggu',
+        'disetujui': 'Disetujui',
+        'proses': 'Sedang Dikerjakan',
+        'selesai': 'Selesai',
+        'ditolak': 'Ditolak',
+        'batal': 'Dibatalkan'
+    };
+    
+    let tableHTML = `
+        <table class="w-full" id="bookingTable">
+            <thead class="bg-gray-100 border-b-2 border-gray-200">
+                <tr>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Total</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+    `;
+    
+    bookings.forEach(booking => {
+        const bookingId = String(booking.id).padStart(3, '0');
+        // API returns: nama_customer, not customer_name
+        const customerName = booking.nama_customer || booking.customer_name || '?';
+        const customerInitial = customerName.charAt(0).toUpperCase();
+        const statusClass = statusClasses[booking.status] || 'bg-gray-100 text-gray-800';
+        const isDisabled = ['selesai', 'ditolak'].includes(booking.status);
+        
+        // Format date
+        const date = new Date(booking.dibuat_pada);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        
+        // Format phone number for WhatsApp
+        const phone = (booking.no_hp || '').replace(/[^0-9]/g, '');
+        
+        // Format service name
+        const serviceName = booking.layanan ? booking.layanan.split('-').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ') : '-';
+        
+        tableHTML += `
+            <tr class="hover:bg-blue-50 transition duration-200">
+                <td class="px-5 py-4 whitespace-nowrap">
+                    <span class="font-semibold text-gray-800 text-sm">BK${bookingId}</span>
+                </td>
+                <td class="px-5 py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                            ${customerInitial}
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900 text-sm">${customerName}</div>
+                            <div class="text-xs text-gray-500">${formattedDate}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap">
+                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>${booking.no_hp || '-'}</span>
+                    </a>
+                </td>
+                <td class="px-5 py-4">
+                    <span class="text-sm text-gray-700">${serviceName}</span>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap text-center">
+                    <span class="text-sm text-gray-700 font-medium">${booking.jumlah || 1}</span>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap text-right">
+                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                </td>
+                <td class="px-5 py-4">
+                    <select 
+                        class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
+                        data-booking-id="${booking.id}"
+                        data-original-status="${booking.status}"
+                        onchange="updateBookingStatus(this)"
+                        ${isDisabled ? 'disabled' : ''}
+                    >
+                        <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
+                        <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
+                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Sedang Dikerjakan</option>
+                        <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                        <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
+                    </select>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap text-center">
+                    <div class="flex items-center justify-center space-x-1">
+                        <a href="/admin/bookings/${booking.id}" 
+                           class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
+                           title="Lihat Detail">
+                            <i class="fas fa-eye text-sm"></i>
+                        </a>
+                        <button onclick="deleteBooking(${booking.id})" 
+                                class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"
+                                title="Hapus">
+                            <i class="fas fa-trash text-sm"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = tableHTML;
+}
+
+// Render empty bookings state
+function renderEmptyBookings() {
+    const container = document.getElementById('bookingsTableContainer');
+    container.innerHTML = `
+        <div class="p-16 text-center">
+            <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+            <p class="text-gray-600 text-lg font-medium">Belum ada booking</p>
+        </div>
+    `;
+}
+
 function searchTable() {
     const input = document.getElementById('searchBooking');
     const filter = input.value.toLowerCase();
@@ -234,7 +387,7 @@ function updateBookingStatus(selectElement) {
     if (newStatus === 'selesai') {
         const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengupload foto hasil cucian.\n\nLanjutkan?';
         if (confirm(confirmMsg)) {
-            window.location.href = '<?= base_url() ?>/admin/bookings/' + bookingId;
+            window.location.href = '/admin/bookings/' + bookingId;
         } else {
             selectElement.value = originalStatus;
         }
@@ -244,26 +397,33 @@ function updateBookingStatus(selectElement) {
     if (newStatus === 'ditolak') {
         const confirmMsg = 'Status "Ditolak" memerlukan alasan penolakan.\n\nAnda akan diarahkan ke halaman detail booking untuk mengisi alasan.\n\nLanjutkan?';
         if (confirm(confirmMsg)) {
-            window.location.href = '<?= base_url() ?>/admin/bookings/' + bookingId;
+            window.location.href = '/admin/bookings/' + bookingId;
         } else {
             selectElement.value = originalStatus;
         }
         return;
     }
     
-    fetch('<?= base_url() ?>/admin/bookings/' + bookingId + '/status', {
-        method: 'PUT',
+    fetch('/api/admin/bookings/' + bookingId + '/status', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
+        credentials: 'include',
         body: JSON.stringify({ status: newStatus })
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (data.success || data.code === 200) {
+            selectElement.setAttribute('data-original-status', newStatus);
             showToast('Status berhasil diupdate', 'success');
-            setTimeout(() => location.reload(), 1000);
+            
+            // Reload statistics and bookings after status update
+            setTimeout(() => {
+                loadDashboardStatistics();
+                loadRecentBookings();
+            }, 500);
         } else {
             showToast(data.message || 'Gagal update status', 'error');
             selectElement.value = originalStatus;
@@ -278,18 +438,24 @@ function updateBookingStatus(selectElement) {
 
 function deleteBooking(id) {
     if (confirm('Yakin ingin menghapus booking ini?')) {
-        fetch('<?= base_url() ?>/admin/bookings/' + id, {
+        fetch('/api/admin/bookings/' + id, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            credentials: 'include'
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success || data.code === 200) {
                 showToast('Booking berhasil dihapus', 'success');
-                setTimeout(() => location.reload(), 1000);
+                
+                // Reload statistics and bookings after delete
+                setTimeout(() => {
+                    loadDashboardStatistics();
+                    loadRecentBookings();
+                }, 500);
             } else {
                 showToast('Gagal menghapus booking', 'error');
             }

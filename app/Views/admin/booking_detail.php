@@ -104,7 +104,7 @@
                     </div>
                     <div class="info-row">
                         <label>Telepon:</label>
-                        <span><?= $booking['phone'] ?></span>
+                        <span><?= $booking['no_hp'] ?></span>
                     </div>
                     <div class="info-row">
                         <label>Alamat:</label>

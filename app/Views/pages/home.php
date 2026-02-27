@@ -900,84 +900,12 @@ function showSlide(n) {
         </div>
         
         <!-- Services Grid - Compact Shopee Style -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            <?php 
-            // Icon mapping for different services
-            $iconMap = [
-                'fast-cleaning' => 'fa-bolt',
-                'deep-cleaning' => 'fa-water',
-                'white-shoes' => 'fa-star',
-                'suede-treatment' => 'fa-shoe-prints',
-                'unyellowing' => 'fa-magic',
-            ];
-            
-            // Popular service (could be from DB in future)
-            $popularServices = ['suede-treatment'];
-            
-            // Special border for white shoes
-            $specialBorder = ['white-shoes'];
-            
-            // Loop through services from database
-            foreach ($services ?? [] as $index => $service): 
-                $serviceCode = $service['kode_layanan'];
-                $serviceName = $service['nama_layanan'];
-                $serviceDesc = $service['deskripsi'];
-                $servicePrice = $service['harga_dasar'];
-                $serviceDuration = $service['durasi_hari'];
-                
-                // Get icon or use default
-                $icon = $iconMap[$serviceCode] ?? 'fa-shoe-prints';
-                
-                // Check if popular
-                $isPopular = in_array($serviceCode, $popularServices);
-                
-                // Check if special border
-                $borderClass = in_array($serviceCode, $specialBorder) ? 'border-blue-300' : 'border-gray-200';
-                
-                // Format price
-                $priceFormatted = number_format($servicePrice / 1000, 0) . 'K';
-                
-                // Duration text
-                $durationText = $serviceDuration == 1 ? '1 hari' : "1-{$serviceDuration} hari";
-            ?>
-            <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border <?= $borderClass ?>">
-                <div class="relative">
-                    <div class="bg-blue-600 h-24 flex items-center justify-center">
-                        <i class="fas <?= $icon ?> text-white text-3xl"></i>
-                    </div>
-                    <?php if ($isPopular): ?>
-                    <div class="absolute top-1 left-1 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">
-                        POPULER
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <div class="p-3">
-                    <h3 class="text-sm font-bold text-gray-900 mb-1 truncate" title="<?= htmlspecialchars($serviceName) ?>"><?= htmlspecialchars($serviceName) ?></h3>
-                    <p class="text-xs text-gray-500 mb-2 h-8 line-clamp-2" title="<?= htmlspecialchars($serviceDesc) ?>"><?= htmlspecialchars($serviceDesc) ?></p>
-                    <div class="flex items-baseline space-x-1 mb-2">
-                        <span class="text-base font-bold text-blue-600">Rp <?= $priceFormatted ?></span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                        <span>⏱️ <?= $durationText ?></span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-1">
-                        <button onclick="addToCartQuick('<?= $serviceCode ?>', '<?= htmlspecialchars($serviceName) ?>', <?= $servicePrice ?>)" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition" title="Tambah ke Keranjang">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
-                        <a href="/make-booking?service=<?= $serviceCode ?>" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
-                            Booking
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-            
-            <?php if (empty($services)): ?>
+        <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            <!-- Loading State -->
             <div class="col-span-full text-center py-12">
-                <i class="fas fa-info-circle text-gray-400 text-4xl mb-3"></i>
-                <p class="text-gray-500">Belum ada layanan tersedia.</p>
+                <i class="fas fa-spinner fa-spin text-blue-600 text-4xl mb-3"></i>
+                <p class="text-gray-500">Memuat layanan...</p>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -1245,7 +1173,92 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof updateCartBadge === 'function') {
         updateCartBadge();
     }
+    
+    // Load services from API
+    loadServices();
 });
+
+// Load services from API
+async function loadServices() {
+    const servicesGrid = document.getElementById('servicesGrid');
+    
+    try {
+        console.log('🚀 Loading services from API...');
+        const response = await fetch('/api/services');
+        const services = await response.json();
+        
+        console.log('✅ Services loaded:', services);
+        
+        if (services && services.length > 0) {
+            // Icon mapping
+            const iconMap = {
+                'fast-cleaning': 'fa-bolt',
+                'deep-cleaning': 'fa-water',
+                'white-shoes': 'fa-star',
+                'suede-treatment': 'fa-shoe-prints',
+                'unyellowing': 'fa-magic',
+            };
+            
+            const popularServices = ['suede-treatment'];
+            const specialBorder = ['white-shoes'];
+            
+            // Render services
+            servicesGrid.innerHTML = services.map(service => {
+                const icon = iconMap[service.kode_layanan] || 'fa-shoe-prints';
+                const isPopular = popularServices.includes(service.kode_layanan);
+                const borderClass = specialBorder.includes(service.kode_layanan) ? 'border-blue-300' : 'border-gray-200';
+                const priceFormatted = Math.floor(service.harga_dasar / 1000) + 'K';
+                const durationText = service.durasi_hari == 1 ? '1 hari' : `1-${service.durasi_hari} hari`;
+                
+                return `
+                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border ${borderClass}">
+                        <div class="relative">
+                            <div class="bg-blue-600 h-24 flex items-center justify-center">
+                                <i class="fas ${icon} text-white text-3xl"></i>
+                            </div>
+                            ${isPopular ? '<div class="absolute top-1 left-1 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">POPULER</div>' : ''}
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-sm font-bold text-gray-900 mb-1 truncate" title="${service.nama_layanan}">${service.nama_layanan}</h3>
+                            <p class="text-xs text-gray-500 mb-2 h-8 line-clamp-2" title="${service.deskripsi}">${service.deskripsi}</p>
+                            <div class="flex items-baseline space-x-1 mb-2">
+                                <span class="text-base font-bold text-blue-600">Rp ${priceFormatted}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                                <span>⏱️ ${durationText}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1">
+                                <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${service.harga_dasar})" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition" title="Tambah ke Keranjang">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                                <a href="/make-booking?service=${service.kode_layanan}" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
+                                    Booking
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            console.log('✨ Services rendered successfully!');
+        } else {
+            servicesGrid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-info-circle text-gray-400 text-4xl mb-3"></i>
+                    <p class="text-gray-500">Belum ada layanan tersedia.</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('❌ Error loading services:', error);
+        servicesGrid.innerHTML = `
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-exclamation-triangle text-red-400 text-4xl mb-3"></i>
+                <p class="text-red-500">Gagal memuat layanan. Silakan refresh halaman.</p>
+            </div>
+        `;
+    }
+}
 </script>
 
 <style>

@@ -54,24 +54,25 @@ class NotificationsApi extends ResourceController
         $userId = session()->get('user_id');
         
         if (!$userId) {
-            return $this->fail([
-                'status' => 'error',
-                'message' => 'Unauthorized. Silakan login terlebih dahulu'
-            ], 401);
+            return $this->response->setJSON(['count' => 0, 'notifications' => []]);
         }
+
+        $count = $this->db->table('notifications')
+            ->where('id_user', $userId)
+            ->where('dibaca', 0)
+            ->countAllResults();
 
         $notifications = $this->db->table('notifications')
             ->where('id_user', $userId)
             ->where('dibaca', 0)
             ->orderBy('dibuat_pada', 'DESC')
+            ->limit(5)
             ->get()
             ->getResultArray();
 
-        return $this->respond([
-            'status' => 'success',
-            'message' => 'Notifikasi belum dibaca berhasil diambil',
-            'data' => $notifications,
-            'total' => count($notifications)
+        return $this->response->setJSON([
+            'count' => $count,
+            'notifications' => $notifications
         ]);
     }
 
@@ -161,10 +162,7 @@ class NotificationsApi extends ResourceController
         $userId = session()->get('user_id');
         
         if (!$userId) {
-            return $this->fail([
-                'status' => 'error',
-                'message' => 'Unauthorized. Silakan login terlebih dahulu'
-            ], 401);
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
         }
 
         $notification = $this->db->table('notifications')
@@ -174,21 +172,14 @@ class NotificationsApi extends ResourceController
             ->getRowArray();
 
         if (!$notification) {
-            return $this->failNotFound('Notifikasi tidak ditemukan');
+            return $this->response->setJSON(['success' => false, 'message' => 'Notification not found']);
         }
 
         $this->db->table('notifications')
             ->where('id', $id)
             ->update(['dibaca' => 1]);
 
-        return $this->respond([
-            'status' => 'success',
-            'message' => 'Notifikasi berhasil ditandai sebagai sudah dibaca',
-            'data' => [
-                'id' => (int)$id,
-                'dibaca' => 1
-            ]
-        ]);
+        return $this->response->setJSON(['success' => true]);
     }
 
     /**
@@ -200,10 +191,7 @@ class NotificationsApi extends ResourceController
         $userId = session()->get('user_id');
         
         if (!$userId) {
-            return $this->fail([
-                'status' => 'error',
-                'message' => 'Unauthorized. Silakan login terlebih dahulu'
-            ], 401);
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
         }
 
         $this->db->table('notifications')
@@ -211,15 +199,7 @@ class NotificationsApi extends ResourceController
             ->where('dibaca', 0)
             ->update(['dibaca' => 1]);
 
-        $updatedCount = $this->db->affectedRows();
-
-        return $this->respond([
-            'status' => 'success',
-            'message' => 'Semua notifikasi berhasil ditandai sebagai sudah dibaca',
-            'data' => [
-                'updated_count' => $updatedCount
-            ]
-        ]);
+        return $this->response->setJSON(['success' => true]);
     }
 
     /**

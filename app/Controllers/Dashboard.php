@@ -33,14 +33,14 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin.');
         }
 
-        // Hitung jumlah pesanan berdasarkan status
+        // Hitung jumlah pesanan berdasarkan status (untuk fallback jika JavaScript tidak berjalan)
         $statusCounts = [
-            'pending' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'pending'])->countAllResults(),
-            'disetujui' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'disetujui'])->countAllResults(),
-            'proses' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'proses'])->countAllResults(),
-            'selesai' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'selesai'])->countAllResults(),
-            'batal' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'batal'])->countAllResults(),
-            'ditolak' => $this->db->table('bookings')->where(['id_user' => $user_id, 'status' => 'ditolak'])->countAllResults(),
+            'pending' => 0,
+            'disetujui' => 0,
+            'proses' => 0,
+            'selesai' => 0,
+            'batal' => 0,
+            'ditolak' => 0,
         ];
 
         $data = [

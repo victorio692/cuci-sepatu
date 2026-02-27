@@ -45,9 +45,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                 <!-- Menunggu Konfirmasi -->
                 <a href="/my-bookings?status=pending" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['pending'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['pending'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="pending" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-clock text-blue-600 text-xl sm:text-2xl"></i>
                     </div>
@@ -56,9 +54,7 @@
 
                 <!-- Dikonfirmasi -->
                 <a href="/my-bookings?status=disetujui" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['disetujui'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['disetujui'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="disetujui" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-check-circle text-blue-500 text-xl sm:text-2xl"></i>
                     </div>
@@ -67,9 +63,7 @@
 
                 <!-- Proses -->
                 <a href="/my-bookings?status=proses" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-purple-400 hover:bg-purple-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['proses'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['proses'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="proses" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-purple-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-sync-alt text-purple-500 text-xl sm:text-2xl"></i>
                     </div>
@@ -78,9 +72,7 @@
 
                 <!-- Selesai -->
                 <a href="/my-bookings?status=selesai" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['selesai'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['selesai'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="selesai" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-check-double text-green-500 text-xl sm:text-2xl"></i>
                     </div>
@@ -89,9 +81,7 @@
 
                 <!-- Dibatalkan -->
                 <a href="/my-bookings?status=batal" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['batal'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['batal'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="batal" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gray-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-times-circle text-gray-500 text-xl sm:text-2xl"></i>
                     </div>
@@ -100,9 +90,7 @@
 
                 <!-- Ditolak -->
                 <a href="/my-bookings?status=ditolak" class="relative flex flex-col items-center p-4 rounded-xl border-2 border-gray-200 hover:border-red-400 hover:bg-red-50 transition-all duration-300 group cursor-pointer">
-                    <?php if ($statusCounts['ditolak'] > 0): ?>
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg"><?= $statusCounts['ditolak'] ?></span>
-                    <?php endif; ?>
+                    <span data-status-badge="ditolak" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">0</span>
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-red-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-ban text-red-500 text-xl sm:text-2xl"></i>
                     </div>
@@ -316,7 +304,7 @@ document.addEventListener('click', function(event) {
 
 async function loadCustomerNotifications() {
     try {
-        const response = await fetch('/notifications/getUnread');
+        const response = await fetch('/api/notifications/unread');
         const data = await response.json();
         
         const badge = document.getElementById('notificationBadgeCustomer');
@@ -387,8 +375,8 @@ function getTimeAgo(datetime) {
 
 async function markAsReadCustomer(id, bookingId) {
     try {
-        await fetch(`/notifications/markAsRead/${id}`, {
-            method: 'POST'
+        await fetch(`/api/notifications/${id}/read`, {
+            method: 'PUT'
         });
         
         if (bookingId) {
@@ -405,8 +393,8 @@ async function markAllAsReadCustomer(event) {
     event.stopPropagation();
     
     try {
-        await fetch('/notifications/markAllAsRead', {
-            method: 'POST'
+        await fetch('/api/notifications/read-all', {
+            method: 'PUT'
         });
         loadCustomerNotifications();
     } catch (error) {
@@ -446,6 +434,60 @@ function getStatusLabel(status) {
     };
     return labels[status] || status;
 }
+
+// Load Dashboard Stats from API
+async function loadDashboardStats() {
+    try {
+        console.log('🚀 Loading dashboard stats from API...');
+        const response = await fetch('/api/dashboard/stats');
+        const result = await response.json();
+        
+        console.log('📊 Dashboard Stats Response:', result);
+        
+        if (result.code === 200 && result.data) {
+            const data = result.data;
+            
+            // Update status count badges
+            if (data.status_counts) {
+                console.log('🎯 Updating status badges:', data.status_counts);
+                
+                // Update each status badge
+                Object.keys(data.status_counts).forEach(status => {
+                    const count = data.status_counts[status];
+                    const badge = document.querySelector(`[data-status-badge="${status}"]`);
+                    
+                    if (badge) {
+                        badge.textContent = count;
+                        if (count > 0) {
+                            badge.classList.remove('hidden');
+                            console.log(`✅ Badge ${status}: ${count}`);
+                        } else {
+                            badge.classList.add('hidden');
+                        }
+                    }
+                });
+            }
+            
+            console.log('✨ Dashboard stats loaded successfully!');
+        } else {
+            console.warn('⚠️ Unexpected API response:', result);
+        }
+    } catch (error) {
+        console.error('❌ Error loading dashboard stats:', error);
+    }
+}
+
+// Auto-load on page ready
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎨 Dashboard page loaded');
+    loadDashboardStats();
+    
+    // Refresh stats every 30 seconds (optional)
+    setInterval(() => {
+        console.log('🔄 Refreshing dashboard stats...');
+        loadDashboardStats();
+    }, 30000);
+});
 </script>
 
 <?= $this->endSection() ?>
