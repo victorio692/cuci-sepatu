@@ -58,15 +58,15 @@
         </div>
 
         <!-- Details & Bookings -->
-        <div>
-            <!-- User Information -->
-            <div class="admin-card" style="margin-bottom: 1.5rem;">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-user"></i> Informasi Customer
-                    </h3>
-                </div>
-                <div class="card-body">
+        <div class="w-full">
+            <!-- Grid 2 Kolom untuk Info Cards -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Card: Informasi Customer -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-user" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Customer</h3>
+                    </div>
                     <div class="info-row">
                         <label>Nama:</label>
                         <span><?= $user['nama_lengkap'] ?></span>
@@ -79,6 +79,14 @@
                         <label>Nomor WA:</label>
                         <span><?= $user['no_hp'] ?></span>
                     </div>
+                </div>
+
+                <!-- Card: Informasi Alamat -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <i class="fas fa-map-marker-alt" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Alamat</h3>
+                    </div>
                     <div class="info-row">
                         <label>Alamat:</label>
                         <span><?= $user['alamat'] ?: '-' ?></span>
@@ -87,43 +95,48 @@
                         <label>Kota:</label>
                         <span><?= $user['kota'] ? $user['kota'] . ', ' . $user['provinsi'] . ' ' . $user['kode_pos'] : '-' ?></span>
                     </div>
+                    <div class="info-row">
+                        <label>Bergabung:</label>
+                        <span><?= date('d M Y', strtotime($user['dibuat_pada'])) ?></span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Booking History -->
-            <div class="admin-card">
-                <div class="card-header">
-                    <h3 style="margin: 0; color: #1f2937;">
-                        <i class="fas fa-history"></i> Riwayat Pesanan
-                    </h3>
+            <!-- Card: Riwayat Pesanan (Full Width) -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-history" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Riwayat Pesanan</h3>
+                    </div>
                 </div>
-                <div class="card-body" style="padding: 0;">
+                <div style="padding: 0;">
                     <?php if (!empty($bookings)): ?>
-                        <table class="admin-table">
-                            <thead>
+                        <table class="admin-table" style="width: 100%; border-collapse: collapse;">
+                            <thead style="background-color: #f9fafb; border-bottom: 2px solid #e5e7eb;">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Layanan</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Tanggal</th>
-                                    <th>Aksi</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">ID</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">Layanan</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">Total</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">Status</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">Tanggal</th>
+                                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #374151;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($bookings as $booking): ?>
-                                    <tr>
-                                        <td><strong>#<?= $booking['id'] ?></strong></td>
-                                        <td><?= ucfirst(str_replace('-', ' ', $booking['layanan'])) ?></td>
-                                        <td>Rp <?= number_format($booking['total'], 0, ',', '.') ?></td>
-                                        <td>
-                                            <span class="badge badge-<?= strtolower($booking['status']) ?>">
+                                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                                        <td style="padding: 1rem;"><strong>#<?= $booking['id'] ?></strong></td>
+                                        <td style="padding: 1rem;"><?= ucfirst(str_replace('-', ' ', $booking['layanan'])) ?></td>
+                                        <td style="padding: 1rem;">Rp <?= number_format($booking['total'], 0, ',', '.') ?></td>
+                                        <td style="padding: 1rem;">
+                                            <span class="badge badge-<?= strtolower($booking['status']) ?>" style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500;">
                                                 <?= ucfirst(str_replace('_', ' ', $booking['status'])) ?>
                                             </span>
                                         </td>
-                                        <td><?= date('d M Y', strtotime($booking['dibuat_pada'])) ?></td>
-                                        <td>
-                                            <a href="/admin/bookings/<?= $booking['id'] ?>" class="btn-link">
+                                        <td style="padding: 1rem;"><?= date('d M Y', strtotime($booking['dibuat_pada'])) ?></td>
+                                        <td style="padding: 1rem;">
+                                            <a href="/admin/bookings/<?= $booking['id'] ?>" style="color: #3b82f6; text-decoration: none; font-weight: 500;">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
