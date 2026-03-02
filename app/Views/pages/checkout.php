@@ -164,8 +164,6 @@
                                 type="time" 
                                 id="booking_time" 
                                 name="booking_time" 
-                                min="12:00"
-                                max="23:59"
                                 placeholder="HH:MM"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
                                 style="-webkit-calendar-picker-indicator: none;"
@@ -551,13 +549,6 @@ function submitCheckout() {
     const bookingTime = document.getElementById('booking_time').value;
     if (!bookingTime) {
         alert('Pilih jam booking');
-        return;
-    }
-    
-    // Validate time range (12:00 - 23:59)
-    const [hours, minutes] = bookingTime.split(':').map(Number);
-    if (hours < 12 || hours > 23) {
-        alert('Jam booking harus antara 12:00 - 23:59');
         return;
     }
     

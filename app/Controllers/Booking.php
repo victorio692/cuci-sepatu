@@ -260,7 +260,7 @@ class Booking extends BaseController
                 'service' => 'Pilih layanan terlebih dahulu',
                 'quantity' => 'Jumlah sepatu harus lebih dari 0',
                 'delivery_date' => 'Tanggal masuk tidak valid',
-                'booking_time' => 'Jam booking harus format HH:MM (12:00 - 23:59)',
+                'booking_time' => 'Jam booking harus format HH:MM',
                 'item_entry_option' => 'Pilih opsi barang masuk',
                 'delivery_option' => 'Pilih opsi pengiriman',
                 'shoe_photo' => [
@@ -287,17 +287,6 @@ class Booking extends BaseController
                 return redirect()->back()
                     ->withInput()
                     ->with('errors', $this->validator->getErrors());
-            }
-
-            // Validate booking time range (12:00 - 23:59)
-            [$hours, $minutes] = explode(':', $booking_time);
-            $hours = (int)$hours;
-            $minutes = (int)$minutes;
-            
-            if ($hours < 12 || $hours > 23) {
-                return redirect()->back()
-                    ->withInput()
-                    ->with('error', 'Jam booking harus antara 12:00 - 23:59');
             }
 
             // Validate delivery date is today or future

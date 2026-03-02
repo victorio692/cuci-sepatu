@@ -278,8 +278,6 @@
                             type="time" 
                             id="booking_time" 
                             name="booking_time" 
-                            min="12:00"
-                            max="23:59"
                             placeholder="HH:MM"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
                             style="-webkit-calendar-picker-indicator: none;"
@@ -907,17 +905,6 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         timeInput.focus();
         timeInput.classList.add('shake');
         setTimeout(() => timeInput.classList.remove('shake'), 500);
-        return;
-    }
-    
-    // Validate time range (12:00 - 23:59)
-    const [hours, minutes] = bookingTime.split(':').map(Number);
-    if (hours < 12 || (hours === 23 && minutes > 59) || hours > 23) {
-        e.preventDefault();
-        alert('Jam booking harus antara 12:00 - 23:59');
-        const timeInput = document.getElementById('booking_time');
-        timeInput.value = '';
-        timeInput.focus();
         return;
     }
     
