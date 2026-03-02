@@ -275,12 +275,11 @@
                     <div class="mb-6">
                         <span for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</span>
                         <input 
-                            type="time" 
+                            type="text" 
                             id="booking_time" 
                             name="booking_time" 
                             placeholder="HH:MM"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
-                            style="-webkit-calendar-picker-indicator: none;"
                             required
                         >
                         <small class="text-gray-500 text-sm mt-1 block">
