@@ -196,6 +196,8 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
     $routes->post('(:num)/price', 'AdminServicesApi::updatePrice/$1');  // Handle POST for price update
+    $routes->post('(:num)/upload-icon', 'AdminServicesApi::uploadIcon/$1');  // Upload service icon
+    $routes->delete('(:num)/remove-icon', 'AdminServicesApi::removeIcon/$1');  // Remove service icon
 });
 
 

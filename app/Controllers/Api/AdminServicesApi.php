@@ -23,6 +23,25 @@ class AdminServicesApi extends BaseController
             ->get()
             ->getResult();
 
+            // Add icon information to each service
+            $iconMap = [
+                'fast-cleaning' => 'bolt',
+                'deep-cleaning' => 'water',
+                'white-shoes' => 'shoe-prints',
+                'suede-treatment' => 'spray-can',
+                'unyellowing' => 'sun',
+            ];
+
+            foreach ($data as &$service) {
+                if (!empty($service->icon_path)) {
+                    $service->icon_type = 'image';
+                    $service->icon = $service->icon_path;
+                } else {
+                    $service->icon_type = 'font';
+                    $service->icon = $iconMap[$service->kode_layanan] ?? 'star';
+                }
+            }
+
             return $this->response->setJSON([
                 'code' => 200,
                 'data' => $data
@@ -293,6 +312,142 @@ class AdminServicesApi extends BaseController
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal update harga: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    // POST /api/admin/services/{id}/upload-icon
+    public function uploadIcon($id = null): ResponseInterface
+    {
+        try {
+            if (!$id) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'message' => 'ID Tidak Boleh Kosong'
+                ]);
+            }
+
+            $service = $this->db->table('services')
+                ->where('id', $id)
+                ->get()
+                ->getRowArray();
+
+            if (!$service) {
+                return $this->response->setJSON([
+                    'code' => 404,
+                    'message' => 'Layanan Tidak Ditemukan'
+                ]);
+            }
+
+            $file = $this->request->getFile('icon_image');
+
+            if (!$file || !$file->isValid()) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'message' => 'File icon harus diupload'
+                ]);
+            }
+
+            // Validate file
+            if ($file->getSize() > 2097152) { // 2MB
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'message' => 'Ukuran file terlalu besar (max 2MB)'
+                ]);
+            }
+
+            $ext = $file->getExtension();
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'message' => 'Format file tidak didukung'
+                ]);
+            }
+
+            // Create services upload directory if not exists
+            $uploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            // Generate filename
+            $filename = 'service_' . $service['id'] . '_' . time() . '.' . $ext;
+            $filePath = $uploadDir . DIRECTORY_SEPARATOR . $filename;
+
+            // Move file
+            $file->move($uploadDir, $filename);
+
+            // Update service with icon path
+            $iconPath = 'uploads/services/' . $filename;
+            $this->db->table('services')
+                ->where('id', $id)
+                ->update([
+                    'icon_path' => $iconPath,
+                    'diupdate_pada' => date('Y-m-d H:i:s')
+                ]);
+
+            return $this->response->setJSON([
+                'code' => 200,
+                'message' => 'Icon berhasil diupload',
+                'icon_path' => $iconPath
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'code' => 500,
+                'message' => 'Gagal upload icon: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    // DELETE /api/admin/services/{id}/remove-icon
+    public function removeIcon($id = null): ResponseInterface
+    {
+        try {
+            if (!$id) {
+                return $this->response->setJSON([
+                    'code' => 400,
+                    'message' => 'ID Tidak Boleh Kosong'
+                ]);
+            }
+
+            $service = $this->db->table('services')
+                ->where('id', $id)
+                ->get()
+                ->getRowArray();
+
+            if (!$service) {
+                return $this->response->setJSON([
+                    'code' => 404,
+                    'message' => 'Layanan Tidak Ditemukan'
+                ]);
+            }
+
+            // Delete the file if exists
+            if (!empty($service['icon_path'])) {
+                $filePath = FCPATH . $service['icon_path'];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+
+            // Update service to remove icon path
+            $this->db->table('services')
+                ->where('id', $id)
+                ->update([
+                    'icon_path' => null,
+                    'diupdate_pada' => date('Y-m-d H:i:s')
+                ]);
+
+            return $this->response->setJSON([
+                'code' => 200,
+                'message' => 'Icon berhasil dihapus'
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'code' => 500,
+                'message' => 'Gagal hapus icon: ' . $e->getMessage()
             ]);
         }
     }

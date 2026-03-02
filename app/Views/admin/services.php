@@ -147,17 +147,27 @@ async function loadServices() {
 function renderServicesGrid(services) {
     const container = document.getElementById('servicesContainer');
     
-    const html = services.map(service => `
+    const html = services.map(service => {
+        // Check if service has an image or use Font Awesome icon
+        let iconHtml = '';
+        if (service.icon_type === 'image' && service.icon) {
+            iconHtml = `<img src="${service.icon}" alt="${service.name || service.nama_layanan}" class="w-14 h-14 object-cover rounded-full">`;
+        } else {
+            iconHtml = `<i class="fas fa-${service.icon || 'shoe-prints'} text-2xl"></i>`;
+        }
+        
+        return `
         <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition">
             <!-- Service Header with Gradient -->
             <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
                 <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-${service.icon || 'shoe-prints'} text-2xl"></i>
+                    ${iconHtml}
                 </div>
                 <h3 class="text-xl font-bold mb-2">${service.name || service.nama_layanan}</h3>
                 <p class="text-blue-100 text-sm">${service.description || service.deskripsi || '-'}</p>
-            </div>
-
+            </div>` +
+            // Rest of the HTML remains the same
+            `
             <!-- Service Body -->
             <div class="p-6">
                 <div class="mb-6">
@@ -191,7 +201,8 @@ function renderServicesGrid(services) {
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
     
     container.innerHTML = html;
 }
@@ -242,7 +253,7 @@ function confirmDelete(serviceId, serviceName) {
 // Delete service with API
 function deleteService(serviceId, serviceName) {
     // Show confirmation dialog
-    const confirmDelete = confirm(`Yakin ingin menghapus layanan "${serviceName}"?\n\nLayanan yang sudah digunakan dalam pesanan aktif tidak dapat dihapus.`);
+    const confirmDelete = confirm(`Yakin ingin menghapus layanan "${serviceName}"?\n\n`);
     
     if (!confirmDelete) {
         return;

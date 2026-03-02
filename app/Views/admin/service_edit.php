@@ -86,6 +86,39 @@
             ><?= old('deskripsi', $service['deskripsi']) ?></textarea>
         </div>
 
+        <!-- Icon/Image Upload -->
+        <div>
+            <label for="icon_image" class="block text-sm font-medium text-gray-700 mb-2">
+                Icon/Gambar Layanan (Opsional)
+            </label>
+            <div class="flex items-center gap-4">
+                <?php if (!empty($service['icon_path'])): ?>
+                    <div class="relative w-24 h-24 rounded-lg border-2 border-blue-300 overflow-hidden bg-blue-50 flex items-center justify-center">
+                        <img src="<?= base_url($service['icon_path']) ?>" alt="Service icon" class="w-full h-full object-cover">
+                        <button type="button" onclick="removeServiceIcon()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600">
+                            ×
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                        <i class="fas fa-image text-gray-400 text-3xl"></i>
+                    </div>
+                <?php endif; ?>
+                <div class="flex-1">
+                    <input 
+                        type="file" 
+                        id="icon_image" 
+                        name="icon_image" 
+                        accept="image/*"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    >
+                    <p class="mt-2 text-xs text-gray-500">
+                        Format: JPG, PNG, GIF (Max: 2MB). Ukuran recommended: 200x200px
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Harga Dasar -->
             <div>
@@ -176,9 +209,40 @@ function formatRupiah(input) {
 async function submitServiceForm() {
     const form = document.getElementById('serviceForm');
     const serviceId = document.getElementById('serviceId').value;
+    const fileInput = document.getElementById('icon_image');
+    
+    // If there's an image file to upload
+    if (fileInput.files.length > 0) {
+        // Upload image first
+        const imageFormData = new FormData();
+        imageFormData.append('icon_image', fileInput.files[0]);
+        
+        try {
+            console.log('🚀 Uploading service icon...');
+            
+            const imageResponse = await fetch(`/api/admin/services/${serviceId}/upload-icon`, {
+                method: 'POST',
+                credentials: 'include',
+                body: imageFormData
+            });
+            
+            const imageResult = await imageResponse.json();
+            console.log('✅ Image upload response:', imageResult);
+            
+            if (imageResult.code !== 200) {
+                showToast(imageResult.message || 'Gagal upload gambar', 'error');
+                return;
+            }
+        } catch (error) {
+            console.error('❌ Error uploading image:', error);
+            showToast('Error upload: ' + error.message, 'error');
+            return;
+        }
+    }
+    
+    // Then update service data
     const formData = new FormData(form);
     
-    // Convert FormData to JSON
     const data = {
         kode_layanan: formData.get('kode_layanan'),
         nama_layanan: formData.get('nama_layanan'),
@@ -284,6 +348,36 @@ document.addEventListener('DOMContentLoaded', async function() {
     } catch (error) {
         console.error('❌ Error loading service:', error);
         showToast('Gagal memuat data layanan: ' + error.message, 'error');
+    }
+}
+
+// Remove service icon
+async function removeServiceIcon() {
+    if (!confirm('Hapus icon layanan?')) return;
+    
+    const serviceId = document.getElementById('serviceId').value;
+    
+    try {
+        const response = await fetch(`/api/admin/services/${serviceId}/remove-icon`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (result.code === 200) {
+            showToast('Icon berhasil dihapus', 'success');
+            // Reload page
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast(result.message || 'Gagal menghapus icon', 'error');
+        }
+    } catch (error) {
+        console.error('❌ Error:', error);
+        showToast('Error: ' + error.message, 'error');
     }
 }
 </script>
