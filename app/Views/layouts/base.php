@@ -892,8 +892,15 @@
                         if (notifList) notifList.innerHTML = html;
                         if (mobileNotifList) mobileNotifList.innerHTML = html;
                     } else {
-                        if (badge) badge.classList.add('hidden');
-                        if (mobileNavBadge) mobileNavBadge.classList.add('hidden');
+                        // Sembunyikan badge jika tidak ada notifikasi
+                        if (badge) {
+                            badge.classList.remove('flex');
+                            badge.classList.add('hidden');
+                        }
+                        if (mobileNavBadge) {
+                            mobileNavBadge.classList.remove('flex');
+                            mobileNavBadge.classList.add('hidden');
+                        }
                         
                         const emptyHtml = `
                             <div class="p-8 text-center text-gray-500">

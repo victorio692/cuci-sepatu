@@ -52,6 +52,27 @@
                             </div>
                         </label>
                     </div>
+
+                    <!-- Jam Antar/Jemput (di dalam section Opsi Barang Masuk) -->
+                    <div class="mt-4">
+                        <span id="bookingTimeLabel" for="booking_time" class="block text-gray-700 font-medium mb-2">
+                            <i class="fas fa-clock text-blue-500 mr-1"></i>
+                            <span id="timeLabelText">Jam Antar</span> <span class="text-red-500">*</span>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="booking_time" 
+                            name="booking_time" 
+                            placeholder="HH:MM (contoh: 14:30)"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                            required
+                        >
+                        <small class="text-gray-500 text-sm mt-1 block">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
+                        </small>
+                    </div>
                 </div>
 
                 <!-- Alamat Penjemputan (conditional) -->
@@ -158,19 +179,46 @@
                             >
                         </div>
 
-                        <div class="mb-6">
-                            <span for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</span>
-                            <input 
-                                type="text" 
-                                id="booking_time" 
-                                name="booking_time" 
-                                placeholder="HH:MM"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
-                                required
-                            >
-                            <small class="text-gray-500 text-sm mt-1 block">
-                                Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
-                            </small>
+                        <!-- Estimasi Selesai -->
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 mb-6">
+                            <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                <i class="fas fa-calendar-check text-green-600"></i>
+                                Estimasi Barang Selesai & Siap Diambil
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="estimated_finish_date" class="block text-gray-700 text-sm font-medium mb-2">
+                                        Tanggal Selesai
+                                    </label>
+                                    <input 
+                                        type="date" 
+                                        id="estimated_finish_date" 
+                                        name="estimated_finish_date" 
+                                        class="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                                        readonly
+                                    >
+                                </div>
+                                
+                                <div>
+                                    <label for="estimated_finish_time" class="block text-gray-700 text-sm font-medium mb-2">
+                                        Jam Siap Diambil
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="estimated_finish_time" 
+                                        name="estimated_finish_time" 
+                                        placeholder="HH:MM"
+                                        class="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                                        readonly
+                                    >
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs text-gray-600 mt-3">
+                                <i class="fas fa-info-circle text-green-600 mr-1"></i>
+                                Estimasi ini dihitung otomatis berdasarkan layanan yang dipilih. Waktu sebenarnya bisa berbeda.
+                            </p>
                         </div>
 
                         <div class="mb-6">
@@ -324,13 +372,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemEntryOptions = document.querySelectorAll('input[name="item_entry_option"]');
     const pickupAddressSection = document.getElementById('pickupAddressSection');
     const pickupAddressInput = document.getElementById('pickup_address');
+    const timeLabelText = document.getElementById('timeLabelText');
     
     itemEntryOptions.forEach(option => {
         option.addEventListener('change', function() {
+            // Update label jam booking
             if (this.value === 'pickup') {
+                timeLabelText.textContent = 'Jam Jemput';
                 pickupAddressSection.classList.remove('hidden');
                 pickupAddressInput.setAttribute('required', 'required');
             } else {
+                timeLabelText.textContent = 'Jam Antar';
                 pickupAddressSection.classList.add('hidden');
                 pickupAddressInput.removeAttribute('required');
                 pickupAddressInput.value = '';
@@ -338,6 +390,39 @@ document.addEventListener('DOMContentLoaded', function() {
             updateSummary();
         });
     });
+    
+    // Trigger initial label update
+    const selectedItemEntry = document.querySelector('input[name="item_entry_option"]:checked');
+    if (selectedItemEntry) {
+        timeLabelText.textContent = selectedItemEntry.value === 'pickup' ? 'Jam Jemput' : 'Jam Antar';
+    }
+    
+    // Calculate estimated finish date/time
+    function calculateEstimatedFinish() {
+        const deliveryDate = document.getElementById('delivery_date').value;
+        if (!deliveryDate) return;
+        
+        // Default 3 hari pengerjaan (bisa disesuaikan per layanan)
+        const serviceDays = 3;
+        
+        const startDate = new Date(deliveryDate);
+        const finishDate = new Date(startDate);
+        finishDate.setDate(finishDate.getDate() + serviceDays);
+        
+        // Format tanggal
+        const year = finishDate.getFullYear();
+        const month = String(finishDate.getMonth() + 1).padStart(2, '0');
+        const day = String(finishDate.getDate()).padStart(2, '0');
+        
+        document.getElementById('estimated_finish_date').value = `${year}-${month}-${day}`;
+        document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore
+    }
+    
+    // Update estimasi saat tanggal berubah
+    document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    
+    // Hitung estimasi saat load
+    calculateEstimatedFinish();
     
     // Handle delivery option change
     const deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');

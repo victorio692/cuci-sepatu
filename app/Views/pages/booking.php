@@ -171,6 +171,27 @@
                                 </div>
                             </label>
                         </div>
+
+                        <!-- Jam Antar/Jemput (di dalam Opsi Barang Masuk) -->
+                        <div class="mt-4">
+                            <span id="bookingTimeLabel" for="booking_time" class="block text-gray-700 font-medium mb-2">
+                                <i class="fas fa-clock text-blue-500 mr-1"></i>
+                                <span id="timeLabelText">Jam Antar</span> <span class="text-red-500">*</span>
+                            </span>
+                            <input 
+                                type="text" 
+                                id="booking_time" 
+                                name="booking_time" 
+                                placeholder="HH:MM (contoh: 14:30)"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                                required
+                            >
+                            <small class="text-gray-500 text-sm mt-1 block">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
+                            </small>
+                        </div>
                     </div>
 
                     <!-- Alamat Penjemputan (conditional) -->
@@ -267,24 +288,52 @@
                             id="delivery_date" 
                             name="delivery_date" 
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            min="<?= date('Y-m-d') ?>"
+                            value="<?= date('Y-m-d') ?>"
                             required
                         >
                     </div>
 
-                    <!-- Jam Booking -->
-                    <div class="mb-6">
-                        <span for="booking_time" class="block text-gray-700 font-medium mb-2">Jam Booking</span>
-                        <input 
-                            type="text" 
-                            id="booking_time" 
-                            name="booking_time" 
-                            placeholder="HH:MM"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-transparent"
-                            required
-                        >
-                        <small class="text-gray-500 text-sm mt-1 block">
-                            Waktu saat ini: <span id="currentTime"></span> | <span id="suggestedTime" class="text-blue-600 font-medium cursor-pointer" onclick="useCurrentTime()">Gunakan waktu saat ini</span>
-                        </small>
+                    <!-- Estimasi Selesai -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 sm:p-5 mb-6">
+                        <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                            <i class="fas fa-calendar-check text-green-600"></i>
+                            Estimasi Barang Selesai & Siap Diambil
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="estimated_finish_date" class="block text-gray-700 text-sm font-medium mb-2">
+                                    Tanggal Selesai
+                                </label>
+                                <input 
+                                    type="date" 
+                                    id="estimated_finish_date" 
+                                    name="estimated_finish_date" 
+                                    class="w-full px-3 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                                    readonly
+                                >
+                            </div>
+                            
+                            <div>
+                                <label for="estimated_finish_time" class="block text-gray-700 text-sm font-medium mb-2">
+                                    Jam Siap Diambil
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="estimated_finish_time" 
+                                    name="estimated_finish_time" 
+                                    placeholder="HH:MM"
+                                    class="w-full px-3 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                                    readonly
+                                >
+                            </div>
+                        </div>
+                        
+                        <p class="text-xs text-gray-600 mt-3">
+                            <i class="fas fa-info-circle text-green-600 mr-1"></i>
+                            Estimasi ini dihitung otomatis berdasarkan layanan yang dipilih. Waktu sebenarnya bisa berbeda.
+                        </p>
                     </div>
 
                     <!-- Catatan -->
@@ -854,6 +903,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Update label jam booking berdasarkan opsi barang masuk
+    const timeLabelText = document.getElementById('timeLabelText');
+    const itemEntryOptions = document.querySelectorAll('input[name="item_entry_option"]');
+    
+    itemEntryOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            if (this.value === 'pickup') {
+                timeLabelText.textContent = 'Jam Jemput';
+            } else {
+                timeLabelText.textContent = 'Jam Antar';
+            }
+        });
+    });
+    
+    // Set initial label
+    const selectedItemEntry2 = document.querySelector('input[name="item_entry_option"]:checked');
+    if (selectedItemEntry2) {
+        timeLabelText.textContent = selectedItemEntry2.value === 'pickup' ? 'Jam Jemput' : 'Jam Antar';
+    }
+    
+    // Calculate estimated finish date/time
+    function calculateEstimatedFinish() {
+        const deliveryDate = document.getElementById('delivery_date').value;
+        if (!deliveryDate) return;
+        
+        // Get selected service to determine duration
+        const selectedService = document.querySelector('input[name="service"]:checked');
+        let serviceDays = 3; // Default 3 hari
+        
+        if (selectedService) {
+            // Ambil durasi dari data-duration jika ada, atau gunakan default
+            const serviceCode = selectedService.value;
+            // Mapping durasi layanan (bisa disesuaikan)
+            const durations = {
+                'fast-cleaning': 1,
+                'deep-cleaning': 3,
+                'white-shoes': 2,
+                'suede-treatment': 3,
+                'unyellowing': 4
+            };
+            serviceDays = durations[serviceCode] || 3;
+        }
+        
+        const startDate = new Date(deliveryDate);
+        const finishDate = new Date(startDate);
+        finishDate.setDate(finishDate.getDate() + serviceDays);
+        
+        // Format tanggal
+        const year = finishDate.getFullYear();
+        const month = String(finishDate.getMonth() + 1).padStart(2, '0');
+        const day = String(finishDate.getDate()).padStart(2, '0');
+        
+        document.getElementById('estimated_finish_date').value = `${year}-${month}-${day}`;
+        document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore
+    }
+    
+    // Update estimasi saat tanggal atau layanan berubah
+    document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    
+    // Update estimasi saat layanan dipilih
+    const serviceRadios = document.querySelectorAll('input[name="service"]');
+    serviceRadios.forEach(radio => {
+        radio.addEventListener('change', calculateEstimatedFinish);
+    });
+    
+    // Hitung estimasi saat load
+    calculateEstimatedFinish();
+
     // Initialize item entry option state
     const selectedItemEntry = document.querySelector('input[name="item_entry_option"]:checked');
     if (selectedItemEntry && selectedItemEntry.value === 'pickup') {
@@ -864,14 +981,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Form submission
 document.getElementById('bookingForm').addEventListener('submit', (e) => {
+    console.log('🚀 Form submit event triggered!');
+    
     // Fallback: ensure booking_time has value if empty
     const bookingTimeInput = document.getElementById('booking_time');
     if (!bookingTimeInput.value) {
+        console.log('⏰ Auto-fill booking time');
         useCurrentTime();
     }
     
     const selectedService = document.querySelector('input[name="service"]:checked');
+    console.log('🔍 Checking service:', selectedService);
     if (!selectedService) {
+        console.log('❌ VALIDASI GAGAL: Layanan belum dipilih');
         e.preventDefault();
         alert('Pilih layanan terlebih dahulu');
         const serviceSection = document.querySelector('[name="service"]').closest('.grid');
@@ -883,7 +1005,9 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     
     // Check delivery date
     const deliveryDate = document.getElementById('delivery_date').value.trim();
+    console.log('📅 Checking delivery date:', deliveryDate);
     if (!deliveryDate) {
+        console.log('❌ VALIDASI GAGAL: Tanggal belum dipilih');
         e.preventDefault();
         alert('Tanggal masuk wajib dipilih');
         const dateInput = document.getElementById('delivery_date');
@@ -896,7 +1020,9 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     
     // Check booking time
     const bookingTime = document.getElementById('booking_time').value.trim();
+    console.log('⏰ Checking booking time:', bookingTime);
     if (!bookingTime) {
+        console.log('❌ VALIDASI GAGAL: Jam booking kosong');
         e.preventDefault();
         alert('Jam booking wajib diisi');
         const timeInput = document.getElementById('booking_time');
@@ -908,7 +1034,9 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     }
     
     const shoePhoto = document.getElementById('shoe_photo');
+    console.log('📸 Checking shoe photo:', shoePhoto.files.length, 'files');
     if (!shoePhoto.files || shoePhoto.files.length === 0) {
+        console.log('❌ VALIDASI GAGAL: Foto belum diupload');
         e.preventDefault();
         alert('Wajib upload foto sepatu terlebih dahulu');
         const photoSection = document.getElementById('uploadArea');
@@ -920,9 +1048,12 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     
     // Check delivery address if delivery option is selected
     const deliveryOption = document.querySelector('input[name="delivery_option"]:checked');
+    console.log('🚚 Delivery option:', deliveryOption?.value);
     if (deliveryOption && deliveryOption.value === 'delivery') {
         const deliveryAddress = document.getElementById('delivery_address').value.trim();
+        console.log('📍 Delivery address:', deliveryAddress);
         if (!deliveryAddress) {
+            console.log('❌ VALIDASI GAGAL: Alamat pengiriman kosong');
             e.preventDefault();
             alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
             const addressInput = document.getElementById('delivery_address');
@@ -936,9 +1067,12 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
 
     // Check pickup address if item entry option is pickup
     const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked');
+    console.log('📦 Item entry option:', itemEntryOption?.value);
     if (itemEntryOption && itemEntryOption.value === 'pickup') {
         const pickupAddress = document.getElementById('pickup_address').value.trim();
+        console.log('📍 Pickup address:', pickupAddress);
         if (!pickupAddress) {
+            console.log('❌ VALIDASI GAGAL: Alamat penjemputan kosong');
             e.preventDefault();
             alert('Alamat penjemputan wajib diisi jika memilih opsi Dijemput');
             const addressInput = document.getElementById('pickup_address');
@@ -954,6 +1088,23 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     const submitBtn = e.target.querySelector('button[type="submit"]');
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
+    
+    // Debug log - pastikan form akan submit
+    console.log('✅✅✅ SEMUA VALIDASI LOLOS - Form akan disubmit! ✅✅✅');
+    console.log('📤 Form action:', e.target.action);
+    console.log('📤 Form method:', e.target.method);
+    console.log('📤 Form data:', {
+        service: selectedService?.value,
+        quantity: document.getElementById('quantity')?.value,
+        delivery_date: deliveryDate,
+        booking_time: bookingTime,
+        has_photo: shoePhoto.files.length > 0,
+        item_entry_option: itemEntryOption?.value,
+        delivery_option: deliveryOption?.value
+    });
+    console.log('🔄 Submitting... Cek Network tab untuk request "submit-booking"');
+    
+    // Form akan submit secara normal karena tidak ada preventDefault() di sini
 });
 
 // File upload handling
