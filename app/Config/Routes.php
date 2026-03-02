@@ -191,9 +191,11 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->get('/', 'AdminServicesApi::index');
     $routes->get('(:num)', 'AdminServicesApi::show/$1');
     $routes->post('/', 'AdminServicesApi::create');
+    $routes->post('(:num)', 'AdminServicesApi::update/$1');  // Handle POST for update (method override)
     $routes->put('(:num)', 'AdminServicesApi::update/$1');
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
+    $routes->post('(:num)/price', 'AdminServicesApi::updatePrice/$1');  // Handle POST for price update
 });
 
 

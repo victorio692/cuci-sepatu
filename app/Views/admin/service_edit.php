@@ -192,9 +192,10 @@ async function submitServiceForm() {
         console.log('🚀 Updating service...', { id: serviceId, data });
         
         const response = await fetch(`/api/admin/services/${serviceId}`, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-HTTP-Method-Override': 'PUT'
             },
             credentials: 'include',
             body: JSON.stringify(data)

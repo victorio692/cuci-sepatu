@@ -900,7 +900,7 @@ function showSlide(n) {
         </div>
         
         <!-- Services Grid - Compact Shopee Style -->
-        <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             <!-- Loading State -->
             <div class="col-span-full text-center py-12">
                 <i class="fas fa-spinner fa-spin text-blue-600 text-4xl mb-3"></i>

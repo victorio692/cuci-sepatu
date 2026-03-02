@@ -195,21 +195,34 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            $cek = $this->db->table('services')
-            ->where('id', $id)
-            ->get()
-            ->getRow();
+            $service = $this->db->table('services')
+                ->where('id', $id)
+                ->get()
+                ->getRowArray();
 
-            if (!$cek) {
+            if (!$service) {
                 return $this->response->setJSON([
                     'code' => 404,
                     'message' => 'Layanan Tidak Ditemukan'
                 ]);
             }
 
+            // Check if service is used in ACTIVE bookings only (not selesai/batal/ditolak)
+            $bookingCount = $this->db->table('bookings')
+                ->where('layanan', $service['kode_layanan'])
+                ->whereIn('status', ['pending', 'proses', 'dikonfirmasi'])
+                ->countAllResults();
+
+            if ($bookingCount > 0) {
+                return $this->response->setJSON([
+                    'code' => 409,
+                    'message' => 'Tidak dapat menghapus layanan yang masih digunakan dalam ' . $bookingCount . ' pesanan aktif (pending/proses)'
+                ]);
+            }
+
             $this->db->table('services')
-            ->where('id', $id)
-            ->delete();
+                ->where('id', $id)
+                ->delete();
 
             return $this->response->setJSON([
                 'code' => 200,

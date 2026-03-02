@@ -170,7 +170,7 @@ function renderServicesGrid(services) {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                     <button type="button" 
                        onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
                        class="px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
@@ -182,6 +182,12 @@ function renderServicesGrid(services) {
                         <i class="fas fa-cog"></i>
                         <span>Detail</span>
                     </a>
+                    <button type="button" 
+                       onclick="deleteService(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}')"
+                       class="px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
+                        <i class="fas fa-trash"></i>
+                        <span>Hapus</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -233,6 +239,42 @@ function confirmDelete(serviceId, serviceName) {
     }
 }
 
+// Delete service with API
+function deleteService(serviceId, serviceName) {
+    // Show confirmation dialog
+    const confirmDelete = confirm(`Yakin ingin menghapus layanan "${serviceName}"?\n\nLayanan yang sudah digunakan dalam pesanan aktif tidak dapat dihapus.`);
+    
+    if (!confirmDelete) {
+        return;
+    }
+
+    fetch(`/api/admin/services/${serviceId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete response:', data);
+        
+        if (data.code === 200) {
+            showToast('Layanan berhasil dihapus', 'success');
+            setTimeout(() => {
+                loadServices();
+            }, 1000);
+        } else {
+            showToast(data.message || 'Gagal menghapus layanan', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting service:', error);
+        showToast('Terjadi kesalahan: ' + error.message, 'error');
+    });
+}
+
 // Open edit price modal
 function openEditPrice(serviceId, serviceName, currentPrice) {
     document.getElementById('serviceId').value = serviceId;
@@ -259,11 +301,12 @@ document.getElementById('priceForm').addEventListener('submit', function(e) {
     const price = document.getElementById('newPrice').value;
 
     fetch(`/api/admin/services/${serviceId}/price`, {
-        method: 'PUT',
+        method: 'POST',
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-HTTP-Method-Override': 'PUT'
         },
         body: JSON.stringify({ harga: price })
     })
