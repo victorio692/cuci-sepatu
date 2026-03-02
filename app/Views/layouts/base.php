@@ -359,7 +359,7 @@
 <body class="font-sans antialiased bg-gray-50">
     <?php 
     // Check if current page is dashboard/user area (exclude profile and my-bookings)
-    $isDashboard = strpos(current_url(), '/dashboard') !== false 
+    $isDashboard = strpos(current_url(), '/home') !== false 
                 || strpos(current_url(), '/make-booking') !== false 
                 || strpos(current_url(), '/booking-detail') !== false;
     ?>
