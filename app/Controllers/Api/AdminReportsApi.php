@@ -100,7 +100,7 @@ class AdminReportsApi extends BaseController
             
             // Hitung total pendapatan dari booking yang selesai
             $builder = $this->db->table('bookings');
-            $builder->select('SUM(total) as total');
+            $builder->select('COALESCE(SUM(total), 0) as total');
             $builder->where('status', 'selesai');
             $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
             $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
@@ -110,7 +110,7 @@ class AdminReportsApi extends BaseController
             
             // Statistik per layanan
             $builder = $this->db->table('bookings');
-            $builder->select('layanan, COUNT(*) as jumlah, SUM(total) as pendapatan');
+            $builder->select('layanan, COUNT(*) as jumlah, COALESCE(SUM(total), 0) as pendapatan');
             $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
             $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
             $builder->groupBy('layanan');
@@ -246,10 +246,10 @@ class AdminReportsApi extends BaseController
             
             if($groupBy == 'monthly') {
                 // Group per bulan
-                $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as periode, SUM(total) as pendapatan, COUNT(*) as jumlah_booking");
+                $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
             } else {
                 // Group per hari
-                $builder->select("DATE(dibuat_pada) as periode, SUM(total) as pendapatan, COUNT(*) as jumlah_booking");
+                $builder->select("DATE(dibuat_pada) as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
             }
             
             $builder->where('status', 'selesai');

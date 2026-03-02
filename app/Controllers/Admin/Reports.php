@@ -58,7 +58,7 @@ class Reports extends Controller
 
         // Service statistics
         $service_stats = $db->table('bookings')
-            ->select('layanan as service, COUNT(*) as count, SUM(total) as revenue')
+            ->select('layanan as service, COUNT(*) as count, COALESCE(SUM(total), 0) as revenue')
             ->where('dibuat_pada >=', $startDate)
             ->where('dibuat_pada <=', $endDate . ' 23:59:59')
             ->groupBy('layanan')

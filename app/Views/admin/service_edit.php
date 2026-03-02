@@ -196,7 +196,7 @@ function formatRupiah(input) {
     let value = input.value.replace(/\D/g, '');
     
     if (value) {
-        value = parseInt(value).toLocaleString('id-ID');
+        value = parseInt(value).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         input.value = value;
         document.getElementById('harga_dasar').value = value.replace(/\./g, '');
     } else {
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('nama_layanan').value = service.nama_layanan || service.name || '';
             document.getElementById('deskripsi').value = service.deskripsi || service.description || '';
             document.getElementById('harga_dasar').value = service.harga_dasar || service.price || 0;
-            document.getElementById('harga_dasar_display').value = (service.harga_dasar || service.price || 0).toLocaleString('id-ID');
+            document.getElementById('harga_dasar_display').value = (service.harga_dasar || service.price || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             document.getElementById('durasi_hari').value = service.durasi_hari || 1;
             document.getElementById('aktif').checked = service.aktif ? true : false;
             

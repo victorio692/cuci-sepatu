@@ -813,14 +813,14 @@ function updateSummary() {
         
         setTimeout(() => {
             summaryService.textContent = serviceName;
-            summaryPrice.textContent = 'Rp ' + price.toLocaleString('id-ID');
+            summaryPrice.textContent = 'Rp ' + parseInt(price).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             summaryQuantity.textContent = quantity + ' pasang';
-            summarySubtotal.textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-            summaryTotal.textContent = 'Rp ' + total.toLocaleString('id-ID');
+            summarySubtotal.textContent = 'Rp ' + parseInt(subtotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            summaryTotal.textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             
             // Show or hide additional fee section
             if (additionalFee > 0) {
-                summaryAdditionalFee.textContent = 'Rp ' + additionalFee.toLocaleString('id-ID');
+                summaryAdditionalFee.textContent = 'Rp ' + additionalFee.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 additionalFeeSection.classList.remove('hidden');
                 
                 // Update fee info
