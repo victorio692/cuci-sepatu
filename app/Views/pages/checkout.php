@@ -415,11 +415,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const day = String(finishDate.getDate()).padStart(2, '0');
         
         document.getElementById('estimated_finish_date').value = `${year}-${month}-${day}`;
-        document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore
+        
+        // Gunakan jam yang sama dengan jam antar/jemput
+        const bookingTime = document.getElementById('booking_time').value;
+        if (bookingTime) {
+            document.getElementById('estimated_finish_time').value = bookingTime;
+        } else {
+            document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore jika belum diisi
+        }
     }
     
-    // Update estimasi saat tanggal berubah
+    // Update estimasi saat tanggal atau jam booking berubah
     document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
     // Hitung estimasi saat load
     calculateEstimatedFinish();
