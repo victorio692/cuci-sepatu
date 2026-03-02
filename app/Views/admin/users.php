@@ -16,15 +16,14 @@
 
 <!-- Filter & Search -->
 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-    <form action="/admin/users" method="GET" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pengguna</label>
             <div class="relative">
                 <input 
                     type="text" 
-                    name="search" 
+                    id="searchInput"
                     placeholder="Cari nama, email, nomor telepon..." 
-                    value="<?= $search ?>"
                     class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -32,18 +31,85 @@
         </div>
 
         <div class="flex items-end">
-            <button type="submit" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
+            <button type="button" onclick="loadUsers()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
                 <i class="fas fa-search"></i>
                 <span>Cari</span>
             </button>
         </div>
-    </form>
+    </div>
 </div>
 
 <!-- Users Table -->
-<div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="overflow-x-auto">
-        <?php if (!empty($users)): ?>
+<div id="usersContainer" class="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div class="w-full flex justify-center py-12">
+        <div class="animate-spin">
+            <i class="fas fa-spinner text-blue-500 text-4xl"></i>
+        </div>
+</div>
+
+<?= $this->endSection() ?>
+
+<?= $this->section('extra_js') ?>
+<script>
+// Load users from API
+async function loadUsers() {
+    const container = document.getElementById('usersContainer');
+    const searchInput = document.getElementById('searchInput');
+    const search = searchInput?.value || '';
+    
+    try {
+        console.log('🚀 Loading users from API...', { search });
+        const url = search ? `/api/users?search=${encodeURIComponent(search)}` : '/api/users';
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Users loaded:', result);
+
+        // Handle API response structure
+        const users = result.data?.users || result.data || [];
+        const total = result.data?.pagination?.total || 0;
+        
+        console.log('📊 Extracted users:', users);
+        console.log('📊 Total:', total);
+
+        if (users && users.length > 0) {
+            renderUsersTable(users, total);
+        } else {
+            renderEmptyState();
+        }
+    } catch (error) {
+        console.error('❌ Error loading users:', error);
+        container.innerHTML = `
+            <div class="p-12 text-center bg-red-50">
+                <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+                <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Data Pengguna</h3>
+                <p class="text-red-600 mb-4">${error.message}</p>
+                <button onclick="loadUsers()" 
+                        class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition">
+                    <i class="fas fa-redo mr-2"></i>Coba Lagi
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Render users table
+function renderUsersTable(users, total) {
+    const container = document.getElementById('usersContainer');
+    
+    const tableHTML = `
+        <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50">
                     <tr>
@@ -57,53 +123,60 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <?php foreach ($users as $user): ?>
+                    ${users.map(user => {
+                        const name = user.full_name || user.nama_lengkap || user.nama || '-';
+                        const phone = user.phone || user.no_hp || user.telepon || '-';
+                        const email = user.email || '-';
+                        const createdAt = new Date(user.created_at || user.dibuat_pada).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+                        const isActive = user.is_active !== false && user.is_active !== 0; // default true if not explicitly false
+                        
+                        return `
                         <tr class="hover:bg-gray-50 transition">
                             <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="font-semibold text-xs text-gray-800">#<?= $user['id'] ?></span>
+                                <span class="font-semibold text-xs text-gray-800">#${user.id}</span>
                             </td>
                             <td class="px-3 py-3">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xs mr-2">
-                                        <?= strtoupper(substr($user['full_name'], 0, 1)) ?>
+                                        ${name.charAt(0).toUpperCase()}
                                     </div>
-                                    <span class="font-medium text-sm text-gray-800"><?= $user['full_name'] ?></span>
+                                    <span class="font-medium text-sm text-gray-800">${name}</span>
                                 </div>
                             </td>
                             <td class="px-3 py-3">
-                                <span class="text-xs text-gray-700"><?= $user['email'] ?></span>
+                                <span class="text-xs text-gray-700">${email}</span>
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap">
-                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $user['phone'] ?? '') ?>" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-0.5">
+                                <a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-0.5">
                                     <i class="fab fa-whatsapp text-sm"></i>
-                                    <span class="text-xs"><?= $user['phone'] ?></span>
+                                    <span class="text-xs">${phone}</span>
                                 </a>
                             </td>
                             <td class="px-3 py-3 whitespace-nowrap">
-                                <span class="text-xs text-gray-700"><?= date('d M Y', strtotime($user['created_at'])) ?></span>
+                                <span class="text-xs text-gray-700">${createdAt}</span>
                             </td>
                             <td class="px-3 py-3">
                                 <button 
                                     class="inline-flex items-center space-x-1 px-2 py-1 rounded text-xs font-medium transition cursor-pointer
-                                        <?= $user['is_active'] ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200' ?>"
-                                    onclick="toggleUserActive(this, <?= $user['id'] ?>)"
+                                        ${isActive ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'}"
+                                    onclick="toggleUserActive(this, ${user.id})"
                                     title="Click to toggle"
                                 >
-                                    <i class="fas fa-<?= $user['is_active'] ? 'check-circle' : 'ban' ?>" style="font-size: 0.7rem;"></i>
-                                    <span><?= $user['is_active'] ? 'Active' : 'Inactive' ?></span>
+                                    <i class="fas fa-${isActive ? 'check-circle' : 'ban'}" style="font-size: 0.7rem;"></i>
+                                    <span>${isActive ? 'Active' : 'Inactive'}</span>
                                 </button>
                             </td>
                             <td class="px-2 py-3 whitespace-nowrap">
                                 <div class="flex items-center space-x-0.5">
-                                    <a href="/admin/users/<?= $user['id'] ?>" 
+                                    <a href="/admin/users/${user.id}" 
                                        class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="/admin/users/edit/<?= $user['id'] ?>" 
+                                    <a href="/admin/users/edit/${user.id}" 
                                        class="inline-flex items-center justify-center w-8 h-8 bg-yellow-50 text-yellow-600 rounded hover:bg-yellow-100 transition text-xs" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/admin/users/delete/<?= $user['id'] ?>" 
+                                    <a href="/admin/users/delete/${user.id}" 
                                        onclick="return confirm('Yakin ingin menghapus user ini?')"
                                        class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
                                         <i class="fas fa-trash"></i>
@@ -111,112 +184,39 @@
                                 </div>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    `}).join('')}
                 </tbody>
             </table>
-
-            <!-- Total Count -->
             <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
-                Total: <span class="font-semibold"><?= $pager['total'] ?></span> pengguna
-                <?php if ($pager['total'] > 0): ?>
-                    | Menampilkan <?= (($pager['currentPage'] - 1) * $pager['perPage']) + 1 ?> - <?= min($pager['currentPage'] * $pager['perPage'], $pager['total']) ?>
-                <?php endif; ?>
+                Total: <span class="font-semibold">${total || users.length}</span> pengguna
             </div>
-            
-            <!-- Pagination -->
-            <?php if ($pager['totalPages'] > 1): ?>
-            <div class="px-6 py-4 border-t border-gray-200 bg-white">
-                <div class="flex items-center justify-between">
-                    <div class="text-sm text-gray-600">
-                        Halaman <?= $pager['currentPage'] ?> dari <?= $pager['totalPages'] ?>
-                    </div>
-                    <div class="flex space-x-1">
-                        <!-- Previous Button -->
-                        <?php if ($pager['currentPage'] > 1): ?>
-                            <a href="?page=<?= $pager['currentPage'] - 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        <?php else: ?>
-                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        <?php endif; ?>
-                        
-                        <!-- Page Numbers -->
-                        <?php 
-                        $startPage = max(1, $pager['currentPage'] - 2);
-                        $endPage = min($pager['totalPages'], $pager['currentPage'] + 2);
-                        
-                        if ($startPage > 1): ?>
-                            <a href="?page=1<?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                1
-                            </a>
-                            <?php if ($startPage > 2): ?>
-                                <span class="px-3 py-2 text-gray-400">...</span>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        
-                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                            <?php if ($i == $pager['currentPage']): ?>
-                                <span class="px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold">
-                                    <?= $i ?>
-                                </span>
-                            <?php else: ?>
-                                <a href="?page=<?= $i ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                    <?= $i ?>
-                                </a>
-                            <?php endif; ?>
-                        <?php endfor; ?>
-                        
-                        <?php if ($endPage < $pager['totalPages']): ?>
-                            <?php if ($endPage < $pager['totalPages'] - 1): ?>
-                                <span class="px-3 py-2 text-gray-400">...</span>
-                            <?php endif; ?>
-                            <a href="?page=<?= $pager['totalPages'] ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <?= $pager['totalPages'] ?>
-                            </a>
-                        <?php endif; ?>
-                        
-                        <!-- Next Button -->
-                        <?php if ($pager['currentPage'] < $pager['totalPages']): ?>
-                            <a href="?page=<?= $pager['currentPage'] + 1 ?><?= $search ? '&search=' . urlencode($search) : '' ?>" 
-                               class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        <?php else: ?>
-                            <span class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-        <?php else: ?>
-            <div class="p-12 text-center text-gray-500">
-                <i class="fas fa-users text-5xl mb-4 text-gray-300"></i>
-                <p class="text-lg">Tidak ada pengguna</p>
-                <p class="text-sm mt-2">Pengguna akan muncul di sini setelah registrasi</p>
-            </div>
-        <?php endif; ?>
-    </div>
-</div>
+        </div>
+    `;
+    
+    container.innerHTML = tableHTML;
+}
 
-<?= $this->endSection() ?>
+// Render empty state
+function renderEmptyState() {
+    const container = document.getElementById('usersContainer');
+    container.innerHTML = `
+        <div class="p-12 text-center text-gray-500">
+            <i class="fas fa-users text-5xl mb-4 text-gray-300"></i>
+            <p class="text-lg">Tidak ada pengguna</p>
+            <p class="text-sm mt-2">Pengguna akan muncul di sini setelah registrasi</p>
+        </div>
+    `;
+}
 
-<?= $this->section('extra_js') ?>
-<script>
+// Toggle user active status
 function toggleUserActive(element, userId) {
-    fetch('/admin/users/' + userId + '/toggle', {
+    fetch(`/admin/users/${userId}/toggle`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
-        }
+        },
+        credentials: 'include'
     })
     .then(response => response.json())
     .then(data => {
@@ -235,7 +235,7 @@ function toggleUserActive(element, userId) {
     })
     .catch(error => {
         console.error('Error:', error);
-        showToast('Gagal update status pengguna', 'error');
+        showToast('Gagal update status pengguna: ' + error.message, 'error');
     });
 }
 
@@ -265,6 +265,16 @@ function showToast(message, type) {
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
+
+// Load users on page load
+document.addEventListener('DOMContentLoaded', loadUsers);
+
+// Add Enter key to search input
+document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        loadUsers();
+    }
+});
 </script>
 
 <style>

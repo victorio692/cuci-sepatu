@@ -15,37 +15,22 @@
                 <p class="text-gray-600 mt-2">Buat akun untuk mulai booking</p>
             </div>
 
-            <!-- Error Alert -->
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                        <span class="text-red-700"><?= session()->getFlashdata('error') ?></span>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <!-- Toast Container -->
+            <div id="toastContainer" class="fixed top-4 right-4 z-50"></div>
 
             <!-- Form -->
-            <form action="/register" method="POST" class="space-y-5">
-                <?= csrf_field() ?>
+            <div id="registerFormContainer" class="space-y-5">
 
                 <!-- Nama Lengkap -->
                 <div>
                     <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
                     <input 
                         type="text" 
-                        id="full_name" 
-                        name="full_name" 
+                        id="full_name"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                         placeholder="Masukkan nama lengkap"
                         required
-                        value="<?= old('full_name') ?>"
                     >
-                    <?php if (session()->getFlashdata('full_name_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('full_name_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Email -->
@@ -53,18 +38,11 @@
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input 
                         type="email" 
-                        id="email" 
-                        name="email" 
+                        id="email"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                         placeholder="Masukkan email"
                         required
-                        value="<?= old('email') ?>"
                     >
-                    <?php if (session()->getFlashdata('email_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('email_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- No WhatsApp -->
@@ -72,21 +50,14 @@
                     <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">No WhatsApp</label>
                     <input 
                         type="tel" 
-                        id="phone" 
-                        name="phone" 
+                        id="phone"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                         placeholder="Masukkan nomor WhatsApp"
                         required
-                        value="<?= old('phone') ?>"
                     >
                     <p class="text-gray-500 text-sm mt-1">
                         <i class="fas fa-info-circle"></i> Nomor WhatsApp valid untuk verifikasi (minimal 10 digit)
                     </p>
-                    <?php if (session()->getFlashdata('phone_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('phone_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Password -->
@@ -95,8 +66,7 @@
                     <div class="relative">
                         <input 
                             type="password" 
-                            id="password" 
-                            name="password" 
+                            id="password"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                             placeholder="Minimal 6 karakter"
                             required
@@ -112,11 +82,6 @@
                     <p class="text-gray-500 text-sm mt-1">
                         <i class="fas fa-info-circle"></i> Minimal 6 karakter, kombinasi huruf dan angka lebih aman
                     </p>
-                    <?php if (session()->getFlashdata('password_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('password_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Konfirmasi Password -->
@@ -125,8 +90,7 @@
                     <div class="relative">
                         <input 
                             type="password" 
-                            id="confirm_password" 
-                            name="confirm_password" 
+                            id="confirm_password"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                             placeholder="Ulangi password"
                             required
@@ -139,19 +103,13 @@
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
-                    <?php if (session()->getFlashdata('confirm_password_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('confirm_password_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Terms & Conditions -->
                 <div class="flex items-start">
                     <input 
                         type="checkbox" 
-                        id="terms" 
-                        name="terms"
+                        id="terms"
                         class="w-5 h-5 mt-0.5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
                         required
                     >
@@ -161,7 +119,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="registerBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onclick="submitRegisterForm()" id="registerBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-user-check mr-2"></i> Daftar Sekarang
                 </button>
 
@@ -171,7 +129,7 @@
                         Sudah punya akun? <a href="/login" class="text-blue-600 hover:text-blue-700 font-medium">Login di sini</a>
                     </p>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -199,6 +157,29 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+// Toast notification function
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    
+    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    
+    toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg mb-4 transition-all duration-300 transform translate-x-0 flex items-center space-x-3`;
+    toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.transform = 'translateX(400px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
 function togglePassword(fieldId, button) {
     const field = document.getElementById(fieldId);
     const icon = button.querySelector('i');
@@ -214,52 +195,145 @@ function togglePassword(fieldId, button) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const registerForm = document.querySelector('form[action="/register"]');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            // Validate required fields
-            const fullName = registerForm.querySelector('#full_name').value.trim();
-            const email = registerForm.querySelector('#email').value.trim();
-            const phone = registerForm.querySelector('#phone').value.trim();
-            const password = registerForm.querySelector('#password').value.trim();
-            const confirmPassword = registerForm.querySelector('#confirm_password').value.trim();
-            const terms = registerForm.querySelector('#terms').checked;
-            
-            if (!fullName || !email || !phone || !password || !confirmPassword) {
-                e.preventDefault();
-                return false;
-            }
-            
-            if (!terms) {
-                e.preventDefault();
-                alert('Anda harus setuju dengan Syarat & Ketentuan');
-                return false;
-            }
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Konfirmasi password tidak sesuai');
-                return false;
-            }
-            
-            // Show loading overlay
-            const overlay = document.getElementById('registerOverlay');
-            if (overlay) {
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-            }
-            
-            // Disable button
-            const btn = document.getElementById('registerBtn');
-            if (btn) {
-                btn.disabled = true;
-            }
-            
-            // Allow form to submit normally
-            return true;
-        });
+// Submit register form via API
+async function submitRegisterForm() {
+    console.log('🚀 Starting registration process...');
+    
+    const fullName = document.getElementById('full_name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirm_password').value.trim();
+    const terms = document.getElementById('terms').checked;
+    
+    // Validation
+    if (!fullName || !email || !phone || !password || !confirmPassword) {
+        showToast('Semua field harus diisi', 'error');
+        return;
     }
+    
+    if (!terms) {
+        showToast('Anda harus setuju dengan Syarat & Ketentuan', 'error');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showToast('Konfirmasi password tidak sesuai', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showToast('Password minimal 6 karakter', 'error');
+        return;
+    }
+    
+    // Show overlay
+    const overlay = document.getElementById('registerOverlay');
+    const btn = document.getElementById('registerBtn');
+    
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+    }
+    
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mendaftar...';
+    }
+    
+    try {
+        console.log('📍 Sending register request to API...');
+        console.log('👤 Full Name:', fullName);
+        console.log('📧 Email:', email);
+        console.log('📱 Phone:', phone);
+        
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                nama_lengkap: fullName,
+                email: email,
+                no_hp: phone,
+                password: password,
+                confirm_password: confirmPassword,
+                alamat: ''
+            })
+        });
+        
+        console.log('📊 Response Status:', response.status);
+        const result = await response.json();
+        console.log('✅ Full API Response:', result);
+        
+        if (result.status === 'success') {
+            showToast(result.message || 'Registrasi berhasil!', 'success');
+            console.log('✅ Registration successful, redirecting...');
+            console.log('👤 User:', result.data?.user);
+            
+            // Redirect to home
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
+        } else {
+            // Error response
+            console.log('❌ Registration failed:', result.message);
+            
+            // Show error messages
+            if (result.errors) {
+                // Show validation errors
+                const errorMessages = Object.values(result.errors).join(', ');
+                showToast(errorMessages, 'error');
+            } else {
+                showToast(result.message || 'Registrasi gagal', 'error');
+            }
+            
+            // Hide overlay
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+            
+            // Re-enable button
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-check mr-2"></i> Daftar Sekarang';
+            }
+        }
+    } catch (error) {
+        console.error('❌ Registration error:', error);
+        showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        
+        // Hide overlay
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+        
+        // Re-enable button
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-user-check mr-2"></i> Daftar Sekarang';
+        }
+    }
+}
+
+// Allow Enter key to submit
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = ['full_name', 'email', 'phone', 'password', 'confirm_password'];
+    
+    inputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitRegisterForm();
+                }
+            });
+        }
+    });
 });
 </script>
 <?= $this->endSection() ?>

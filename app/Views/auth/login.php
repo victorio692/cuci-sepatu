@@ -15,47 +15,22 @@
                 <p class="text-gray-600 mt-2">Masuk untuk melanjutkan</p>
             </div>
 
-            <!-- Success Alert -->
-            <?php if (session()->getFlashdata('success')): ?>
-                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
-                    <div class="flex items-center">
-                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                        <span class="text-green-700"><?= session()->getFlashdata('success') ?></span>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <!-- Error Alert -->
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
-                        <span class="text-red-700"><?= session()->getFlashdata('error') ?></span>
-                    </div>
-                </div>
-            <?php endif; ?>
+            <!-- Toast Container -->
+            <div id="toastContainer" class="fixed top-4 right-4 z-50"></div>
 
             <!-- Form -->
-            <form action="/login" method="POST" class="space-y-6">
-                <?= csrf_field() ?>
+            <div id="loginFormContainer" class="space-y-6">
 
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                     <input 
                         type="email" 
-                        id="email" 
-                        name="email" 
+                        id="email"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                         placeholder="Masukkan email"
                         required
-                        value="<?= old('email') ?>"
                     >
-                    <?php if (session()->getFlashdata('email_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('email_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Password Field -->
@@ -64,8 +39,7 @@
                     <div class="relative">
                         <input 
                             type="password" 
-                            id="password" 
-                            name="password" 
+                            id="password"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                             placeholder="Masukkan password"
                             required
@@ -78,26 +52,20 @@
                             <i class="fas fa-eye" id="password-icon"></i>
                         </button>
                     </div>
-                    <?php if (session()->getFlashdata('password_error')): ?>
-                        <p class="text-red-500 text-sm mt-1">
-                            <?= session()->getFlashdata('password_error') ?>
-                        </p>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Remember Me -->
                 <div class="flex items-center">
                     <input 
                         type="checkbox" 
-                        id="remember" 
-                        name="remember"
+                        id="remember"
                         class="w-5 h-5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
                     >
                     <label for="remember" class="ml-3 text-sm text-gray-700 cursor-pointer">Ingat saya</label>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onclick="submitLoginForm()" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-sign-in-alt mr-2"></i> Login
                 </button>
 
@@ -110,7 +78,7 @@
                         <a href="/forgot-password" class="text-blue-600 hover:text-blue-700 font-medium text-sm">Lupa password?</a>
                     </p>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -138,36 +106,141 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.querySelector('form[action="/login"]');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            // Validate email and password exist
-            const email = loginForm.querySelector('#email').value.trim();
-            const password = loginForm.querySelector('#password').value.trim();
-            
-            if (!email || !password) {
-                e.preventDefault();
-                return false;
-            }
-            
-            // Show loading overlay
-            const overlay = document.getElementById('loginOverlay');
-            if (overlay) {
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-            }
-            
-            // Disable button
-            const btn = document.getElementById('loginBtn');
-            if (btn) {
-                btn.disabled = true;
-            }
-            
-            // Allow form to submit normally
-            return true;
-        });
+// Toast notification function
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    
+    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    
+    toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg mb-4 transition-all duration-300 transform translate-x-0 flex items-center space-x-3`;
+    toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.transform = 'translateX(400px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Submit login form via API
+async function submitLoginForm() {
+    console.log('🚀 Starting login process...');
+    
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const remember = document.getElementById('remember').checked;
+    
+    // Validation
+    if (!email || !password) {
+        showToast('Email dan password harus diisi', 'error');
+        return;
     }
+    
+    // Show overlay
+    const overlay = document.getElementById('loginOverlay');
+    const btn = document.getElementById('loginBtn');
+    
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+    }
+    
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Loading...';
+    }
+    
+    try {
+        console.log('📍 Sending login request to API...');
+        console.log('📧 Email:', email);
+        
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                remember: remember
+            })
+        });
+        
+        console.log('📊 Response Status:', response.status);
+        const result = await response.json();
+        console.log('✅ Full API Response:', result);
+        
+        if (result.status === 'success') {
+            showToast(result.message || 'Login berhasil!', 'success');
+            console.log('✅ Login successful, redirecting...');
+            console.log('👤 User:', result.data?.user);
+            
+            // Redirect based on role
+            setTimeout(() => {
+                if (result.data?.user?.role === 'admin') {
+                    window.location.href = '/admin';
+                } else {
+                    window.location.href = '/dashboard';
+                }
+            }, 500);
+        } else {
+            // Error response
+            console.log('❌ Login failed:', result.message);
+            showToast(result.message || 'Login gagal', 'error');
+            
+            // Hide overlay
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+            }
+            
+            // Re-enable button
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+            }
+        }
+    } catch (error) {
+        console.error('❌ Login error:', error);
+        showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        
+        // Hide overlay
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+        
+        // Re-enable button
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+        }
+    }
+}
+
+// Allow Enter key to submit
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    
+    [emailInput, passwordInput].forEach(input => {
+        if (input) {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitLoginForm();
+                }
+            });
+        }
+    });
 });
 </script>
 <?= $this->endSection() ?>

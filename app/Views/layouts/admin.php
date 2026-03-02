@@ -426,18 +426,39 @@
             window.open('<?= base_url("admin/reports/print") ?>', '_blank');
         }
         
-        // Show Admin Logout Animation
-        function showAdminLogoutAnimation(event) {
+        // Show Admin Logout Animation and call API
+        async function showAdminLogoutAnimation(event) {
             event.preventDefault();
             
             const overlay = document.getElementById('adminLogoutOverlay');
             if (overlay) {
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');
+            }
+            
+            try {
+                console.log('🚀 Admin logging out via API...');
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
                 
-                // Redirect after animation (1.5 seconds)
+                console.log('📊 Logout Response Status:', response.status);
+                const result = await response.json();
+                console.log('✅ Admin Logout API Response:', result);
+                
+                // Redirect after animation
                 setTimeout(function() {
-                    window.location.href = '<?= base_url("logout") ?>';
+                    window.location.href = '/';
+                }, 1500);
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+                // Still redirect even if error
+                setTimeout(function() {
+                    window.location.href = '/';
                 }, 1500);
             }
         }

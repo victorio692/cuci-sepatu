@@ -1082,18 +1082,39 @@
         `;
         document.head.appendChild(style);
         
-        // Show logout animation
-        function showLogoutAnimation(event) {
+        // Show logout animation and call API
+        async function showLogoutAnimation(event) {
             event.preventDefault();
             
             const overlay = document.getElementById('logoutOverlay');
             if (overlay) {
                 overlay.classList.remove('hidden');
                 overlay.classList.add('flex');
+            }
+            
+            try {
+                console.log('🚀 Logging out via API...');
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
                 
-                // Redirect after animation (1.5 seconds)
+                console.log('📊 Logout Response Status:', response.status);
+                const result = await response.json();
+                console.log('✅ Logout API Response:', result);
+                
+                // Redirect after animation
                 setTimeout(function() {
-                    window.location.href = '/logout';
+                    window.location.href = '/';
+                }, 1500);
+            } catch (error) {
+                console.error('❌ Logout error:', error);
+                // Still redirect even if error
+                setTimeout(function() {
+                    window.location.href = '/';
                 }, 1500);
             }
         }

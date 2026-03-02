@@ -23,6 +23,23 @@ class AdminReportsApi extends BaseController
      */
     public function index(): ResponseInterface
     {
+        // Check admin authentication
+        $userId = session()->get('user_id');
+        if (!$userId) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'status' => 401,
+                'error' => 'Silakan login terlebih dahulu'
+            ]);
+        }
+        
+        $user = $this->db->table('users')->where('id', $userId)->get()->getRowArray();
+        if (!$user || $user['role'] !== 'admin') {
+            return $this->response->setStatusCode(403)->setJSON([
+                'status' => 403,
+                'error' => 'Akses ditolak. Hanya admin yang bisa mengakses'
+            ]);
+        }
+        
         // Ambil parameter tanggal dari URL
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
@@ -45,6 +62,8 @@ class AdminReportsApi extends BaseController
         }
         
         try {
+            log_message('info', '[AdminReportsApi] Loading reports for ' . $startDate . ' to ' . $endDate);
+            
             // Hitung total booking
             $builder = $this->db->table('bookings');
             $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');

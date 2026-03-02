@@ -1043,11 +1043,30 @@ uploadArea.addEventListener('drop', (e) => {
     }
 });
 
-// Logout confirmation
-function confirmLogout(e) {
+// Logout confirmation and API call
+async function confirmLogout(e) {
     e.preventDefault();
     if (confirm('Apakah Anda yakin ingin logout?')) {
-        window.location.href = '/logout';
+        try {
+            console.log('🚀 Logging out via API...');
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            
+            console.log('📊 Logout Response Status:', response.status);
+            const result = await response.json();
+            console.log('✅ Logout API Response:', result);
+            
+            window.location.href = '/';
+        } catch (error) {
+            console.error('❌ Logout error:', error);
+            // Still redirect even if error
+            window.location.href = '/';
+        }
     }
 }
 </script>

@@ -36,46 +36,13 @@
 </div>
 
 <!-- Services Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <?php foreach ($services as $service): ?>
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition">
-            <!-- Service Header with Gradient -->
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
-                <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-<?= $service['icon'] ?> text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold mb-2"><?= $service['name'] ?></h3>
-                <p class="text-blue-100 text-sm"><?= $service['description'] ?></p>
-            </div>
-
-            <!-- Service Body -->
-            <div class="p-6">
-                <div class="mb-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600 font-medium">Harga Layanan</span>
-                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">Per Pasang</span>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800">
-                        Rp <?= isset($service['base_price']) ? number_format($service['base_price'], 0, ',', '.') : number_format($service['price'], 0, ',', '.') ?>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="/admin/services/edit/<?= $service['id'] ?>" 
-                       class="px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
-                        <i class="fas fa-edit"></i>
-                        <span>Edit</span>
-                    </a>
-                    <button type="button" 
-                       onclick="confirmDelete(<?= $service['id'] ?>, '<?= addslashes($service['name']) ?>')"
-                       class="px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
-                        <i class="fas fa-trash"></i>
-                        <span>Hapus</span>
-                    </button>
-                </div>
-            </div>
+<div id="servicesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Loading State -->
+    <div class="col-span-full flex justify-center py-12">
+        <div class="animate-spin flex items-center justify-center">
+            <i class="fas fa-spinner text-blue-500 text-4xl"></i>
         </div>
-    <?php endforeach; ?>
+    </div>
 </div>
 
 <!-- Edit Price Modal -->
@@ -134,6 +101,116 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+// Load services from API
+async function loadServices() {
+    const container = document.getElementById('servicesContainer');
+    
+    try {
+        console.log('🚀 Loading services from API...');
+        const response = await fetch('/api/admin/services', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ Services loaded:', result);
+
+        if (result.data && result.data.length > 0) {
+            renderServicesGrid(result.data);
+        } else {
+            renderEmptyState();
+        }
+    } catch (error) {
+        console.error('❌ Error loading services:', error);
+        container.innerHTML = `
+            <div class="col-span-full bg-red-50 rounded-xl shadow-lg p-12 text-center">
+                <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-4"></i>
+                <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Layanan</h3>
+                <p class="text-red-600 mb-4">${error.message}</p>
+                <button onclick="loadServices()" 
+                        class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition">
+                    <i class="fas fa-redo mr-2"></i>Coba Lagi
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Render services grid
+function renderServicesGrid(services) {
+    const container = document.getElementById('servicesContainer');
+    
+    const html = services.map(service => `
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition">
+            <!-- Service Header with Gradient -->
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
+                <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-${service.icon || 'shoe-prints'} text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">${service.name || service.nama_layanan}</h3>
+                <p class="text-blue-100 text-sm">${service.description || service.deskripsi || '-'}</p>
+            </div>
+
+            <!-- Service Body -->
+            <div class="p-6">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm text-gray-600 font-medium">Harga Layanan</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">Per Pasang</span>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-800">
+                        Rp ${formatCurrency(service.harga_dasar || service.base_price || service.price || 0)}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" 
+                       onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
+                       class="px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit Harga</span>
+                    </button>
+                    <a href="/admin/services/edit/${service.id}" 
+                       class="px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
+                        <i class="fas fa-cog"></i>
+                        <span>Detail</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = html;
+}
+
+// Render empty state
+function renderEmptyState() {
+    const container = document.getElementById('servicesContainer');
+    container.innerHTML = `
+        <div class="col-span-full bg-blue-50 rounded-xl shadow-lg p-12 text-center">
+            <i class="fas fa-inbox text-blue-500 text-6xl mb-4"></i>
+            <h3 class="text-xl font-bold text-blue-700 mb-2">Tidak Ada Layanan</h3>
+            <p class="text-blue-600 mb-4">Belum ada layanan yang terdaftar. Silakan buat layanan baru.</p>
+        </div>
+    `;
+}
+
+// Format currency
+function formatCurrency(number) {
+    return new Intl.NumberFormat('id-ID').format(number);
+}
+
+// Load services on page load
+document.addEventListener('DOMContentLoaded', loadServices);
+
+// Confirm delete function
 function confirmDelete(serviceId, serviceName) {
     if (confirm('Yakin ingin menghapus layanan "' + serviceName + '"?\n\nLayanan yang sudah digunakan dalam pesanan tidak dapat dihapus.')) {
         // Create form dynamically
@@ -156,6 +233,7 @@ function confirmDelete(serviceId, serviceName) {
     }
 }
 
+// Open edit price modal
 function openEditPrice(serviceId, serviceName, currentPrice) {
     document.getElementById('serviceId').value = serviceId;
     document.getElementById('serviceName').textContent = serviceName;
@@ -165,6 +243,7 @@ function openEditPrice(serviceId, serviceName, currentPrice) {
     modal.classList.add('flex');
 }
 
+// Close price modal
 function closePriceModal() {
     const modal = document.getElementById('priceModal');
     modal.classList.add('hidden');
@@ -172,6 +251,7 @@ function closePriceModal() {
     document.getElementById('priceForm').reset();
 }
 
+// Handle price form submission
 document.getElementById('priceForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -187,19 +267,25 @@ document.getElementById('priceForm').addEventListener('submit', function(e) {
         },
         body: JSON.stringify({ harga: price })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('✅ Price updated:', data);
         if (data.code === 200 || data.success) {
             showToast('Harga berhasil diperbarui', 'success');
             closePriceModal();
-            setTimeout(() => location.reload(), 1000);
+            setTimeout(() => loadServices(), 1000);
         } else {
             showToast(data.message || 'Gagal memperbarui harga', 'error');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan koneksi', 'error');
+        console.error('❌ Error updating price:', error);
+        showToast('Terjadi kesalahan koneksi: ' + error.message, 'error');
     });
 });
 
@@ -211,6 +297,7 @@ window.addEventListener('click', function(event) {
     }
 });
 
+// Show toast notification
 function showToast(message, type) {
     const bgColors = {
         'success': 'bg-green-500',

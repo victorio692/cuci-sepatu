@@ -206,9 +206,11 @@
                         'suede-treatment' => 'fa-tshirt',
                         'unyellowing' => 'fa-sun'
                     ];
+
+                    $servicesData = (isset($services) && is_array($services)) ? $services : [];
                     
-                    foreach ($services as $service): 
-                        $icon = $serviceIcons[$service['kode_layanan']] ?? 'fa-shoe-prints';
+                    foreach ($servicesData as $service): 
+                        $icon = $serviceIcons[$service['kode_layanan'] ?? ''] ?? 'fa-shoe-prints';
                     ?>
                     <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group transform hover:-translate-y-2">
                         <!-- Service Header with Gradient -->
@@ -251,6 +253,13 @@
                         </div>
                     </div>
                     <?php endforeach; ?>
+
+                    <?php if (empty($servicesData)): ?>
+                    <div class="col-span-full bg-white rounded-2xl p-8 text-center text-gray-500 shadow-sm">
+                        <i class="fas fa-box-open text-3xl mb-3"></i>
+                        <p>Layanan belum tersedia saat ini.</p>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -406,11 +415,30 @@ async function markAllAsReadCustomer(event) {
     }
 }
 
-// Logout confirmation
-function confirmLogout(e) {
+// Logout confirmation and API call
+async function confirmLogout(e) {
     e.preventDefault();
     if (confirm('Apakah Anda yakin ingin logout?')) {
-        window.location.href = '/logout';
+        try {
+            console.log('🚀 Logging out via API...');
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            
+            console.log('📊 Logout Response Status:', response.status);
+            const result = await response.json();
+            console.log('✅ Logout API Response:', result);
+            
+            window.location.href = '/';
+        } catch (error) {
+            console.error('❌ Logout error:', error);
+            // Still redirect even if error
+            window.location.href = '/';
+        }
     }
 }
 

@@ -16,14 +16,8 @@
             Edit Pengguna
         </h2>
 
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                <?= session()->getFlashdata('error') ?>
-            </div>
-        <?php endif; ?>
-
-        <form action="/admin/users/update/<?= $user['id'] ?>" method="POST" class="space-y-6">
-            <?= csrf_field() ?>
+        <form id="userForm" class="space-y-6">
+            <input type="hidden" id="userId" value="<?= $user['id'] ?>">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Lengkap -->
@@ -87,7 +81,7 @@
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         required
                     >
-                        <option value="customer" <?= old('role', $user['role']) == 'customer' ? 'selected' : '' ?>>Customer</option>
+                        <option value="pelanggan" <?= old('role', $user['role']) == 'pelanggan' ? 'selected' : '' ?>>Pelanggan</option>
                         <option value="admin" <?= old('role', $user['role']) == 'admin' ? 'selected' : '' ?>>Admin</option>
                     </select>
                 </div>
@@ -117,7 +111,7 @@
                     id="password" 
                     name="password" 
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                    placeholder="Minimal 8 karakter"
+                    placeholder="Minimal 6 karakter"
                 >
                 <p class="mt-1 text-sm text-gray-500">
                     <i class="fas fa-info-circle"></i> Kosongkan jika tidak ingin mengubah password
@@ -127,22 +121,180 @@
             <!-- Buttons -->
             <div class="flex items-center space-x-4 pt-4 border-t border-gray-200">
                 <button 
-                    type="submit" 
-                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center"
+                    type="button"
+                    onclick="submitUserForm()"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
                 >
-                    <i class="fas fa-save mr-2"></i>
-                    Simpan Perubahan
+                    <i class="fas fa-save"></i>
+                    <span>Simpan Perubahan</span>
                 </button>
                 <a 
                     href="/admin/users" 
-                    class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center"
+                    class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center space-x-2"
                 >
-                    <i class="fas fa-times mr-2"></i>
-                    Batal
+                    <i class="fas fa-times"></i>
+                    <span>Batal</span>
                 </a>
             </div>
         </form>
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('extra_js') ?>
+<script>
+// Load user detail and populate form
+document.addEventListener('DOMContentLoaded', async function() {
+    const userId = document.getElementById('userId').value;
+    
+    try {
+        console.log('🚀 Loading user detail from API...', userId);
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('✅ User loaded:', result);
+        
+        // Handle nested response structure
+        const user = result.data || result;
+        
+        if (user) {
+            // Auto-populate form fields
+            document.getElementById('nama_lengkap').value = user.nama_lengkap || user.full_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('no_hp').value = user.no_hp || user.phone || '';
+            document.getElementById('role').value = user.role || '';
+            document.getElementById('alamat').value = user.alamat || user.address || '';
+        }
+    } catch (error) {
+        console.error('❌ Error loading user:', error);
+        showToast('Gagal memuat data pengguna: ' + error.message, 'error');
+    }
+});
+
+// Submit user form via API
+function submitUserForm() {
+    const form = document.getElementById('userForm');
+    const userId = document.getElementById('userId').value;
+    const formData = new FormData(form);
+    
+    // Validate form
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    // Collect data
+    const data = {
+        nama_lengkap: formData.get('nama_lengkap'),
+        email: formData.get('email'),
+        no_hp: formData.get('no_hp'),
+        role: formData.get('role'),
+        alamat: formData.get('alamat')
+    };
+    
+    // Only include password if provided
+    if (formData.get('password')) {
+        data.password = formData.get('password');
+    }
+    
+    console.log('📤 Submitting user update:', data);
+    
+    fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include',
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        console.log('📬 API Response Status:', response.status);
+        return response.json().then(body => ({
+            status: response.status,
+            body: body
+        }));
+    })
+    .then(({ status, body }) => {
+        console.log('✅ API Response:', status, body);
+        
+        if (status === 200 || (body && body.success)) {
+            showToast('Pengguna berhasil diperbarui', 'success');
+            setTimeout(() => {
+                window.location.href = '/admin/users';
+            }, 1500);
+        } else {
+            const errorMsg = body.message || body.error || 'Gagal memperbarui pengguna';
+            showToast(errorMsg, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        showToast('Terjadi kesalahan koneksi: ' + error.message, 'error');
+    });
+}
+
+// Show toast notification
+function showToast(message, type) {
+    const bgColors = {
+        'success': 'bg-green-500',
+        'error': 'bg-red-500'
+    };
+    
+    const icons = {
+        'success': 'fa-check-circle',
+        'error': 'fa-exclamation-circle'
+    };
+    
+    const toast = document.createElement('div');
+    toast.className = `fixed top-20 right-4 ${bgColors[type]} text-white px-6 py-4 rounded-lg shadow-2xl flex items-center space-x-3 z-50 animate-slide-in`;
+    toast.innerHTML = `
+        <i class="fas ${icons[type]} text-xl"></i>
+        <span class="font-medium">${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Handle Enter key to submit
+document.getElementById('userForm').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        submitUserForm();
+    }
+});
+</script>
+
+<style>
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.animate-slide-in {
+    animation: slide-in 0.3s ease;
+}
+</style>
 <?= $this->endSection() ?>
