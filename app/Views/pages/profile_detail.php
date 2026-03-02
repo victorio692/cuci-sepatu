@@ -60,6 +60,8 @@
             <!-- Main Content -->
             <div class="lg:col-span-3">
 
+                <div id="toastContainer" class="fixed top-4 right-4 z-50"></div>
+
                 <?php if (session()->getFlashdata('success')): ?>
                     <div class="bg-green-50 border border-green-200 p-4 mb-6 rounded-lg">
                         <div class="flex items-center">
@@ -86,13 +88,12 @@
                                 </form>
 
                                 <!-- Profile Form -->
-                                <form action="/update-profile" method="POST" class="space-y-5">
-                                    <?= csrf_field() ?>
+                                <form id="profileForm" class="space-y-5">
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                            <input type="text" value="<?= $user['email'] ?>" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
+                                            <input type="text" id="emailReadonly" value="<?= $user['email'] ?>" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
                                         </div>
 
                                         <div>
@@ -111,7 +112,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                                             <div class="flex items-center gap-2">
-                                                <input type="email" value="<?= substr($user['email'], 0, 3) ?>*****<?= substr($user['email'], strpos($user['email'], '@')) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
+                                                <input type="email" id="emailMasked" value="<?= substr($user['email'], 0, 3) ?>*****<?= substr($user['email'], strpos($user['email'], '@')) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
                                                 <a href="/profile/change-email" class="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap">Ubah</a>
                                             </div>
                                         </div>
@@ -119,7 +120,7 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
                                             <div class="flex items-center gap-2">
-                                                <input type="text" value="*********<?= substr($user['no_hp'] ?? '00', -2) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
+                                                <input type="text" id="phoneMasked" value="*********<?= substr($user['no_hp'] ?? '00', -2) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
                                                 <a href="/profile/change-phone" class="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap">Ubah</a>
                                             </div>
                                         </div>
@@ -176,8 +177,7 @@
                     </div>
                     
                     <div class="p-6">
-                        <form action="/change-password" method="POST" class="max-w-2xl">
-                            <?= csrf_field() ?>
+                        <form id="passwordForm" class="max-w-2xl">
 
                             <div class="space-y-5">
                                 <div>
@@ -332,6 +332,179 @@
 <?= $this->endSection() ?>
 <?= $this->section('extra_js') ?>
 <script>
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toastContainer');
+    if (!toastContainer) return;
+
+    const toast = document.createElement('div');
+    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+    toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg mb-4 transition-all duration-300 transform translate-x-0 flex items-center space-x-3`;
+    toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.transform = 'translateX(400px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function maskEmail(email) {
+    if (!email || !email.includes('@')) return '';
+    const [name, domain] = email.split('@');
+    const prefix = name.slice(0, 3);
+    return `${prefix}${'*'.repeat(Math.max(name.length - 3, 0))}@${domain}`;
+}
+
+function maskPhone(phone) {
+    if (!phone) return '*********00';
+    return `*********${phone.slice(-2)}`;
+}
+
+async function loadProfileDetail() {
+    try {
+        console.log('🚀 Loading profile detail via API...');
+        const response = await fetch('/api/auth/profile', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        const result = await response.json();
+        console.log('✅ Profile detail response:', result);
+
+        if (result.status !== 'success' || !result.data?.user) {
+            showToast(result.message || 'Gagal memuat profil', 'error');
+            return;
+        }
+
+        const user = result.data.user;
+        const fullName = user.nama_lengkap || user.full_name || '';
+        const email = user.email || '';
+        const phone = user.no_hp || user.phone || '';
+        const address = user.alamat || user.address || '';
+
+        const fullNameInput = document.getElementById('full_name');
+        const emailReadonly = document.getElementById('emailReadonly');
+        const emailMasked = document.getElementById('emailMasked');
+        const phoneMasked = document.getElementById('phoneMasked');
+        const addressInput = document.getElementById('address');
+
+        if (fullNameInput) fullNameInput.value = fullName;
+        if (emailReadonly) emailReadonly.value = email;
+        if (emailMasked) emailMasked.value = maskEmail(email);
+        if (phoneMasked) phoneMasked.value = maskPhone(phone);
+        if (addressInput) addressInput.value = address;
+    } catch (error) {
+        console.error('❌ Error loading profile detail:', error);
+        showToast('Terjadi kesalahan saat memuat profil', 'error');
+    }
+}
+
+async function submitProfileForm(event) {
+    event.preventDefault();
+
+    const fullName = document.getElementById('full_name')?.value?.trim() || '';
+    const address = document.getElementById('address')?.value?.trim() || '';
+
+    if (!fullName) {
+        showToast('Nama wajib diisi', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/profile', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                nama_lengkap: fullName,
+                alamat: address
+            })
+        });
+
+        const result = await response.json();
+        console.log('✅ Update profile response:', result);
+
+        if (result.status === 'success') {
+            showToast(result.message || 'Profil berhasil diperbarui', 'success');
+            await loadProfileDetail();
+            return;
+        }
+
+        if (result.errors) {
+            showToast(Object.values(result.errors).join(', '), 'error');
+            return;
+        }
+
+        showToast(result.message || 'Gagal memperbarui profil', 'error');
+    } catch (error) {
+        console.error('❌ Error updating profile:', error);
+        showToast('Terjadi kesalahan saat memperbarui profil', 'error');
+    }
+}
+
+async function submitPasswordForm(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const currentPassword = form.querySelector('input[name="current_password"]')?.value?.trim() || '';
+    const newPassword = form.querySelector('input[name="new_password"]')?.value?.trim() || '';
+    const confirmPassword = form.querySelector('input[name="confirm_password"]')?.value?.trim() || '';
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        showToast('Semua field password wajib diisi', 'error');
+        return;
+    }
+
+    if (newPassword.length < 6) {
+        showToast('Password baru minimal 6 karakter', 'error');
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        showToast('Konfirmasi password tidak sesuai', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/auth/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                old_password: currentPassword,
+                new_password: newPassword,
+                confirm_password: confirmPassword
+            })
+        });
+
+        const result = await response.json();
+        console.log('✅ Change password response:', result);
+
+        if (result.status === 'success') {
+            showToast(result.message || 'Password berhasil diubah', 'success');
+            form.reset();
+            return;
+        }
+
+        if (result.errors) {
+            showToast(Object.values(result.errors).join(', '), 'error');
+            return;
+        }
+
+        showToast(result.message || 'Gagal mengubah password', 'error');
+    } catch (error) {
+        console.error('❌ Error changing password:', error);
+        showToast('Terjadi kesalahan saat mengubah password', 'error');
+    }
+}
+
 // Show section function
 function showSection(section) {
     // Hide all sections
@@ -433,6 +606,7 @@ document.getElementById('profilePhoto').addEventListener('change', function(e) {
         // Submit with AJAX and reload after success
         fetch(form.action, {
             method: 'POST',
+            credentials: 'include',
             body: formData
         })
         .then(response => {
@@ -443,6 +617,20 @@ document.getElementById('profilePhoto').addEventListener('change', function(e) {
                 }, 500);
             }
         });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadProfileDetail();
+
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', submitProfileForm);
+    }
+
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', submitPasswordForm);
     }
 });
 </script>
