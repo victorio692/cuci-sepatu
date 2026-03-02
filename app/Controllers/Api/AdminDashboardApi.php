@@ -61,7 +61,7 @@ class AdminDashboardApi extends BaseController
             // STATISTIK PENDAPATAN
             // Pendapatan bulan (hanya booking selesai)
             $builderRevenue = $this->db->table('bookings');
-            $builderRevenue->select('SUM(total) as total');
+            $builderRevenue->select('COALESCE(SUM(total), 0) as total');
             $builderRevenue->where('status', 'selesai');    
             $builderRevenue->where('MONTH(dibuat_pada)', date('m'));
             $builderRevenue->where('YEAR(dibuat_pada)', date('Y'));
@@ -71,7 +71,7 @@ class AdminDashboardApi extends BaseController
 
             // Total pendapatan semua waktu
             $builderRevenue = $this->db->table('bookings');
-            $builderRevenue->select('SUM(total) as total');
+            $builderRevenue->select('COALESCE(SUM(total), 0) as total');
             $builderRevenue->where('status', 'selesai');
             $queryRevenue = $builderRevenue->get();
             $rowRevenue = $queryRevenue->getRow();
@@ -225,7 +225,7 @@ class AdminDashboardApi extends BaseController
     {
         try {
             $builder = $this->db->table('bookings');
-            $builder->select('layanan, COUNT(*) as jumlah_booking, SUM(total) as total_pendapatan');
+            $builder->select('layanan, COUNT(*) as jumlah_booking, COALESCE(SUM(total), 0) as total_pendapatan');
             $builder->groupBy('layanan');
             $builder->orderBy('jumlah_booking', 'DESC');
             $query = $builder->get();
@@ -293,7 +293,7 @@ class AdminDashboardApi extends BaseController
             $setahunLalu = date('Y-m-d', strtotime('-12 months'));
 
             $builder = $this->db->table('bookings');
-            $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as bulan, COUNT(*) as jumlah_booking, SUM(total) as total_pendapatan");
+            $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as bulan, COUNT(*) as jumlah_booking, COALESCE(SUM(total), 0) as total_pendapatan");
             $builder->where('dibuat_pada >=', $setahunLalu . ' 00:00:00');
             $builder->groupBy('bulan');
             $builder->orderBy('bulan', 'ASC');

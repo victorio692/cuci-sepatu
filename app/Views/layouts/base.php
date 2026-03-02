@@ -522,7 +522,7 @@
                             <span class="absolute bottom-0 left-0 <?= $isKontak ? 'w-full' : 'w-0' ?> h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a></li>
                         <li><a href="/login" class="px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white hover:shadow-md transform hover:scale-105 transition-all duration-300 font-medium">Login</a></li>
-                        <li><a href="/register" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 font-medium">Daftar</a></li>
+                        
                     </ul>
                 <?php endif; ?>
             </div>
@@ -576,9 +576,6 @@
                         <div class="border-t border-gray-200 my-3"></div>
                         <li><a href="/login" class="block py-2.5 px-4 border-2 border-blue-600 text-blue-600 rounded-lg text-center hover:bg-blue-600 hover:text-white hover:shadow-md transition-all duration-300 font-semibold">
                             <i class="fas fa-sign-in-alt mr-2"></i>Login
-                        </a></li>
-                        <li><a href="/register" class="block py-2.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-center hover:from-blue-600 hover:to-blue-700 hover:shadow-lg transition-all duration-300 font-semibold">
-                            <i class=\"fas fa-user-plus mr-2\"></i>Daftar
                         </a></li>
                     </ul>
                 <?php endif; ?>

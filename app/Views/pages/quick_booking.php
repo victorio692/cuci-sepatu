@@ -176,7 +176,7 @@ function updateSummary() {
 
     document.getElementById('summary-quantity').textContent = quantity + ' pasang';
     document.getElementById('summary-delivery').textContent = deliveryFee > 0 ? 'Rp 5.000' : 'Gratis';
-    document.getElementById('summary-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('summary-total').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 quantityInput.addEventListener('input', updateSummary);

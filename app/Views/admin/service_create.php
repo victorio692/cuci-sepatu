@@ -162,7 +162,7 @@ function formatRupiah(input) {
     let value = input.value.replace(/\D/g, '');
     
     if (value) {
-        value = parseInt(value).toLocaleString('id-ID');
+        value = parseInt(value).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         input.value = value;
         document.getElementById('harga_dasar').value = value.replace(/\./g, '');
     } else {

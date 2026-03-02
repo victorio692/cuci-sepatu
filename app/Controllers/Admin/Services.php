@@ -33,7 +33,22 @@ class Services extends Controller
             $service['price'] = $service['harga_dasar'];
             $service['duration_days'] = $service['durasi_hari'];
             $service['is_active'] = $service['aktif'];
-            $service['icon'] = 'star'; // Default icon
+            // Use icon_path if available, otherwise use default icon mapping
+            if (!empty($service['icon_path'])) {
+                $service['icon_type'] = 'image';
+                $service['icon'] = $service['icon_path'];
+            } else {
+                // Default Font Awesome icons for each service
+                $iconMap = [
+                    'fast-cleaning' => 'bolt',
+                    'deep-cleaning' => 'water',
+                    'white-shoes' => 'shoe-prints',
+                    'suede-treatment' => 'spray-can',
+                    'unyellowing' => 'sun',
+                ];
+                $service['icon_type'] = 'font';
+                $service['icon'] = $iconMap[$service['kode_layanan']] ?? 'star';
+            }
         }
 
         $data = [

@@ -415,11 +415,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const day = String(finishDate.getDate()).padStart(2, '0');
         
         document.getElementById('estimated_finish_date').value = `${year}-${month}-${day}`;
-        document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore
+        
+        // Gunakan jam yang sama dengan jam antar/jemput
+        const bookingTime = document.getElementById('booking_time').value;
+        if (bookingTime) {
+            document.getElementById('estimated_finish_time').value = bookingTime;
+        } else {
+            document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore jika belum diisi
+        }
     }
     
-    // Update estimasi saat tanggal berubah
+    // Update estimasi saat tanggal atau jam booking berubah
     document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
     // Hitung estimasi saat load
     calculateEstimatedFinish();
@@ -540,8 +548,8 @@ function loadCheckoutItems() {
                     <p class="font-semibold text-gray-900 text-sm">${item.service_name}</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <p class="text-xs text-gray-500">Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</p>
-                    <p class="font-bold text-blue-600 text-sm">Rp ${itemTotal.toLocaleString('id-ID')}</p>
+                    <p class="text-xs text-gray-500">Rp ${parseInt(item.price).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} x ${item.quantity}</p>
+                    <p class="font-bold text-blue-600 text-sm">Rp ${parseInt(itemTotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                 </div>
             </div>
         `;
@@ -582,7 +590,7 @@ function updateSummary() {
     
     // Update display
     document.getElementById('totalQuantity').textContent = `${totalQuantity} pasang`;
-    document.getElementById('subtotalPrice').textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+    document.getElementById('subtotalPrice').textContent = `Rp ${parseInt(subtotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
     const additionalFeeSection = document.getElementById('additionalFeeSection');
     const feeInfoSection = document.getElementById('feeInfoSection');
@@ -592,14 +600,14 @@ function updateSummary() {
     if (additionalFee > 0) {
         additionalFeeSection.classList.remove('hidden');
         feeInfoSection.classList.remove('hidden');
-        additionalFeeEl.textContent = `Rp ${additionalFee.toLocaleString('id-ID')}`;
+        additionalFeeEl.textContent = `Rp ${parseInt(additionalFee).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         feeInfoText.textContent = feeReasons.join(' + ');
     } else {
         additionalFeeSection.classList.add('hidden');
         feeInfoSection.classList.add('hidden');
     }
     
-    document.getElementById('totalPrice').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+    document.getElementById('totalPrice').textContent = `Rp ${parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 // Submit checkout
