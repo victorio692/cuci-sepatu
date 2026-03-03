@@ -235,21 +235,6 @@ function renderServiceStats(serviceStats) {
                 ${tableRows}
             </tbody>
         </table>
-        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <div class="flex justify-between items-center">
-                <span class="text-gray-700 font-medium">Total</span>
-                <div class="flex space-x-8">
-                    <span class="text-gray-700">
-                        <span class="font-medium">Orders:</span> 
-                        <span class="font-bold text-blue-600">${totalOrders}</span>
-                    </span>
-                    <span class="text-gray-700">
-                        <span class="font-medium">Pendapatan:</span> 
-                        <span class="font-bold text-green-600">Rp ${formatCurrency(totalRevenue)}</span>
-                    </span>
-                </div>
-            </div>
-        </div>
     `;
     
     container.innerHTML = html;
