@@ -151,7 +151,9 @@ function renderServicesGrid(services) {
         // Check if service has an image or use Font Awesome icon
         let iconHtml = '';
         if (service.icon_type === 'image' && service.icon) {
-            iconHtml = `<img src="${service.icon}" alt="${service.name || service.nama_layanan}" class="w-14 h-14 object-cover rounded-full">`;
+            // Tambahkan base URL untuk path gambar
+            const iconPath = service.icon.startsWith('http') ? service.icon : `/${service.icon}`;
+            iconHtml = `<img src="${iconPath}" alt="${service.name || service.nama_layanan}" class="w-14 h-14 object-cover rounded-full">`;
         } else {
             iconHtml = `<i class="fas fa-${service.icon || 'shoe-prints'} text-2xl"></i>`;
         }

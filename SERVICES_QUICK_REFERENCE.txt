@@ -1,0 +1,107 @@
+┌─────────────────────────────────────────────────────────────────┐
+│          📋 QUICK REFERENCE - TABEL SERVICES                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  DATABASE: cuciriobabang                                        │
+│  TABEL:    services                                             │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🏗️  STRUKTUR KOLOM                                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  id               INT(11)        AUTO_INCREMENT PRIMARY KEY     │
+│  kode_layanan     VARCHAR(100)   UNIQUE - fast-cleaning, dll   │
+│  nama_layanan     VARCHAR(255)   Fast Cleaning, Deep Cleaning  │
+│  deskripsi        TEXT           Deskripsi detail               │
+│  harga_dasar      DECIMAL(10,2)  15000.00, 25000.00            │
+│  durasi_hari      INT(11)        1, 2, 3, 4 hari               │
+│  icon_path        VARCHAR(255)   uploads/services/icon.jpg     │
+│  aktif            TINYINT(1)     1=Aktif, 0=Nonaktif           │
+│  dibuat_pada      DATETIME       AUTO TIMESTAMP                │
+│  diupdate_pada    DATETIME       AUTO UPDATE TIMESTAMP         │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  ⚡ QUERY CEPAT                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✅ Tambah Kolom icon_path:                                    │
+│     ALTER TABLE services                                        │
+│     ADD COLUMN icon_path VARCHAR(255) NULL                      │
+│     AFTER durasi_hari;                                          │
+│                                                                 │
+│  📋 Lihat Struktur:                                            │
+│     SHOW COLUMNS FROM services;                                 │
+│                                                                 │
+│  📊 Lihat Data:                                                │
+│     SELECT * FROM services;                                     │
+│                                                                 │
+│  ✏️  Update Harga:                                             │
+│     UPDATE services SET harga_dasar = 20000                     │
+│     WHERE kode_layanan = 'fast-cleaning';                       │
+│                                                                 │
+│  ❌ Nonaktifkan:                                               │
+│     UPDATE services SET aktif = 0                               │
+│     WHERE id = 1;                                               │
+│                                                                 │
+│  ➕ Tambah Layanan:                                            │
+│     INSERT INTO services                                        │
+│     (kode_layanan, nama_layanan, harga_dasar, durasi_hari)      │
+│     VALUES ('new-service', 'New Service', 30000, 2);            │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🖼️  UPLOAD ICON                                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Folder:   public/uploads/services/                             │
+│  Format:   JPG, PNG, GIF                                        │
+│  Max:      2MB                                                  │
+│  Size:     200x200px (recommended)                              │
+│                                                                 │
+│  API:      POST /api/admin/services/{id}/upload-icon            │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🔌 API ENDPOINTS                                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  GET    /api/admin/services          → List all                │
+│  GET    /api/admin/services/{id}     → Detail                  │
+│  POST   /api/admin/services          → Create new              │
+│  PUT    /api/admin/services/{id}     → Update                  │
+│  DELETE /api/admin/services/{id}     → Delete                  │
+│  POST   /api/admin/services/{id}/upload-icon → Upload          │
+│  DELETE /api/admin/services/{id}/remove-icon → Remove icon     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  📁 FILE LOKASI                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Controller:  app/Controllers/Admin/Services.php                │
+│  API:         app/Controllers/Api/AdminServicesApi.php          │
+│  View:        app/Views/admin/services.php                      │
+│  Edit View:   app/Views/admin/service_edit.php                  │
+│  Create View: app/Views/admin/service_create.php                │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  📦 DATA LAYANAN DEFAULT                                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. fast-cleaning      → Rp 15.000   (1 hari)                  │
+│  2. deep-cleaning      → Rp 25.000   (3 hari)                  │
+│  3. white-shoes        → Rp 20.000   (2 hari)                  │
+│  4. suede-treatment    → Rp 30.000   (3 hari)                  │
+│  5. unyellowing        → Rp 35.000   (4 hari)                  │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  ⚠️  CATATAN PENTING                                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  • Backup database sebelum ALTER TABLE                          │
+│  • kode_layanan harus UNIQUE (tidak boleh duplikat)             │
+│  • Folder uploads/services/ harus writable (chmod 755)          │
+│  • Icon tidak auto-delete jika layanan dihapus                  │
+│  • Gunakan base_url() untuk path icon di view                   │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+Version: 1.0
+Last Update: March 3, 2026
