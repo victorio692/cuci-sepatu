@@ -60,7 +60,7 @@
                             </button>
                         <?php elseif ($booking['status'] === 'proses'): ?>
                             <button onclick="showCompleteModal()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 700; font-size: 0.875rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-check-circle"></i> Upload Foto
+                                <i class="fas fa-check-circle"></i> Unggah Foto
                             </button>
                         <?php elseif ($booking['status'] === 'selesai'): ?>
                             <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);">
@@ -382,7 +382,7 @@
                 <i class="fas fa-camera" style="font-size: 1.75rem; color: #10b981;"></i>
             </div>
             <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700;">
-                Upload Foto Hasil Cucian
+                Unggah Foto Hasil Cucian
             </h3>
             <p style="margin: 0.5rem 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">
                 Pesanan #<?= $booking['id'] ?> - <?= $booking['full_name'] ?>
@@ -397,7 +397,7 @@
                     <div>
                         <strong style="color: #92400e; display: block; margin-bottom: 0.25rem; font-size: 0.95rem;">Penting!</strong>
                         <p style="margin: 0; color: #78350f; font-size: 0.875rem; line-height: 1.5;">
-                            Upload foto hasil cucian sepatu yang sudah selesai dikerjakan. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
+                            Unggah foto hasil cucian sepatu yang sudah selesai dikerjakan. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
                         </p>
                     </div>
                 </div>
@@ -438,7 +438,7 @@
         <!-- Footer -->
         <div style="background: #f9fafb; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; border-top: 1px solid #e5e7eb;">
             <button onclick="confirmComplete()" class="btn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: all 0.2s;">
-                <i class="fas fa-check-circle"></i> Upload & Tandai Selesai
+                <i class="fas fa-check-circle"></i> Unggah & Tandai Selesai
             </button>
             <button onclick="closeCompleteModal()" class="btn" style="flex: 1; background: #e5e7eb; color: #374151; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s;">
                 <i class="fas fa-times"></i> Batal
@@ -663,7 +663,7 @@ function confirmComplete() {
             alert('❌ Error: ' + (data.message || 'Gagal mengubah status'));
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
             }
         }
     })
@@ -672,7 +672,7 @@ function confirmComplete() {
         alert('❌ Terjadi kesalahan saat upload foto.\n\nCek console untuk detail atau coba lagi.');
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
         }
     });
 }

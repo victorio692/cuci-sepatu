@@ -379,7 +379,7 @@ function updateBookingStatus(selectElement) {
     }
     
     if (newStatus === 'selesai') {
-        const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengupload foto hasil cucian.\n\nLanjutkan?';
+        const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengunggah foto hasil cucian.\n\nLanjutkan?';
         if (confirm(confirmMsg)) {
             window.location.href = '/admin/bookings/' + bookingId;
         } else {
