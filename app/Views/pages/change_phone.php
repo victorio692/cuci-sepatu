@@ -33,7 +33,7 @@
                             <a href="/profile/detail" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
                                 <i class="fas fa-user-circle w-5"></i> Profil
                             </a>
-                            <a href="/profile/change-password" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
+                            <a href="/profile/detail" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
                                 <i class="fas fa-lock w-5"></i> Ubah Password
                             </a>
                             <a href="/profile/change-phone" id="menu-phone" class="flex items-center gap-3 px-4 py-3 text-sm text-white bg-blue-600 rounded-lg font-medium shadow-sm">
@@ -101,14 +101,14 @@
                                 </div>
 
                                 <div>
-                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Password Saat Ini</label>
+                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi Saat Ini</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
                                             id="current_password" 
                                             name="current_password" 
                                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
-                                            placeholder="Masukkan password Anda"
+                                            placeholder="Masukkan kata sandi Anda"
                                             required
                                         >
                                         <button 
@@ -118,7 +118,7 @@
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-1">Kami memerlukan password untuk mengubah nomor telepon</p>
+                                    <p class="text-xs text-gray-500 mt-1">Kami memerlukan kata sandi untuk mengubah nomor telepon</p>
                                 </div>
 
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -128,7 +128,7 @@
                                     <ul class="text-sm text-blue-800 space-y-1 ml-5">
                                         <li>• Nomor telepon harus dimulai dengan 08 dan minimal 11 digit</li>
                                         <li>• Pastikan nomor telepon aktif dan dapat dihubungi</li>
-                                        <li>• Pastikan password yang Anda masukkan benar</li>
+                                        <li>• Pastikan kata sandi yang Anda masukkan benar</li>
                                     </ul>
                                 </div>
 

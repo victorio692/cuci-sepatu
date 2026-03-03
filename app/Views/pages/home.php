@@ -45,7 +45,7 @@
                                 
                                 <!-- CTA Button -->
                                 <div class="banner-cta">
-                                    <a href="#services" class="cta-button">Booking Sekarang</a>
+                                    <a href="#services" class="cta-button">Pesan Sekarang</a>
                                 </div>
                                 
                                 <!-- Decorative Elements -->
@@ -84,7 +84,7 @@
                                     <div class="ongkir-text">ONGKIR</div>
                                     <!-- CTA Button inside red box -->
                                     <div class="banner-cta banner-cta-ongkir">
-                                        <a href="#services" class="cta-button cta-button-red">Booking Sekarang</a>
+                                        <a href="#services" class="cta-button cta-button-red">Pesan Sekarang</a>
                                     </div>
                                 </div>
                                 
@@ -1016,7 +1016,7 @@ function showSlide(n) {
                     </div>
                 </div>
                 <a href="/#services" class="bg-white text-blue-600 px-6 py-2.5 md:py-3 rounded-lg font-bold hover:bg-blue-50 transition shadow-md text-sm md:text-base w-full md:w-auto text-center">
-                    Booking Sekarang
+                    Pesan Sekarang
                 </a>
             </div>
         </div>
@@ -1234,7 +1234,7 @@ async function loadServices() {
                                     <i class="fas fa-shopping-cart"></i>
                                 </button>
                                 <a href="/make-booking?service=${service.kode_layanan}" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
-                                    Booking
+                                    Pesan
                                 </a>
                             </div>
                         </div>

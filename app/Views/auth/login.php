@@ -11,7 +11,7 @@
                 <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-user-lock text-white text-3xl"></i>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-900">Login</h1>
+                <h1 class="text-3xl font-bold text-gray-900">Masuk</h1>
                 <p class="text-gray-600 mt-2">Masuk untuk melanjutkan</p>
             </div>
 
@@ -35,13 +35,13 @@
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi</label>
                     <div class="relative">
                         <input 
                             type="password" 
                             id="password"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                            placeholder="Masukkan password"
+                            placeholder="Masukkan kata sandi"
                             required
                         >
                         <button 
@@ -66,7 +66,7 @@
 
                 <!-- Submit Button -->
                 <button type="button" onclick="submitLoginForm()" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                    <i class="fas fa-sign-in-alt mr-2"></i> Masuk
                 </button>
 
                 <!-- Footer Links -->
@@ -75,7 +75,7 @@
                         Belum punya akun? <a href="/register" class="text-blue-600 hover:text-blue-700 font-medium">Daftar di sini</a>
                     </p>
                     <p>
-                        <a href="/forgot-password" class="text-blue-600 hover:text-blue-700 font-medium text-sm">Lupa password?</a>
+                        <a href="/forgot-password" class="text-blue-600 hover:text-blue-700 font-medium text-sm">Lupa kata sandi?</a>
                     </p>
                 </div>
             </div>
@@ -94,7 +94,7 @@
     </div>
     
     <!-- Text -->
-    <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Logging In...</h2>
+    <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Masuk ke Akun Anda</h2>
     <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Mohon tunggu sebentar</p>
     
     <!-- Loading dots -->
@@ -139,7 +139,7 @@ async function submitLoginForm() {
     
     // Validation
     if (!email || !password) {
-        showToast('Email dan password harus diisi', 'error');
+        showToast('Email dan Kata sandi  harus diisi', 'error');
         return;
     }
     

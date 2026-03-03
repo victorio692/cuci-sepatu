@@ -35,10 +35,16 @@
                                 <i class="fas fa-user"></i> Akun Saya
                             </div>
                             <a href="#" onclick="showSection('profile'); return false;" id="menu-profile" class="flex items-center gap-3 px-4 py-3 text-sm text-white bg-blue-600 rounded-lg font-medium shadow-sm mb-1">
-                                <i class="fas fa-user-circle w-5"></i> Profil
+                                <i class="fas fa-user-circle w-5"></i> Akun
+                            </a>
+                            <a href="#" onclick="showSection('email'); return false;" id="menu-email" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition mb-1">
+                                <i class="fas fa-envelope w-5"></i> Ubah Email
+                            </a>
+                            <a href="#" onclick="showSection('phone'); return false;" id="menu-phone" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition mb-1">
+                                <i class="fas fa-phone w-5"></i> Ubah Nomor Telepon
                             </a>
                             <a href="#" onclick="showSection('password'); return false;" id="menu-password" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
-                                <i class="fas fa-lock w-5"></i> Ubah Password
+                                <i class="fas fa-lock w-5"></i> Ubah Kata Sandi
                             </a>
                         </div>
                     </div>
@@ -49,11 +55,19 @@
             <div class="lg:hidden col-span-1 grid grid-cols-2 gap-3 mb-6">
                 <a href="#" onclick="showSection('profile'); return false;" id="mobile-menu-profile" class="bg-blue-600 text-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 transition">
                     <i class="fas fa-user-circle text-2xl"></i>
-                    <span class="text-sm font-medium">Profil</span>
+                    <span class="text-sm font-medium">Akun</span>
+                </a>
+                <a href="#" onclick="showSection('email'); return false;" id="mobile-menu-email" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
+                    <i class="fas fa-envelope text-2xl text-gray-600"></i>
+                    <span class="text-sm font-medium">Ubah Email</span>
+                </a>
+                <a href="#" onclick="showSection('phone'); return false;" id="mobile-menu-phone" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
+                    <i class="fas fa-phone text-2xl text-gray-600"></i>
+                    <span class="text-sm font-medium">Ubah Nomor Telepon</span>
                 </a>
                 <a href="#" onclick="showSection('password'); return false;" id="mobile-menu-password" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
                     <i class="fas fa-lock text-2xl text-gray-600"></i>
-                    <span class="text-sm font-medium">Ubah Password</span>
+                    <span class="text-sm font-medium">Ubah Kata Sandi</span>
                 </a>
             </div>
 
@@ -92,11 +106,6 @@
                                     
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                            <input type="text" id="emailReadonly" value="<?= $user['email'] ?>" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
-                                        </div>
-
-                                        <div>
                                             <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
                                             <input 
                                                 type="text" 
@@ -106,35 +115,31 @@
                                                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             >
                                         </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                            <input type="text" id="emailReadonly" value="<?= $user['email'] ?>" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
+                                        </div>
                                     </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                            <div class="flex items-center gap-2">
-                                                <input type="email" id="emailMasked" value="<?= substr($user['email'], 0, 3) ?>*****<?= substr($user['email'], strpos($user['email'], '@')) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
-                                                <a href="/profile/change-email" class="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap">Ubah</a>
-                                            </div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                                            <input type="text" id="phoneReadonly" value="<?= $user['no_hp'] ?? '-' ?>" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
                                         </div>
 
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                                            <div class="flex items-center gap-2">
-                                                <input type="text" id="phoneMasked" value="*********<?= substr($user['no_hp'] ?? '00', -2) ?>" disabled class="flex-1 px-4 py-2.5 bg-gray-100 border border-gray-300 rounded-lg text-gray-500 cursor-not-allowed">
-                                                <a href="/profile/change-phone" class="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap">Ubah</a>
-                                            </div>
+                                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+                                            <textarea 
+                                                id="address" 
+                                                name="address" 
+                                                rows="3"
+                                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            ><?= $user['address'] ?? $user['alamat'] ?? '' ?></textarea>
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
-                                        <textarea 
-                                            id="address" 
-                                            name="address" 
-                                            rows="3"
-                                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        ><?= $user['address'] ?? $user['alamat'] ?? '' ?></textarea>
-                                    </div>
+                                    
 
                                     <div class="pt-4">
                                         <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
@@ -172,8 +177,8 @@
                 <!-- Change Password Section -->
                 <div id="section-password" class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 overflow-hidden hidden">
                     <div class="px-6 py-5 border-b border-gray-200">
-                        <h2 class="text-xl font-bold text-gray-900">Ubah Password</h2>
-                        <p class="text-sm text-gray-600 mt-1">Pastikan akun Anda menggunakan password yang aman</p>
+                        <h2 class="text-xl font-bold text-gray-900">Ubah Kata Sandi</h2>
+                        <p class="text-sm text-gray-600 mt-1">Pastikan akun Anda menggunakan kata sandi yang aman</p>
                     </div>
                     
                     <div class="p-6">
@@ -181,14 +186,14 @@
 
                             <div class="space-y-5">
                                 <div>
-                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Password Saat Ini</label>
+                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi Saat Ini</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
                                             id="current_password" 
                                             name="current_password" 
                                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
-                                            placeholder="Masukkan password saat ini"
+                                            placeholder="Masukkan kata sandi saat ini"
                                             required
                                         >
                                         <button 
@@ -201,7 +206,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi Baru</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
@@ -223,14 +228,14 @@
                                 </div>
 
                                 <div>
-                                    <label for="confirm_password_section" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                                    <label for="confirm_password_section" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi Baru</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
                                             id="confirm_password_section" 
                                             name="confirm_password" 
                                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
-                                            placeholder="Ulangi password baru"
+                                            placeholder="Ulangi kata sandi baru"
                                             required
                                             minlength="6"
                                         >
@@ -245,17 +250,171 @@
 
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                     <p class="text-sm font-medium text-blue-900 mb-2">
-                                        <i class="fas fa-info-circle"></i> Persyaratan Password:
+                                        <i class="fas fa-info-circle"></i> Persyaratan Kata Sandi:
                                     </p>
                                     <ul class="text-sm text-blue-800 space-y-1 ml-5">
                                         <li>• Minimal 6 karakter</li>
-                                        <li>• Password baru dan konfirmasi harus sama</li>
+                                        <li>• Kata sandi baru dan konfirmasi harus sama</li>
                                     </ul>
                                 </div>
 
                                 <div class="pt-4">
                                     <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
-                                        <i class="fas fa-check"></i> Ubah Password
+                                        <i class="fas fa-check"></i> Ubah Kata Sandi
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Email Section -->
+                <div id="section-email" class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 overflow-hidden hidden">
+                    <div class="px-6 py-5 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900">Ubah Email</h2>
+                        <p class="text-sm text-gray-600 mt-1">Perbarui alamat email Anda untuk login dan notifikasi</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <form action="/change-email" method="POST" id="emailForm" class="max-w-2xl">
+                            <?= csrf_field() ?>
+
+                            <div class="space-y-5">
+                                <div>
+                                    <label for="current_email_display" class="block text-sm font-medium text-gray-700 mb-2">Email Saat Ini</label>
+                                    <input 
+                                        type="email" 
+                                        id="current_email_display" 
+                                        value="<?= $user['email'] ?>" 
+                                        disabled
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    >
+                                </div>
+
+                                <div>
+                                    <label for="new_email_input" class="block text-sm font-medium text-gray-700 mb-2">Email Baru</label>
+                                    <input 
+                                        type="email" 
+                                        id="new_email_input" 
+                                        name="new_email" 
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Masukkan email baru"
+                                        required
+                                    >
+                                </div>
+
+                                <div>
+                                    <label for="email_current_password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="password" 
+                                            id="email_current_password" 
+                                            name="current_password" 
+                                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                                            placeholder="Masukkan kata sandi Anda"
+                                            required
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordField('email_current_password', this)" 
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan kata sandi Anda</p>
+                                </div>
+
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <p class="text-sm font-medium text-yellow-900 mb-2">
+                                        <i class="fas fa-exclamation-triangle"></i> Perhatian:
+                                    </p>
+                                    <ul class="text-sm text-yellow-800 space-y-1 ml-5">
+                                        <li>• Email baru akan digunakan untuk login</li>
+                                        <li>• Pastikan email yang Anda masukkan valid dan aktif</li>
+                                    </ul>
+                                </div>
+
+                                <div class="pt-4">
+                                    <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
+                                        <i class="fas fa-check"></i> Ubah Email
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Phone Section -->
+                <div id="section-phone" class="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 overflow-hidden hidden">
+                    <div class="px-6 py-5 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900">Ubah Nomor Telepon</h2>
+                        <p class="text-sm text-gray-600 mt-1">Perbarui nomor telepon Anda untuk notifikasi dan verifikasi</p>
+                    </div>
+                    
+                    <div class="p-6">
+                        <form action="/change-phone" method="POST" id="phoneForm" class="max-w-2xl">
+                            <?= csrf_field() ?>
+
+                            <div class="space-y-5">
+                                <div>
+                                    <label for="current_phone_display" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon Saat Ini</label>
+                                    <input 
+                                        type="text" 
+                                        id="current_phone_display" 
+                                        value="<?= $user['no_hp'] ?? '-' ?>" 
+                                        disabled
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    >
+                                </div>
+
+                                <div>
+                                    <label for="new_phone_input" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon Baru</label>
+                                    <input 
+                                        type="tel" 
+                                        id="new_phone_input" 
+                                        name="new_phone" 
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="08xxxxxxxxxx"
+                                        pattern="08[0-9]{9,}"
+                                        required
+                                    >
+                                    <p class="text-xs text-gray-500 mt-1">Format: 08xxxxxxxxxx (minimal 11 digit)</p>
+                                </div>
+
+                                <div>
+                                    <label for="phone_current_password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="password" 
+                                            id="phone_current_password" 
+                                            name="current_password" 
+                                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
+                                            placeholder="Masukkan kata sandi Anda"
+                                            required
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordField('phone_current_password', this)" 
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan kata sandi Anda</p>
+                                </div>
+
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <p class="text-sm font-medium text-yellow-900 mb-2">
+                                        <i class="fas fa-exclamation-triangle"></i> Perhatian:
+                                    </p>
+                                    <ul class="text-sm text-yellow-800 space-y-1 ml-5">
+                                        <li>• Nomor telepon akan digunakan untuk notifikasi WhatsApp</li>
+                                        <li>• Pastikan nomor yang Anda masukkan aktif</li>
+                                    </ul>
+                                </div>
+
+                                <div class="pt-4">
+                                    <button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition">
+                                        <i class="fas fa-check"></i> Ubah Nomor Telepon
                                     </button>
                                 </div>
                             </div>
@@ -269,11 +428,133 @@
 </div> 
 
 
+<!-- Change Email Modal -->
+<div id="changeEmailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeModal('changeEmailModal')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Email</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeModal('changeEmailModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/change-email" method="POST" id="changeEmailForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+
+            <div>
+                <label for="current_email" class="block text-sm font-semibold text-gray-700 mb-2">Email Saat Ini</label>
+                <input 
+                    type="email" 
+                    id="current_email" 
+                    value="<?= $user['email'] ?>" 
+                    disabled
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                >
+            </div>
+
+            <div>
+                <label for="new_email" class="block text-sm font-semibold text-gray-700 mb-2">Email Baru</label>
+                <input 
+                    type="email" 
+                    id="new_email" 
+                    name="new_email" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan email baru"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="email_password" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                <input 
+                    type="password" 
+                    id="email_password" 
+                    name="current_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan password Anda"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan password Anda</p>
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeModal('changeEmailModal')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Ubah Email
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Change Phone Modal -->
+<div id="changePhoneModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeModal('changePhoneModal')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Nomor Telepon</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeModal('changePhoneModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/change-phone" method="POST" id="changePhoneForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+
+            <div>
+                <label for="current_phone" class="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon Saat Ini</label>
+                <input 
+                    type="text" 
+                    id="current_phone" 
+                    value="<?= $user['no_hp'] ?? '-' ?>" 
+                    disabled
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                >
+            </div>
+
+            <div>
+                <label for="new_phone" class="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon Baru</label>
+                <input 
+                    type="tel" 
+                    id="new_phone" 
+                    name="new_phone" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="08xxxxxxxxxx"
+                    pattern="08[0-9]{9,}"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Format: 08xxxxxxxxxx (minimal 11 digit)</p>
+            </div>
+
+            <div>
+                <label for="phone_password" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                <input 
+                    type="password" 
+                    id="phone_password" 
+                    name="current_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan password Anda"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan password Anda</p>
+            </div>
+
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeModal('changePhoneModal')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Ubah Nomor Telepon
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Change Password Modal -->
 <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeModal('changePasswordModal')">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-xl font-bold text-gray-900">Ubah Password</h3>
+            <h3 class="text-xl font-bold text-gray-900">Ubah Kata Sandi</h3>
             <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeModal('changePasswordModal')">
                 <i class="fas fa-times"></i>
             </button>
@@ -282,7 +563,7 @@
             <?= csrf_field() ?>
 
             <div>
-                <label for="current_password" class="block text-sm font-semibold text-gray-700 mb-2">Password Lama</label>
+                <label for="current_password" class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi Lama</label>
                 <input 
                     type="password" 
                     id="current_password" 
@@ -293,7 +574,7 @@
             </div>
 
             <div>
-                <label for="new_password" class="block text-sm font-semibold text-gray-700 mb-2">Password Baru</label>
+                <label for="new_password" class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi Baru</label>
                 <input 
                     type="password" 
                     id="new_password" 
@@ -306,7 +587,7 @@
             </div>
 
             <div>
-                <label for="confirm_password" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                <label for="confirm_password" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Kata Sandi Baru</label>
                 <input 
                     type="password" 
                     id="confirm_password" 
@@ -322,7 +603,7 @@
                     Batal
                 </button>
                 <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-                    Ubah Password
+                    Ubah Kata Sandi
                 </button>
             </div>
         </form>
@@ -509,33 +790,63 @@ async function submitPasswordForm(event) {
 function showSection(section) {
     // Hide all sections
     document.getElementById('section-profile').classList.add('hidden');
+    document.getElementById('section-email').classList.add('hidden');
+    document.getElementById('section-phone').classList.add('hidden');
     document.getElementById('section-password').classList.add('hidden');
     
     // Update desktop menu
-    document.getElementById('menu-profile').classList.remove('bg-blue-600', 'text-white');
-    document.getElementById('menu-profile').classList.add('text-gray-700', 'hover:bg-gray-50');
-    document.getElementById('menu-password').classList.remove('bg-blue-600', 'text-white');
-    document.getElementById('menu-password').classList.add('text-gray-700', 'hover:bg-gray-50');
+    const desktopMenus = ['menu-profile', 'menu-email', 'menu-phone', 'menu-password'];
+    desktopMenus.forEach(menuId => {
+        const menu = document.getElementById(menuId);
+        menu.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+        menu.classList.add('text-gray-700', 'hover:bg-gray-50');
+    });
     
     // Update mobile menu
-    document.getElementById('mobile-menu-profile').classList.remove('bg-blue-600', 'text-white');
-    document.getElementById('mobile-menu-profile').classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
-    document.getElementById('mobile-menu-password').classList.remove('bg-blue-600', 'text-white');
-    document.getElementById('mobile-menu-password').classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+    const mobileMenus = ['mobile-menu-profile', 'mobile-menu-email', 'mobile-menu-phone', 'mobile-menu-password'];
+    mobileMenus.forEach(menuId => {
+        const menu = document.getElementById(menuId);
+        menu.classList.remove('bg-blue-600', 'text-white');
+        menu.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+    });
     
-    // Show selected section
-    if (section === 'profile') {
-        document.getElementById('section-profile').classList.remove('hidden');
-        document.getElementById('menu-profile').classList.add('bg-blue-600', 'text-white');
-        document.getElementById('menu-profile').classList.remove('text-gray-700', 'hover:bg-gray-50');
-        document.getElementById('mobile-menu-profile').classList.add('bg-blue-600', 'text-white');
-        document.getElementById('mobile-menu-profile').classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
-    } else if (section === 'password') {
-        document.getElementById('section-password').classList.remove('hidden');
-        document.getElementById('menu-password').classList.add('bg-blue-600', 'text-white');
-        document.getElementById('menu-password').classList.remove('text-gray-700', 'hover:bg-gray-50');
-        document.getElementById('mobile-menu-password').classList.add('bg-blue-600', 'text-white');
-        document.getElementById('mobile-menu-password').classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+    // Show selected section and highlight menu
+    const sectionMap = {
+        'profile': {
+            section: 'section-profile',
+            desktop: 'menu-profile',
+            mobile: 'mobile-menu-profile'
+        },
+        'email': {
+            section: 'section-email',
+            desktop: 'menu-email',
+            mobile: 'mobile-menu-email'
+        },
+        'phone': {
+            section: 'section-phone',
+            desktop: 'menu-phone',
+            mobile: 'mobile-menu-phone'
+        },
+        'password': {
+            section: 'section-password',
+            desktop: 'menu-password',
+            mobile: 'mobile-menu-password'
+        }
+    };
+    
+    if (sectionMap[section]) {
+        // Show section
+        document.getElementById(sectionMap[section].section).classList.remove('hidden');
+        
+        // Highlight desktop menu
+        const desktopMenu = document.getElementById(sectionMap[section].desktop);
+        desktopMenu.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+        desktopMenu.classList.remove('text-gray-700', 'hover:bg-gray-50');
+        
+        // Highlight mobile menu
+        const mobileMenu = document.getElementById(sectionMap[section].mobile);
+        mobileMenu.classList.add('bg-blue-600', 'text-white');
+        mobileMenu.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
     }
 }
 
@@ -631,6 +942,180 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordForm = document.getElementById('passwordForm');
     if (passwordForm) {
         passwordForm.addEventListener('submit', submitPasswordForm);
+    }
+
+    // Handle email form (section)
+    const emailForm = document.getElementById('emailForm');
+    if (emailForm) {
+        emailForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newEmail = formData.get('new_email');
+            const password = formData.get('current_password');
+            
+            if (!newEmail || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            // Validate email format
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                showToast('Format email tidak valid', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok || response.redirected) {
+                    showToast('Email berhasil diubah!', 'success');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.href = '/profile/detail';
+                    }, 1000);
+                } else {
+                    showToast('Gagal mengubah email. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah email', 'error');
+            }
+        });
+    }
+
+    // Handle phone form (section)
+    const phoneForm = document.getElementById('phoneForm');
+    if (phoneForm) {
+        phoneForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newPhone = formData.get('new_phone');
+            const password = formData.get('current_password');
+            
+            if (!newPhone || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            // Validate phone format
+            if (!/^08[0-9]{9,}$/.test(newPhone)) {
+                showToast('Format nomor telepon tidak valid (08xxxxxxxxxx)', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok || response.redirected) {
+                    showToast('Nomor telepon berhasil diubah!', 'success');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.href = '/profile/detail';
+                    }, 1000);
+                } else {
+                    showToast('Gagal mengubah nomor telepon. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah nomor telepon', 'error');
+            }
+        });
+    }
+
+    // Handle change email form (modal)
+    const changeEmailForm = document.getElementById('changeEmailForm');
+    if (changeEmailForm) {
+        changeEmailForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newEmail = formData.get('new_email');
+            const password = formData.get('current_password');
+            
+            if (!newEmail || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    showToast('Email berhasil diubah!', 'success');
+                    closeModal('changeEmailModal');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    const text = await response.text();
+                    showToast('Gagal mengubah email. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah email', 'error');
+            }
+        });
+    }
+
+    // Handle change phone form (modal)
+    const changePhoneForm = document.getElementById('changePhoneForm');
+    if (changePhoneForm) {
+        changePhoneForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newPhone = formData.get('new_phone');
+            const password = formData.get('current_password');
+            
+            if (!newPhone || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            // Validate phone format
+            if (!/^08[0-9]{9,}$/.test(newPhone)) {
+                showToast('Format nomor telepon tidak valid (08xxxxxxxxxx)', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    showToast('Nomor telepon berhasil diubah!', 'success');
+                    closeModal('changePhoneModal');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    const text = await response.text();
+                    showToast('Gagal mengubah nomor telepon. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah nomor telepon', 'error');
+            }
+        });
     }
 });
 </script>

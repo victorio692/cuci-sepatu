@@ -62,7 +62,7 @@
 
                 <!-- Password -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi</label>
                     <div class="relative">
                         <input 
                             type="password" 
@@ -86,13 +86,13 @@
 
                 <!-- Konfirmasi Password -->
                 <div>
-                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
+                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi</label>
                     <div class="relative">
                         <input 
                             type="password" 
                             id="confirm_password"
                             class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                            placeholder="Ulangi password"
+                            placeholder="Ulangi kata sandi"
                             required
                         >
                         <button 

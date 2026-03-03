@@ -198,15 +198,15 @@ class Booking extends BaseController
             $this->db->table('notifications')->insert([
                 'id_user' => $admin['id'],
                 'booking_id' => $booking_id,
-                'judul' => 'Booking Baru!',
-                'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                'judul' => 'Pesanan Baru!',
+                'pesan' => "Ada pesanan baru dari pelanggan dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                 'tipe' => 'new_booking',
                 'dibaca' => 0,
                 'dibuat_pada' => date('Y-m-d H:i:s')
             ]);
         }
 
-        return redirect()->to('/my-bookings')->with('success', 'Booking berhasil dibuat! Pesanan Anda akan segera diproses.');
+        return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibuat! Pesanan Anda akan segera diproses.');
     }
 
     // Submit Booking
@@ -225,7 +225,7 @@ class Booking extends BaseController
 
             // Cek jika admin, redirect ke admin dashboard
             if ($user['role'] === 'admin') {
-                return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
+                return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat pesanan dari sini');
             }
 
             // Get form data
@@ -390,8 +390,8 @@ class Booking extends BaseController
                 $this->db->table('notifications')->insert([
                     'id_user' => $admin['id'],
                     'booking_id' => $booking_id,
-                    'judul' => 'Booking Baru!',
-                    'pesan' => "Ada booking baru dari customer dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                    'judul' => 'Pesanan Baru!',
+                    'pesan' => "Ada Pesanan baru dari customer dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
                     'dibuat_pada' => date('Y-m-d H:i:s')
@@ -695,8 +695,8 @@ class Booking extends BaseController
                     $this->db->table('notifications')->insert([
                         'id_user' => $admin['id'],
                         'booking_id' => $bookingId,
-                        'judul' => 'Booking Baru!',
-                        'pesan' => "Ada booking baru dari customer dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                        'judul' => 'Pesanan Baru!',
+                        'pesan' => "Ada Pesanan baru dari customer dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                         'tipe' => 'new_booking',
                         'dibaca' => 0,
                         'dibuat_pada' => date('Y-m-d H:i:s')

@@ -34,7 +34,7 @@
                                 <i class="fas fa-user-circle w-5"></i> Profil
                             </a>
                             <a href="/profile/change-password" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
-                                <i class="fas fa-lock w-5"></i> Ubah Password
+                                <i class="fas fa-lock w-5"></i> Ubah Kata Sandi
                             </a>
                             <a href="/profile/change-email" id="menu-email" class="flex items-center gap-3 px-4 py-3 text-sm text-white bg-blue-600 rounded-lg font-medium shadow-sm">
                                 <i class="fas fa-envelope w-5"></i> Ubah Email
@@ -108,7 +108,7 @@
                                             id="current_password" 
                                             name="current_password" 
                                             class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
-                                            placeholder="Masukkan password Anda"
+                                            placeholder="Masukkan kata sandi Anda"
                                             required
                                         >
                                         <button 
@@ -118,7 +118,7 @@
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-1">Kami memerlukan password untuk mengubah email</p>
+                                    <p class="text-xs text-gray-500 mt-1">Kami memerlukan kata sandi untuk mengubah email</p>
                                 </div>
 
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -127,7 +127,7 @@
                                     </p>
                                     <ul class="text-sm text-blue-800 space-y-1 ml-5">
                                         <li>• Email harus valid dan belum terdaftar</li>
-                                        <li>• Pastikan password yang Anda masukkan benar</li>
+                                        <li>• Pastikan kata sandi yang Anda masukkan benar</li>
                                         <li>• Setelah diubah, Anda akan login dengan email baru</li>
                                     </ul>
                                 </div>

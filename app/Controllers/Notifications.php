@@ -111,7 +111,7 @@ class Notifications extends Controller
             ->getRowArray();
 
         if (!$booking) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Booking not found']);
+            return $this->response->setJSON(['success' => false, 'message' => 'Pesanan tidak ditemukan']);
         }
 
         // Format phone number (remove leading 0, add 62)
@@ -122,7 +122,7 @@ class Notifications extends Controller
 
         // Create WhatsApp message
         $message = "Halo {$booking['nama_lengkap']},\n\n";
-        $message .= "Sepatu Anda dengan booking ID #{$bookingId} sudah selesai dicuci!\n\n";
+        $message .= "Sepatu Anda dengan ID Pesanan  #{$bookingId} sudah selesai dicuci!\n\n";
         $message .= "Layanan: {$booking['layanan']}\n";
         $message .= "Jumlah: {$booking['jumlah_sepatu']} pasang\n";
         $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";

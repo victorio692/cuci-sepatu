@@ -4,7 +4,7 @@
 
 <div class="admin-container">
     <div class="dashboard-header" style="margin-bottom: 2rem;">
-        <h1><i class="fas fa-user-circle"></i> Profil Admin</h1>
+        <h1><i class="fas fa-user-circle"></i> Akun Admin</h1>
         <p style="margin: 0.5rem 0 0; color: #6b7280;">Kelola informasi akun Anda</p>
     </div>
 
@@ -13,7 +13,7 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
                 <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
-                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Profil</h3>
+                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Akun</h3>
             </div>
             <form id="profileForm" class="space-y-6">
                 <div class="form-group">
@@ -46,22 +46,22 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
                 <i class="fas fa-lock" style="color: #5d00ff; font-size: 1.25rem;"></i>
-                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Ubah Password</h3>
+                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Ubah Kata Sandi</h3>
             </div>
             <form id="passwordForm" class="space-y-6">
                 <div class="form-group">
-                    <label>Password Baru</label>
+                    <label>Kata Sandi Baru</label>
                     <input type="password" id="new_password" name="new_password" class="form-control" required>
                     <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter</p>
                 </div>
 
                 <div class="form-group">
-                    <label>Konfirmasi Password Baru</label>
+                    <label>Konfirmasi Kata Sandi Baru</label>
                     <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
                 </div>
 
                 <button type="button" onclick="submitPasswordForm()" class="btn btn-primary">
-                    <i class="fas fa-key"></i> Ubah Password
+                    <i class="fas fa-key"></i> Ubah Kata Sandi
                 </button>
             </form>
         </div>

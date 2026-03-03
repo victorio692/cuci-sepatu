@@ -412,7 +412,7 @@
                     <!-- Logged In Menu -->
                     <ul class="hidden md:flex items-center space-x-6">
                         <li><a href="/" class="relative <?= $isHome ? 'text-blue-600 font-bold' : 'text-gray-700' ?> hover:text-blue-600 font-medium transition-colors duration-300 group">
-                            Home
+                            Beranda
                             <span class="absolute bottom-0 left-0 <?= $isHome ? 'w-full' : 'w-0' ?> h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a></li>
                         <li class="group"><a href="/#services" class="relative text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300 block">
@@ -482,12 +482,12 @@
                             <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 py-2">
                                 <a href="/profile" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 group">
                                     <i class="fas fa-user-circle mr-3 group-hover:scale-110 transition-transform"></i>
-                                    <span>My Account</span>
+                                    <span>Akun Saya</span>
                                 </a>
                                 <div class="border-t border-gray-200 my-2"></div>
                                 <a href="#" onclick="showLogoutAnimation(event)" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-300 group">
                                     <i class="fas fa-sign-out-alt mr-3 group-hover:scale-110 transition-transform"></i>
-                                    <span>Logout</span>
+                                    <span>Keluar</span>
                                 </a>
                             </div>
                         </li>
@@ -502,7 +502,7 @@
                     <!-- Guest Menu -->
                     <ul class="hidden md:flex items-center space-x-8">
                         <li><a href="/" class="relative <?= $isHome ? 'text-blue-600 font-bold' : 'text-gray-700' ?> hover:text-blue-600 font-medium transition-colors duration-300 group">
-                            Home
+                            Beranda
                             <span class="absolute bottom-0 left-0 <?= $isHome ? 'w-full' : 'w-0' ?> h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a></li>
                         <li class="group"><a href="/#services" class="relative text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300 block">
@@ -521,7 +521,7 @@
                             Kontak
                             <span class="absolute bottom-0 left-0 <?= $isKontak ? 'w-full' : 'w-0' ?> h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                         </a></li>
-                        <li><a href="/login" class="px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white hover:shadow-md transform hover:scale-105 transition-all duration-300 font-medium">Login</a></li>
+                        <li><a href="/login" class="px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white hover:shadow-md transform hover:scale-105 transition-all duration-300 font-medium">Masuk</a></li>
                         
                     </ul>
                 <?php endif; ?>
@@ -533,7 +533,7 @@
                     <!-- Logged In Mobile Menu -->
                     <ul class="flex flex-col space-y-1">
                         <li><a href="/" class="block py-2.5 px-3 <?= $isHome ? 'text-blue-600 bg-blue-50 font-bold' : 'text-gray-700' ?> hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300">
-                            <i class="fas fa-home mr-2 w-5"></i>Home
+                            <i class="fas fa-home mr-2 w-5"></i>Beranda
                         </a></li>
                         <li><a href="/#services" class="block py-2.5 px-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300">
                             <i class="fas fa-concierge-bell mr-2 w-5"></i>Layanan
@@ -549,7 +549,7 @@
                         </a></li>
                         <div class="border-t border-gray-200 my-2"></div>
                         <li><a href="/profile" class="block py-2.5 px-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300">
-                            <i class="fas fa-user-circle mr-2 w-5"></i>My Account
+                            <i class="fas fa-user-circle mr-2 w-5"></i>Akun Saya
                         </a></li>
                         <li><a href="#" onclick="showLogoutAnimation(event)" class="block py-2.5 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg font-medium transition-all duration-300">
                             <i class="fas fa-sign-out-alt mr-2 w-5"></i>Logout
@@ -559,7 +559,7 @@
                     <!-- Guest Mobile Menu -->
                     <ul class="flex flex-col space-y-1">
                         <li><a href="/" class="block py-2.5 px-3 <?= $isHome ? 'text-blue-600 bg-blue-50 font-bold' : 'text-gray-700' ?> hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300">
-                            <i class="fas fa-home mr-2 w-5"></i>Home
+                            <i class="fas fa-home mr-2 w-5"></i>Beranda
                         </a></li>
                         <li><a href="/#services" class="block py-2.5 px-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300">
                             <i class="fas fa-concierge-bell mr-2 w-5"></i>Layanan
@@ -575,7 +575,7 @@
                         </a></li>
                         <div class="border-t border-gray-200 my-3"></div>
                         <li><a href="/login" class="block py-2.5 px-4 border-2 border-blue-600 text-blue-600 rounded-lg text-center hover:bg-blue-600 hover:text-white hover:shadow-md transition-all duration-300 font-semibold">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                            <i class="fas fa-sign-in-alt mr-2"></i>Masuk
                         </a></li>
                     </ul>
                 <?php endif; ?>

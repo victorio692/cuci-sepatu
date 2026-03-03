@@ -174,7 +174,7 @@
                 <a href="<?= base_url('admin') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isDashboard ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     <i class="fas fa-home w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
-                    <span class="relative">Dashboard</span>
+                    <span class="relative">Beranda</span>
                 </a>
                 <a href="<?= base_url('admin/services') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isServices ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
@@ -184,12 +184,12 @@
                 <a href="<?= base_url('admin/bookings') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isBookings ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     <i class="fas fa-shopping-bag w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
-                    <span class="relative">Booking</span>
+                    <span class="relative">Pesanan</span>
                 </a>
                 <a href="<?= base_url('admin/users') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isUsers ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     <i class="fas fa-users w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
-                    <span class="relative">Customers</span>
+                    <span class="relative">Pelanggan</span>
                 </a>
                 <a href="<?= base_url('admin/reports') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isReports ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
@@ -199,14 +199,14 @@
                 <a href="<?= base_url('admin/profile') ?>" class="flex items-center space-x-3 px-4 py-3 <?= $isProfile ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg' : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600' ?> rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                     <span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                     <i class="fas fa-user-circle w-5 text-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
-                    <span class="relative">Profil</span>
+                    <span class="relative">Akun</span>
                 </a>
                 
                 <div class="pt-4 border-t border-gray-200">
                     <a href="#" onclick="showAdminLogoutAnimation(event)" class="flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 rounded-lg font-medium transform hover:translate-x-1 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                         <span class="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                         <i class="fas fa-sign-out-alt w-5 text-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300"></i>
-                        <span class="relative">Logout</span>
+                        <span class="relative">Keluar</span>
                     </a>
                 </div>
             </nav>

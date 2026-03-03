@@ -4,8 +4,8 @@
 
 <!-- Page Header -->
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Admin</h1>
-    <p class="text-gray-600">Kelola semua booking dan layanan SYH Cleaning</p>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Beranda Admin</h1>
+    <p class="text-gray-600">Kelola semua Pesanan dan layanan SYH Cleaning</p>
 </div>
 
 <!-- Statistics Cards -->
@@ -14,7 +14,7 @@
     <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
         <div class="flex items-center justify-between">
             <div class="flex-1">
-                <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Booking</p>
+                <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Pesanan</p>
                 <h3 class="text-4xl font-bold mt-2" data-stat="total_bookings">0</h3>
                 <p class="text-blue-100 text-xs mt-2">Total semua pesanan</p>
             </div>
@@ -72,14 +72,14 @@
     <!-- Card Header -->
     <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50">
         <div>
-            <h3 class="text-lg font-bold text-gray-900">Data Booking</h3>
+            <h3 class="text-lg font-bold text-gray-900">Data Pesanan</h3>
             <p class="text-sm text-gray-600 mt-1">Kelola semua pesanan customer</p>
         </div>
         <div class="relative w-full sm:w-64">
             <input 
                 type="text" 
                 id="searchBooking" 
-                placeholder="Cari booking..." 
+                placeholder="Cari pesanan..." 
                 onkeyup="searchTable()"
                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             >
@@ -92,7 +92,7 @@
         <div id="bookingsTableContainer">
             <div class="p-16 text-center">
                 <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
-                <p class="text-gray-600 text-lg font-medium">Memuat data booking...</p>
+                <p class="text-gray-600 text-lg font-medium">Memuat data pesanan...</p>
             </div>
         </div>
     </div>

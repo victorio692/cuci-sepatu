@@ -50,7 +50,7 @@
     <div id="bookingsTableContainer">
         <div class="p-16 text-center">
             <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
-            <p class="text-gray-600 text-lg font-medium">Memuat data booking...</p>
+            <p class="text-gray-600 text-lg font-medium">Memuat data pesanan...</p>
         </div>
     </div>
 </div>
@@ -159,7 +159,7 @@ function renderBookingsTable(bookings, pagination = {}) {
             <thead class="bg-gray-100 border-b-2 border-gray-200">
                 <tr>
                     <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
+                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Pelanggan</th>
                     <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
                     <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
                     <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
