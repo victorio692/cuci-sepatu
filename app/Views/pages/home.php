@@ -907,6 +907,21 @@ function showSlide(n) {
                 <p class="text-gray-500">Memuat layanan...</p>
             </div>
         </div>
+        
+        <!-- Other Services Container (Hidden by default) -->
+        <div id="otherServicesContainer" class="mt-4 hidden">
+            <div id="otherServicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                <!-- Other services will be rendered here -->
+            </div>
+        </div>
+        
+        <!-- "Layanan Lainnya" Button -->
+        <div id="viewMoreButton" class="mt-6 text-center hidden">
+            <button onclick="toggleAdditionalServices()" class="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
+                <i class="fas fa-chevron-down mr-2"></i>
+                <span id="viewMoreBtnText">Layanan Lainnya</span>
+            </button>
+        </div>
     </div>
 </section>
 
@@ -1178,9 +1193,33 @@ document.addEventListener('DOMContentLoaded', function() {
     loadServices();
 });
 
+// Function to toggle additional services visibility
+function toggleAdditionalServices() {
+    const container = document.getElementById('otherServicesContainer');
+    const button = document.getElementById('viewMoreButton');
+    const btnText = document.getElementById('viewMoreBtnText');
+    const isHidden = container.classList.contains('hidden');
+    
+    if (isHidden) {
+        container.classList.remove('hidden');
+        container.classList.add('fadeIn');
+        btnText.innerHTML = '<i class="fas fa-chevron-up mr-2"></i>Sembunyikan Layanan';
+        button.querySelector('button').classList.add('bg-blue-700');
+    } else {
+        container.classList.add('hidden');
+        container.classList.remove('fadeIn');
+        btnText.innerHTML = '<i class="fas fa-chevron-down mr-2"></i>Layanan Lainnya';
+        button.querySelector('button').classList.remove('bg-blue-700');
+        // Scroll to services section smoothly
+        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 // Load services from API
 async function loadServices() {
     const servicesGrid = document.getElementById('servicesGrid');
+    const otherServicesGrid = document.getElementById('otherServicesGrid');
+    const viewMoreButton = document.getElementById('viewMoreButton');
     
     try {
         console.log('🚀 Loading services from API...');
@@ -1204,8 +1243,8 @@ async function loadServices() {
             const popularServices = ['suede-treatment'];
             const specialBorder = ['white-shoes'];
             
-            // Render services
-            servicesGrid.innerHTML = services.map(service => {
+            // Function to render service card
+            const renderServiceCard = (service) => {
                 const icon = iconMap[service.kode_layanan] || 'fa-shoe-prints';
                 const isPopular = popularServices.includes(service.kode_layanan);
                 const borderClass = specialBorder.includes(service.kode_layanan) ? 'border-blue-300' : 'border-gray-200';
@@ -1240,7 +1279,22 @@ async function loadServices() {
                         </div>
                     </div>
                 `;
-            }).join('');
+            };
+            
+            // Split services into first 4 and the rest
+            const firstFourServices = services.slice(0, 4);
+            const remainingServices = services.slice(4);
+            
+            // Render first 4 services in main grid
+            servicesGrid.innerHTML = firstFourServices.map(renderServiceCard).join('');
+            
+            // Render remaining services if any
+            if (remainingServices.length > 0) {
+                otherServicesGrid.innerHTML = remainingServices.map(renderServiceCard).join('');
+                viewMoreButton.classList.remove('hidden');
+            } else {
+                viewMoreButton.classList.add('hidden');
+            }
             
             console.log('✨ Services rendered successfully!');
         } else {
@@ -1264,6 +1318,22 @@ async function loadServices() {
 </script>
 
 <style>
+/* Fade in animation for additional services */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
 /* Slide up animation */
 @keyframes slide-up {
     from {
