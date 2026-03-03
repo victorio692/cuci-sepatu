@@ -116,9 +116,9 @@
 
             <!-- CTA -->
             <div class="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-xl p-8 text-white text-center hover:scale-[1.02] transition-all duration-300">
-                <h3 class="text-2xl font-bold mb-3">
-                    Siap untuk sepatu bersih dan rapi?
-                </h3>
+                 <h3 class="text-2xl font-bold mb-3 text-white">
+        Siap untuk sepatu bersih dan rapi?
+    </h3>
                 <p class="text-blue-100 mb-6">
                     Hubungi kami sekarang atau langsung pesan layanan kami!
                 </p>

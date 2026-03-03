@@ -148,57 +148,59 @@ function renderServicesGrid(services) {
     const container = document.getElementById('servicesContainer');
     
     const html = services.map(service => {
-        // Check if service has an image or use Font Awesome icon
-        let iconHtml = '';
-        if (service.icon_type === 'image' && service.icon) {
-            // Tambahkan base URL untuk path gambar
-            const iconPath = service.icon.startsWith('http') ? service.icon : `/${service.icon}`;
-            iconHtml = `<img src="${iconPath}" alt="${service.name || service.nama_layanan}" class="w-14 h-14 object-cover rounded-full">`;
-        } else {
-            iconHtml = `<i class="fas fa-${service.icon || 'shoe-prints'} text-2xl"></i>`;
-        }
+        // Check if service has an image
+        const hasImage = service.icon_type === 'image' && service.icon;
+        const backgroundStyle = hasImage 
+            ? `background-image: url('${service.icon.startsWith('http') ? service.icon : '/' + service.icon}'); background-size: cover; background-position: center;`
+            : `background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);`;
+        
+        const overlayClass = hasImage ? 'bg-black/35' : '';
+        const durationText = (service.durasi_hari || service.duration || 1) == 1 ? '1 hari' : `1-${service.durasi_hari || service.duration || 1} hari`;
         
         return `
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition">
-            <!-- Service Header with Gradient -->
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white">
-                <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                    ${iconHtml}
-                </div>
-                <h3 class="text-xl font-bold mb-2">${service.name || service.nama_layanan}</h3>
-                <p class="text-blue-100 text-sm">${service.description || service.deskripsi || '-'}</p>
-            </div>` +
-            // Rest of the HTML remains the same
-            `
-            <!-- Service Body -->
-            <div class="p-6">
-                <div class="mb-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm text-gray-600 font-medium">Harga Layanan</span>
-                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">Per Pasang</span>
-                    </div>
-                    <div class="text-3xl font-bold text-gray-800">
-                        Rp ${formatCurrency(service.harga_dasar || service.base_price || service.price || 0)}
-                    </div>
+        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-200 h-full flex flex-col service-card">
+            <!-- Service Header with Background Image (h-40) -->
+            <div class="relative h-40 overflow-hidden flex items-center justify-center" style="${backgroundStyle}">
+                <!-- Overlay for better text readability -->
+                <div class="absolute inset-0 ${overlayClass} transition"></div>
+            </div>
+            
+            <!-- White Content Area - Horizontal Layout -->
+            <div class="p-6 flex-1 flex flex-col justify-between">
+                <!-- Row 1: Nama Layanan (left) | Harga (right) -->
+                <div class="flex justify-between items-start mb-3 pb-3 border-b border-gray-200">
+                    <!-- Nama Layanan -->
+                    <h3 class="text-xl font-bold text-gray-800 line-clamp-1 flex-1">${service.name || service.nama_layanan}</h3>
+                    <!-- Harga -->
+                    <p class="text-2xl font-bold text-blue-600 ml-4 whitespace-nowrap">Rp ${formatCurrency(service.harga_dasar || service.base_price || service.price || 0)}</p>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2">
+                <!-- Row 2: Deskripsi (left) | Durasi (right) -->
+                <div class="flex justify-between items-start mb-4 pb-4 border-b border-gray-200 flex-1">
+                    <!-- Deskripsi -->
+                    <p class="text-sm text-gray-600 line-clamp-2 flex-1">${service.description || service.deskripsi || 'Tidak ada deskripsi'}</p>
+                    <!-- Durasi -->
+                    <p class="text-xs text-gray-600 ml-4 whitespace-nowrap">⏱️ ${durationText}</p>
+                </div>
+
+                <!-- Row 3: 3 Action Buttons -->
+                <div class="grid grid-cols-3 gap-3">
                     <button type="button" 
                        onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
-                       class="px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
-                        <i class="fas fa-edit"></i>
-                        <span>Edit Harga</span>
+                       class="py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       title="Edit Harga">
+                        Edit
                     </button>
                     <a href="/admin/services/edit/${service.id}" 
-                       class="px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
-                        <i class="fas fa-cog"></i>
-                        <span>Detail</span>
+                       class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       title="Detail/Edit">
+                        Detail
                     </a>
                     <button type="button" 
                        onclick="deleteService(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}')"
-                       class="px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:shadow-lg transition text-sm font-medium flex items-center justify-center space-x-1">
-                        <i class="fas fa-trash"></i>
-                        <span>Hapus</span>
+                       class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       title="Hapus">
+                        Hapus
                     </button>
                 </div>
             </div>
@@ -395,6 +397,76 @@ function showToast(message, type) {
 }
 .animate-slide-in {
     animation: slide-in 0.3s ease;
+}
+
+/* Service Card Styling */
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive Grid - 3 columns */
+@media (max-width: 640px) {
+    #servicesContainer {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    #servicesContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    #servicesContainer {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Line clamping for older browsers */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Button hover effects */
+.service-card button {
+    transition: all 0.2s ease;
+}
+
+.service-card button:hover {
+    transform: scale(1.05);
+}
+
+/* Background image styling */
+.service-card .h-40 {
+    position: relative;
+}
+
+/* Overlay opacity handling */
+.bg-black\/40 {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Select dropdown styling */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
+}
+
+/* Input focus state */
+input:focus, select:focus {
+    outline: none;
 }
 </style>
 <?= $this->endSection() ?>

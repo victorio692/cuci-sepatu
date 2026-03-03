@@ -85,6 +85,39 @@
             ><?= old('deskripsi') ?></textarea>
         </div>
 
+        <!-- Icon/Image Upload -->
+        <div>
+            <label for="icon_image" class="block text-sm font-medium text-gray-700 mb-2">
+                Icon/Gambar Layanan (Opsional)
+            </label>
+            <div class="flex items-center gap-4">
+                <?php if (!empty($service['icon_path'])): ?>
+                    <div class="relative w-24 h-24 rounded-lg border-2 border-blue-300 overflow-hidden bg-blue-50 flex items-center justify-center">
+                        <img src="<?= base_url($service['icon_path']) ?>" alt="Service icon" class="w-full h-full object-cover">
+                        <button type="button" onclick="removeServiceIcon()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600">
+                            ×
+                        </button>
+                    </div>
+                <?php else: ?>
+                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                        <i class="fas fa-image text-gray-400 text-3xl"></i>
+                    </div>
+                <?php endif; ?>
+                <div class="flex-1">
+                    <input 
+                        type="file" 
+                        id="icon_image" 
+                        name="icon_image" 
+                        accept="image/*"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    >
+                    <p class="mt-2 text-xs text-gray-500">
+                        Format: JPG, PNG, GIF (Max: 2MB). Ukuran recommended: 200x200px
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Harga Dasar -->
             <div>

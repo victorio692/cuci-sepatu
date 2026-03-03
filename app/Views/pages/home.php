@@ -918,8 +918,7 @@ function showSlide(n) {
         <!-- "Layanan Lainnya" Button -->
         <div id="viewMoreButton" class="mt-6 text-center hidden">
             <button onclick="toggleAdditionalServices()" class="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
-                <i class="fas fa-chevron-down mr-2"></i>
-                <span id="viewMoreBtnText">Layanan Lainnya</span>
+                <span id="viewMoreBtnText"><i class="fas fa-chevron-down mr-2"></i>Layanan Lainnya</span>
             </button>
         </div>
     </div>
