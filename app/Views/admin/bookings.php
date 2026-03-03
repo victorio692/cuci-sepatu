@@ -221,7 +221,7 @@ function renderBookingsTable(bookings, pagination = {}) {
                     <span class="text-sm text-gray-700 font-medium">${booking.quantity || booking.jumlah || 1}</span>
                 </td>
                 <td class="px-5 py-4 whitespace-nowrap text-right">
-                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </td>
                 <td class="px-5 py-4">
                     <select 

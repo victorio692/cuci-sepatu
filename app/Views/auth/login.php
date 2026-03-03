@@ -179,7 +179,7 @@ async function submitLoginForm() {
         console.log('✅ Full API Response:', result);
         
         if (result.status === 'success') {
-            showToast(result.message || 'Login berhasil!', 'success');
+            showToast(result.message || '', 'success');
             console.log('✅ Login successful, redirecting...');
             console.log('👤 User:', result.data?.user);
             
@@ -194,7 +194,7 @@ async function submitLoginForm() {
         } else {
             // Error response
             console.log('❌ Login failed:', result.message);
-            showToast(result.message || 'Login gagal', 'error');
+            showToast(result.message || '', 'error');
             
             // Hide overlay
             if (overlay) {

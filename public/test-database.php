@@ -133,11 +133,11 @@ try {
             COUNT(*) as total,
             SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
             SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-            SUM(total) as revenue
+            COALESCE(SUM(total), 0) as revenue
         FROM bookings
     ")->getRow();
     
-    $paid_total = $db->query("SELECT SUM(amount) as paid FROM payments WHERE payment_status = 'paid'")->getRow();
+    $paid_total = $db->query("SELECT COALESCE(SUM(amount), 0) as paid FROM payments WHERE payment_status = 'paid'")->getRow();
     
     echo '<h2>📊 Statistik</h2>';
     echo '<div class="info">';

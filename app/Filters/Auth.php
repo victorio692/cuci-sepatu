@@ -24,7 +24,7 @@ class Auth implements FilterInterface
             $user = $db->table('users')->where('id', $session->get('user_id'))->get()->getRowArray();
             
             if (!$user || $user['role'] !== 'admin') {
-                return redirect()->to('/dashboard')->with('error', 'Access denied');
+                return redirect()->to('/')->with('error', 'Access denied');
             }
         }
     }
