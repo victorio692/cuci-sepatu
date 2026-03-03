@@ -156,22 +156,12 @@
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                         <span style="color: rgba(255, 255, 255, 0.9);">Layanan:</span>
                         <span style="font-weight: 600;">
-                            <?php
-                            $serviceName = match($booking['service']) {
-                                'fast-cleaning' => 'Fast Cleaning',
-                                'deep-cleaning' => 'Deep Cleaning',
-                                'white-shoes' => 'White Shoes',
-                                'suede-treatment' => 'Suede Treatment',
-                                'unyellowing' => 'Unyellowing',
-                                default => $booking['service']
-                            };
-                            echo $serviceName;
-                            ?>
+                            <?= !empty($booking['service_name']) ? $booking['service_name'] : ucfirst(str_replace('-', ' ', $booking['service'])) ?>
                         </span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                         <span style="color: rgba(255, 255, 255, 0.9);">Harga/Sepatu:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format($booking['subtotal'] / $booking['quantity'], 0, ',', '.') ?></span>
+                        <span style="font-weight: 600;">Rp <?= number_format(!empty($booking['service_price']) ? intval($booking['service_price']) : intval($booking['subtotal'] / $booking['quantity']), 0, '', '.') ?></span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: rgba(255, 255, 255, 0.9);">Jumlah:</span>
@@ -181,15 +171,15 @@
                 <div style="background: white; color: #374151; padding: 1rem; border-radius: 0.5rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span>Subtotal:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format($booking['subtotal'], 0, ',', '.') ?></span>
+                        <span style="font-weight: 600;">Rp <?= number_format(intval($booking['subtotal']), 0, '', '.') ?></span>
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
                         <span>Biaya Pengiriman:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format($booking['delivery_fee'], 0, ',', '.') ?></span>
+                        <span style="font-weight: 600;">Rp <?= number_format(intval($booking['delivery_fee']), 0, '', '.') ?></span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
                         <span style="font-weight: 700; font-size: 1.1rem;">Total</span>
-                        <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format($booking['total'], 0, ',', '.') ?></span>
+                        <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format(intval($booking['total']), 0, '', '.') ?></span>
                     </div>
                 </div>
             </div>

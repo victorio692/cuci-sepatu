@@ -236,7 +236,7 @@
                                 <div>
                                     <span class="text-sm text-gray-500">Mulai dari</span>
                                     <div class="text-2xl font-bold text-gray-900">
-                                        Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?>
+                                        Rp <?= number_format($service['harga_dasar'], 0, '', '.') ?>
                                     </div>
                                 </div>
                                 <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white">

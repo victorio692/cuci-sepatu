@@ -164,8 +164,8 @@ function loadCart() {
                                 </button>
                             </div>
                             <div class="text-right">
-                                <div class="text-sm text-gray-500">Rp ${parseInt(item.price).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / pasang</div>
-                                <div class="text-lg font-bold text-blue-600">Rp ${parseInt(itemTotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                                <div class="text-sm text-gray-500">Rp ${parseInt(item.price).toLocaleString('id-ID')} / pasang</div>
+                                <div class="text-lg font-bold text-blue-600">Rp ${parseInt(itemTotal).toLocaleString('id-ID')}</div>
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@ function loadCart() {
                     <div class="border-t border-gray-200 pt-3">
                         <div class="flex justify-between items-center">
                             <span class="text-lg font-bold text-gray-900">Total</span>
-                            <span class="text-2xl font-bold text-blue-600">Rp ${parseInt(totalPrice).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            <span class="text-2xl font-bold text-blue-600">Rp ${parseInt(totalPrice).toLocaleString('id-ID')}</span>
                         </div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@ function updateSummary() {
         const checkoutButton = summaryContainer.querySelector('button');
         
         if (itemCountElement) itemCountElement.textContent = `${totalItems} item dipilih`;
-        if (totalPriceElement) totalPriceElement.textContent = `Rp ${parseInt(totalPrice).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        if (totalPriceElement) totalPriceElement.textContent = `Rp ${parseInt(totalPrice).toLocaleString('id-ID')}`;
         if (checkoutButton) {
             checkoutButton.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Checkout (${totalItems} item)`;
             if (totalItems === 0) {

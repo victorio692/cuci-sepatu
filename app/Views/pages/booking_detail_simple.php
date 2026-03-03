@@ -234,7 +234,7 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Harga Layanan</span>
-                            <span class="font-semibold">Rp <?= number_format($booking['harga'], 0, ',', '.') ?></span>
+                            <span class="font-semibold">Rp <?= number_format($booking['harga'], 0, '', '.') ?></span>
                         </div>
                         
                         <div class="flex justify-between">
@@ -245,7 +245,7 @@
                         <div class="border-t border-gray-300 pt-2 mt-2">
                             <div class="flex justify-between">
                                 <span class="font-bold">Total</span>
-                                <span class="font-bold text-lg">Rp <?= number_format($booking['total_harga'], 0, ',', '.') ?></span>
+                                <span class="font-bold text-lg">Rp <?= number_format($booking['total_harga'], 0, '', '.') ?></span>
                             </div>
                         </div>
                     </div>

@@ -288,7 +288,7 @@
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between items-center py-2">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-medium text-gray-900">Rp <?= number_format($subtotal, 0, ',', '.') ?></span>
+                            <span class="font-medium text-gray-900">Rp <?= number_format($subtotal, 0, '', '.') ?></span>
                         </div>
                         
                         <div class="flex justify-between items-center py-2">
@@ -297,7 +297,7 @@
                                 <?php if ($biayaKirim == 0): ?>
                                     <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">FREE</span>
                                 <?php else: ?>
-                                    Rp <?= number_format($biayaKirim, 0, ',', '.') ?>
+                                    Rp <?= number_format($biayaKirim, 0, '', '.') ?>
                                 <?php endif; ?>
                             </span>
                         </div>
@@ -305,7 +305,7 @@
                         <div class="border-t-2 border-gray-200 pt-3 mt-3">
                             <div class="flex justify-between items-center">
                                 <span class="font-semibold text-gray-900">Total</span>
-                                <span class="font-bold text-xl text-purple-600">Rp <?= number_format($total, 0, ',', '.') ?></span>
+                                <span class="font-bold text-xl text-purple-600">Rp <?= number_format($total, 0, '', '.') ?></span>
                             </div>
                         </div>
                     </div>

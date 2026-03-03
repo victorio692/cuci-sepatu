@@ -133,7 +133,7 @@ function formatDate(dateString) {
 
 // Format currency
 function formatCurrency(amount) {
-    return 'Rp ' + parseInt(amount).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return 'Rp ' + parseInt(amount).toLocaleString('id-ID');
 }
 
 // Load bookings from API

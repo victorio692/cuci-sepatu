@@ -42,7 +42,7 @@
                             <div class="flex-1">
                                 <h3 class="text-lg font-bold text-gray-900"><?= htmlspecialchars($service['nama_layanan']) ?></h3>
                                 <p class="text-sm text-gray-600"><?= htmlspecialchars($service['deskripsi']) ?></p>
-                                <p class="text-lg font-bold text-blue-600 mt-1">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></p>
+                                <p class="text-lg font-bold text-blue-600 mt-1">Rp <?= number_format($service['harga_dasar'], 0, '', '.') ?></p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Harga/Sepatu</span>
-                            <span class="font-medium">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
+                            <span class="font-medium">Rp <?= number_format($service['harga_dasar'], 0, '', '.') ?></span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Jumlah</span>
@@ -147,7 +147,7 @@
                     <div class="border-t border-gray-200 pt-3">
                         <div class="flex justify-between items-center">
                             <span class="text-gray-900 font-bold">Total</span>
-                            <span class="text-2xl font-bold text-blue-600" id="summary-total">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
+                            <span class="text-2xl font-bold text-blue-600" id="summary-total">Rp <?= number_format($service['harga_dasar'], 0, '', '.') ?></span>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@ function updateSummary() {
 
     document.getElementById('summary-quantity').textContent = quantity + ' pasang';
     document.getElementById('summary-delivery').textContent = deliveryFee > 0 ? 'Rp 5.000' : 'Gratis';
-    document.getElementById('summary-total').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('summary-total').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
 }
 
 quantityInput.addEventListener('input', updateSummary);

@@ -548,8 +548,8 @@ function loadCheckoutItems() {
                     <p class="font-semibold text-gray-900 text-sm">${item.service_name}</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <p class="text-xs text-gray-500">Rp ${parseInt(item.price).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} x ${item.quantity}</p>
-                    <p class="font-bold text-blue-600 text-sm">Rp ${parseInt(itemTotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p class="text-xs text-gray-500">Rp ${parseInt(item.price).toLocaleString('id-ID')} x ${item.quantity}</p>
+                    <p class="font-bold text-blue-600 text-sm">Rp ${parseInt(itemTotal).toLocaleString('id-ID')}</p>
                 </div>
             </div>
         `;
@@ -590,7 +590,7 @@ function updateSummary() {
     
     // Update display
     document.getElementById('totalQuantity').textContent = `${totalQuantity} pasang`;
-    document.getElementById('subtotalPrice').textContent = `Rp ${parseInt(subtotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('subtotalPrice').textContent = `Rp ${parseInt(subtotal).toLocaleString('id-ID')}`;
     
     const additionalFeeSection = document.getElementById('additionalFeeSection');
     const feeInfoSection = document.getElementById('feeInfoSection');
@@ -600,14 +600,14 @@ function updateSummary() {
     if (additionalFee > 0) {
         additionalFeeSection.classList.remove('hidden');
         feeInfoSection.classList.remove('hidden');
-        additionalFeeEl.textContent = `Rp ${parseInt(additionalFee).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        additionalFeeEl.textContent = `Rp ${parseInt(additionalFee).toLocaleString('id-ID')}`;
         feeInfoText.textContent = feeReasons.join(' + ');
     } else {
         additionalFeeSection.classList.add('hidden');
         feeInfoSection.classList.add('hidden');
     }
     
-    document.getElementById('totalPrice').textContent = `Rp ${parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('totalPrice').textContent = `Rp ${parseInt(total).toLocaleString('id-ID')}`;
 }
 
 // Submit checkout

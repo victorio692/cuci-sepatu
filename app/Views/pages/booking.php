@@ -97,7 +97,7 @@
                                 </span>
                             </div>
                             <div class="mt-2 sm:mt-3">
-                                <span class="text-blue-600 font-semibold text-base sm:text-lg">Rp <?= number_format($service['harga_dasar'], 0, ',', '.') ?></span>
+                                <span class="text-blue-600 font-semibold text-base sm:text-lg">Rp <?= number_format($service['harga_dasar'], 0, '', '.') ?></span>
                                 <span class="text-gray-400 text-xs sm:text-sm">/pasang</span>
                             </div>
                             <div class="text-gray-400 text-xs mt-1 sm:mt-2"><?= $service['durasi_hari'] ?> hari pengerjaan</div>
@@ -813,14 +813,14 @@ function updateSummary() {
         
         setTimeout(() => {
             summaryService.textContent = serviceName;
-            summaryPrice.textContent = 'Rp ' + parseInt(price).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            summaryPrice.textContent = 'Rp ' + parseInt(price).toLocaleString('id-ID');
             summaryQuantity.textContent = quantity + ' pasang';
-            summarySubtotal.textContent = 'Rp ' + parseInt(subtotal).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            summaryTotal.textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            summarySubtotal.textContent = 'Rp ' + parseInt(subtotal).toLocaleString('id-ID');
+            summaryTotal.textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
             
             // Show or hide additional fee section
             if (additionalFee > 0) {
-                summaryAdditionalFee.textContent = 'Rp ' + additionalFee.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                summaryAdditionalFee.textContent = 'Rp ' + additionalFee.toLocaleString('id-ID');
                 additionalFeeSection.classList.remove('hidden');
                 
                 // Update fee info

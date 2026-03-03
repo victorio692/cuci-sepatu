@@ -85,8 +85,9 @@ class Bookings extends Controller
     public function detail($id)
     {
         $booking = $this->db->table('bookings')
-            ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp, users.alamat as address')
+            ->select('bookings.*, users.nama_lengkap as full_name, users.email, users.no_hp, users.alamat as address, services.nama_layanan as service_name, services.harga_dasar as service_price, services.durasi_hari as service_duration')
             ->join('users', 'bookings.id_user = users.id')
+            ->join('services', 'bookings.layanan = services.kode_layanan', 'left')
             ->where('bookings.id', $id)
             ->get()
             ->getRowArray();

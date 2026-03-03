@@ -1248,7 +1248,7 @@ async function loadServices() {
                 const icon = iconMap[service.kode_layanan] || 'fa-shoe-prints';
                 const isPopular = popularServices.includes(service.kode_layanan);
                 const borderClass = specialBorder.includes(service.kode_layanan) ? 'border-blue-300' : 'border-gray-200';
-                const priceFormatted = parseInt(service.harga_dasar).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const priceFormatted = parseInt(service.harga_dasar).toLocaleString('id-ID');
                 const durationText = service.durasi_hari == 1 ? '1 hari' : `1-${service.durasi_hari} hari`;
                 
                 return `
