@@ -131,7 +131,7 @@ function renderStats(ringkasan) {
     
     const stats = [
         {
-            title: 'Total Booking',
+            title: 'Total Pesanan',
             value: ringkasan.total_booking,
             color: 'from-blue-500 to-blue-600',
             icon: 'fa-shopping-bag',
@@ -145,7 +145,7 @@ function renderStats(ringkasan) {
             subtitle: 'Booking selesai'
         },
         {
-            title: 'Pending',
+            title: 'Menunggu Konfirmasi',
             value: ringkasan.booking_pending,
             color: 'from-blue-500 to-blue-700',
             icon: 'fa-clock',
@@ -156,7 +156,7 @@ function renderStats(ringkasan) {
             value: 'Rp ' + formatCurrency(ringkasan.total_pendapatan),
             color: 'from-purple-500 to-indigo-600',
             icon: 'fa-money-bill-wave',
-            subtitle: 'Dari booking selesai',
+            subtitle: 'Dari pesanan selesai',
             isAmount: true
         }
     ];

@@ -182,7 +182,7 @@
                         </div>
                     </div>
                     <a href="/make-booking" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-plus mr-2"></i> Booking Sekarang
+                        <i class="fas fa-plus mr-2"></i> Pesan Sekarang
                     </a>
                 </div>
             </div>
@@ -248,7 +248,7 @@
                             <a href="/make-booking?service=<?= $service['kode_layanan'] ?>" 
                                class="block w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white text-center rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
                                 <i class="fas fa-shopping-cart mr-2"></i>
-                                Booking Sekarang
+                                Pesan Sekarang
                             </a>
                         </div>
                     </div>
@@ -270,7 +270,7 @@
                     <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
                     <p class="text-gray-600 mb-4">Anda belum memiliki pesanan.</p>
                     <a href="/make-booking" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
-                        Booking Sekarang
+                        Pesan Sekarang
                     </a>
                 </div>
             </div>

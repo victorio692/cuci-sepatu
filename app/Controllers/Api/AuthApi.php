@@ -142,7 +142,7 @@ class AuthApi extends ResourceController
 
         return $this->respond([
             'status' => 'success',
-            'message' => 'Login berhasil',
+            'message' => '',
             'data' => [
                 'user' => $user,
                 'token' => session_id()

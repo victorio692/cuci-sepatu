@@ -208,7 +208,7 @@ class AdminBookingsApi extends BaseController
             }
 
             if (!$foto_hasil->isValid()) {
-                return $this->fail('Error upload foto: ' . $foto_hasil->getErrorString());
+                return $this->fail('Error unggah foto: ' . $foto_hasil->getErrorString());
             }
 
             
@@ -234,7 +234,7 @@ class AdminBookingsApi extends BaseController
                 
                 $foto_hasil->move($uploadPath, $newName);
             } catch (\Exception $e) {
-                return $this->failServerError('Gagal upload foto: ' . $e->getMessage());
+                return $this->failServerError('Gagal unggah foto: ' . $e->getMessage());
             }
         }
 
