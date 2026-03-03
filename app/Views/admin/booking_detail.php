@@ -438,7 +438,7 @@
         <!-- Footer -->
         <div style="background: #f9fafb; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; border-top: 1px solid #e5e7eb;">
             <button onclick="confirmComplete()" class="btn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: all 0.2s;">
-                <i class="fas fa-check-circle"></i> Upload & Tandai Selesai
+                <i class="fas fa-check-circle"></i> Unggah & Tandai Selesai
             </button>
             <button onclick="closeCompleteModal()" class="btn" style="flex: 1; background: #e5e7eb; color: #374151; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s;">
                 <i class="fas fa-times"></i> Batal
@@ -663,7 +663,7 @@ function confirmComplete() {
             alert('❌ Error: ' + (data.message || 'Gagal mengubah status'));
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
             }
         }
     })
@@ -672,7 +672,7 @@ function confirmComplete() {
         alert('❌ Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Upload & Tandai Selesai';
+            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
         }
     });
 }
