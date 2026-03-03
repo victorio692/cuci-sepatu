@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('❌ Error loading service:', error);
         showToast('Gagal memuat data layanan: ' + error.message, 'error');
     }
-}
+});
 
 // Remove service icon
 async function removeServiceIcon() {

@@ -93,8 +93,12 @@ class AdminServicesApi extends BaseController
     public function create(): ResponseInterface
     {
         try {
+            log_message('info', 'Create service API called');
+            
             // Support both JSON and form-data
             $input = $this->request->getJSON(true) ?? $this->request->getPost();
+            
+            log_message('info', 'Create data received: ' . json_encode($input));
             
             $rules = [
                 'kode_layanan' => 'required',
@@ -103,11 +107,15 @@ class AdminServicesApi extends BaseController
                 'durasi_hari' => 'required'
             ];
 
-            if (!$this->validate($rules, $input)) {
+            $validation = \Config\Services::validation();
+            $validation->setRules($rules);
+            
+            if (!$validation->run($input)) {
+                log_message('warning', 'Validation failed: ' . json_encode($validation->getErrors()));
                 return $this->response->setJSON([
                     'code' => 400,
                     'message' => 'Validasi Gagal',
-                    'errors' => $this->validator->getErrors()
+                    'errors' => $validation->getErrors()
                 ]);
             }
 
@@ -117,14 +125,18 @@ class AdminServicesApi extends BaseController
                 'deskripsi' => $input['deskripsi'] ?? null,
                 'harga_dasar' => $input['harga_dasar'],
                 'durasi_hari' => $input['durasi_hari'],
-                'aktif' => 1,
+                'aktif' => isset($input['aktif']) ? ($input['aktif'] ? 1 : 0) : 1,
                 'dibuat_pada' => date('Y-m-d H:i:s'),
                 'diupdate_pada' => date('Y-m-d H:i:s')
             ];
 
+            log_message('info', 'Inserting service with data: ' . json_encode($data));
+            
             $this->db->table('services')->insert($data);
             $id = $this->db->insertID();
 
+            log_message('info', 'Service created successfully with ID: ' . $id);
+            
             return $this->response->setJSON([
                 'code' => 201,
                 'message' => 'Layanan berhasil dibuat',
@@ -142,6 +154,8 @@ class AdminServicesApi extends BaseController
     public function update($id = null): ResponseInterface
     {
         try {
+            log_message('info', 'Update service API called for ID: ' . $id);
+            
             if (!$id) {
                 return $this->response->setJSON([
                       'code' => 400,
@@ -155,6 +169,7 @@ class AdminServicesApi extends BaseController
                 ->getRow();
 
             if (!$cek) {
+                log_message('warning', 'Service not found: ' . $id);
                 return $this->response->setJSON([
                     'code' => 404,
                     'message' => 'Layanan Tidak Ditemukan'
@@ -163,6 +178,8 @@ class AdminServicesApi extends BaseController
 
             // Support both JSON and form-data
             $input = $this->request->getJSON(true) ?? $this->request->getPost();
+            log_message('info', 'Update data received: ' . json_encode($input));
+            
             $data = [];
 
             if (isset($input['kode_layanan'])) {
@@ -185,12 +202,24 @@ class AdminServicesApi extends BaseController
                 $data['durasi_hari'] = $input['durasi_hari'];
             }
 
+            // Handle aktif status
+            if (isset($input['aktif'])) {
+                $data['aktif'] = $input['aktif'] ? 1 : 0;
+            } else {
+                // If not set, means checkbox is unchecked
+                $data['aktif'] = 0;
+            }
+
             $data['diupdate_pada'] = date('Y-m-d H:i:s');
 
+            log_message('info', 'Updating service with data: ' . json_encode($data));
+            
             $this->db->table('services')
                 ->where('id', $id)
                 ->update($data);
 
+            log_message('info', 'Service updated successfully: ' . $id);
+            
             return $this->response->setJSON([
                 'code' => 200,
                 'message' => 'Layanan berhasil diupdate',
