@@ -9,7 +9,7 @@
             <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
                 <i class="fas fa-arrow-left mr-2"></i> Kembali ke Beranda
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Booking Sekarang</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Pesan Sekarang</h1>
             <p class="text-gray-600 mt-2">Isi form dibawah untuk langsung booking layanan ini</p>
         </div>
 
@@ -105,7 +105,7 @@
                         <label class="block text-gray-700 font-medium mb-2">Foto Sepatu <span class="text-red-500">*</span></label>
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                             <i class="fas fa-camera text-4xl text-gray-400 mb-3"></i>
-                            <p class="text-gray-600 mb-2">Upload Foto Sepatu Anda</p>
+                            <p class="text-gray-600 mb-2">Unggah Foto Sepatu Anda</p>
                             <p class="text-xs text-gray-500 mb-3">PNG, JPG, JPEG (Maks. 5 MB)</p>
                             <input type="file" name="shoe_photo" accept="image/*" required class="w-full">
                         </div>
@@ -113,7 +113,7 @@
 
                     <!-- Submit Button -->
                     <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
-                        <i class="fas fa-check-circle mr-2"></i> Booking Sekarang
+                        <i class="fas fa-check-circle mr-2"></i> Pesan Sekarang
                     </button>
                 </form>
             </div>

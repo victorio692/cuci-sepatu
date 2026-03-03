@@ -245,7 +245,7 @@
                         <div class="mb-3 sm:mb-4">
                             <i class="fas fa-image text-4xl sm:text-5xl md:text-6xl text-blue-500"></i>
                         </div>
-                        <p class="text-gray-800 font-medium mb-1 text-sm sm:text-base">Upload Foto Sepatu Anda</p>
+                        <p class="text-gray-800 font-medium mb-1 text-sm sm:text-base">Unggah Foto Sepatu Anda</p>
                         <p class="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">PNG, JPG, JPEG (Maks. 5 MB)</p>
                         
                         <button type="button" onclick="document.getElementById('shoe_photo').click()" class="ripple inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition text-sm sm:text-base">
@@ -256,7 +256,7 @@
                             <i class="fas fa-hand-pointer"></i> atau seret file kesini
                         </p>
                         <p class="text-red-500 text-xs sm:text-sm mt-2">
-                            <i class="fas fa-exclamation-circle"></i> Wajib upload foto sepatu
+                            <i class="fas fa-exclamation-circle"></i> Wajib unggah foto sepatu
                         </p>
                     </div>
                     
@@ -282,7 +282,7 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">
-                        <i class="fas fa-file-invoice text-blue-600 mr-2"></i>Ringkasan Booking
+                        <i class="fas fa-file-invoice text-blue-600 mr-2"></i>Ringkasan Pesanan
                     </h3>
                     
                     <div id="itemsList" class="space-y-3 mb-4 max-h-60 overflow-y-auto">
@@ -320,7 +320,7 @@
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
                             <p class="text-xs text-blue-800">
                                 <i class="fas fa-check-circle mr-1"></i>
-                                Anda dapat booking untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.
+                                Anda dapat pesan untuk hari ini atau hari lainnya. Untuk konfirmasi lebih lanjut hubungi kami.
                             </p>
                         </div>
                     </div>
@@ -329,7 +329,7 @@
                         type="button"
                         onclick="submitCheckout()" 
                         class="w-full mt-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition transform hover:scale-105 shadow-lg">
-                        <i class="fas fa-check-circle mr-2"></i> Booking Sekarang
+                        <i class="fas fa-check-circle mr-2"></i> Pesan Sekarang
                     </button>
                 </div>
             </div>
@@ -646,7 +646,7 @@ function submitCheckout() {
     
     const shoePhoto = document.getElementById('shoe_photo').files[0];
     if (!shoePhoto) {
-        alert('Upload foto sepatu');
+        alert('Unggah foto sepatu');
         return;
     }
     

@@ -244,7 +244,7 @@ class Dashboard extends BaseController
         ];
 
         if (!$this->validate($validationRule)) {
-            return redirect()->back()->with('error', 'Gagal upload foto. Pastikan file format PNG/JPG/JPEG dan maksimal 2MB');
+            return redirect()->back()->with('error', 'Gagal unggah foto. Pastikan file format PNG/JPG/JPEG dan maksimal 2MB');
         }
 
         // Get old photo

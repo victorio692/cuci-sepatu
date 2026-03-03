@@ -318,7 +318,7 @@ function renderEmptyState() {
             <a href="/make-booking" 
                class="inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition">
                 <i class="fas fa-plus mr-2"></i>
-                Booking Sekarang
+                Pesan Sekarang
             </a>
         </div>
     `;

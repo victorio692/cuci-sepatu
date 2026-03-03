@@ -126,7 +126,7 @@
                 <a href="/#services"
                    class="inline-flex items-center space-x-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 hover:scale-105 transition-all duration-300 shadow-lg">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span>Booking Sekarang</span>
+                    <span>Pesan Sekarang</span>
                 </a>
             </div>
 

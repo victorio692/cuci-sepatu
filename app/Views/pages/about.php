@@ -74,7 +74,7 @@
             <div class="text-center mt-12">
                 <a href="/#services" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
                     <i class="fas fa-shopping-cart"></i>
-                    <span>Booking Sekarang</span>
+                    <span>Pesan Sekarang</span>
                 </a>
             </div>
         </div>

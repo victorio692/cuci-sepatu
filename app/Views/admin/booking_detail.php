@@ -659,7 +659,7 @@ function confirmComplete() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('❌ Terjadi kesalahan saat upload foto.\n\nCek console untuk detail atau coba lagi.');
+        alert('❌ Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';

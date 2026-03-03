@@ -72,18 +72,18 @@
                         <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-calendar-check text-purple-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Bagaimana cara melakukan booking?</h3>
+                        <h3 class="font-semibold text-gray-900">Bagaimana cara melakukan pesanan?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq3"></i>
                 </button>
                 <div id="faq3" class="hidden px-6 pb-4 text-gray-600">
-                    <p class="pl-13">Anda dapat melakukan booking dengan mudah:</p>
+                    <p class="pl-13">Anda dapat memesan dengan mudah:</p>
                     <ol class="pl-13 mt-2 space-y-2">
                         <li>1. Pilih menu <strong>Layanan</strong> dan pilih jenis layanan yang diinginkan</li>
-                        <li>2. Klik tombol <strong>Booking Sekarang</strong></li>
+                        <li>2. Klik tombol <strong>Pesan Sekarang</strong></li>
                         <li>3. Isi form booking dengan detail lengkap</li>
                         <li>4. Pilih tanggal pengambilan yang tersedia</li>
-                        <li>5. Submit booking dan tunggu konfirmasi dari kami</li>
+                        <li>5. Submit pesanan dan tunggu konfirmasi dari kami</li>
                     </ol>
                 </div>
             </div>

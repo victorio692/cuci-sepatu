@@ -223,7 +223,7 @@ class Bookings extends Controller
                 $error = $foto_hasil->getErrorString();
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Error upload foto: ' . $error
+                    'message' => 'Error unggah foto: ' . $error
                 ]);
             }
 
@@ -252,7 +252,7 @@ class Bookings extends Controller
             } catch (\Exception $e) {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Gagal upload foto: ' . $e->getMessage()
+                    'message' => 'Gagal unggah foto: ' . $e->getMessage()
                 ]);
             }
         }

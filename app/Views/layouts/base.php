@@ -695,7 +695,7 @@
         </div>
         
         <!-- Text -->
-        <h2 class="text-3xl font-bold text-white mb-4 animate-fade-in">Logging Out...</h2>
+        <h2 class="text-3xl font-bold text-white mb-4 animate-fade-in">Sedang Keluar...</h2>
         <p class="text-blue-100 text-lg animate-fade-in-delay">Terima kasih telah menggunakan layanan kami</p>
         
         <!-- Loading Dots -->

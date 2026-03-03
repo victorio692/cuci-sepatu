@@ -314,7 +314,11 @@ class Booking extends BaseController
                 if ($file->move($uploadPath, $fileName) === false) {
                     return redirect()->back()
                         ->withInput()
+<<<<<<< HEAD
+                        ->with('error', 'Gagal unggah foto sepatu. Coba lagi.');
+=======
                         ->with('error', 'Gagal Unggah foto sepatu. Coba lagi.');
+>>>>>>> 44bfe4cd6c5764f6a0cb422b6ee66ebfb15bde70
                 }
             }
 
@@ -391,7 +395,7 @@ class Booking extends BaseController
                     'id_user' => $admin['id'],
                     'booking_id' => $booking_id,
                     'judul' => 'Pesanan Baru!',
-                    'pesan' => "Ada Pesanan baru dari customer dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                    'pesan' => "Ada Pesanan baru dari pelanggan dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
                     'dibuat_pada' => date('Y-m-d H:i:s')
@@ -696,7 +700,7 @@ class Booking extends BaseController
                         'id_user' => $admin['id'],
                         'booking_id' => $bookingId,
                         'judul' => 'Pesanan Baru!',
-                        'pesan' => "Ada Pesanan baru dari customer dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
+                        'pesan' => "Ada Pesanan baru dari pelanggan dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                         'tipe' => 'new_booking',
                         'dibaca' => 0,
                         'dibuat_pada' => date('Y-m-d H:i:s')
