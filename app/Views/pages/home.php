@@ -45,7 +45,7 @@
                                 
                                 <!-- CTA Button -->
                                 <div class="banner-cta">
-                                    <a href="#services" class="cta-button">Pesan Sekarang</a>
+                                    <a href="#services" class="cta-button">Booking Sekarang</a>
                                 </div>
                                 
                                 <!-- Decorative Elements -->
@@ -84,7 +84,7 @@
                                     <div class="ongkir-text">ONGKIR</div>
                                     <!-- CTA Button inside red box -->
                                     <div class="banner-cta banner-cta-ongkir">
-                                        <a href="#services" class="cta-button cta-button-red">Pesan Sekarang</a>
+                                        <a href="#services" class="cta-button cta-button-red">Booking Sekarang</a>
                                     </div>
                                 </div>
                                 
@@ -899,28 +899,20 @@ function showSlide(n) {
             <p class="text-sm text-gray-600">Pilihan Terbaik Untuk Perawatan Sepatu Anda</p>
         </div>
         
-        <!-- Services Grid - Compact Shopee Style -->
-        <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <!-- Services Grid - 4 Columns for Main Services -->
+        <div id="servicesGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <!-- Loading State -->
             <div class="col-span-full text-center py-12">
                 <i class="fas fa-spinner fa-spin text-blue-600 text-4xl mb-3"></i>
                 <p class="text-gray-500">Memuat layanan...</p>
             </div>
         </div>
-        
-        <!-- Other Services Container (Hidden by default) -->
-        <div id="otherServicesContainer" class="mt-4 hidden">
-            <div id="otherServicesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                <!-- Other services will be rendered here -->
-            </div>
-        </div>
-        
-        <!-- "Layanan Lainnya" Button -->
-        <div id="viewMoreButton" class="mt-6 text-center hidden">
-            <button onclick="toggleAdditionalServices()" class="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
-                <span id="viewMoreBtnText"><i class="fas fa-chevron-down mr-2"></i>Layanan Lainnya</span>
-            </button>
-        </div>
+
+        <!-- More Services Grid (Initially Hidden) -->
+        <div id="moreServicesExpandedGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-3 hidden"></div>
+
+        <!-- More Services Button -->
+        <div id="moreServicesButtonContainer" class="text-center mt-6"></div>
     </div>
 </section>
 
@@ -1030,7 +1022,7 @@ function showSlide(n) {
                     </div>
                 </div>
                 <a href="/#services" class="bg-white text-blue-600 px-6 py-2.5 md:py-3 rounded-lg font-bold hover:bg-blue-50 transition shadow-md text-sm md:text-base w-full md:w-auto text-center">
-                    Pesan Sekarang
+                    Booking Sekarang
                 </a>
             </div>
         </div>
@@ -1192,33 +1184,11 @@ document.addEventListener('DOMContentLoaded', function() {
     loadServices();
 });
 
-// Function to toggle additional services visibility
-function toggleAdditionalServices() {
-    const container = document.getElementById('otherServicesContainer');
-    const button = document.getElementById('viewMoreButton');
-    const btnText = document.getElementById('viewMoreBtnText');
-    const isHidden = container.classList.contains('hidden');
-    
-    if (isHidden) {
-        container.classList.remove('hidden');
-        container.classList.add('fadeIn');
-        btnText.innerHTML = '<i class="fas fa-chevron-up mr-2"></i>Sembunyikan Layanan';
-        button.querySelector('button').classList.add('bg-blue-700');
-    } else {
-        container.classList.add('hidden');
-        container.classList.remove('fadeIn');
-        btnText.innerHTML = '<i class="fas fa-chevron-down mr-2"></i>Layanan Lainnya';
-        button.querySelector('button').classList.remove('bg-blue-700');
-        // Scroll to services section smoothly
-        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
 // Load services from API
 async function loadServices() {
     const servicesGrid = document.getElementById('servicesGrid');
-    const otherServicesGrid = document.getElementById('otherServicesGrid');
-    const viewMoreButton = document.getElementById('viewMoreButton');
+    const moreServicesButtonContainer = document.getElementById('moreServicesButtonContainer');
+    const moreServicesExpandedGrid = document.getElementById('moreServicesExpandedGrid');
     
     try {
         console.log('🚀 Loading services from API...');
@@ -1247,7 +1217,7 @@ async function loadServices() {
                 const icon = iconMap[service.kode_layanan] || 'fa-shoe-prints';
                 const isPopular = popularServices.includes(service.kode_layanan);
                 const borderClass = specialBorder.includes(service.kode_layanan) ? 'border-blue-300' : 'border-gray-200';
-                const priceFormatted = parseInt(service.harga_dasar).toLocaleString('id-ID');
+                const priceFormatted = Math.floor(service.harga_dasar / 1000) + 'K';
                 const durationText = service.durasi_hari == 1 ? '1 hari' : `1-${service.durasi_hari} hari`;
                 
                 return `
@@ -1272,7 +1242,7 @@ async function loadServices() {
                                     <i class="fas fa-shopping-cart"></i>
                                 </button>
                                 <a href="/make-booking?service=${service.kode_layanan}" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
-                                    Pesan
+                                    Booking
                                 </a>
                             </div>
                         </div>
@@ -1280,19 +1250,27 @@ async function loadServices() {
                 `;
             };
             
-            // Split services into first 4 and the rest
-            const firstFourServices = services.slice(0, 4);
-            const remainingServices = services.slice(4);
+            // Split services: first 4 for main grid, rest for expanded grid
+            const mainServices = services.slice(0, 4);
+            const moreServices = services.slice(4);
             
-            // Render first 4 services in main grid
-            servicesGrid.innerHTML = firstFourServices.map(renderServiceCard).join('');
+            // Render main services (first 4)
+            servicesGrid.innerHTML = mainServices.map(renderServiceCard).join('');
             
-            // Render remaining services if any
-            if (remainingServices.length > 0) {
-                otherServicesGrid.innerHTML = remainingServices.map(renderServiceCard).join('');
-                viewMoreButton.classList.remove('hidden');
+            // Render more services button and expanded grid if there are more services
+            if (moreServices.length > 0) {
+                // Render more services in expanded grid (hidden by default)
+                moreServicesExpandedGrid.innerHTML = moreServices.map(renderServiceCard).join('');
+                
+                moreServicesButtonContainer.innerHTML = `
+                    <button onclick="toggleMoreServices()" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition flex items-center justify-center space-x-2 mx-auto">
+                        <i class="fas fa-chevron-down" id="moreServicesToggleIcon"></i>
+                        <span id="moreServicesToggleText">Layanan Lainnya</span>
+                    </button>
+                `;
             } else {
-                viewMoreButton.classList.add('hidden');
+                moreServicesButtonContainer.innerHTML = '';
+                moreServicesExpandedGrid.classList.add('hidden');
             }
             
             console.log('✨ Services rendered successfully!');
@@ -1303,6 +1281,8 @@ async function loadServices() {
                     <p class="text-gray-500">Belum ada layanan tersedia.</p>
                 </div>
             `;
+            moreServicesButtonContainer.innerHTML = '';
+            moreServicesExpandedGrid.classList.add('hidden');
         }
     } catch (error) {
         console.error('❌ Error loading services:', error);
@@ -1312,13 +1292,51 @@ async function loadServices() {
                 <p class="text-red-500">Gagal memuat layanan. Silakan refresh halaman.</p>
             </div>
         `;
+        moreServicesButtonContainer.innerHTML = '';
+        moreServicesExpandedGrid.classList.add('hidden');
+    }
+}
+
+// Toggle more services visibility
+function toggleMoreServices() {
+    const moreServicesExpandedGrid = document.getElementById('moreServicesExpandedGrid');
+    const toggleIcon = document.getElementById('moreServicesToggleIcon');
+    const toggleText = document.getElementById('moreServicesToggleText');
+    
+    if (moreServicesExpandedGrid.classList.contains('hidden')) {
+        // Show more services
+        moreServicesExpandedGrid.classList.remove('hidden');
+        toggleIcon.classList.add('rotate-180');
+        toggleIcon.style.transition = 'transform 0.3s ease';
+        toggleText.textContent = 'Sembunyikan Layanan';
+    } else {
+        // Hide more services
+        moreServicesExpandedGrid.classList.add('hidden');
+        toggleIcon.classList.remove('rotate-180');
+        toggleText.textContent = 'Layanan Lainnya';
+        
+        // Scroll to services section
+        document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
     }
 }
 </script>
 
 <style>
-/* Fade in animation for additional services */
-@keyframes fadeIn {
+/* Toggle icon rotation */
+#moreServicesToggleIcon {
+    transition: transform 0.3s ease;
+}
+
+#moreServicesToggleIcon.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* More services expanded grid animation */
+#moreServicesExpandedGrid:not(.hidden) {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
     from {
         opacity: 0;
         transform: translateY(-10px);
@@ -1327,10 +1345,6 @@ async function loadServices() {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.fadeIn {
-    animation: fadeIn 0.4s ease-in-out;
 }
 
 /* Slide up animation */
