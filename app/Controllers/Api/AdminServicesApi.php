@@ -47,6 +47,7 @@ class AdminServicesApi extends BaseController
                 'data' => $data
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Gagal mengambil layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal mengambil data: ' . $e->getMessage()
@@ -143,6 +144,7 @@ class AdminServicesApi extends BaseController
                 'data' => array_merge($data, ['id' => $id])
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Gagal menyimpan layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal menyimpan: ' . $e->getMessage()
@@ -225,6 +227,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Layanan berhasil diupdate',
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Gagal update layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal update: ' . $e->getMessage()
@@ -277,6 +280,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Layanan berhasil dihapus',
             ]);
         }catch (\Exception $e) {
+            log_message('error', 'Gagal hapus layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal hapus: ' . $e->getMessage()
@@ -338,6 +342,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Harga berhasil diupdate',
             ]);
         } catch(\Exception $e) {
+            log_message('error', 'Gagal update harga: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal update harga: ' . $e->getMessage()
@@ -422,6 +427,7 @@ class AdminServicesApi extends BaseController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal upload icon: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal upload icon: ' . $e->getMessage()
@@ -474,6 +480,7 @@ class AdminServicesApi extends BaseController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal hapus icon: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal hapus icon: ' . $e->getMessage()

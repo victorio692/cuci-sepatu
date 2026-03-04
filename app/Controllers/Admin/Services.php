@@ -239,6 +239,7 @@ class Services extends Controller
         $newStatus = $service['aktif'] ? 0 : 1;
 
         if ($this->db->table('services')->where('id', $id)->update(['aktif' => $newStatus])) {
+            log_message('info', 'Service ' . $service['kode_layanan'] . ' active status changed to: ' . $newStatus);
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Status berhasil diubah',

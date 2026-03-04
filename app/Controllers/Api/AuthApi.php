@@ -51,6 +51,7 @@ class AuthApi extends ResourceController
             $userId = $this->model->insert($data);
 
             if (!$userId) {
+                log_message('error', 'Gagal membuat akun untuk email: ' . $data['email']);
                 return $this->fail([
                     'status' => 'error',
                     'message' => 'Gagal membuat akun'
@@ -265,6 +266,7 @@ class AuthApi extends ResourceController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal update profile untuk user ID ' . $userId . ': ' . $e->getMessage());
             return $this->fail([
                 'status' => 'error',
                 'message' => 'Gagal update profile: ' . $e->getMessage()
@@ -323,6 +325,7 @@ class AuthApi extends ResourceController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal ubah password untuk user ID ' . $userId . ': ' . $e->getMessage());
             return $this->fail([
                 'status' => 'error',
                 'message' => 'Gagal ubah password: ' . $e->getMessage()
