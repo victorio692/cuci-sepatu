@@ -314,11 +314,7 @@ class Booking extends BaseController
                 if ($file->move($uploadPath, $fileName) === false) {
                     return redirect()->back()
                         ->withInput()
-<<<<<<< HEAD
                         ->with('error', 'Gagal unggah foto sepatu. Coba lagi.');
-=======
-                        ->with('error', 'Gagal Unggah foto sepatu. Coba lagi.');
->>>>>>> 44bfe4cd6c5764f6a0cb422b6ee66ebfb15bde70
                 }
             }
 

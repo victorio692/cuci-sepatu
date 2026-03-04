@@ -16,15 +16,12 @@ class Auth extends BaseController
     // Show Login Page
     public function login()
     {
-        // Redirect jika sudah login
-        if (session()->get('user_id')) {
-            $user = $this->db->table('users')->where('id', session()->get('user_id'))->get()->getRow();
-            if ($user) {
-                if ($user->role === 'admin') {
-                    return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
-                } else {
-                    return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
-                }
+        $role = session()->get('role');
+        if ($role){
+            if ($user->role === 'admin') {
+                return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
+            } else {
+                return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
             }
         }
         
@@ -53,9 +50,14 @@ class Auth extends BaseController
         }
 
         // Set session
-        session()->set('user_id', $user->id);
+        session()->set([
+            'user_id' => $user->id,
+            'username' => $user->fullname,
+            'role' => $user->role,
+            'is_logged_in' => true
 
-        // Redirect based on role
+        ]);
+
         if ($user->role === 'admin') {
             return redirect()->to('/admin')->with('success', 'Selamat datang, Admin!');
         } else {

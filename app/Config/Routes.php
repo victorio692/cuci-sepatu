@@ -174,7 +174,7 @@ $routes->group('api/admin/bookings', ['namespace' => 'App\Controllers\Api'], fun
     $routes->get('/', 'AdminBookingsApi::index');
     $routes->get('statistics', 'AdminBookingsApi::statistics');
     $routes->get('(:num)', 'AdminBookingsApi::detail/$1');
-    $routes->post('(:num)/status', 'AdminBookingsApi::updateStatus/$1');
+    $routes->put('(:num)/status', 'AdminBookingsApi::updateStatus/$1');
     $routes->delete('(:num)', 'AdminBookingsApi::delete/$1');
 });
 

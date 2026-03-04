@@ -147,7 +147,7 @@ async function loadDashboardStatistics() {
         
         // Format currency for revenue
         const revenue = parseInt(data.pendapatan?.total || 0);
-        document.querySelector('[data-stat="total_revenue"]').textContent = 'Rp ' + revenue.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.querySelector('[data-stat="total_revenue"]').textContent = 'Rp ' + revenue.toLocaleString('id-ID');
         
         console.log('📊 Cards updated:', {
             total: data.booking?.total,
@@ -297,7 +297,7 @@ function renderBookingsTable(bookings) {
                     <span class="text-sm text-gray-700 font-medium">${booking.jumlah || 1}</span>
                 </td>
                 <td class="px-5 py-4 whitespace-nowrap text-right">
-                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
                 </td>
                 <td class="px-5 py-4">
                     <select 
