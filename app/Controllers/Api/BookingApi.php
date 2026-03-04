@@ -25,7 +25,11 @@ class BookingApi extends BaseController
         }
 
         // Get user data
-        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        $user = $this->db->table('users')
+            ->select('id, role')
+            ->where('id', $user_id)
+            ->get()
+            ->getRowArray();
         if (!$user) {
             return $this->failUnauthorized('User tidak ditemukan');
         }

@@ -19,6 +19,7 @@ class AdminServicesApi extends BaseController
     {
         try {
             $data = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif')
             ->orderBy('id', 'DESC')
             ->get()
             ->getResult();
@@ -66,6 +67,7 @@ class AdminServicesApi extends BaseController
             }
 
             $data = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif, dibuat_pada, diupdate_pada')
             ->where('id', $id)
             ->get()
             ->getRowArray();

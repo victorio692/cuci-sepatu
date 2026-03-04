@@ -1217,16 +1217,29 @@ async function loadServices() {
                 const icon = iconMap[service.kode_layanan] || 'fa-shoe-prints';
                 const isPopular = popularServices.includes(service.kode_layanan);
                 const borderClass = specialBorder.includes(service.kode_layanan) ? 'border-blue-300' : 'border-gray-200';
-                const priceFormatted = Math.floor(service.harga_dasar / 1000) + 'K';
-                const durationText = service.durasi_hari == 1 ? '1 hari' : `1-${service.durasi_hari} hari`;
+                // Convert to number to ensure proper formatting
+                const price = Number(service.harga_dasar) || 0;
+                const priceFormatted = price.toLocaleString('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                const durationDays = Number(service.durasi_hari) || 1;
+                const durationText = durationDays == 1 ? '1 hari' : `1-${durationDays} hari`;
+                
+                // Use icon_path from database if available, otherwise fallback to icon
+                const hasImage = service.icon_path && service.icon_path.trim() !== '';
+                const headerStyle = hasImage 
+                    ? `background-image: url('${service.icon_path}'); background-size: cover; background-position: center;`
+                    : 'background-color: #2563eb;';
+                const headerContent = hasImage
+                    ? '' // If image exists, don't show icon
+                    : `<i class="fas ${icon} text-white text-3xl"></i>`;
                 
                 return `
                     <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border ${borderClass}">
-                        <div class="relative">
-                            <div class="bg-blue-600 h-24 flex items-center justify-center">
-                                <i class="fas ${icon} text-white text-3xl"></i>
-                            </div>
-                            ${isPopular ? '<div class="absolute top-1 left-1 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded">POPULER</div>' : ''}
+                        <div class="relative h-24 flex items-center justify-center" style="${headerStyle}">
+                            ${headerContent}
+                            ${hasImage ? '<div class="absolute inset-0 bg-black/20 flex items-center justify-center"></div>' : ''}
                         </div>
                         <div class="p-3">
                             <h3 class="text-sm font-bold text-gray-900 mb-1 truncate" title="${service.nama_layanan}">${service.nama_layanan}</h3>
@@ -1238,7 +1251,7 @@ async function loadServices() {
                                 <span>⏱️ ${durationText}</span>
                             </div>
                             <div class="grid grid-cols-2 gap-1">
-                                <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${service.harga_dasar})" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition" title="Tambah ke Keranjang">
+                                <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${price})" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition" title="Tambah ke Keranjang">
                                     <i class="fas fa-shopping-cart"></i>
                                 </button>
                                 <a href="/make-booking?service=${service.kode_layanan}" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
