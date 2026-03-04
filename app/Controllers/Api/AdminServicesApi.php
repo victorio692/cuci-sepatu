@@ -240,6 +240,7 @@ class AdminServicesApi extends BaseController
             }
 
             $cek = $this->db->table('services')
+                ->select('id')
                 ->where('id', $id)
                 ->get()
                 ->getRow();
@@ -321,7 +322,7 @@ class AdminServicesApi extends BaseController
             }
 
             $service = $this->db->table('services')
-                ->where('id', $id)
+                ->select('id, kode_layanan')                ->select('id, kode_layanan')                ->where('id', $id)
                 ->get()
                 ->getRowArray();
 
@@ -393,6 +394,7 @@ class AdminServicesApi extends BaseController
             }
 
             $cek = $this->db->table('services')
+                ->select('id')
                 ->where('id', $id)
                 ->get()
                 ->getRow();
@@ -436,6 +438,7 @@ class AdminServicesApi extends BaseController
             }
 
             $service = $this->db->table('services')
+                ->select('id')
                 ->where('id', $id)
                 ->get()
                 ->getRowArray();
@@ -520,8 +523,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            $service = $this->db->table('services')
-                ->where('id', $id)
+            $service = $this->db->table('services')                ->select('id, icon_path')                ->where('id', $id)
                 ->get()
                 ->getRowArray();
 

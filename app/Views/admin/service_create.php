@@ -218,14 +218,15 @@ function previewIcon(input) {
 // Submit form via API with file upload
 async function submitServiceForm() {
     const form = document.getElementById('serviceForm');
+    const formData = new FormData(form);
     
     // Extract and validate required fields
-    const kode = document.getElementById('kode_layanan').value?.trim();
-    const nama = document.getElementById('nama_layanan').value?.trim();
-    const deskripsi = document.getElementById('deskripsi').value?.trim();
-    let harga = document.getElementById('harga_dasar').value?.trim();
-    const durasi = parseInt(document.getElementById('durasi_hari').value) || 1;
-    const aktif = document.getElementById('aktif').checked ? 1 : 0;
+    const kode = formData.get('kode_layanan')?.trim();
+    const nama = formData.get('nama_layanan')?.trim();
+    const deskripsi = formData.get('deskripsi')?.trim();
+    let harga = formData.get('harga_dasar')?.trim();
+    const durasi = parseInt(formData.get('durasi_hari')) || 1;
+    const aktif = formData.get('aktif') ? 1 : 0;
     
     // Validate required fields
     if (!kode) {
@@ -249,76 +250,36 @@ async function submitServiceForm() {
         return;
     }
     
-    // Check if there's a file to upload
+    // Prepare form data for multipart submission
+    const submitData = new FormData();
+    submitData.append('kode_layanan', kode);
+    submitData.append('nama_layanan', nama);
+    submitData.append('deskripsi', deskripsi);
+    submitData.append('harga_dasar', harga);
+    submitData.append('durasi_hari', durasi);
+    submitData.append('aktif', aktif);
+    
+    // Add icon file if present
     const iconFile = document.getElementById('icon_image').files[0];
-    
-    console.log('📦 Icon file:', iconFile ? `${iconFile.name} (${iconFile.size} bytes)` : 'NO FILE');
-    
-    let response;
-    
     if (iconFile) {
         // Validate file size (max 2MB)
         if (iconFile.size > 2 * 1024 * 1024) {
             showToast('Ukuran file maksimal 2MB!', 'error');
             return;
         }
-        
-        // Send with FormData if there's a file
-        const submitData = new FormData();
-        submitData.append('kode_layanan', kode);
-        submitData.append('nama_layanan', nama);
-        submitData.append('deskripsi', deskripsi);
-        submitData.append('harga_dasar', harga);
-        submitData.append('durasi_hari', durasi);
-        submitData.append('aktif', aktif);
         submitData.append('icon_image', iconFile);
-        
-        try {
-            console.log('🚀 Creating service with file...');
-            console.log('  Kode:', kode, 'Nama:', nama, 'Harga:', harga, 'Durasi:', durasi);
-            
-            response = await fetch('/api/admin/services', {
-                method: 'POST',
-                credentials: 'include',
-                body: submitData
-            });
-        } catch (error) {
-            console.error('❌ Error:', error);
-            showToast('Error: ' + error.message, 'error');
-            return;
-        }
-    } else {
-        // Send with JSON if no file
-        const submitData = {
-            kode_layanan: kode,
-            nama_layanan: nama,
-            deskripsi: deskripsi,
-            harga_dasar: harga,
-            durasi_hari: durasi,
-            aktif: aktif
-        };
-        
-        try {
-            console.log('🚀 Creating service without file...');
-            console.log('  Kode:', kode, 'Nama:', nama, 'Harga:', harga, 'Durasi:', durasi);
-            
-            response = await fetch('/api/admin/services', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(submitData)
-            });
-        } catch (error) {
-            console.error('❌ Error:', error);
-            showToast('Error: ' + error.message, 'error');
-            return;
-        }
     }
     
-    // Handle response
     try {
+        console.log('🚀 Creating service...');
+        console.log('  Kode:', kode, 'Nama:', nama, 'Harga:', harga, 'Durasi:', durasi);
+        
+        const response = await fetch('/api/admin/services', {
+            method: 'POST',
+            credentials: 'include',
+            body: submitData
+        });
+        
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -329,13 +290,13 @@ async function submitServiceForm() {
         if (result.code === 201 || result.code === 200 || result.success) {
             showToast('Layanan berhasil dibuat!', 'success');
             setTimeout(() => {
-                window.location.href = '/admin/services';
+                window.location.href = '/admin/services:8080';
             }, 1500);
         } else {
             showToast(result.message || 'Gagal menyimpan layanan', 'error');
         }
     } catch (error) {
-        console.error('❌ Error processing response:', error);
+        console.error('❌ Error:', error);
         showToast('Error: ' + error.message, 'error');
     }
 }
