@@ -352,6 +352,23 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
             border-color: #2563eb;
         }
+
+        /* Mobile Menu Hover Effects */
+        #mobile-menu a {
+            cursor: pointer;
+            position: relative;
+        }
+
+        #mobile-menu a:active {
+            background-color: #f0f9ff !important;
+            color: #2563eb !important;
+        }
+
+        @supports (transition: background-color) {
+            #mobile-menu a {
+                transition: background-color 0.3s ease, color 0.3s ease !important;
+            }
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>
@@ -1266,6 +1283,34 @@
         // Update cart badge on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateCartBadge();
+            
+            // Add active state to mobile menu items on click/touch
+            const mobileMenuItems = document.querySelectorAll('#mobile-menu a');
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Remove active class from all items
+                    mobileMenuItems.forEach(link => {
+                        link.style.backgroundColor = '';
+                        link.style.color = '';
+                    });
+                });
+                
+                // Touch effect for mobile
+                item.addEventListener('touchstart', function() {
+                    this.style.backgroundColor = '#f0f9ff';
+                    this.style.color = '#2563eb';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    // Keep the effect briefly then clear
+                    setTimeout(() => {
+                        if (!this.classList.contains('bg-blue-50')) {
+                            this.style.backgroundColor = '';
+                            this.style.color = '';
+                        }
+                    }, 150);
+                });
+            });
         });
     </script>
     

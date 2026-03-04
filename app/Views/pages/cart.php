@@ -84,8 +84,27 @@ function getServiceStyle(serviceCode) {
         bg: 'bg-blue-600'
     };
 }
+// Fetch service data from API and create a mapping by service code
+async function fetchServiceDataMap() {
+    try {
+        const response = await fetch('/api/services');
+        if (!response.ok) throw new Error('Failed to fetch services');
+        const services = await response.json();
+        
+        // Create a map of service_code to service data
+        const serviceMap = {};
+        services.forEach(service => {
+            serviceMap[service.kode_layanan] = service;
+        });
+        return serviceMap;
+    } catch (error) {
+        console.error('Error fetching service data:', error);
+        return {};
+    }
+}
+
 // Load cart from localStorage
-function loadCart() {
+async function loadCart() {
     const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
     const cartContainer = document.getElementById('cartContainer');
     
@@ -104,6 +123,9 @@ function loadCart() {
         updateNavbarCart();
         return;
     }
+    
+    // Fetch service data including icon_path
+    const serviceMap = await fetchServiceDataMap();
     
     // Build cart HTML
     let cartHTML = '<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">';
@@ -125,8 +147,19 @@ function loadCart() {
         const itemTotal = item.price * item.quantity;
         const isChecked = item.selected !== false ? 'checked' : ''; // Default checked
         
-        // Get service-specific styling
-        const serviceStyles = getServiceStyle(item.service_code || item.kode_layanan);
+        // Get service data from the map
+        const serviceCode = item.service_code || item.kode_layanan;
+        const serviceData = serviceMap[serviceCode];
+        const hasImage = serviceData && serviceData.icon_path && serviceData.icon_path.trim() !== '';
+        
+        // Fallback to FontAwesome icon if no image
+        let iconHTML = '';
+        if (hasImage) {
+            iconHTML = `<div class="absolute inset-0" style="background-image: url('${serviceData.icon_path}'); background-size: cover; background-position: center;"></div>`;
+        } else {
+            const serviceStyles = getServiceStyle(serviceCode);
+            iconHTML = `<i class="fas ${serviceStyles.icon} text-white text-4xl relative z-10"></i>`;
+        }
         
         cartHTML += `
             <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition">
@@ -140,9 +173,9 @@ function loadCart() {
                                class="w-5 h-5 text-blue-600 border-2 border-gray-400 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer appearance-none bg-white checked:bg-blue-600 checked:border-blue-600 transition">
                     </div>
                     
-                    <div class="w-20 h-20 ${serviceStyles.bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
+                    <div class="w-20 h-20 ${hasImage ? 'bg-gray-200' : getServiceStyle(serviceCode).bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent"></div>
-                        <i class="fas ${serviceStyles.icon} text-white text-4xl relative z-10"></i>
+                        ${iconHTML}
                     </div>
                     
                     <div class="flex-1">
@@ -227,12 +260,12 @@ function loadCart() {
 }
 
 // Remove item from cart
-function removeFromCart(index) {
+async function removeFromCart(index) {
     if (confirm('Hapus layanan ini dari keranjang?')) {
         const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
         cart.splice(index, 1);
         localStorage.setItem(getCartKey(), JSON.stringify(cart));
-        loadCart();
+        await loadCart();
         
         // Show notification
         showNotification('Item berhasil dihapus dari keranjang', 'success');
@@ -240,17 +273,17 @@ function removeFromCart(index) {
 }
 
 // Update quantity
-function updateQuantity(index, change) {
+async function updateQuantity(index, change) {
     const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
     cart[index].quantity += change;
     
     if (cart[index].quantity < 1) {
-        removeFromCart(index);
+        await removeFromCart(index);
         return;
     }
     
     localStorage.setItem(getCartKey(), JSON.stringify(cart));
-    loadCart();
+    await loadCart();
 }
 
 // Toggle select all items
@@ -380,8 +413,8 @@ function showNotification(message, type = 'success') {
 }
 
 // Load cart on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadCart();
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadCart();
     
     // Test API connection (for visibility in inspector)
     testCartAPI();

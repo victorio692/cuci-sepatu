@@ -923,6 +923,16 @@ label {
     display: flex;
   }
 
+  /* Mobile menu hover effect */
+  #mobile-menu a {
+    transition: all 0.3s ease;
+  }
+
+  #mobile-menu a:active {
+    background-color: #f0f9ff !important;
+    color: #2563eb !important;
+  }
+
   .hero h1 {
     font-size: 2rem;
   }
