@@ -91,18 +91,9 @@
                 Icon/Gambar Layanan (Opsional)
             </label>
             <div class="flex items-center gap-4">
-                <?php if (!empty($service['icon_path'])): ?>
-                    <div class="relative w-24 h-24 rounded-lg border-2 border-blue-300 overflow-hidden bg-blue-50 flex items-center justify-center">
-                        <img src="<?= base_url($service['icon_path']) ?>" alt="Service icon" class="w-full h-full object-cover">
-                        <button type="button" onclick="removeServiceIcon()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600">
-                            ×
-                        </button>
-                    </div>
-                <?php else: ?>
-                    <div class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
-                        <i class="fas fa-image text-gray-400 text-3xl"></i>
-                    </div>
-                <?php endif; ?>
+                <div id="iconPreview" class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                    <i class="fas fa-image text-gray-400 text-3xl"></i>
+                </div>
                 <div class="flex-1">
                     <input 
                         type="file" 
@@ -110,6 +101,7 @@
                         name="icon_image" 
                         accept="image/*"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        onchange="previewIcon(this)"
                     >
                     <p class="mt-2 text-xs text-gray-500">
                         Format: JPG, PNG, GIF (Max: 2MB). Ukuran recommended: 200x200px
@@ -192,49 +184,149 @@
 
 <script>
 function formatRupiah(input) {
-    let value = input.value.replace(/\D/g, '');
+    let value = input.value.replace(/\D/g, '');  // Hapus semua non-digit
     
     if (value) {
-        value = parseInt(value).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Store angka bersih di hidden input terlebih dahulu
+        document.getElementById('harga_dasar').value = value;
+        
+        // Format untuk display
+        value = parseInt(value).toLocaleString('id-ID');
         input.value = value;
-        document.getElementById('harga_dasar').value = value.replace(/\./g, '');
     } else {
         input.value = '';
         document.getElementById('harga_dasar').value = '';
     }
 }
 
-// Submit form via API
+// Preview icon
+function previewIcon(input) {
+    const preview = document.getElementById('iconPreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover rounded-lg">
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Submit form via API with file upload
 async function submitServiceForm() {
     const form = document.getElementById('serviceForm');
-    const formData = new FormData(form);
     
-    // Convert FormData to JSON
-    const data = {
-        kode_layanan: formData.get('kode_layanan'),
-        nama_layanan: formData.get('nama_layanan'),
-        deskripsi: formData.get('deskripsi'),
-        harga_dasar: parseInt(formData.get('harga_dasar')) || 0,
-        durasi_hari: formData.get('durasi_hari') || 1,
-        aktif: formData.get('aktif') ? 1 : 0
-    };
+    // Extract and validate required fields
+    const kode = document.getElementById('kode_layanan').value?.trim();
+    const nama = document.getElementById('nama_layanan').value?.trim();
+    const deskripsi = document.getElementById('deskripsi').value?.trim();
+    let harga = document.getElementById('harga_dasar').value?.trim();
+    const durasi = parseInt(document.getElementById('durasi_hari').value) || 1;
+    const aktif = document.getElementById('aktif').checked ? 1 : 0;
     
-    try {
-        console.log('🚀 Creating service...', data);
+    // Validate required fields
+    if (!kode) {
+        showToast('Kode Layanan harus diisi!', 'error');
+        return;
+    }
+    if (!nama) {
+        showToast('Nama Layanan harus diisi!', 'error');
+        return;
+    }
+    if (!deskripsi) {
+        showToast('Deskripsi harus diisi!', 'error');
+        return;
+    }
+    
+    // Clean and parse harga
+    harga = parseInt(harga.replace(/\D/g, '')) || 0;
+    
+    if (harga <= 0) {
+        showToast('Harga harus lebih dari 0!', 'error');
+        return;
+    }
+    
+    // Check if there's a file to upload
+    const iconFile = document.getElementById('icon_image').files[0];
+    
+    console.log('📦 Icon file:', iconFile ? `${iconFile.name} (${iconFile.size} bytes)` : 'NO FILE');
+    
+    let response;
+    
+    if (iconFile) {
+        // Validate file size (max 2MB)
+        if (iconFile.size > 2 * 1024 * 1024) {
+            showToast('Ukuran file maksimal 2MB!', 'error');
+            return;
+        }
         
-        const response = await fetch('/api/admin/services', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify(data)
-        });
+        // Send with FormData if there's a file
+        const submitData = new FormData();
+        submitData.append('kode_layanan', kode);
+        submitData.append('nama_layanan', nama);
+        submitData.append('deskripsi', deskripsi);
+        submitData.append('harga_dasar', harga);
+        submitData.append('durasi_hari', durasi);
+        submitData.append('aktif', aktif);
+        submitData.append('icon_image', iconFile);
+        
+        try {
+            console.log('🚀 Creating service with file...');
+            console.log('  Kode:', kode, 'Nama:', nama, 'Harga:', harga, 'Durasi:', durasi);
+            
+            response = await fetch('/api/admin/services', {
+                method: 'POST',
+                credentials: 'include',
+                body: submitData
+            });
+        } catch (error) {
+            console.error('❌ Error:', error);
+            showToast('Error: ' + error.message, 'error');
+            return;
+        }
+    } else {
+        // Send with JSON if no file
+        const submitData = {
+            kode_layanan: kode,
+            nama_layanan: nama,
+            deskripsi: deskripsi,
+            harga_dasar: harga,
+            durasi_hari: durasi,
+            aktif: aktif
+        };
+        
+        try {
+            console.log('🚀 Creating service without file...');
+            console.log('  Kode:', kode, 'Nama:', nama, 'Harga:', harga, 'Durasi:', durasi);
+            
+            response = await fetch('/api/admin/services', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(submitData)
+            });
+        } catch (error) {
+            console.error('❌ Error:', error);
+            showToast('Error: ' + error.message, 'error');
+            return;
+        }
+    }
+    
+    // Handle response
+    try {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const result = await response.json();
         console.log('✅ Response:', result);
         
-        if (result.code === 201 || result.code === 200) {
+        if (result.code === 201 || result.code === 200 || result.success) {
             showToast('Layanan berhasil dibuat!', 'success');
             setTimeout(() => {
                 window.location.href = '/admin/services';
@@ -243,7 +335,7 @@ async function submitServiceForm() {
             showToast(result.message || 'Gagal menyimpan layanan', 'error');
         }
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Error processing response:', error);
         showToast('Error: ' + error.message, 'error');
     }
 }

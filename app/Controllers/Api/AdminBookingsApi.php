@@ -24,7 +24,11 @@ class AdminBookingsApi extends BaseController
             return null;
         }
 
-        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        $user = $this->db->table('users')
+            ->select('id, role')
+            ->where('id', $user_id)
+            ->get()
+            ->getRowArray();
         if (!$user || $user['role'] !== 'admin') {
             return null;
         }

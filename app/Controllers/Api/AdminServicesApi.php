@@ -19,6 +19,7 @@ class AdminServicesApi extends BaseController
     {
         try {
             $data = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif')
             ->orderBy('id', 'DESC')
             ->get()
             ->getResult();
@@ -33,6 +34,11 @@ class AdminServicesApi extends BaseController
             ];
 
             foreach ($data as &$service) {
+                // Convert numeric fields to integers for proper handling
+                $service->harga_dasar = (int)$service->harga_dasar;
+                $service->durasi_hari = (int)$service->durasi_hari;
+                $service->aktif = (int)$service->aktif;
+                
                 if (!empty($service->icon_path)) {
                     $service->icon_type = 'image';
                     $service->icon = $service->icon_path;
@@ -47,6 +53,7 @@ class AdminServicesApi extends BaseController
                 'data' => $data
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Gagal mengambil layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal mengambil data: ' . $e->getMessage()
@@ -66,6 +73,7 @@ class AdminServicesApi extends BaseController
             }
 
             $data = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif, dibuat_pada, diupdate_pada')
             ->where('id', $id)
             ->get()
             ->getRowArray();
@@ -76,6 +84,11 @@ class AdminServicesApi extends BaseController
                     'message' => 'Layanan Tidak Ditemukan'
                 ]);
             }
+
+            // Convert harga_dasar to integer to prevent parsing issues
+            $data['harga_dasar'] = (int)$data['harga_dasar'];
+            $data['durasi_hari'] = (int)$data['durasi_hari'];
+            $data['aktif'] = (int)$data['aktif'];
 
             return $this->response->setJSON([
                 'code' => 200,
@@ -95,16 +108,32 @@ class AdminServicesApi extends BaseController
         try {
             log_message('info', 'Create service API called');
             
-            // Support both JSON and form-data
-            $input = $this->request->getJSON(true) ?? $this->request->getPost();
+            // Get content type
+            $contentType = $this->request->getHeaderLine('Content-Type');
             
-            log_message('info', 'Create data received: ' . json_encode($input));
+            // Support both JSON and form-data
+            if (strpos($contentType, 'application/json') !== false) {
+                $input = $this->request->getJSON(true);
+            } else {
+                // For multipart/form-data (file upload) or application/x-www-form-urlencoded
+                $input = [
+                    'kode_layanan' => $this->request->getPost('kode_layanan'),
+                    'nama_layanan' => $this->request->getPost('nama_layanan'),
+                    'deskripsi' => $this->request->getPost('deskripsi'),
+                    'harga_dasar' => $this->request->getPost('harga_dasar'),
+                    'durasi_hari' => $this->request->getPost('durasi_hari'),
+                    'aktif' => $this->request->getPost('aktif'),
+                    'icon_image' => $this->request->getFile('icon_image')
+                ];
+            }
+            
+            log_message('info', 'Create data received: Kode=' . ($input['kode_layanan'] ?? 'null') . ', Nama=' . ($input['nama_layanan'] ?? 'null'));
             
             $rules = [
                 'kode_layanan' => 'required',
                 'nama_layanan' => 'required|min_length[3]',
                 'harga_dasar' => 'required|numeric',
-                'durasi_hari' => 'required'
+                'durasi_hari' => 'required|numeric'
             ];
 
             $validation = \Config\Services::validation();
@@ -123,26 +152,73 @@ class AdminServicesApi extends BaseController
                 'kode_layanan' => $input['kode_layanan'],
                 'nama_layanan' => $input['nama_layanan'],
                 'deskripsi' => $input['deskripsi'] ?? null,
-                'harga_dasar' => $input['harga_dasar'],
-                'durasi_hari' => $input['durasi_hari'],
-                'aktif' => isset($input['aktif']) ? ($input['aktif'] ? 1 : 0) : 1,
+                'harga_dasar' => (int)$input['harga_dasar'],
+                'durasi_hari' => (int)($input['durasi_hari'] ?? 1),
+                'aktif' => isset($input['aktif']) ? (int)$input['aktif'] : 1,
                 'dibuat_pada' => date('Y-m-d H:i:s'),
                 'diupdate_pada' => date('Y-m-d H:i:s')
-            ];
+            ];            // Handle file upload if present
+            $iconFile = $input['icon_image'] ?? null;
+            log_message('info', 'Icon file check: ' . ($iconFile ? 'EXISTS' : 'NULL'));
+            
+            if ($iconFile && is_object($iconFile) && $iconFile->isValid()) {
+                try {
+                    log_message('info', 'Processing icon upload: ' . $iconFile->getClientName() . ' Size: ' . $iconFile->getSize());
+                    
+                    // Save to PUBLIC uploads directory (not writable) so it's web-accessible
+                    $uploadsDir = FCPATH . 'uploads';
+                    $servicesDir = $uploadsDir . DIRECTORY_SEPARATOR . 'services';
+                    
+                    if (!is_dir($uploadsDir)) {
+                        mkdir($uploadsDir, 0755, true);
+                        log_message('info', 'Created uploads directory: ' . $uploadsDir);
+                    }
+                    
+                    if (!is_dir($servicesDir)) {
+                        mkdir($servicesDir, 0755, true);
+                        log_message('info', 'Created services directory: ' . $servicesDir);
+                    }
+                    
+                    // Validate file size (max 2MB)
+                    if ($iconFile->getSize() > 2 * 1024 * 1024) {
+                        log_message('warning', 'File too large: ' . $iconFile->getSize());
+                        // Continue without icon
+                    } else {
+                        // Generate unique filename
+                        $newName = 'service_' . time() . '_' . $iconFile->getRandomName();
+                        
+                        // Move file to uploads directory
+                        if ($iconFile->move($servicesDir, $newName)) {
+                            $data['icon_path'] = 'uploads/services/' . $newName;
+                            log_message('info', 'Icon uploaded successfully: ' . $newName . ' at path: ' . $servicesDir . DIRECTORY_SEPARATOR . $newName);
+                        } else {
+                            log_message('error', 'Failed to move file: ' . $iconFile->getClientName());
+                        }
+                    }
+                } catch (\Exception $e) {
+                    log_message('error', 'File upload exception: ' . $e->getMessage());
+                    // Continue without file if upload fails
+                }
+            }
 
             log_message('info', 'Inserting service with data: ' . json_encode($data));
             
             $this->db->table('services')->insert($data);
             $id = $this->db->insertID();
 
-            log_message('info', 'Service created successfully with ID: ' . $id);
-            
+            // Ensure all numeric fields are integers in response
+            $data['id'] = $id;
+            $data['harga_dasar'] = (int)$data['harga_dasar'];
+            $data['durasi_hari'] = (int)$data['durasi_hari'];
+            $data['aktif'] = (int)$data['aktif'];
+
             return $this->response->setJSON([
                 'code' => 201,
                 'message' => 'Layanan berhasil dibuat',
-                'data' => array_merge($data, ['id' => $id])
+                'data' => $data
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Create service error: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal menyimpan: ' . $e->getMessage()
@@ -225,6 +301,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Layanan berhasil diupdate',
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Gagal update layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal update: ' . $e->getMessage()
@@ -277,6 +354,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Layanan berhasil dihapus',
             ]);
         }catch (\Exception $e) {
+            log_message('error', 'Gagal hapus layanan: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal hapus: ' . $e->getMessage()
@@ -338,6 +416,7 @@ class AdminServicesApi extends BaseController
                 'message' => 'Harga berhasil diupdate',
             ]);
         } catch(\Exception $e) {
+            log_message('error', 'Gagal update harga: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal update harga: ' . $e->getMessage()
@@ -422,6 +501,7 @@ class AdminServicesApi extends BaseController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal upload icon: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal upload icon: ' . $e->getMessage()
@@ -474,6 +554,7 @@ class AdminServicesApi extends BaseController
             ]);
 
         } catch (\Exception $e) {
+            log_message('error', 'Gagal hapus icon: ' . $e->getMessage());
             return $this->response->setJSON([
                 'code' => 500,
                 'message' => 'Gagal hapus icon: ' . $e->getMessage()

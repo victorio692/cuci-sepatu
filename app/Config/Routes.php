@@ -6,6 +6,9 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
+// Asset Server - Serve images from uploads directory (including legacy writable folder)
+$routes->get('uploads/services/(:any)', 'AssetServer::serveServiceIcon/$1');
+
 // Home
 $routes->get('/', 'Home::index');
 

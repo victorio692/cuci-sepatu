@@ -76,10 +76,7 @@ class Users extends Controller
 
         // Add aktif field for compatibility with view (always true for now)
         $user['aktif'] = 1;
-        $user['kota'] = '-';
-        $user['provinsi'] = '-';
-        $user['kode_pos'] = '-';
-
+       
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->orderBy('dibuat_pada', 'DESC')

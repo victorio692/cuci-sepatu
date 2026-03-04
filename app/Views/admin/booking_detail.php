@@ -109,10 +109,7 @@
                         <label>Alamat:</label>
                         <span><?= $booking['address'] ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Kota:</label>
-                        <span><?= $booking['city'] ?>, <?= $booking['province'] ?> <?= $booking['zip_code'] ?></span>
-                    </div>
+                    
                 </div>
             </div>
 
