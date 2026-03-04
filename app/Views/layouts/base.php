@@ -496,16 +496,40 @@
                             </button>
                             
                             <!-- Dropdown Menu -->
-                            <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 py-2">
-                                <a href="/profile" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 group">
-                                    <i class="fas fa-user-circle mr-3 group-hover:scale-110 transition-transform"></i>
-                                    <span>Akun Saya</span>
-                                </a>
-                                <div class="border-t border-gray-200 my-2"></div>
-                                <a href="#" onclick="showLogoutAnimation(event)" class="flex items-center px-4 py-3 text-red-600 hover:bg-red-50 transition-all duration-300 group">
-                                    <i class="fas fa-sign-out-alt mr-3 group-hover:scale-110 transition-transform"></i>
-                                    <span>Keluar</span>
-                                </a>
+                            <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <!-- Profile Header -->
+                                <div class="flex flex-col items-center pt-4 pb-3 px-4 border-b border-gray-100">
+                                    <?php if (!empty($user['foto_profil'])): ?>
+                                        <img src="<?= base_url('uploads/' . $user['foto_profil']) ?>?t=<?= time() ?>" alt="<?= $user['nama_lengkap'] ?>" class="w-14 h-14 rounded-full object-cover border-2 border-blue-500 mb-2">
+                                    <?php else: ?>
+                                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold mb-2">
+                                            <?= strtoupper(substr($user['nama_lengkap'], 0, 1)) ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="text-center">
+                                        <p class="font-semibold text-gray-800 text-xs"><?= $user['nama_lengkap'] ?></p>
+                                        <p class="text-gray-500 text-xs mt-0.5"><?= $user['email'] ?></p>
+                                    </div>
+                                </div>
+
+                                <!-- Menu Items -->
+                                <div class="py-1">
+                                    <a href="/profile" class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 transition-all duration-200 text-sm">
+                                        <i class="fas fa-user-circle mr-2 text-gray-600 text-xs"></i>
+                                        <span>Akun Saya</span>
+                                    </a>
+                                </div>
+
+                                <!-- Divider -->
+                                <div class="border-t border-gray-100"></div>
+
+                                <!-- Logout -->
+                                <div class="py-1">
+                                    <a href="#" onclick="showLogoutAnimation(event)" class="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 transition-all duration-200 text-sm">
+                                        <i class="fas fa-sign-out-alt mr-2 text-xs"></i>
+                                        <span>Keluar</span>
+                                    </a>
+                                </div>
                             </div>
                         </li>
                     </ul>
