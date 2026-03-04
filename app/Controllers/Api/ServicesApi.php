@@ -19,6 +19,7 @@ class ServicesApi extends ResourceController
     public function index()
     {
         $services = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif')
             ->orderBy('id', 'DESC')
             ->get()
             ->getResultArray();
@@ -29,6 +30,7 @@ class ServicesApi extends ResourceController
     public function show($id = null)
     {
         $service = $this->db->table('services')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif')
             ->where('id', $id)
             ->get()
             ->getRowArray();
@@ -69,7 +71,11 @@ class ServicesApi extends ResourceController
     {
         $data = $this->request->getJSON(true);
 
-        $service = $this->db->table('services')->where('id', $id)->get()->getRowArray();
+        $service = $this->db->table('services')
+            ->select('id, aktif')
+            ->where('id', $id)
+            ->get()
+            ->getRowArray();
 
         if (!$service) {
             return $this->failNotFound('Layanan tidak ditemukan');
