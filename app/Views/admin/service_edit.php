@@ -193,12 +193,15 @@
 
 <script>
 function formatRupiah(input) {
-    let value = input.value.replace(/\D/g, '');
+    let value = input.value.replace(/\D/g, '');  // Hapus semua non-digit
     
     if (value) {
-        value = parseInt(value).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Store angka bersih di hidden input terlebih dahulu
+        document.getElementById('harga_dasar').value = value;
+        
+        // Format untuk display
+        value = parseInt(value).toLocaleString('id-ID');
         input.value = value;
-        document.getElementById('harga_dasar').value = value.replace(/\./g, '');
     } else {
         input.value = '';
         document.getElementById('harga_dasar').value = '';
@@ -209,47 +212,42 @@ function formatRupiah(input) {
 async function submitServiceForm() {
     const form = document.getElementById('serviceForm');
     const serviceId = document.getElementById('serviceId').value;
-    const fileInput = document.getElementById('icon_image');
-    
-    // If there's an image file to upload
-    if (fileInput.files.length > 0) {
-        // Upload image first
-        const imageFormData = new FormData();
-        imageFormData.append('icon_image', fileInput.files[0]);
-        
-        try {
-            console.log('🚀 Uploading service icon...');
-            
-            const imageResponse = await fetch(`/api/admin/services/${serviceId}/upload-icon`, {
-                method: 'POST',
-                credentials: 'include',
-                body: imageFormData
-            });
-            
-            const imageResult = await imageResponse.json();
-            console.log('✅ Image upload response:', imageResult);
-            
-            if (imageResult.code !== 200) {
-                showToast(imageResult.message || 'Gagal upload gambar', 'error');
-                return;
-            }
-        } catch (error) {
-            console.error('❌ Error uploading image:', error);
-            showToast('Error upload: ' + error.message, 'error');
-            return;
-        }
-    }
-    
-    // Then update service data
     const formData = new FormData(form);
     
+    // Extract and validate required fields
+    const kode = formData.get('kode_layanan')?.trim();
+    const nama = formData.get('nama_layanan')?.trim();
+    const deskripsi = formData.get('deskripsi')?.trim();
+    let harga = formData.get('harga_dasar')?.trim();
+    const durasi = formData.get('durasi_hari');
+    const aktif = formData.get('aktif') ? 1 : 0;
+    
+    // Validate required fields
+    if (!kode) {
+        showToast('Kode Layanan harus diisi!', 'error');
+        return;
+    }
+    if (!nama) {
+        showToast('Nama Layanan harus diisi!', 'error');
+        return;
+    }
+    
+    // Clean and parse harga
+    harga = parseInt(harga.replace(/\D/g, '')) || 0;
+    
+    if (harga <= 0) {
+        showToast('Harga harus lebih dari 0!', 'error');
+        return;
+    }
+    
+    // Prepare data
     const data = {
-        kode_layanan: formData.get('kode_layanan'),
-        nama_layanan: formData.get('nama_layanan'),
-        deskripsi: formData.get('deskripsi'),
-        harga_dasar: parseInt(formData.get('harga_dasar')) || 0,
-        durasi_hari: formData.get('durasi_hari') || 1,
-        aktif: formData.get('aktif') ? 1 : 0
+        kode_layanan: kode,
+        nama_layanan: nama,
+        deskripsi: deskripsi,
+        harga_dasar: harga,
+        durasi_hari: parseInt(durasi) || 1,
+        aktif: aktif
     };
     
     try {
@@ -264,6 +262,10 @@ async function submitServiceForm() {
             credentials: 'include',
             body: JSON.stringify(data)
         });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const result = await response.json();
         console.log('✅ Response:', result);
