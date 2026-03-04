@@ -179,12 +179,13 @@
                                 <span id="timeLabelText">Jam Antar</span> <span class="text-red-500">*</span>
                             </span>
                             <input 
-                                type="text" 
+                                type="time" 
                                 id="booking_time" 
                                 name="booking_time" 
-                                placeholder="HH:MM (contoh: 14:30)"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                                min="08:00"
+                                max="20:00"
+                                step="1800"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-lg"
                                 required
                             >
                             <small class="text-gray-500 text-sm mt-1 block">
@@ -320,11 +321,10 @@
                                     Jam Siap Diambil
                                 </label>
                                 <input 
-                                    type="text" 
+                                    type="time" 
                                     id="estimated_finish_time" 
                                     name="estimated_finish_time" 
-                                    placeholder="HH:MM"
-                                    class="w-full px-3 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                                    class="w-full px-3 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-100 text-lg"
                                     readonly
                                 >
                             </div>
@@ -869,12 +869,18 @@ function useCurrentTime() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('booking_time').value = `${hours}:${minutes}`;
+    
+    // Set to time picker (will snap to step="1800" = 30 min intervals automatically)
+    const bookingTimeInput = document.getElementById('booking_time');
+    bookingTimeInput.value = `${hours}:${minutes}`;
+    
+    // Trigger change event to update estimated finish time
+    bookingTimeInput.dispatchEvent(new Event('change'));
 }
 
 // Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize booking time with current time
+    // Initialize booking time with current time (closest available)
     useCurrentTime();
     
     // Update current time display
@@ -958,16 +964,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('estimated_finish_date').value = `${year}-${month}-${day}`;
         
         // Gunakan jam yang sama dengan jam antar/jemput
-        const bookingTime = document.getElementById('booking_time').value;
+        const bookingTimeInput = document.getElementById('booking_time');
+        const estimatedTimeInput = document.getElementById('estimated_finish_time');
+        const bookingTime = bookingTimeInput.value;
+        
         if (bookingTime) {
-            document.getElementById('estimated_finish_time').value = bookingTime;
+            estimatedTimeInput.value = bookingTime;
         } else {
-            document.getElementById('estimated_finish_time').value = '17:00'; // Default jam 5 sore jika belum diisi
+            estimatedTimeInput.value = '17:00'; // Default jam 5 sore jika belum diisi
         }
     }
     
     // Update estimasi saat tanggal, layanan, atau jam booking berubah
     document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    document.getElementById('booking_time').addEventListener('change', calculateEstimatedFinish);
     document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
     // Update estimasi saat layanan dipilih
@@ -994,7 +1004,7 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     // Fallback: ensure booking_time has value if empty
     const bookingTimeInput = document.getElementById('booking_time');
     if (!bookingTimeInput.value) {
-        console.log('⏰ Auto-fill booking time');
+        console.log('⏰ Auto-select closest time');
         useCurrentTime();
     }
     

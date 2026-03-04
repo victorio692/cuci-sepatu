@@ -91,10 +91,7 @@
                         <label>Alamat:</label>
                         <span><?= $user['alamat'] ?: '-' ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Kota:</label>
-                        <span><?= $user['kota'] ? $user['kota'] . ', ' . $user['provinsi'] . ' ' . $user['kode_pos'] : '-' ?></span>
-                    </div>
+                    
                     <div class="info-row">
                         <label>Bergabung:</label>
                         <span><?= date('d M Y', strtotime($user['dibuat_pada'])) ?></span>

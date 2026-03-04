@@ -5,6 +5,8 @@ namespace App\Controllers\Api;
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 
+
+
 class BookingApi extends BaseController
 {
     use ResponseTrait;
@@ -48,7 +50,8 @@ class BookingApi extends BaseController
             'jumlah' => 'required|integer|greater_than[0]',
             'tanggal_kirim' => 'required|valid_date[Y-m-d]',
             'jam_booking' => 'required|regex_match[/^([01][0-9]|2[0-3]):[0-5][0-9]$/]',
-            'opsi_kirim' => 'required|in_list[pickup,delivery,home]',
+            'opsi_barang_masuk' => 'required|in_list[pickup,dropoff]',
+            'opsi_kirim' => 'required|in_list[pickup,delivery]',
         ];
 
         if (!$this->validate($rules)) {
@@ -57,13 +60,23 @@ class BookingApi extends BaseController
 
         // Get request data
         $layanan = $json['layanan'] ?? '';
+        $opsi_barang_masuk = $json['opsi_barang_masuk']??'dropoff';
+        $opsi_kirim = $json['opsi_kirim']??'';
         $kondisi_sepatu = $json['kondisi_sepatu'] ?? 'normal';
         $jumlah = intval($json['jumlah']);
         $tanggal_kirim = $json['tanggal_kirim'];
         $jam_booking = $json['jam_booking'];
         $opsi_kirim = $json['opsi_kirim'];
+        $pickup_addres = $json['alamat_penjemputan'] ?? '';
         $alamat_kirim = $json['alamat_kirim'] ?? $user['alamat'] ?? '';
         $catatan = $json['catatan'] ?? '';
+
+        // validate pickup address if item entry option is pickup
+        if ($opsi_barang_masuk === 'pickup') {
+            if (empty($pickup_addres) || strlen($pickup_addres) < 10) {
+                return $this->fail('Alamat penjemputan minimal 10 karakter untuk opsi pickup');
+            }
+        }
 
         // Validate delivery address if needed
         if ($opsi_kirim === 'delivery' || $opsi_kirim === 'home') {
@@ -126,17 +139,19 @@ class BookingApi extends BaseController
         $namaLayanan = $serviceData['nama_layanan'];
         $subtotal = $harga_dasar * $jumlah;
 
-        // Calculate additional fees
+       
         $biaya_kirim = 0;
         
-        // Delivery charge (only for 1 shoe, free for 2+)
-        if (($opsi_kirim === 'delivery' || $opsi_kirim === 'home') && $jumlah == 1) {
-            $biaya_kirim = 5000;
-        } elseif ($opsi_kirim === 'pickup' && $jumlah == 1) {
-            // Single shoe pickup charge
-            $biaya_kirim = 5000;
+        if ($opsi_kirim === 'delivery' || $opsi_kirim === 'home') {
+            if ($jumlah == 1) {
+                $biaya_kirim = 5000;
+            }
+        } 
+        if ($opsi_barang_masuk === 'pickup') {
+            if ($jumlah == 1) {
+                $biaya_kirim += 5000;
         }
-
+        }
         $total = $subtotal + $biaya_kirim;
 
         // Insert booking
@@ -149,7 +164,9 @@ class BookingApi extends BaseController
             'jam_booking' => $jam_booking,
             'foto_sepatu' => $fileName,
             'opsi_kirim' => $opsi_kirim,
+            'opsi_barang_masuk' => $opsi_barang_masuk,
             'alamat_kirim' => $alamat_kirim,
+            'alamat_penjemputan' => $pickup_addres,
             'catatan' => $catatan,
             'subtotal' => $subtotal,
             'biaya_kirim' => $biaya_kirim,
@@ -183,12 +200,15 @@ class BookingApi extends BaseController
             // Get created booking
             $booking = $this->db->table('bookings')->where('id', $booking_id)->get()->getRowArray();
 
+            $estimation = $this->calculateEstimatedFinish($layanan, $tanggal_kirim, $jam_booking);
+
             return $this->respondCreated([
                 'success' => true,
                 'message' => 'Booking berhasil dibuat',
                 'data' => [
                     'booking_id' => $booking_id,
-                    'booking' => $booking
+                    'booking' => $booking,
+                    'estimation' => $estimation
                 ]
             ]);
 
@@ -263,12 +283,12 @@ class BookingApi extends BaseController
             ->getResultArray();
 
         // Debug logging
-        log_message('debug', '📌 BookingApi::myBookings - User ID: ' . $user_id);
-        log_message('debug', '📌 BookingApi::myBookings - Status filter: ' . ($status ?? 'none'));
-        log_message('debug', '📌 BookingApi::myBookings - Found bookings: ' . count($bookings));
-        log_message('debug', '📌 BookingApi::myBookings - Status counts: ' . json_encode($statusCounts));
+        log_message('debug', ' BookingApi::myBookings - User ID: ' . $user_id);
+        log_message('debug', ' BookingApi::myBookings - Status filter: ' . ($status ?? 'none'));
+        log_message('debug', ' BookingApi::myBookings - Found bookings: ' . count($bookings));
+        log_message('debug', 'BookingApi::myBookings - Status counts: ' . json_encode($statusCounts));
         if (count($bookings) > 0) {
-            log_message('debug', '📌 BookingApi::myBookings - First booking: ' . json_encode($bookings[0]));
+            log_message('debug', ' BookingApi::myBookings - First booking: ' . json_encode($bookings[0]));
         }
 
         return $this->respond([
@@ -319,12 +339,18 @@ class BookingApi extends BaseController
                 
                 $photos = [];
             }
+            $serviceData = $this->db->table('services')
+                ->where('nama_layanan', $booking['layanan'])
+                ->get()
+                ->getRowArray();
+            $estimation = $this->calculateEstimatedFinish($serviceData['kode_layanan'] ?? '', $booking['tanggal_kirim'], $booking['jam_booking']);
 
-            return $this->respond([
+             return $this->respond([
                 'success' => true,
                 'data' => [
                     'booking' => $booking,
-                    'photos' => $photos
+                    'photos' => $photos,
+                    'estimation' => $estimation
                 ]
             ]);
         } catch (\Exception $e) {
@@ -370,5 +396,35 @@ class BookingApi extends BaseController
             'success' => true,
             'message' => 'Booking berhasil dibatalkan'
         ]);
+    }
+    private function calculateEstimatedFinish($kodeLayanan, $tanggalKirim, $jamBooking)
+{
+    $service = $this->db->table('services')
+        ->where('kode_layanan', $kodeLayanan)
+        ->get()
+        ->getRowArray();
+
+    if (!$service) {
+        return  [
+            'estimated_finish_date' => $tanggalKirim,
+            'estimated_finish_time' => $jamBooking,
+            'estimated_finish_datetime' => $tanggalKirim . ' ' . $jamBooking
+        ];
+    }
+
+    // Duration in hours (from database durasi_pengerjaan)
+    $durationHours = ($service['durasi_pengerjaan'] ?? 24);
+
+    //Parse delivery date and booking  time
+    $startDateTime = new \DateTime($tanggalKirim . ' ' . $jamBooking);
+
+    // Add duration
+    $startDateTime->modify("+ {$durationHours} hours");
+
+    return [
+        'estimated_finish_date' => $startDateTime->format('Y-m-d'),
+        'estimated_finish_time' => $startDateTime->format('H:i:s'),
+        'estimated_finish_datetime' => $startDateTime->format('Y-m-d H:i:s')
+    ];
     }
 }
