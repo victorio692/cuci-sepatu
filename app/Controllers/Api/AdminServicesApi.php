@@ -253,30 +253,49 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Support both JSON and form-data
-            $input = $this->request->getJSON(true) ?? $this->request->getPost();
+            // Check content type to determine how to parse input
+            $contentType = $this->request->getHeaderLine('Content-Type');
+            log_message('info', 'Content-Type: ' . $contentType);
+            
+            // Parse input based on content type
+            $input = [];
+            if (strpos($contentType, 'application/json') !== false) {
+                // JSON request
+                $input = $this->request->getJSON(true) ?? [];
+            } else {
+                // Form data or multipart request
+                $input = [
+                    'kode_layanan' => $this->request->getPost('kode_layanan'),
+                    'nama_layanan' => $this->request->getPost('nama_layanan'),
+                    'deskripsi' => $this->request->getPost('deskripsi'),
+                    'harga_dasar' => $this->request->getPost('harga_dasar'),
+                    'durasi_hari' => $this->request->getPost('durasi_hari'),
+                    'aktif' => $this->request->getPost('aktif')
+                ];
+            }
+            
             log_message('info', 'Update data received: ' . json_encode($input));
             
             $data = [];
 
-            if (isset($input['kode_layanan'])) {
+            if (isset($input['kode_layanan']) && !empty($input['kode_layanan'])) {
                 $data['kode_layanan'] = $input['kode_layanan'];
             }
 
-            if (isset($input['nama_layanan'])) {
+            if (isset($input['nama_layanan']) && !empty($input['nama_layanan'])) {
                 $data['nama_layanan'] = $input['nama_layanan'];
             }
 
-            if (isset($input['deskripsi'])) {
+            if (isset($input['deskripsi']) && !empty($input['deskripsi'])) {
                 $data['deskripsi'] = $input['deskripsi'];
             }
 
-            if (isset($input['harga_dasar'])) {
-                $data['harga_dasar'] = $input['harga_dasar'];
+            if (isset($input['harga_dasar']) && $input['harga_dasar'] !== '') {
+                $data['harga_dasar'] = (int)$input['harga_dasar'];
             }
 
-            if (isset($input['durasi_hari'])) {
-                $data['durasi_hari'] = $input['durasi_hari'];
+            if (isset($input['durasi_hari']) && $input['durasi_hari'] !== '') {
+                $data['durasi_hari'] = (int)$input['durasi_hari'];
             }
 
             // Handle aktif status
@@ -285,6 +304,48 @@ class AdminServicesApi extends BaseController
             } else {
                 // If not set, means checkbox is unchecked
                 $data['aktif'] = 0;
+            }
+
+            // Handle file upload for icon_path
+            $iconFile = $this->request->getFile('icon_image');
+            if ($iconFile && is_object($iconFile) && $iconFile->isValid()) {
+                try {
+                    log_message('info', 'Processing icon upload: ' . $iconFile->getClientName() . ' Size: ' . $iconFile->getSize());
+                    
+                    // Save to PUBLIC uploads directory (not writable) so it's web-accessible
+                    $uploadsDir = FCPATH . 'uploads';
+                    $servicesDir = $uploadsDir . DIRECTORY_SEPARATOR . 'services';
+                    
+                    if (!is_dir($uploadsDir)) {
+                        mkdir($uploadsDir, 0755, true);
+                        log_message('info', 'Created uploads directory: ' . $uploadsDir);
+                    }
+                    
+                    if (!is_dir($servicesDir)) {
+                        mkdir($servicesDir, 0755, true);
+                        log_message('info', 'Created services directory: ' . $servicesDir);
+                    }
+                    
+                    // Validate file size (max 2MB)
+                    if ($iconFile->getSize() > 2 * 1024 * 1024) {
+                        log_message('warning', 'File too large: ' . $iconFile->getSize());
+                        // Continue without updating icon
+                    } else {
+                        // Generate unique filename
+                        $newName = 'service_' . time() . '_' . $iconFile->getRandomName();
+                        
+                        // Move file to uploads directory
+                        if ($iconFile->move($servicesDir, $newName)) {
+                            $data['icon_path'] = 'uploads/services/' . $newName;
+                            log_message('info', 'Icon uploaded successfully: ' . $newName . ' at path: ' . $servicesDir . DIRECTORY_SEPARATOR . $newName);
+                        } else {
+                            log_message('error', 'Failed to move file: ' . $iconFile->getClientName());
+                        }
+                    }
+                } catch (\Exception $e) {
+                    log_message('error', 'File upload exception: ' . $e->getMessage());
+                    // Continue without file if upload fails
+                }
             }
 
             $data['diupdate_pada'] = date('Y-m-d H:i:s');
