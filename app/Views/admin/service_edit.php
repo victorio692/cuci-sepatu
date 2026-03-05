@@ -184,7 +184,7 @@
 </div>
 
 <script>
-function formatRupiah(input) {
+function formatRupiah(input) {  
     let value = input.value.replace(/\D/g, '');  // Hapus semua non-digit
     
     if (value) {
@@ -199,6 +199,21 @@ function formatRupiah(input) {
         document.getElementById('harga_dasar').value = '';
     }
 }
+function previewIcon(input) {
+    const preview = document.getElementById('iconPreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover rounded-lg">
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 
 // Submit form via API
 async function submitServiceForm() {

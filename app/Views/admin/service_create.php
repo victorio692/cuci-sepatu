@@ -340,7 +340,7 @@ function showToast(message, type) {
         transform: translateX(0);
     }
 }
-.animate-slide-in {
+animate-slide-in {
     animation: slide-in 0.3s ease;
 }
 </style>
