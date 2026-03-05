@@ -33,8 +33,8 @@ class Services extends Controller
             $service['price'] = $service['harga_dasar'];
             $service['duration_days'] = $service['durasi_hari'];
             $service['is_active'] = $service['aktif'];
-            // Use icon_path if available, otherwise use default icon mapping
-            if (!empty($service['icon_path'])) {
+
+            if (!empty($service['icon_'])) {
                 $service['icon_type'] = 'image';
                 $service['icon'] = $service['icon_path'];
             } else {

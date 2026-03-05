@@ -123,7 +123,7 @@ class AdminServicesApi extends BaseController
                     'harga_dasar' => $this->request->getPost('harga_dasar'),
                     'durasi_hari' => $this->request->getPost('durasi_hari'),
                     'aktif' => $this->request->getPost('aktif'),
-                    'icon_image' => $this->request->getFile('icon_image')
+                    'icon_file' => $this->request->getFile('icon_image')
                 ];
             }
             
@@ -153,12 +153,12 @@ class AdminServicesApi extends BaseController
                 'nama_layanan' => $input['nama_layanan'],
                 'deskripsi' => $input['deskripsi'] ?? null,
                 'harga_dasar' => (int)$input['harga_dasar'],
-                'durasi_hari' => (int)($input['durasi_hari'] ?? 1),
+                'durasi_hari' => (int)($input['durasi_hari'] ?? 1), 
                 'aktif' => isset($input['aktif']) ? (int)$input['aktif'] : 1,
                 'dibuat_pada' => date('Y-m-d H:i:s'),
                 'diupdate_pada' => date('Y-m-d H:i:s')
             ];            // Handle file upload if present
-            $iconFile = $input['icon_image'] ?? null;
+            $iconFile = $this->request->getFile('icon_image');
             log_message('info', 'Icon file check: ' . ($iconFile ? 'EXISTS' : 'NULL'));
             
             if ($iconFile && is_object($iconFile) && $iconFile->isValid()) {
@@ -254,7 +254,7 @@ class AdminServicesApi extends BaseController
             }
 
             // Support both JSON and form-data
-            $input = $this->request->getJSON(true) ?? $this->request->getPost();
+            $input = $this->request->getPost();
             log_message('info', 'Update data received: ' . json_encode($input));
             
             $data = [];
@@ -279,6 +279,21 @@ class AdminServicesApi extends BaseController
                 $data['durasi_hari'] = $input['durasi_hari'];
             }
 
+            // Handle icon file upload
+            $file = $this->request->getFile('icon_image');
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                // Create services upload directory if not exists
+                $uploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                
+                $newName = $file->getRandomName();
+                if ($file->move($uploadDir, $newName)) {
+                    $data['icon_path'] = 'uploads/services/' . $newName;
+                }
+            }
             // Handle aktif status
             if (isset($input['aktif'])) {
                 $data['aktif'] = $input['aktif'] ? 1 : 0;
@@ -450,7 +465,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            $file = $this->request->getFile('icon_image');
+            $file = $this->request->getFile('icon_path');
 
             if (!$file || !$file->isValid()) {
                 return $this->response->setJSON([

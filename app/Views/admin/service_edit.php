@@ -88,7 +88,7 @@
 
         <!-- Icon/Image Upload -->
         <div>
-            <label for="icon_image" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="icon_path" class="block text-sm font-medium text-gray-700 mb-2">
                 Icon/Gambar Layanan (Opsional)
             </label>
             <div class="flex items-center gap-4">
@@ -260,14 +260,30 @@ async function submitServiceForm() {
     try {
         console.log('🚀 Updating service...', { id: serviceId, data });
         
-        const response = await fetch(`/api/admin/services/${serviceId}`, {
+       
+        const submitData = new FormData();
+        submitData.append('kode_layanan', data.kode_layanan);
+        submitData.append('nama_layanan', data.nama_layanan);
+        submitData.append('deskripsi', data.deskripsi);
+        submitData.append('harga_dasar', data.harga_dasar);
+        submitData.append('durasi_hari', data.durasi_hari);
+        submitData.append('aktif', data.aktif);
+
+        const iconFile = document.getElementById('icon_image').files[0];
+        if (iconFile) {
+            if(iconFile.size > 2 * 1024 * 1024) { 
+                showToast('Ukuran file terlalu besar! Maksimal 2MB.', 'error');
+                return;
+            }
+            submitData.append('icon_image', iconFile);
+        }
+         const response = await fetch(`/api/admin/services/${serviceId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-HTTP-Method-Override': 'PUT'
             },
             credentials: 'include',
-            body: JSON.stringify(data)
+            body: submitData
         });
         
         if (!response.ok) {
@@ -325,6 +341,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('🚀 Loading service detail from API...', { serviceId });
         
+        
         const response = await fetch(`/api/admin/services/${serviceId}`, {
             method: 'GET',
             headers: {
@@ -350,10 +367,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('harga_dasar_display').value = (service.harga_dasar || service.price || 0).toLocaleString('id-ID');
             document.getElementById('durasi_hari').value = service.durasi_hari || 1;
             document.getElementById('aktif').checked = service.aktif ? true : false;
-            
-            // Update page header
+        if (service.icon_path) {
+            document.getElementById('iconPreview').innerHTML = `
+                <img src="/${service.icon_path}" 
+                    class="w-full h-full object-cover rounded-lg">
+            `;
+        }
             document.querySelector('.text-gray-600').textContent = `Update informasi layanan ${service.nama_layanan || service.name}`;
         }
+
     } catch (error) {
         console.error('❌ Error loading service:', error);
         showToast('Gagal memuat data layanan: ' + error.message, 'error');
