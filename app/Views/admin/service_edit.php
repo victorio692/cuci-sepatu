@@ -92,7 +92,7 @@
                 Icon/Gambar Layanan (Opsional)
             </label>
             <div class="flex items-center gap-4">
-                <div id="iconPreview" class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                <div id="iconPreview" class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 relative">
                     <i class="fas fa-image text-gray-400 text-3xl"></i>
                 </div>
                 <div class="flex-1">
@@ -107,6 +107,9 @@
                     <p class="mt-2 text-xs text-gray-500">
                         Format: JPG, PNG, GIF (Max: 2MB). Ukuran recommended: 200x200px
                     </p>
+                    <button type="button" onclick="removeServiceIcon()" id="removeIconBtn" style="display: none;" class="mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition">
+                        <i class="fas fa-trash mr-1"></i>Hapus Icon
+                    </button>
                 </div>
             </div>
         </div>
@@ -219,15 +222,15 @@ function previewIcon(input) {
 async function submitServiceForm() {
     const form = document.getElementById('serviceForm');
     const serviceId = document.getElementById('serviceId').value;
-    const formData = new FormData(form);
+    const formDataInput = new FormData(form);
     
     // Extract and validate required fields
-    const kode = formData.get('kode_layanan')?.trim();
-    const nama = formData.get('nama_layanan')?.trim();
-    const deskripsi = formData.get('deskripsi')?.trim();
-    let harga = formData.get('harga_dasar')?.trim();
-    const durasi = formData.get('durasi_hari');
-    const aktif = formData.get('aktif') ? 1 : 0;
+    const kode = formDataInput.get('kode_layanan')?.trim();
+    const nama = formDataInput.get('nama_layanan')?.trim();
+    const deskripsi = formDataInput.get('deskripsi')?.trim();
+    let harga = formDataInput.get('harga_dasar')?.trim();
+    const durasi = formDataInput.get('durasi_hari');
+    const aktif = formDataInput.get('aktif') ? 1 : 0;
     
     // Validate required fields
     if (!kode) {
@@ -247,27 +250,31 @@ async function submitServiceForm() {
         return;
     }
     
-    // Prepare data
-    const data = {
-        kode_layanan: kode,
-        nama_layanan: nama,
-        deskripsi: deskripsi,
-        harga_dasar: harga,
-        durasi_hari: parseInt(durasi) || 1,
-        aktif: aktif
-    };
+    // Create FormData to handle file upload
+    const formData = new FormData();
+    formData.append('kode_layanan', kode);
+    formData.append('nama_layanan', nama);
+    formData.append('deskripsi', deskripsi);
+    formData.append('harga_dasar', harga);
+    formData.append('durasi_hari', parseInt(durasi) || 1);
+    formData.append('aktif', aktif);
+    
+    // Add icon file if selected
+    const iconInput = document.getElementById('icon_image');
+    if (iconInput.files && iconInput.files[0]) {
+        formData.append('icon_image', iconInput.files[0]);
+    }
     
     try {
-        console.log('🚀 Updating service...', { id: serviceId, data });
+        console.log('🚀 Updating service...', { id: serviceId });
         
         const response = await fetch(`/api/admin/services/${serviceId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-HTTP-Method-Override': 'PUT'
             },
             credentials: 'include',
-            body: JSON.stringify(data)
+            body: formData
         });
         
         if (!response.ok) {
@@ -350,6 +357,19 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('harga_dasar_display').value = (service.harga_dasar || service.price || 0).toLocaleString('id-ID');
             document.getElementById('durasi_hari').value = service.durasi_hari || 1;
             document.getElementById('aktif').checked = service.aktif ? true : false;
+            
+            // Display existing icon if available
+            if (service.icon_path) {
+                const preview = document.getElementById('iconPreview');
+                preview.innerHTML = `
+                    <img src="/${service.icon_path}" alt="Service Icon" class="w-full h-full object-cover rounded-lg">
+                `;
+                // Show remove button if icon exists
+                const removeBtn = document.getElementById('removeIconBtn');
+                if (removeBtn) {
+                    removeBtn.style.display = 'block';
+                }
+            }
             
             // Update page header
             document.querySelector('.text-gray-600').textContent = `Update informasi layanan ${service.nama_layanan || service.name}`;
