@@ -28,8 +28,8 @@ class AdminDashboardApi extends BaseController
 
             // Hitung user yang daftar bulan ini
             $builder = $this->db->table('users');
-            $builder->where('MONTH(dibuat_pada)', date('m'));
-            $builder->where('YEAR(dibuat_pada)', date('Y'));
+            $builder->where('MONTH(created_at)', date('m'));
+            $builder->where('YEAR(created_at)', date('Y'));
             $usersThisMonth = $builder->countAllResults();
 
             // STATISTIK BOOKING
@@ -39,8 +39,8 @@ class AdminDashboardApi extends BaseController
 
             // Booking bulan ini
             $builderBooking = $this->db->table('bookings');
-            $builderBooking->where('MONTH(dibuat_pada)', date('m'));
-            $builderBooking->where('YEAR(dibuat_pada)', date('Y'));
+            $builderBooking->where('MONTH(created_at)', date('m'));
+            $builderBooking->where('YEAR(created_at)', date('Y'));
             $builderBulanIini = $builderBooking->countAllResults();
 
             // Booking selesai
@@ -63,8 +63,8 @@ class AdminDashboardApi extends BaseController
             $builderRevenue = $this->db->table('bookings');
             $builderRevenue->select('COALESCE(SUM(total), 0) as total');
             $builderRevenue->where('status', 'selesai');    
-            $builderRevenue->where('MONTH(dibuat_pada)', date('m'));
-            $builderRevenue->where('YEAR(dibuat_pada)', date('Y'));
+            $builderRevenue->where('MONTH(created_at)', date('m'));
+            $builderRevenue->where('YEAR(created_at)', date('Y'));
             $queryRevenue = $builderRevenue->get();
             $rowRevenue = $queryRevenue->getRow();
             $revenueThisMonth = $rowRevenue ? (int)$rowRevenue->total : 0;
@@ -139,7 +139,7 @@ class AdminDashboardApi extends BaseController
             $builder = $this->db->table('bookings');
             $builder->select('bookings.*, users.nama_lengkap as nama_customer, users.email as email_customer, users.no_hp');
             $builder->join('users', 'users.id = bookings.id_user', 'left');
-            $builder->orderBy('bookings.dibuat_pada', 'DESC');
+            $builder->orderBy('bookings.created_at', 'DESC');
             $builder->limit($batas, $mulaiDari);
             $query = $builder->get();
             $dataBooking = $query->getResultArray();
@@ -194,7 +194,7 @@ class AdminDashboardApi extends BaseController
             $builder->select('bookings.*, users.nama_lengkap as nama_customer, users.email as email_customer, users.no_hp');
             $builder->join('users', 'users.id = bookings.id_user', 'left');
             $builder->where('bookings.status', 'pending');
-            $builder->orderBy('bookings.dibuat_pada', 'DESC');
+            $builder->orderBy('bookings.created_at', 'DESC');
             $builder->limit($batas);
             $query = $builder->get();
             $dataPending = $query->getResultArray();
@@ -261,8 +261,8 @@ class AdminDashboardApi extends BaseController
             }
 
             $builder = $this->db->table('users');
-            $builder->select('id, nama_lengkap, email, no_hp, role, dibuat_pada');
-            $builder->orderBy('dibuat_pada', 'DESC');
+            $builder->select('id, nama_lengkap, email, no_hp, role, created_at');
+            $builder->orderBy('created_at', 'DESC');
             $builder->limit($batas);
             $query = $builder->get();
             $dataUser = $query->getResultArray();
@@ -293,8 +293,8 @@ class AdminDashboardApi extends BaseController
             $setahunLalu = date('Y-m-d', strtotime('-12 months'));
 
             $builder = $this->db->table('bookings');
-            $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as bulan, COUNT(*) as jumlah_booking, COALESCE(SUM(total), 0) as total_pendapatan");
-            $builder->where('dibuat_pada >=', $setahunLalu . ' 00:00:00');
+            $builder->select("DATE_FORMAT(created_at, '%Y-%m') as bulan, COUNT(*) as jumlah_booking, COALESCE(SUM(total), 0) as total_pendapatan");
+            $builder->where('created_at >=', $setahunLalu . ' 00:00:00');
             $builder->groupBy('bulan');
             $builder->orderBy('bulan', 'ASC');
             $query = $builder->get();

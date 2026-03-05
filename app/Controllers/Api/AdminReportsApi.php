@@ -66,44 +66,44 @@ class AdminReportsApi extends BaseController
             
             // Hitung total booking
             $builder = $this->db->table('bookings');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $totalBookings = $builder->countAllResults();
             
             // Reset builder untuk query berikutnya
             $builder = $this->db->table('bookings');
             $builder->where('status', 'selesai');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $completedBookings = $builder->countAllResults();
             
             // Hitung booking pending
             $builder = $this->db->table('bookings');
             $builder->where('status', 'pending');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $pendingBookings = $builder->countAllResults();
             
             // Hitung booking batal
             $builder = $this->db->table('bookings');
             $builder->where('status', 'batal');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $cancelledBookings = $builder->countAllResults();
             
             // Hitung booking proses
             $builder = $this->db->table('bookings');
             $builder->where('status', 'proses');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $processingBookings = $builder->countAllResults();
             
             // Hitung total pendapatan dari booking yang selesai
             $builder = $this->db->table('bookings');
             $builder->select('COALESCE(SUM(total), 0) as total');
             $builder->where('status', 'selesai');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $query = $builder->get();
             $row = $query->getRow();
             $totalRevenue = $row ? (int)$row->total : 0;
@@ -111,8 +111,8 @@ class AdminReportsApi extends BaseController
             // Statistik per layanan
             $builder = $this->db->table('bookings');
             $builder->select('layanan, COUNT(*) as jumlah, COALESCE(SUM(total), 0) as pendapatan');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $builder->groupBy('layanan');
             $builder->orderBy('jumlah', 'DESC');
             $query = $builder->get();
@@ -120,19 +120,19 @@ class AdminReportsApi extends BaseController
             
             // Data booking per hari untuk chart
             $builder = $this->db->table('bookings');
-            $builder->select('DATE(dibuat_pada) as tanggal, COUNT(*) as jumlah');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
-            $builder->groupBy('DATE(dibuat_pada)');
+            $builder->select('DATE(created_at) as tanggal, COUNT(*) as jumlah');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
+            $builder->groupBy('DATE(created_at)');
             $builder->orderBy('tanggal', 'ASC');
-            $query = $builder->get();
+            $query = $builder->get();   
             $dailyBookings = $query->getResultArray();
             
             // Breakdown status booking
             $builder = $this->db->table('bookings');
             $builder->select('status, COUNT(*) as jumlah');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $builder->groupBy('status');
             $query = $builder->get();
             $statusBreakdown = $query->getResultArray();
@@ -191,9 +191,9 @@ class AdminReportsApi extends BaseController
             $builder = $this->db->table('bookings');
             $builder->select('bookings.*, users.nama_lengkap as nama_customer, users.email as email_customer');
             $builder->join('users', 'users.id = bookings.id_user', 'left');
-            $builder->where('bookings.dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('bookings.dibuat_pada <=', $endDate . ' 23:59:59');
-            $builder->orderBy('bookings.dibuat_pada', 'DESC');
+            $builder->where('bookings.created_at >=', $startDate . ' 00:00:00');
+            $builder->where('bookings.created_at <=', $endDate . ' 23:59:59');
+            $builder->orderBy('bookings.created_at', 'DESC');
             $query = $builder->get();
             $bookings = $query->getResultArray();
             
@@ -246,15 +246,15 @@ class AdminReportsApi extends BaseController
             
             if($groupBy == 'monthly') {
                 // Group per bulan
-                $builder->select("DATE_FORMAT(dibuat_pada, '%Y-%m') as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
+                $builder->select("DATE_FORMAT(created_at, '%Y-%m') as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
             } else {
                 // Group per hari
-                $builder->select("DATE(dibuat_pada) as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
+                $builder->select("DATE(created_at) as periode, COALESCE(SUM(total), 0) as pendapatan, COUNT(*) as jumlah_booking");
             }
             
             $builder->where('status', 'selesai');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('created_at >=', $startDate . ' 00:00:00');
+            $builder->where('created_at <=', $endDate . ' 23:59:59');
             $builder->groupBy('periode');
             $builder->orderBy('periode', 'ASC');
             $query = $builder->get();
@@ -321,8 +321,8 @@ class AdminReportsApi extends BaseController
             $builder->select('users.id, users.nama_lengkap, users.email, COUNT(bookings.id) as jumlah_booking, SUM(bookings.total) as total_belanja');
             $builder->join('users', 'users.id = bookings.id_user');
             $builder->where('bookings.status', 'selesai');
-            $builder->where('bookings.dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('bookings.dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('bookings.created_at >=', $startDate . ' 00:00:00');
+            $builder->where('bookings.created_at <=', $endDate . ' 23:59:59');
             $builder->groupBy('users.id');
             $builder->orderBy('total_belanja', 'DESC');
             $builder->limit(10);
@@ -331,8 +331,8 @@ class AdminReportsApi extends BaseController
             
             // Hitung customer baru di periode ini
             $builder = $this->db->table('users');
-            $builder->where('dibuat_pada >=', $startDate . ' 00:00:00');
-            $builder->where('dibuat_pada <=', $endDate . ' 23:59:59');
+            $builder->where('users.created_at >=', $startDate . ' 00:00:00');
+            $builder->where('users.created_at <=', $endDate . ' 23:59:59');
             $newCustomers = $builder->countAllResults();
             
             return $this->response->setJSON([

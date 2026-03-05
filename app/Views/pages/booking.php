@@ -184,7 +184,7 @@
                                 name="booking_time" 
                                 min="08:00"
                                 max="20:00"
-                                step="1800"
+                                step="60"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-lg"
                                 required
                             >
@@ -870,7 +870,7 @@ function useCurrentTime() {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     
-    // Set to time picker (will snap to step="1800" = 30 min intervals automatically)
+   
     const bookingTimeInput = document.getElementById('booking_time');
     bookingTimeInput.value = `${hours}:${minutes}`;
     

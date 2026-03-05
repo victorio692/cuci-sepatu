@@ -59,7 +59,7 @@ class Dashboard extends BaseController
 
         $recent_bookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
@@ -107,7 +107,7 @@ class Dashboard extends BaseController
         // Get all bookings for count
         $allBookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -116,7 +116,7 @@ class Dashboard extends BaseController
             $bookings = $this->db->table('bookings')
                 ->where('id_user', $user_id)
                 ->where('status', $statusFilter)
-                ->orderBy('dibuat_pada', 'DESC')
+                ->orderBy('created_at', 'DESC')
                 ->get()
                 ->getResultArray();
         } else {

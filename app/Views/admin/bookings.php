@@ -180,7 +180,7 @@ function renderBookingsTable(bookings, pagination = {}) {
         const isDisabled = ['selesai', 'ditolak'].includes(booking.status);
         
         // Format date
-        const date = new Date(booking.created_at || booking.dibuat_pada);
+        const date = new Date(booking.created_at || booking.created_at);
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
         

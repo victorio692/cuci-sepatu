@@ -70,7 +70,7 @@ class AdminBookingsApi extends BaseController
         $totalBookings = $builder->countAllResults(false);
         
         // Get paginated results
-        $bookings = $builder->orderBy('bookings.dibuat_pada', 'DESC')
+        $bookings = $builder->orderBy('bookings.created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
@@ -245,7 +245,7 @@ class AdminBookingsApi extends BaseController
         
         $updateData = [
             'status' => $status,
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ];
         
         if ($status === 'ditolak') {
@@ -264,7 +264,7 @@ class AdminBookingsApi extends BaseController
                 'id_user' => $booking['id_user'],
                 'booking_id' => $id,
                 'dibaca' => 0,
-                'dibuat_pada' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s')
             ];
 
             switch ($status) {

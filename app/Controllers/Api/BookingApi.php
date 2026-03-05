@@ -172,8 +172,8 @@ class BookingApi extends BaseController
             'biaya_kirim' => $biaya_kirim,
             'total' => $total,
             'status' => 'pending',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         try {
@@ -193,7 +193,7 @@ class BookingApi extends BaseController
                     'pesan' => "Ada booking baru dari pelanggan {$pelangganName} dengan ID #{$booking_id}. Layanan: {$namaLayanan}, Jumlah: {$jumlah} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
-                    'dibuat_pada' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s')
                 ]);
             }
 
@@ -277,7 +277,7 @@ class BookingApi extends BaseController
 
         $total = $builder->countAllResults(false);
         
-        $bookings = $builder->orderBy('dibuat_pada', 'DESC')
+        $bookings = $builder->orderBy('created_at', 'DESC')
             ->limit($limit, $offset)
             ->get()
             ->getResultArray();
@@ -389,7 +389,7 @@ class BookingApi extends BaseController
         $this->db->table('bookings')->update([
             'status' => 'batal',
             'alasan_pembatalan' => trim($alasan_pembatalan),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ], ['id' => $id]);
 
         return $this->respond([

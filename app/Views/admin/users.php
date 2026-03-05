@@ -143,7 +143,7 @@ function renderUsersTable(users, pagination = {}) {
                         const name = user.full_name || user.nama_lengkap || user.nama || '-';
                         const phone = user.phone || user.no_hp || user.telepon || '-';
                         const email = user.email || '-';
-                        const createdAt = new Date(user.created_at || user.dibuat_pada).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+                        const createdAt = new Date(user.created_at || user.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
                         const isActive = user.is_active !== false && user.is_active !== 0; // default true if not explicitly false
                         
                         return `

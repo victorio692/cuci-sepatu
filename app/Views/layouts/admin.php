@@ -558,7 +558,7 @@
                         div.className = 'px-4 py-3 hover:bg-blue-50 border-b border-gray-100 cursor-pointer transition';
                         div.onclick = () => markAsRead(notif.id, notif.booking_id);
                         
-                        const timeAgo = getTimeAgo(notif.dibuat_pada);
+                        const timeAgo = getTimeAgo(notif.created_at);
                         const iconClass = getNotificationIcon(notif.tipe);
                         const iconColor = notif.tipe === 'new_booking' ? 'text-green-500' : 'text-blue-500';
                         

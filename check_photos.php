@@ -21,7 +21,7 @@ if ($result->num_rows > 0) {
     $booking = $result->fetch_assoc();
     echo "  - User ID: " . $booking['id_user'] . "\n";
     echo "  - Status: " . $booking['status'] . "\n";
-    echo "  - Created: " . $booking['dibuat_pada'] . "\n";
+    echo "  - Created: " . $booking['created_at'] . "\n";
 } else {
     echo "Booking #35 not found\n";
 }

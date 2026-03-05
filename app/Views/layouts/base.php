@@ -1019,7 +1019,7 @@
                                         <div class="flex-1">
                                             <p class="text-sm font-semibold text-gray-900">${notif.judul}</p>
                                             <p class="text-xs text-gray-600 mt-1">${notif.pesan}</p>
-                                            <p class="text-xs text-gray-400 mt-1">${timeAgo(notif.dibuat_pada)}</p>
+                                            <p class="text-xs text-gray-400 mt-1">${timeAgo(notif.created_at)}</p>
                                         </div>
                                         ${notif.dibaca == 0 ? '<div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>' : ''}
                                     </div>

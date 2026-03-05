@@ -52,7 +52,7 @@ class Bookings extends Controller
         $totalBookings = $builder->countAllResults(false);
         
         // Get paginated results
-        $bookings = $builder->orderBy('bookings.dibuat_pada', 'DESC')
+        $bookings = $builder->orderBy('bookings.created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
@@ -60,7 +60,7 @@ class Bookings extends Controller
         // Map Indonesian columns to English for view
         foreach ($bookings as &$booking) {
             $booking['service'] = $booking['layanan'];
-            $booking['created_at'] = $booking['dibuat_pada'];
+            $booking['created_at'] = $booking['created_at'];
         }
 
         // Calculate pagination
@@ -102,7 +102,7 @@ class Bookings extends Controller
         $booking['delivery_date'] = $booking['tanggal_kirim'];
         $booking['delivery_address'] = $booking['alamat_kirim'] ?? $booking['address'];
         $booking['notes'] = $booking['catatan'] ?? '';
-        $booking['created_at'] = $booking['dibuat_pada'];
+        $booking['created_at'] = $booking['created_at'];
         $booking['city'] = '-';
         $booking['province'] = '-';
         $booking['zip_code'] = '-';
@@ -275,7 +275,7 @@ class Bookings extends Controller
             'id_user' => $booking['id_user'],
             'booking_id' => $id,
             'dibaca' => 0,
-            'dibuat_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s')
         ];
 
         switch ($status) {

@@ -93,8 +93,8 @@ class Auth extends BaseController
             'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT),
             'alamat' => '',
             'role' => 'pelanggan',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         // Validate

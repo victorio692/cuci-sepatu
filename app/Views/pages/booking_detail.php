@@ -15,7 +15,7 @@
                 Detail Pesanan #<?= $booking['id'] ?>
             </h1>
             <p class="text-gray-500 text-sm">
-                Dibuat pada <?= date('d M Y H:i', strtotime($booking['dibuat_pada'])) ?>
+                Dibuat pada <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
             </p>
         </div>
 

@@ -144,43 +144,6 @@
 
 <?= $this->section('extra_js') ?>
 <script>
-// Load user detail and populate form
-document.addEventListener('DOMContentLoaded', async function() {
-    const userId = document.getElementById('userId').value;
-    
-    try {
-        console.log('🚀 Loading user detail from API...', userId);
-        const response = await fetch(`/api/users/${userId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        console.log('✅ User loaded:', result);
-        
-        // Handle nested response structure
-        const user = result.data || result;
-        
-        if (user) {
-            // Auto-populate form fields
-            document.getElementById('nama_lengkap').value = user.nama_lengkap || user.full_name || '';
-            document.getElementById('email').value = user.email || '';
-            document.getElementById('no_hp').value = user.no_hp || user.phone || '';
-            document.getElementById('role').value = user.role || '';
-            document.getElementById('alamat').value = user.alamat || user.address || '';
-        }
-    } catch (error) {
-        console.error('❌ Error loading user:', error);
-        showToast('Gagal memuat data pengguna: ' + error.message, 'error');
-    }
-});
 
 // Submit user form via API
 function submitUserForm() {

@@ -35,7 +35,7 @@ class Users extends Controller
         $totalUsers = $builder->countAllResults(false);
 
         // Get paginated results
-        $users = $builder->orderBy('dibuat_pada', 'DESC')
+        $users = $builder->orderBy('created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
@@ -44,7 +44,7 @@ class Users extends Controller
         foreach ($users as &$user) {
             $user['full_name'] = $user['nama_lengkap'];
             $user['phone'] = $user['no_hp'];
-            $user['created_at'] = $user['dibuat_pada'];
+            $user['created_at'] = $user['created_at'];
             $user['is_active'] = 1; // Always active for now
         }
 
@@ -79,7 +79,7 @@ class Users extends Controller
        
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -152,8 +152,8 @@ class Users extends Controller
             'password_hash' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role' => $this->request->getPost('role'),
             'alamat' => $this->request->getPost('alamat'),
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         if ($this->db->table('users')->insert($data)) {
@@ -219,7 +219,7 @@ class Users extends Controller
             'no_hp' => $this->request->getPost('no_hp'),
             'role' => $this->request->getPost('role'),
             'alamat' => $this->request->getPost('alamat'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         // Update password if provided

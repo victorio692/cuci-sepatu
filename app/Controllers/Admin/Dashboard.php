@@ -34,15 +34,15 @@ class Dashboard extends Controller
         // Users statistics
         $total_users = $db->table('users')->countAllResults();
         $users_this_month = $db->table('users')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
 
         // Bookings statistics
         $total_bookings = $db->table('bookings')->countAllResults();
         $bookings_this_month = $db->table('bookings')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
         $completed_bookings = $db->table('bookings')
             ->where('status', 'selesai')
@@ -54,8 +54,8 @@ class Dashboard extends Controller
         // Revenue
         $revenue = $db->table('bookings')
             ->selectSum('total')
-            ->where('MONTH(dibuat_pada)', date('m'))
-            ->where('YEAR(dibuat_pada)', date('Y'))
+            ->where('MONTH(created_at)', date('m'))
+            ->where('YEAR(created_at)', date('Y'))
             ->get()
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
@@ -72,7 +72,7 @@ class Dashboard extends Controller
         $recent_bookings = $db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as customer_name, users.no_hp')
             ->join('users', 'bookings.id_user = users.id')
-            ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->orderBy('bookings.created_at', 'DESC')
             ->limit($perPage, $offset)
             ->get()
             ->getResultArray();
@@ -89,7 +89,7 @@ class Dashboard extends Controller
             ->select('bookings.*, users.nama_lengkap as customer_name')
             ->join('users', 'bookings.id_user = users.id')
             ->where('bookings.status', 'pending')
-            ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->orderBy('bookings.created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
@@ -104,8 +104,8 @@ class Dashboard extends Controller
 
         // Recent users
         $recent_users = $db->table('users')
-            ->select('id, nama_lengkap as full_name, email, dibuat_pada as created_at')
-            ->orderBy('dibuat_pada', 'DESC')
+            ->select('id, nama_lengkap as full_name, email, created_at')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();
