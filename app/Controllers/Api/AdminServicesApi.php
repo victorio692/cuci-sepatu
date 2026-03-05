@@ -321,48 +321,6 @@ class AdminServicesApi extends BaseController
                 $data['aktif'] = 0;
             }
 
-            // Handle file upload for icon_path
-            $iconFile = $this->request->getFile('icon_image');
-            if ($iconFile && is_object($iconFile) && $iconFile->isValid()) {
-                try {
-                    log_message('info', 'Processing icon upload: ' . $iconFile->getClientName() . ' Size: ' . $iconFile->getSize());
-                    
-                    // Save to PUBLIC uploads directory (not writable) so it's web-accessible
-                    $uploadsDir = FCPATH . 'uploads';
-                    $servicesDir = $uploadsDir . DIRECTORY_SEPARATOR . 'services';
-                    
-                    if (!is_dir($uploadsDir)) {
-                        mkdir($uploadsDir, 0755, true);
-                        log_message('info', 'Created uploads directory: ' . $uploadsDir);
-                    }
-                    
-                    if (!is_dir($servicesDir)) {
-                        mkdir($servicesDir, 0755, true);
-                        log_message('info', 'Created services directory: ' . $servicesDir);
-                    }
-                    
-                    // Validate file size (max 2MB)
-                    if ($iconFile->getSize() > 2 * 1024 * 1024) {
-                        log_message('warning', 'File too large: ' . $iconFile->getSize());
-                        // Continue without updating icon
-                    } else {
-                        // Generate unique filename
-                        $newName = 'service_' . time() . '_' . $iconFile->getRandomName();
-                        
-                        // Move file to uploads directory
-                        if ($iconFile->move($servicesDir, $newName)) {
-                            $data['icon_path'] = 'uploads/services/' . $newName;
-                            log_message('info', 'Icon uploaded successfully: ' . $newName . ' at path: ' . $servicesDir . DIRECTORY_SEPARATOR . $newName);
-                        } else {
-                            log_message('error', 'Failed to move file: ' . $iconFile->getClientName());
-                        }
-                    }
-                } catch (\Exception $e) {
-                    log_message('error', 'File upload exception: ' . $e->getMessage());
-                    // Continue without file if upload fails
-                }
-            }
-
             $data['diupdate_pada'] = date('Y-m-d H:i:s');
 
             log_message('info', 'Updating service with data: ' . json_encode($data));
