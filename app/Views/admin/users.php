@@ -31,7 +31,7 @@
         </div>
 
         <div class="flex items-end">
-            <button type="button" onclick="loadUsers()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
+            <button type="button" onclick="loadUsers(document.getElementById('searchInput').value, 1)" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
                 <i class="fas fa-search"></i>
                 <span>Cari</span>
             </button>
@@ -41,25 +41,41 @@
 
 <!-- Users Table -->
 <div id="usersContainer" class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <div class="w-full flex justify-center py-12">
-        <div class="animate-spin">
-            <i class="fas fa-spinner text-blue-500 text-4xl"></i>
-        </div>
+    <div class="p-16 text-center">
+        <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
+        <p class="text-gray-600 text-lg font-medium">Memuat data pengguna...</p>
+    </div>
 </div>
 
 <?= $this->endSection() ?>
 
 <?= $this->section('extra_js') ?>
 <script>
+// Store pagination and filter state
+let currentFilters = {
+    search: '',
+    page: 1
+};
+
 // Load users from API
-async function loadUsers() {
+async function loadUsers(search = '', page = 1) {
+    console.log('🚀 Loading users...', { search, page });
+    
+    // Store current filters and page
+    currentFilters = { search, page };
+    
     const container = document.getElementById('usersContainer');
-    const searchInput = document.getElementById('searchInput');
-    const search = searchInput?.value || '';
     
     try {
-        console.log('🚀 Loading users from API...', { search });
-        const url = search ? `/api/users?search=${encodeURIComponent(search)}` : '/api/users';
+        let url = '/api/users';
+        const params = new URLSearchParams();
+        
+        if (search) params.append('search', search);
+        if (page) params.append('page', page);
+        
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
         
         const response = await fetch(url, {
             method: 'GET',
@@ -78,13 +94,13 @@ async function loadUsers() {
 
         // Handle API response structure
         const users = result.data?.users || result.data || [];
-        const total = result.data?.pagination?.total || 0;
+        const pagination = result.data?.pagination || {};
         
         console.log('📊 Extracted users:', users);
-        console.log('📊 Total:', total);
+        console.log('📄 Pagination:', pagination);
 
         if (users && users.length > 0) {
-            renderUsersTable(users, total);
+            renderUsersTable(users, pagination);
         } else {
             renderEmptyState();
         }
@@ -105,12 +121,12 @@ async function loadUsers() {
 }
 
 // Render users table
-function renderUsersTable(users, total) {
+function renderUsersTable(users, pagination = {}) {
     const container = document.getElementById('usersContainer');
     
     const tableHTML = `
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="overflow-x-auto table-responsive">
+            <table class="w-full border-collapse">
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
@@ -132,10 +148,10 @@ function renderUsersTable(users, total) {
                         
                         return `
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-3 py-3 whitespace-nowrap">
+                            <td class="px-3 py-3 whitespace-nowrap" data-label="ID">
                                 <span class="font-semibold text-xs text-gray-800">#${user.id}</span>
                             </td>
-                            <td class="px-3 py-3">
+                            <td class="px-3 py-3" data-label="Nama">
                                 <div class="flex items-center">
                                     <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xs mr-2">
                                         ${name.charAt(0).toUpperCase()}
@@ -143,19 +159,19 @@ function renderUsersTable(users, total) {
                                     <span class="font-medium text-sm text-gray-800">${name}</span>
                                 </div>
                             </td>
-                            <td class="px-3 py-3">
-                                <span class="text-xs text-gray-700">${email}</span>
+                            <td class="px-3 py-3" data-label="Email">
+                                <span class="text-xs text-gray-700 break-all">${email}</span>
                             </td>
-                            <td class="px-3 py-3 whitespace-nowrap">
+                            <td class="px-3 py-3 whitespace-nowrap" data-label="Telepon">
                                 <a href="https://wa.me/${phone.replace(/[^0-9]/g, '')}" target="_blank" class="text-green-600 hover:text-green-700 flex items-center space-x-0.5">
                                     <i class="fab fa-whatsapp text-sm"></i>
                                     <span class="text-xs">${phone}</span>
                                 </a>
                             </td>
-                            <td class="px-3 py-3 whitespace-nowrap">
+                            <td class="px-3 py-3 whitespace-nowrap" data-label="Bergabung">
                                 <span class="text-xs text-gray-700">${createdAt}</span>
                             </td>
-                            <td class="px-3 py-3">
+                            <td class="px-3 py-3" data-label="Status">
                                 <button 
                                     class="inline-flex items-center space-x-1 px-2 py-1 rounded text-xs font-medium transition cursor-pointer
                                         ${isActive ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200'}"
@@ -166,7 +182,7 @@ function renderUsersTable(users, total) {
                                     <span>${isActive ? 'Active' : 'Inactive'}</span>
                                 </button>
                             </td>
-                            <td class="px-2 py-3 whitespace-nowrap">
+                            <td class="px-2 py-3 whitespace-nowrap" data-label="Aksi">
                                 <div class="flex items-center space-x-0.5">
                                     <a href="/admin/users/${user.id}" 
                                        class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs" title="Lihat">
@@ -187,13 +203,103 @@ function renderUsersTable(users, total) {
                     `}).join('')}
                 </tbody>
             </table>
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-center text-gray-600">
-                Total: <span class="font-semibold">${total || users.length}</span> pengguna
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <!-- Info Text -->
+                    <div class="text-sm text-gray-600">
+                        Total: <span class="font-semibold">${pagination.total || 0} pengguna</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.total_pages || 1}</span>
+                    </div>
+                    
+                    <!-- Pagination Controls -->
+                    <div class="flex items-center gap-2">
+                        <!-- Previous Button -->
+                        ${pagination.current_page > 1 ? `
+                            <button onclick="loadUsers('${currentFilters.search}', ${pagination.current_page - 1})" 
+                                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium text-xs">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        ` : `
+                            <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium text-xs">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        `}
+                        
+                        <!-- Page Numbers -->
+                        ${generatePageNumbers(pagination.current_page || 1, pagination.total_pages || 1)}
+                        
+                        <!-- Next Button -->
+                        ${pagination.current_page < pagination.total_pages ? `
+                            <button onclick="loadUsers('${currentFilters.search}', ${pagination.current_page + 1})" 
+                                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium text-xs">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        ` : `
+                            <button disabled class="px-3 py-2 bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium text-xs">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        `}
+                    </div>
+                </div>
             </div>
         </div>
     `;
     
     container.innerHTML = tableHTML;
+}
+
+// Generate page number buttons
+function generatePageNumbers(currentPage, totalPages) {
+    let html = '';
+    const maxVisible = 5;
+    
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    
+    // Show first page if not visible
+    if (startPage > 1) {
+        html += `
+            <button onclick="loadUsers('${currentFilters.search}', 1)" 
+                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                1
+            </button>
+        `;
+        if (startPage > 2) {
+            html += `<span class="px-2 py-2 text-gray-400">...</span>`;
+        }
+    }
+    
+    // Show page numbers
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            html += `
+                <button class="px-3 py-2 bg-blue-600 text-white rounded-lg font-medium text-xs">
+                    ${i}
+                </button>
+            `;
+        } else {
+            html += `
+                <button onclick="loadUsers('${currentFilters.search}', ${i})" 
+                        class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                    ${i}
+                </button>
+            `;
+        }
+    }
+    
+    // Show last page if not visible
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span class="px-2 py-2 text-gray-400">...</span>`;
+        }
+        html += `
+            <button onclick="loadUsers('${currentFilters.search}', ${totalPages})" 
+                    class="px-3 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-xs">
+                ${totalPages}
+            </button>
+        `;
+    }
+    
+    return html;
 }
 
 // Render empty state
@@ -272,7 +378,7 @@ document.addEventListener('DOMContentLoaded', loadUsers);
 // Add Enter key to search input
 document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-        loadUsers();
+        loadUsers(document.getElementById('searchInput').value, 1);
     }
 });
 </script>

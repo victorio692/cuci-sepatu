@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title><?= $title ?? 'Admin - SYH Cleaning' ?></title>
     
     <!-- Tailwind CSS CDN -->
@@ -101,6 +103,212 @@
         .animate-fade-in-delay {
             animation: fade-in 0.8s ease-out 0.3s forwards;
             opacity: 0;
+        }
+
+        /* MOBILE RESPONSIVE IMPROVEMENTS */
+        
+        /* Prevent pinch zoom on mobile inputs */
+        input, select, textarea, button {
+            font-size: 16px !important;
+        }
+        
+        /* Ensure touch targets are at least 44px */
+        button, a, .btn, .clickable {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Responsive margins for main container */
+        main {
+            max-width: 100%;
+        }
+
+        /* Mobile-specific sidebar improvements */
+        @media (max-width: 1024px) {
+            #sidebar {
+                width: 100%;
+                max-width: 280px;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            }
+            
+            #sidebar nav {
+                overflow-y-auto;
+                max-height: calc(100vh - 12rem);
+                padding-bottom: 2rem;
+            }
+            
+            /* Close sidebar when clicking links on mobile */
+            aside nav > a {
+                position: relative;
+            }
+            
+            aside nav > a::after {
+                content: '';
+            }
+        }
+
+        /* Responsive navbar adjustments */
+        @media (max-width: 640px) {
+            nav .px-4 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            nav h1 {
+                font-size: 1rem;
+            }
+            
+            nav button {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Responsive main content padding */
+        @media (max-width: 768px) {
+            main {
+                padding: 1rem;
+            }
+        }
+
+        /* Table responsive - overflow on mobile */
+        @media (max-width: 768px) {
+            .table-responsive {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            table {
+                display: block;
+                border: 0;
+            }
+            
+            table thead {
+                display: none;
+            }
+            
+            table tbody {
+                display: block;
+            }
+            
+            table tbody tr {
+                display: block;
+                border: 1px solid #e5e7eb;
+                margin-bottom: 1rem;
+                border-radius: 0.5rem;
+                padding: 1rem;
+            }
+            
+            table tbody td {
+                display: block;
+                text-align: left;
+                padding: 0.5rem 0;
+                border: 0;
+                position: relative;
+                padding-left: 50%;
+            }
+            
+            table tbody td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                font-weight: bold;
+                color: #6b7280;
+                text-align: left;
+            }
+        }
+
+        /* Form field responsive sizing */
+        @media (max-width: 768px) {
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            input[type="tel"],
+            select,
+            textarea {
+                font-size: 16px !important;
+                min-height: 44px;
+                padding: 0.75rem !important;
+            }
+            
+            label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+            }
+            
+            form button {
+                width: 100%;
+                min-height: 44px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Card layout responsive */
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Modal responsive */
+        @media (max-width: 640px) {
+            .modal-dialog {
+                margin: 1rem;
+                width: auto;
+                max-width: calc(100vw - 2rem);
+            }
+        }
+
+        /* Notification dropdown responsive */
+        @media (max-width: 640px) {
+            #notificationDropdown {
+                position: fixed;
+                right: 0;
+                left: 0;
+                top: auto;
+                bottom: 0;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 1rem 1rem 0 0;
+                max-height: 70vh;
+            }
+        }
+
+        /* Hide elements on mobile if needed */
+        @media (max-width: 768px) {
+            .hidden-mobile {
+                display: none;
+            }
+            
+            .show-mobile {
+                display: block;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .show-mobile {
+                display: none;
+            }
+        }
+
+        /* Text size adjustments for mobile */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.25rem; }
+            h3 { font-size: 1.1rem; }
+            p { font-size: 0.95rem; }
+        }
+
+        /* Prevent text zoom on mobile */
+        body {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
         }
     </style>
     
@@ -264,12 +472,30 @@
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         
+        // Function to close sidebar
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+        
         sidebarToggle?.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
             sidebarOverlay.classList.toggle('hidden');
         });
         
         sidebarOverlay?.addEventListener('click', () => {
+            closeSidebar();
+        });
+
+        // Close sidebar when menu item is clicked on mobile
+        document.querySelectorAll('aside nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                // Only close on mobile (when sidebar is visible)
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
             sidebar.classList.add('-translate-x-full');
             sidebarOverlay.classList.add('hidden');
         });

@@ -199,7 +199,7 @@ function renderServiceStats(serviceStats) {
     
     const tableRows = serviceStats.map(stat => `
         <tr class="hover:bg-gray-50 transition">
-            <td class="px-6 py-4">
+            <td class="px-6 py-4" data-label="Layanan">
                 <div class="flex items-center">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold mr-3">
                         <i class="fas fa-shoe-prints"></i>
@@ -207,21 +207,22 @@ function renderServiceStats(serviceStats) {
                     <span class="font-medium text-gray-800">${stat.layanan || '-'}</span>
                 </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Jumlah Order">
                 <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                     ${stat.jumlah} order
                 </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Total Pendapatan">
                 <span class="font-semibold text-gray-800">Rp ${formatCurrency(stat.pendapatan)}</span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-4 whitespace-nowrap" data-label="Rata-rata/Order">
                 <span class="text-gray-700">Rp ${formatCurrency(Math.round(stat.pendapatan / stat.jumlah))}</span>
             </td>
         </tr>
     `).join('');
     
     const html = `
+        <div class="overflow-x-auto table-responsive">
         <table class="w-full">
             <thead class="bg-gray-50">
                 <tr>
@@ -235,6 +236,7 @@ function renderServiceStats(serviceStats) {
                 ${tableRows}
             </tbody>
         </table>
+        </div>
     `;
     
     container.innerHTML = html;
