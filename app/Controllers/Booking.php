@@ -184,8 +184,8 @@ class Booking extends BaseController
             'biaya_kirim' => $delivery_fee,
             'total' => $total,
             'status' => 'pending',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         $this->db->table('bookings')->insert($booking_data);
@@ -202,7 +202,7 @@ class Booking extends BaseController
                 'pesan' => "Ada pesanan baru dari pelanggan dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                 'tipe' => 'new_booking',
                 'dibaca' => 0,
-                'dibuat_pada' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s')
             ]);
         }
 
@@ -371,8 +371,8 @@ class Booking extends BaseController
                 'biaya_kirim' => $delivery_fee,
                 'total' => $total,
                 'status' => 'pending',
-                'dibuat_pada' => date('Y-m-d H:i:s'),
-                'diupdate_pada' => date('Y-m-d H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
 
             if (!$this->db->table('bookings')->insert($booking_data)) {
@@ -394,7 +394,7 @@ class Booking extends BaseController
                     'pesan' => "Ada Pesanan baru dari pelanggan dengan ID #{$booking_id}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                     'tipe' => 'new_booking',
                     'dibaca' => 0,
-                    'dibuat_pada' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s')
                 ]);
             }
 
@@ -483,7 +483,7 @@ class Booking extends BaseController
         $this->db->table('bookings')->update([
             'status' => 'batal',
             'alasan_pembatalan' => trim($alasan_pembatalan),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ], ['id' => $bookingId]);
 
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibatalkan');
@@ -671,7 +671,7 @@ class Booking extends BaseController
                 'delivery_method' => $deliveryMethod,
                 'catatan' => $notes,
                 'status' => 'pending',
-                'dibuat_pada' => date('Y-m-d H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
             ];
 
             if ($this->db->table('bookings')->insert($bookingData)) {
@@ -699,7 +699,7 @@ class Booking extends BaseController
                         'pesan' => "Ada Pesanan baru dari pelanggan dengan ID #{$bookingId}. Layanan: {$serviceName}, Jumlah: {$quantity} pasang sepatu.",
                         'tipe' => 'new_booking',
                         'dibaca' => 0,
-                        'dibuat_pada' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s')
                     ]);
                 }
             }

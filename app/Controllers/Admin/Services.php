@@ -117,8 +117,8 @@ class Services extends Controller
             'harga_dasar' => $this->request->getPost('harga_dasar'),
             'durasi_hari' => $this->request->getPost('durasi_hari'),
             'aktif' => $this->request->getPost('aktif') ? 1 : 0,
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         if ($this->db->table('services')->insert($data)) {
@@ -179,7 +179,7 @@ class Services extends Controller
             'harga_dasar' => $this->request->getPost('harga_dasar'),
             'durasi_hari' => $this->request->getPost('durasi_hari'),
             'aktif' => $this->request->getPost('aktif') ? 1 : 0,
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         if ($this->db->table('services')->where('id', $id)->update($data)) {

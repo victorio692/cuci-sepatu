@@ -239,7 +239,7 @@ function renderBookingsTable(bookings) {
         const status = booking.status || 'pending';
         const statusInfo = statusConfig[status] || statusConfig['pending'];
         const serviceName = serviceNames[booking.layanan] || booking.layanan;
-        const tanggal = formatDate(booking.dibuat_pada);
+        const tanggal = formatDate(booking.created_at);
         const hasFoto = booking.status === 'selesai' && booking.foto_hasil;
         
         tableHTML += `

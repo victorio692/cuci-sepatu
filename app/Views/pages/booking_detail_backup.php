@@ -15,7 +15,7 @@
                 <i class="fas fa-receipt"></i> Detail Pesanan #<?= $booking['id'] ?>
             </h1>
             <p class="text-blue-100 text-sm">
-                <i class="fas fa-clock"></i> Dibuat pada <?= date('d M Y H:i', strtotime($booking['dibuat_pada'])) ?>
+                <i class="fas fa-clock"></i> Dibuat pada <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
             </p>
         </div>
 

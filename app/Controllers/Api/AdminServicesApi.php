@@ -73,7 +73,7 @@ class AdminServicesApi extends BaseController
             }
 
             $data = $this->db->table('services')
-            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif, dibuat_pada, diupdate_pada')
+            ->select('id, kode_layanan, nama_layanan, deskripsi, harga_dasar, durasi_hari, icon_path, aktif, created_at, updated_at')
             ->where('id', $id)
             ->get()
             ->getRowArray();
@@ -155,8 +155,8 @@ class AdminServicesApi extends BaseController
                 'harga_dasar' => (int)$input['harga_dasar'],
                 'durasi_hari' => (int)($input['durasi_hari'] ?? 1), 
                 'aktif' => isset($input['aktif']) ? (int)$input['aktif'] : 1,
-                'dibuat_pada' => date('Y-m-d H:i:s'),
-                'diupdate_pada' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];            // Handle file upload if present
             $iconFile = $this->request->getFile('icon_image');
             log_message('info', 'Icon file check: ' . ($iconFile ? 'EXISTS' : 'NULL'));
@@ -321,7 +321,7 @@ class AdminServicesApi extends BaseController
                 $data['aktif'] = 0;
             }
 
-            $data['diupdate_pada'] = date('Y-m-d H:i:s');
+            $data['updated_at'] = date('Y-m-d H:i:s');
 
             log_message('info', 'Updating service with data: ' . json_encode($data));
             
@@ -444,7 +444,7 @@ class AdminServicesApi extends BaseController
                 ->where('id', $id)
                 ->update([
                     'harga_dasar' => $harga, 
-                    'diupdate_pada' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s')
                 ]);
 
             return $this->response->setJSON([
@@ -528,7 +528,7 @@ class AdminServicesApi extends BaseController
                 ->where('id', $id)
                 ->update([
                     'icon_path' => $iconPath,
-                    'diupdate_pada' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s')
                 ]);
 
             return $this->response->setJSON([
@@ -581,7 +581,7 @@ class AdminServicesApi extends BaseController
                 ->where('id', $id)
                 ->update([
                     'icon_path' => null,
-                    'diupdate_pada' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s')
                 ]);
 
             return $this->response->setJSON([

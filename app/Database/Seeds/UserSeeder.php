@@ -17,8 +17,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Jl. Raya Bogor KM 23 No. 45, Jakarta Timur',
             'role' => 'admin',
-            'dibuat_pada' => '2025-11-12 08:23:11',
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => '2025-11-12 08:23:11',
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
         // Admin 2 - Manager
@@ -30,8 +30,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Jl. Sudirman No. 88, Jakarta Pusat',
             'role' => 'admin',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
         // Petugas 1
@@ -43,8 +43,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Jl. Cibubur No. 12, Bekasi',
             'role' => 'petugas',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
         // Customers
@@ -56,8 +56,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Perum Cimanggis Indah Blok A3, Depok',
             'role' => 'pelanggan',
-            'dibuat_pada' => '2025-12-20 14:22:00',
-            'diupdate_pada' => '2025-12-20 14:22:00',
+            'created_at' => '2025-12-20 14:22:00',
+            'updated_at' => '2025-12-20 14:22:00',
         ]);
 
         $this->db->table('users')->insert([
@@ -68,8 +68,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Jl. Margonda Raya No. 156, Depok',
             'role' => 'pelanggan',
-            'dibuat_pada' => '2026-01-05 09:15:00',
-            'diupdate_pada' => '2026-01-05 09:15:00',
+            'created_at' => '2026-01-05 09:15:00',
+            'updated_at' => '2026-01-05 09:15:00',
         ]);
 
         $this->db->table('users')->insert([
@@ -80,8 +80,8 @@ class UserSeeder extends Seeder
             'foto_profil' => null,
             'alamat' => 'Komplek Cibubur Country Blok C12, Bekasi',
             'role' => 'pelanggan',
-            'dibuat_pada' => '2026-01-10 16:45:00',
-            'diupdate_pada' => '2026-01-10 16:45:00',
+            'created_at' => '2026-01-10 16:45:00',
+            'updated_at' => '2026-01-10 16:45:00',
         ]);
     }
 }

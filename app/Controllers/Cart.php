@@ -245,8 +245,8 @@ class Cart extends BaseController
                     'biaya_kirim' => $deliveryFee,
                     'total' => $totalPrice + $deliveryFee,
                     'status' => 'pending',
-                    'dibuat_pada' => date('Y-m-d H:i:s'),
-                    'diupdate_pada' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ];
 
                 $insertResult = $this->db->table('bookings')->insert($bookingData);
@@ -306,7 +306,7 @@ class Cart extends BaseController
             'judul' => 'Booking Berhasil',
             'pesan' => 'Booking Anda telah berhasil dibuat dan sedang menunggu konfirmasi admin.',
             'dibaca' => 0,
-            'dibuat_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s')
         ];
 
         $this->db->table('notifications')->insert($notificationData);

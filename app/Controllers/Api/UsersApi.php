@@ -51,7 +51,7 @@ class UsersApi extends BaseController
         
         $totalUsers = $builder->countAllResults(false);
 
-        $users = $builder->orderBy('dibuat_pada', 'DESC')
+        $users = $builder->orderBy('created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
@@ -111,7 +111,7 @@ class UsersApi extends BaseController
         // If admin viewing other user's profile, include bookings and stats
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
@@ -179,8 +179,8 @@ class UsersApi extends BaseController
             'password_hash' => password_hash($json['password'], PASSWORD_DEFAULT),
             'role' => $json['role'],
             'alamat' => $json['alamat'] ?? null,
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         try {
@@ -249,7 +249,7 @@ class UsersApi extends BaseController
             'email' => $json['email'],
             'no_hp' => $json['no_hp'],
             'alamat' => $json['alamat'] ?? $user['alamat'],
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         if ($currentUser['role'] === 'admin' && $user_id != $id && isset($json['role'])) {
@@ -340,7 +340,7 @@ class UsersApi extends BaseController
 
         $firstDayOfMonth = date('Y-m-01 00:00:00');
         $newUsersThisMonth = $this->db->table('users')
-            ->where('dibuat_pada >=', $firstDayOfMonth)
+            ->where('created_at >=', $firstDayOfMonth)
             ->countAllResults();
 
         return $this->respond([
@@ -412,7 +412,7 @@ class UsersApi extends BaseController
             'email' => $json['email'],
             'no_hp' => $json['no_hp'],
             'alamat' => $json['alamat'] ?? $user['alamat'],
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         // Update password if provided

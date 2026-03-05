@@ -57,8 +57,8 @@ class ServicesApi extends ResourceController
             'harga_dasar' => $data['harga_dasar'],
             'durasi_hari' => $data['durasi_hari'],
             'aktif' => $data['aktif'] ?? 1,
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         return $this->respondCreated([
@@ -88,7 +88,7 @@ class ServicesApi extends ResourceController
             'harga_dasar' => $data['harga_dasar'],
             'durasi_hari' => $data['durasi_hari'],
             'aktif' => $data['aktif'] ?? $service['aktif'],
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         return $this->respond([

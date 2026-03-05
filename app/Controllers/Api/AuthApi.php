@@ -43,8 +43,8 @@ class AuthApi extends ResourceController
             'password_hash' => password_hash($json['password'], PASSWORD_BCRYPT),
             'alamat' => $json['alamat'] ?? '',
             'role' => 'pelanggan',
-            'dibuat_pada' => date('Y-m-d H:i:s'),
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         try {
@@ -244,7 +244,7 @@ class AuthApi extends ResourceController
             ], 400);
         }
 
-        $data['diupdate_pada'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
 
         try {
             $this->model->update($userId, $data);
@@ -316,7 +316,7 @@ class AuthApi extends ResourceController
         try {
             $this->model->update($userId, [
                 'password_hash' => password_hash($json['new_password'], PASSWORD_BCRYPT),
-                'diupdate_pada' => date('Y-m-d H:i:s')
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
 
             return $this->respond([

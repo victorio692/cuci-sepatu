@@ -23,7 +23,7 @@ class Notifications extends Controller
 
         $notifications = $this->db->table('notifications')
             ->where('id_user', $userId)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(50)
             ->get()
             ->getResultArray();
@@ -49,7 +49,7 @@ class Notifications extends Controller
         $notifications = $this->db->table('notifications')
             ->where('id_user', $userId)
             ->where('dibaca', 0)
-            ->orderBy('dibuat_pada', 'DESC')
+            ->orderBy('created_at', 'DESC')
             ->limit(5)
             ->get()
             ->getResultArray();

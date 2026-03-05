@@ -49,7 +49,7 @@ class DashboardApi extends BaseController
         
         // Get user data untuk member_sejak
         $user = $db->table('users')
-            ->select('dibuat_pada')
+            ->select('created_at')
             ->where('id', $userId)
             ->get()
             ->getRow();
@@ -71,7 +71,7 @@ class DashboardApi extends BaseController
                 'booking_selesai' => $completedBookings,
                 'booking_pending' => $pendingBookings,
                 'total_pengeluaran' => (int)$pengeluaran,
-                'member_sejak' => $user ? date('d/m/Y', strtotime($user->dibuat_pada)) : '-',
+                'member_sejak' => $user ? date('d/m/Y', strtotime($user->created_at)) : '-',
                 'status_counts' => $statusCounts
             ]
         ]);

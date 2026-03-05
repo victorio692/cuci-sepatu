@@ -21,15 +21,15 @@ class UserModel extends Model
         'foto_profil',
         'alamat',
         'role',
-        'dibuat_pada',
-        'diupdate_pada'
+        'created_at',
+        'updated_at'
     ];
 
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat = 'datetime';
-    protected $createdField = 'dibuat_pada';
-    protected $updatedField = 'diupdate_pada';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     // Validation
     protected $validationRules = [];
@@ -101,7 +101,7 @@ class UserModel extends Model
         
         return $this->update($userId, [
             'aktif' => $newStatus,
-            'diupdate_pada' => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
     }
 
@@ -124,7 +124,7 @@ class UserModel extends Model
         return $this->select('users.*, COUNT(bookings.id) as total_booking')
                     ->join('bookings', 'bookings.id_user = users.id', 'left')
                     ->groupBy('users.id')
-                    ->orderBy('users.dibuat_pada', 'DESC')
+                    ->orderBy('users.created_at', 'DESC')
                     ->findAll();
     }
 }

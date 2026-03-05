@@ -24,34 +24,34 @@ class Reports extends Controller
 
         // Bookings statistics
         $total_bookings = $db->table('bookings')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->countAllResults();
 
         $completed_bookings = $db->table('bookings')
             ->where('status', 'selesai')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->countAllResults();
 
         $pending_bookings = $db->table('bookings')
             ->where('status', 'pending')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->countAllResults();
 
         $cancelled_bookings = $db->table('bookings')
             ->where('status', 'batal')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->countAllResults();
 
         // Revenue
         $revenue = $db->table('bookings')
             ->selectSum('total')
             ->where('status', 'selesai')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->get()
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
@@ -59,8 +59,8 @@ class Reports extends Controller
         // Service statistics
         $service_stats = $db->table('bookings')
             ->select('layanan as service, COUNT(*) as count, COALESCE(SUM(total), 0) as revenue')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
             ->groupBy('layanan')
             ->orderBy('count', 'DESC')
             ->get()
@@ -68,10 +68,10 @@ class Reports extends Controller
 
         // Daily bookings for chart
         $daily_bookings = $db->table('bookings')
-            ->select('DATE(dibuat_pada) as date, COUNT(*) as count')
-            ->where('dibuat_pada >=', $startDate)
-            ->where('dibuat_pada <=', $endDate . ' 23:59:59')
-            ->groupBy('DATE(dibuat_pada)')
+            ->select('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate . ' 23:59:59')
+            ->groupBy('DATE(created_at)')
             ->orderBy('date', 'ASC')
             ->get()
             ->getResultArray();
@@ -103,9 +103,9 @@ class Reports extends Controller
         $bookings = $db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as customer_name')
             ->join('users', 'bookings.id_user = users.id')
-            ->where('bookings.dibuat_pada >=', $startDate)
-            ->where('bookings.dibuat_pada <=', $endDate . ' 23:59:59')
-            ->orderBy('bookings.dibuat_pada', 'DESC')
+            ->where('bookings.created_at >=', $startDate)
+            ->where('bookings.created_at <=', $endDate . ' 23:59:59')
+            ->orderBy('bookings.created_at', 'DESC')
             ->get()
             ->getResultArray();
 

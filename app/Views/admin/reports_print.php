@@ -208,7 +208,7 @@
                             echo $serviceName;
                             ?>
                         </td>
-                        <td><?= date('d/m/Y', strtotime($booking['dibuat_pada'])) ?></td>
+                        <td><?= date('d/m/Y', strtotime($booking['created_at'])) ?></td>
                         <td>
                             <?php
                             $statusClass = match($booking['status']) {

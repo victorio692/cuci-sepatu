@@ -239,8 +239,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('alamat').value = user.alamat || '';
             document.getElementById('roleDisplay').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : '-';
             
-            if (user.dibuat_pada) {
-                const date = new Date(user.dibuat_pada);
+            if (user.created_at) {
+                const date = new Date(user.created_at);
                 document.getElementById('createdAtDisplay').textContent = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
             }
         }
