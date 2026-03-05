@@ -299,7 +299,7 @@
                     <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4 sm:p-5 mb-6">
                         <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                             <i class="fas fa-calendar-check text-green-600"></i>
-                            Estimasi Barang Selesai & Siap Diambil
+                            Estimasi Barang Selesai & Siap Diambil  
                         </h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

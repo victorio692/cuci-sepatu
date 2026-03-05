@@ -290,7 +290,7 @@ async function submitServiceForm() {
         if (result.code === 201 || result.code === 200 || result.success) {
             showToast('Layanan berhasil dibuat!', 'success');
             setTimeout(() => {
-                window.location.href = '/admin/services';
+                window.location.href = '/admin/services:8080';  
             }, 1500);
         } else {
             showToast(result.message || 'Gagal menyimpan layanan', 'error');
@@ -340,7 +340,7 @@ function showToast(message, type) {
         transform: translateX(0);
     }
 }
-.animate-slide-in {
+animate-slide-in {
     animation: slide-in 0.3s ease;
 }
 </style>
