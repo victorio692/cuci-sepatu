@@ -203,26 +203,61 @@
                     </div>
 
                     <?php
-                    $statuses = ['pending' => 'Pending', 'approved' => 'Disetujui', 'in_progress' => 'Sedang Diproses', 'completed' => 'Selesai'];
-                    $status_order = ['pending', 'approved', 'in_progress', 'completed'];
+                    // Map status timeline berdasarkan status sebenarnya
+                    $statuses = [
+                        'pending' => 'Menunggu Persetujuan',
+                        'disetujui' => 'Disetujui',
+                        'proses' => 'Sedang Diproses',
+                        'selesai' => 'Selesai'
+                    ];
+                    
+                    $status_order = ['pending', 'disetujui', 'proses', 'selesai'];
                     $current_status = $booking['status'];
+                    
+                    // Jika ditolak, tampilkan status berbeda
+                    $is_rejected = ($current_status === 'ditolak');
                     ?>
 
-                    <?php foreach ($status_order as $status): ?>
-                        <?php if ($status !== 'pending'): ?>
-                            <div class="timeline-item">
-                                <div class="timeline-status <?= (array_search($current_status, $status_order) >= array_search($status, $status_order)) ? 'completed' : 'pending' ?>">
-                                    <i class="fas fa-circle"></i>
-                                </div>
-                                <div>
-                                    <strong style="color: #1f2937;"><?= $statuses[$status] ?></strong>
-                                    <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
-                                        <?= (array_search($current_status, $status_order) >= array_search($status, $status_order)) ? 'Selesai' : 'Menunggu' ?>
-                                    </p>
-                                </div>
+                    <?php if ($is_rejected): ?>
+                        <!-- Timeline untuk pesanan yang ditolak -->
+                        <div class="timeline-item">
+                            <div class="timeline-status" style="background-color: #fee2e2; color: #991b1b;">
+                                <i class="fas fa-times"></i>
                             </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                            <div>
+                                <strong style="color: #ef4444;">Pesanan Ditolak</strong>
+                                <p style="margin: 0.25rem 0 0; color: #991b1b; font-size: 0.875rem;">
+                                    Pesanan tidak dapat diproses
+                                </p>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Timeline normal untuk pesanan yang diproses -->
+                        <?php foreach ($status_order as $status): ?>
+                            <?php if ($status !== 'pending'): ?>
+                                <?php
+                                $current_index = array_search($current_status, $status_order);
+                                $status_index = array_search($status, $status_order);
+                                $is_completed = ($current_index !== false && $status_index !== false && $current_index >= $status_index);
+                                $is_current = ($current_status === $status);
+                                ?>
+                                <div class="timeline-item">
+                                    <div class="timeline-status <?= $is_completed ? 'completed' : 'pending' ?>" <?= $is_current ? 'style="box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); border: 2px solid #3b82f6;"' : '' ?>>
+                                        <i class="fas <?= $is_completed ? 'fa-check' : 'fa-circle' ?>"></i>
+                                    </div>
+                                    <div>
+                                        <strong style="color: <?= $is_current ? '#3b82f6' : '#1f2937' ?>;">
+                                            <?= $statuses[$status] ?>
+                                            <?= $is_current ? '<span style="font-size: 0.75rem; color: #3b82f6; font-weight: normal;"> (Saat ini)</span>' : '' ?>
+                                        </strong>
+                                        <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
+                                            <?= $is_completed ? 'Selesai' : 'Menunggu' ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
