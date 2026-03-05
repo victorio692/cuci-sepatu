@@ -9,31 +9,67 @@
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-        <!-- Card: Informasi Profil -->
+        <!-- Card: Edit Profil -->
         <div class="bg-white rounded-lg shadow-md p-6">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
                 <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
-                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Akun</h3>
+                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Edit Profil</h3>
             </div>
             <form id="profileForm" class="space-y-6">
+                <!-- Nama Lengkap -->
                 <div class="form-group">
-                    <label>Nama Lengkap</label>
-                    <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" required>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-circle" style="color: #6b7280; font-size: 0.9rem;"></i>
+                        Nama Lengkap
+                    </label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" required>
+                        <button type="button" onclick="focusField('nama_lengkap')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Email -->
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: #6b7280; font-size: 0.9rem;"></i>
+                        Email
+                    </label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="email" id="email" name="email" class="form-control" required>
+                        <button type="button" onclick="focusField('email')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <!-- No. HP -->
                 <div class="form-group">
-                    <label>No. HP</label>
-                    <input type="text" id="no_hp" name="no_hp" class="form-control" required>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-phone" style="color: #6b7280; font-size: 0.9rem;"></i>
+                        No. HP
+                    </label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="text" id="no_hp" name="no_hp" class="form-control" required>
+                        <button type="button" onclick="focusField('no_hp')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Alamat -->
                 <div class="form-group">
-                    <label>Alamat</label>
-                    <textarea id="alamat" name="alamat" rows="3" class="form-control"></textarea>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-home" style="color: #6b7280; font-size: 0.9rem;"></i>
+                        Alamat
+                    </label>
+                    <div style="position: relative; display: flex; align-items: flex-start;">
+                        <textarea id="alamat" name="alamat" rows="3" class="form-control" style="padding-right: 40px;"></textarea>
+                        <button type="button" onclick="focusField('alamat')" style="position: absolute; right: 12px; top: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="button" onclick="submitProfileForm()" class="btn btn-primary">
@@ -50,14 +86,20 @@
             </div>
             <form id="passwordForm" class="space-y-6">
                 <div class="form-group">
+                    <label>Kata Sandi Saat Ini</label>
+                    <input type="password" id="current_password" name="current_password" class="form-control" placeholder="Masukkan kata sandi saat ini" required>
+                    <p class="text-xs text-gray-500 mt-1">Diperlukan untuk verifikasi keamanan</p>
+                </div>
+
+                <div class="form-group">
                     <label>Kata Sandi Baru</label>
-                    <input type="password" id="new_password" name="new_password" class="form-control" required>
+                    <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Minimal 6 karakter" required>
                     <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter</p>
                 </div>
 
                 <div class="form-group">
                     <label>Konfirmasi Kata Sandi Baru</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Ketik ulang kata sandi baru" required>
                 </div>
 
                 <button type="button" onclick="submitPasswordForm()" class="btn btn-primary">
@@ -67,28 +109,40 @@
         </div>
     </div>
 
-    <!-- Card: Informasi Akun -->
+    <!-- Card: Detail Akun -->
     <div class="bg-white rounded-lg shadow-md p-6" style="margin-top: 1.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
             <i class="fas fa-info-circle" style="color: #5d00ff; font-size: 1.25rem;"></i>
-            <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Akun</h3>
+            <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail Akun</h3>
         </div>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
-            <div>
-                <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Role:</label>
-                <span id="roleDisplay" style="display: inline-block; background: #5d00ff; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;">
-                    -
-                </span>
+            <!-- Role -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #5d00ff;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-shield-alt" style="color: #5d00ff; font-size: 1.1rem;"></i>
+                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">ROLE</p>
+                </div>
+                <p id="roleDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1rem; text-transform: capitalize;">-</p>
             </div>
-            <div>
-                <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Terdaftar Sejak:</label>
-                <span id="createdAtDisplay" style="color: #1f2937; font-weight: 500;">-</span>
+
+            <!-- Terdaftar Sejak -->
+            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #10b981;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-calendar-alt" style="color: #10b981; font-size: 1.1rem;"></i>
+                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">TERDAFTAR SEJAK</p>
+                </div>
+                <p id="createdAtDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.95rem;">-</p>
             </div>
-            <div>
-                <label style="font-weight: 600; color: #6b7280; display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Status:</label>
-                <span style="color: #10b981; font-weight: 600;">
-                    <i class="fas fa-check-circle"></i> Aktif
-                </span>
+
+            <!-- Status -->
+            <div style="padding: 1.5rem; background: #f0fdf4; border-radius: 0.5rem; border-left: 4px solid #10b981;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
+                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">STATUS</p>
+                </div>
+                <p style="margin: 0; color: #10b981; font-weight: 600; font-size: 1rem;">
+                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.5rem;"></i> Aktif
+                </p>
             </div>
         </div>
     </div>
@@ -203,6 +257,24 @@
 .mt-1 {
     margin-top: 0.25rem;
 }
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    /* Edit & Password cards - stack vertically */
+    div[style*="display: grid; grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Detail Akun - change from 3 columns to 1 column */
+    div[style*="display: grid; grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Hide vertical separators */
+    div[style*="width: 1px; height: 40px"] {
+        display: none !important;
+    }
+}
 </style>
 <?= $this->endSection() ?>
 
@@ -250,6 +322,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
+// Focus field helper
+function focusField(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.focus();
+        field.style.borderColor = '#5d00ff';
+        field.style.boxShadow = '0 0 0 3px rgba(93, 0, 255, 0.1)';
+    }
+}
+
 // Submit profile form
 function submitProfileForm() {
     const form = document.getElementById('profileForm');
@@ -296,11 +378,17 @@ function submitProfileForm() {
 // Submit password form
 function submitPasswordForm() {
     const form = document.getElementById('passwordForm');
+    const currentPassword = document.getElementById('current_password').value;
     const newPassword = document.getElementById('new_password').value;
     const confirmPassword = document.getElementById('confirm_password').value;
     
     if (!form.checkValidity()) {
         form.reportValidity();
+        return;
+    }
+    
+    if (!currentPassword) {
+        showToast('Kata sandi saat ini harus diisi', 'error');
         return;
     }
     
@@ -315,6 +403,7 @@ function submitPasswordForm() {
     }
     
     const data = {
+        current_password: currentPassword,
         password: newPassword
     };
     
