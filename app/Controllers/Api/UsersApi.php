@@ -334,4 +334,88 @@ class UsersApi extends BaseController
             ]
         ]);
     }
+
+    public function getProfile()
+    {
+        // Get current user profile without needing ID parameter
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return $this->failUnauthorized('Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        if (!$user) {
+            return $this->failNotFound('User tidak ditemukan');
+        }
+
+        // Remove sensitive data
+        unset($user['password_hash']);
+
+        return $this->respond([
+            'success' => true,
+            'data' => $user
+        ]);
+    }
+
+    public function updateProfile()
+    {
+        // Update current user's own profile
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return $this->failUnauthorized('Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if (!$user) {
+            return $this->failNotFound('User tidak ditemukan');
+        }
+
+        $json = $this->request->getJSON(true);
+
+        // Validation rules for profile update
+        $rules = [
+            'nama_lengkap' => 'required|min_length[3]',
+            'email' => "required|valid_email|is_unique[users.email,id,{$user_id}]",
+            'no_hp' => 'required|min_length[10]',
+        ];
+
+        if (isset($json['password']) && !empty($json['password'])) {
+            $rules['password'] = 'required|min_length[6]';
+        }
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        $data = [
+            'nama_lengkap' => $json['nama_lengkap'],
+            'email' => $json['email'],
+            'no_hp' => $json['no_hp'],
+            'alamat' => $json['alamat'] ?? $user['alamat'],
+            'diupdate_pada' => date('Y-m-d H:i:s')
+        ];
+
+        // Update password if provided
+        if (isset($json['password']) && !empty($json['password'])) {
+            $data['password_hash'] = password_hash($json['password'], PASSWORD_DEFAULT);
+        }
+
+        try {
+            if ($this->db->table('users')->where('id', $user_id)->update($data)) {
+                $updatedUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+                unset($updatedUser['password_hash']);
+
+                return $this->respond([
+                    'success' => true,
+                    'message' => 'Profil berhasil diperbarui',
+                    'data' => $updatedUser
+                ]);
+            }
+
+            return $this->failServerError('Gagal memperbarui profil');
+        } catch (\Exception $e) {
+            return $this->failServerError('Gagal memperbarui profil: ' . $e->getMessage());
+        }
+    }
 }
