@@ -78,15 +78,17 @@ class UsersApi extends BaseController
     
     public function detail($id)
     {
-        // Check if admin
+        // Check if logged in
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
         }
 
         $currentUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
-        if (!$currentUser || $currentUser['role'] !== 'admin') {
-            return $this->failForbidden('Akses ditolak. Hanya admin yang bisa mengakses');
+        
+        // Allow if: 1) User is admin, OR 2) User is viewing their own profile
+        if (!$currentUser || ($currentUser['role'] !== 'admin' && $user_id != $id)) {
+            return $this->failForbidden('Akses ditolak');
         }
 
         $user = $this->db->table('users')->where('id', $id)->get()->getRowArray();
@@ -98,6 +100,15 @@ class UsersApi extends BaseController
         
         unset($user['password_hash']);
 
+        // If user is viewing their own profile, return simplified response
+        if ($user_id == $id) {
+            return $this->respond([
+                'success' => true,
+                'data' => $user
+            ]);
+        }
+
+        // If admin viewing other user's profile, include bookings and stats
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->orderBy('dibuat_pada', 'DESC')
@@ -194,15 +205,17 @@ class UsersApi extends BaseController
     
     public function update($id)
     {
-        // Check if admin
+        // Check if admin OR updating own profile
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
         }
 
         $currentUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
-        if (!$currentUser || $currentUser['role'] !== 'admin') {
-            return $this->failForbidden('Akses ditolak. Hanya admin yang bisa mengakses');
+        
+        // Allow if admin or updating own profile
+        if (!$currentUser || ($currentUser['role'] !== 'admin' && $user_id != $id)) {
+            return  $this->failForbidden('Akses ditolak');
         }
 
         $user = $this->db->table('users')->where('id', $id)->get()->getRowArray();
@@ -216,9 +229,12 @@ class UsersApi extends BaseController
         $rules = [
             'nama_lengkap' => 'required|min_length[3]',
             'email' => "required|valid_email|is_unique[users.email,id,{$id}]",
-            'no_hp' => 'required|min_length[10]',
-            'role' => 'required|in_list[pelanggan,admin]',
+            'no_hp' => 'required|min_length[10]'
         ];
+
+        if ($currentUser['role'] === 'admin' && $user_id != $id) {
+            $rules['role'] = 'required|in_list[pelanggan,admin]';
+        }
 
         if (isset($json['password']) && !empty($json['password'])) {
             $rules['password'] = 'min_length[6]';
@@ -232,10 +248,13 @@ class UsersApi extends BaseController
             'nama_lengkap' => $json['nama_lengkap'],
             'email' => $json['email'],
             'no_hp' => $json['no_hp'],
-            'role' => $json['role'],
             'alamat' => $json['alamat'] ?? $user['alamat'],
             'diupdate_pada' => date('Y-m-d H:i:s')
         ];
+
+        if ($currentUser['role'] === 'admin' && $user_id != $id && isset($json['role'])) {
+            $data['role'] = $json['role'];
+        }
 
         // Update password if provided
         if (isset($json['password']) && !empty($json['password'])) {
@@ -333,5 +352,89 @@ class UsersApi extends BaseController
                 'new_users_this_month' => $newUsersThisMonth
             ]
         ]);
+    }
+
+    public function getProfile()
+    {
+        // Get current user profile without needing ID parameter
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return $this->failUnauthorized('Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+
+        if (!$user) {
+            return $this->failNotFound('User tidak ditemukan');
+        }
+
+        // Remove sensitive data
+        unset($user['password_hash']);
+
+        return $this->respond([
+            'success' => true,
+            'data' => $user
+        ]);
+    }
+
+    public function updateProfile()
+    {
+        // Update current user's own profile
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return $this->failUnauthorized('Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if (!$user) {
+            return $this->failNotFound('User tidak ditemukan');
+        }
+
+        $json = $this->request->getJSON(true);
+
+        // Validation rules for profile update
+        $rules = [
+            'nama_lengkap' => 'required|min_length[3]',
+            'email' => "required|valid_email|is_unique[users.email,id,{$user_id}]",
+            'no_hp' => 'required|min_length[10]',
+        ];
+
+        if (isset($json['password']) && !empty($json['password'])) {
+            $rules['password'] = 'required|min_length[6]';
+        }
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        $data = [
+            'nama_lengkap' => $json['nama_lengkap'],
+            'email' => $json['email'],
+            'no_hp' => $json['no_hp'],
+            'alamat' => $json['alamat'] ?? $user['alamat'],
+            'diupdate_pada' => date('Y-m-d H:i:s')
+        ];
+
+        // Update password if provided
+        if (isset($json['password']) && !empty($json['password'])) {
+            $data['password_hash'] = password_hash($json['password'], PASSWORD_DEFAULT);
+        }
+
+        try {
+            if ($this->db->table('users')->where('id', $user_id)->update($data)) {
+                $updatedUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+                unset($updatedUser['password_hash']);
+
+                return $this->respond([
+                    'success' => true,
+                    'message' => 'Profil berhasil diperbarui',
+                    'data' => $updatedUser
+                ]);
+            }
+
+            return $this->failServerError('Gagal memperbarui profil');
+        } catch (\Exception $e) {
+            return $this->failServerError('Gagal memperbarui profil: ' . $e->getMessage());
+        }
     }
 }

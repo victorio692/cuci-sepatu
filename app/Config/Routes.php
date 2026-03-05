@@ -166,10 +166,14 @@ $routes->group('api', function($routes) {
 // Users API
 $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($routes) {
     $routes->get('/', 'UsersApi::index');
+    $routes->get('profile', 'UsersApi::getProfile');  // Get current user profile
+    $routes->put('profile', 'UsersApi::updateProfile');  // Update current user profile
+    $routes->post('profile', 'UsersApi::updateProfile');  // Allow POST for profile update
     $routes->get('statistics', 'UsersApi::statistics');
     $routes->get('(:num)', 'UsersApi::detail/$1');
     $routes->post('/', 'UsersApi::create');
     $routes->post('(:num)', 'UsersApi::update/$1');
+    $routes->put('(:num)', 'UsersApi::update/$1');
     $routes->delete('(:num)', 'UsersApi::delete/$1');
 });
 //adminbookingapi

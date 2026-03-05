@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('🚀 Loading admin profile from API...');
         
-        const response = await fetch(`/api/users/${userId}`, {
+        const response = await fetch(`/api/users/profile`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const result = await response.json();
         console.log('✅ Profile loaded:', result);
         
-        const user = result.data || result;
+        const user = result.data;
         
         if (user) {
             document.getElementById('nama_lengkap').value = user.nama_lengkap || '';
@@ -268,7 +268,7 @@ function submitProfileForm() {
     
     console.log('📤 Submitting profile update:', data);
     
-    fetch(`/api/users/${userId}`, {
+    fetch(`/api/users/profile`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -320,7 +320,7 @@ function submitPasswordForm() {
     
     console.log('📤 Submitting password change...');
     
-    fetch(`/api/users/${userId}`, {
+    fetch(`/api/users/profile`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
