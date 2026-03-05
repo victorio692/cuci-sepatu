@@ -170,6 +170,7 @@ $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($ro
     $routes->get('(:num)', 'UsersApi::detail/$1');
     $routes->post('/', 'UsersApi::create');
     $routes->post('(:num)', 'UsersApi::update/$1');
+    $routes->put('(:num)', 'UsersApi::update/$1');
     $routes->delete('(:num)', 'UsersApi::delete/$1');
 });
 //adminbookingapi
