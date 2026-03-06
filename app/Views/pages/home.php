@@ -45,7 +45,7 @@
                                 
                                 <!-- CTA Button -->
                                 <div class="banner-cta">
-                                    <a href="#services" class="cta-button">Booking Sekarang</a>
+                                    <a href="#services" class="cta-button">Pesan Sekarang</a>
                                 </div>
                                 
                                 <!-- Decorative Elements -->
@@ -1022,7 +1022,7 @@ function showSlide(n) {
                     </div>
                 </div>
                 <a href="/#services" class="bg-white text-blue-600 px-6 py-2.5 md:py-3 rounded-lg font-bold hover:bg-blue-50 transition shadow-md text-sm md:text-base w-full md:w-auto text-center">
-                    Booking Sekarang
+                    Pesan Sekarang
                 </a>
             </div>
         </div>
