@@ -427,7 +427,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold text-gray-800 truncate">Admin</div>
-                        <div class="text-xs text-gray-600">Dimas Syahrul S (Owner)</div>
+                        <div class="text-xs text-gray-600">Administrator</div>
                     </div>
                 </div>
             </div>
