@@ -24,12 +24,12 @@
 <?php endif; ?>
 
 <!-- Page Header -->
-<div class="mb-8 flex justify-between items-center">
+<div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Layanan</h1>
-        <p class="text-gray-600">Kelola layanan dan harga SYH Cleaning</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Layanan</h1>
+        <p class="text-sm md:text-base text-gray-600">Kelola layanan dan harga SYH Cleaning</p>
     </div>
-    <a href="/admin/services/create" class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center space-x-2">
+    <a href="/admin/services/create" class="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm md:text-base rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center md:justify-start space-x-2">
         <i class="fas fa-plus"></i>
         <span>Tambah Layanan</span>
     </a>

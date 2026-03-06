@@ -3,22 +3,23 @@
 <?= $this->section('content') ?>
 
 <!-- Main Content -->
-<div class="min-h-screen bg-gray-50 pt-24 pb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-50 pt-20 md:pt-24 pb-8">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         <!-- Header -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div class="flex items-center justify-between">
+        <div class="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900">
-                        <i class="fas fa-calendar-check text-blue-600 mr-3"></i>
-                        Pesanan Saya
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
+                        <i class="fas fa-calendar-check text-blue-600 mr-2"></i>
+                        <span class="inline-block">Pesanan Saya</span>
                     </h1>
-                    <p class="text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
+                    <p class="text-xs md:text-sm text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
                 </div>
                 <div>
-                    <a href="/profile" class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition shadow-sm">
+                    <a href="/profile" class="inline-flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm md:text-base rounded-lg transition shadow-sm whitespace-nowrap">
                         <i class="fas fa-arrow-left"></i>
                         <span class="hidden sm:inline">Kembali ke Profil</span>
+                        <span class="sm:hidden">Kembali</span>
                     </a>
                 </div>
             </div>
@@ -26,8 +27,8 @@
 
         <!-- Status Tabs Navigation -->
         <div class="bg-white rounded-xl shadow-lg mb-6 overflow-hidden">
-            <div class="border-b border-gray-200">
-                <nav class="flex overflow-x-auto" aria-label="Tabs">
+            <div class="border-b border-gray-200 overflow-x-auto">
+                <nav class="flex whitespace-nowrap" aria-label="Tabs">
                     <?php 
                     $currentStatus = $_GET['status'] ?? 'all';
                     $tabs = [
@@ -46,13 +47,14 @@
                            class="<?= $currentStatus === $status 
                                     ? 'border-blue-600 text-blue-600 font-semibold' 
                                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' 
-                                ?> whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm flex items-center gap-2 transition">
-                            <i class="fas <?= $tab['icon'] ?>"></i>
-                            <span><?= $tab['label'] ?></span>
+                                ?> py-3 px-3 md:px-6 border-b-2 font-medium text-xs md:text-sm flex items-center gap-1 md:gap-2 transition flex-shrink-0">
+                            <i class="fas <?= $tab['icon'] ?> text-sm"></i>
+                            <span class="hidden sm:inline"><?= $tab['label'] ?></span>
+                            <span class="sm:hidden text-xs"><?= substr($tab['label'], 0, 3) ?></span>
                             <span data-tab-count="<?= $status ?>" class="<?= $currentStatus === $status 
                                 ? 'bg-blue-100 text-blue-600' 
                                 : 'bg-gray-100 text-gray-600' 
-                            ?> ml-2 py-0.5 px-2 rounded-full text-xs font-semibold">
+                            ?> ml-1 py-0.5 px-1.5 rounded-full text-xs font-semibold">
                                 0
                             </span>
                         </a>
@@ -208,12 +210,71 @@ function updateTabCounts(counts) {
     });
 }
 
-// Render bookings table - DIPERBAIKI dengan status badge yang rapi
+// Render bookings table - DIPERBAIKI dengan responsive mobile/desktop layout
 function renderBookingsTable(bookings) {
     const container = document.getElementById('bookingsContainer');
     
-    let tableHTML = `
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+    // Mobile cards HTML
+    let mobileCardsHTML = `<div class="block md:hidden space-y-3">`;
+    
+    bookings.forEach(booking => {
+        const status = booking.status || 'pending';
+        const statusInfo = statusConfig[status] || statusConfig['pending'];
+        const serviceName = serviceNames[booking.layanan] || booking.layanan;
+        const tanggal = formatDate(booking.created_at);
+        const hasFoto = booking.status === 'selesai' && booking.foto_hasil;
+        
+        mobileCardsHTML += `
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">No Pesanan</p>
+                        <p class="font-bold text-gray-900">#${booking.id}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-2 py-1 inline-flex items-center justify-center text-xs font-semibold rounded-full ${statusInfo.class}">
+                            <i class="fas ${statusInfo.icon} mr-1 text-[10px] leading-none"></i>
+                            <span class="leading-none">${statusInfo.label}</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 mb-3 text-xs">
+                    <div>
+                        <p class="text-gray-500 font-medium">Layanan</p>
+                        <p class="text-gray-900 font-medium">${serviceName}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Tanggal</p>
+                        <p class="text-gray-900 font-medium">${tanggal}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Total</p>
+                        <p class="text-gray-900 font-semibold">${formatCurrency(booking.total)}</p>
+                    </div>
+                    ${hasFoto ? `
+                        <div>
+                            <p class="text-gray-500 font-medium">Hasil</p>
+                            <p class="text-green-600 font-medium flex items-center gap-1">
+                                <i class="fas fa-camera text-xs"></i>Foto
+                            </p>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <a href="/booking-detail/${booking.id}" 
+                   class="w-full inline-flex items-center justify-center px-3 py-2 ${booking.status === 'selesai' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white text-xs font-medium rounded-lg transition-colors duration-200">
+                    ${hasFoto ? '<i class="fas fa-image mr-1"></i> Detail & Foto' : '<i class="fas fa-eye mr-1"></i> Lihat'}
+                </a>
+            </div>
+        `;
+    });
+    
+    mobileCardsHTML += `</div>`;
+    
+    // Desktop table HTML
+    let desktopTableHTML = `
+        <div class="hidden md:block bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100">
                 <h3 class="font-semibold text-gray-800 flex items-center gap-2">
                     <i class="fas fa-list text-blue-600"></i>
@@ -242,7 +303,7 @@ function renderBookingsTable(bookings) {
         const tanggal = formatDate(booking.created_at);
         const hasFoto = booking.status === 'selesai' && booking.foto_hasil;
         
-        tableHTML += `
+        desktopTableHTML += `
             <tr class="hover:bg-gray-50 transition">
                 <td class="px-6 py-4 whitespace-nowrap">
                     <span class="font-bold text-gray-900">#${booking.id}</span>
@@ -254,7 +315,6 @@ function renderBookingsTable(bookings) {
                     <span class="text-gray-600">${tanggal}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <!-- Status Badge dengan Icon dan Teks Sejajar - DIPERBAIKI -->
                     <div class="flex items-center gap-1">
                         <span class="px-3 py-1 inline-flex items-center justify-center text-xs font-semibold rounded-full ${statusInfo.class}">
                             <i class="fas ${statusInfo.icon} mr-1 text-[10px] leading-none"></i>
@@ -283,11 +343,10 @@ function renderBookingsTable(bookings) {
         `;
     });
 
-    tableHTML += `
+    desktopTableHTML += `
                     </tbody>
                 </table>
             </div>
-            <!-- Footer dengan pagination -->
             <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-sm text-gray-600">
                 <div class="flex justify-between items-center">
                     <span>Menampilkan ${bookings.length} pesanan</span>
@@ -300,7 +359,7 @@ function renderBookingsTable(bookings) {
         </div>
     `;
 
-    container.innerHTML = tableHTML;
+    container.innerHTML = mobileCardsHTML + desktopTableHTML;
 }
 
 // Render empty state

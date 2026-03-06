@@ -2,71 +2,71 @@
 
 <?= $this->section('content') ?>
 
-<!-- Page Header -->
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">
+<!-- Halaman Header -->
+<div class="mb-6 md:mb-8">
+    <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
         <i class="fas fa-file-chart-line"></i> Laporan
     </h1>
-    <p class="text-gray-600">Statistik dan laporan bisnis SYH Cleaning</p>
+    <p class="text-xs md:text-base text-gray-600">Statistik dan laporan bisnis SYH Cleaning</p>
 </div>
 
-<!-- Filter Date Range -->
-<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- Filter Rentang Tanggal -->
+<div class="bg-white rounded-xl shadow-lg p-3 md:p-6 mb-6 md:mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Tanggal Mulai</label>
             <input 
                 type="date" 
                 id="startDate"
                 value="<?= date('Y-m-d', strtotime('-30 days')) ?>"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                class="w-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
             >
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Tanggal Akhir</label>
             <input 
                 type="date" 
                 id="endDate"
                 value="<?= date('Y-m-d') ?>"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
+                class="w-full px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" 
             >
         </div>
         <div class="flex items-end">
-            <button type="button" onclick="loadReports()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
-                <i class="fas fa-filter"></i>
+            <button type="button" onclick="loadReports()" class="w-full px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
+                <i class="fas fa-filter text-xs md:text-sm"></i>
                 <span>Filter</span>
             </button>
         </div>
         <div class="flex items-end">
-            <a href="#" id="printLink" target="_blank" class="w-full px-6 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
-                <i class="fas fa-print"></i>
+            <a href="#" id="printLink" target="_blank" class="w-full px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
+                <i class="fas fa-print text-xs md:text-sm"></i>
                 <span>Cetak</span>
             </a>
         </div>
     </div>
 </div>
 
-<!-- Statistics Cards -->
-<div id="statsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-gray-100 rounded-xl shadow-lg p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-6 animate-pulse"></div>
+<!-- Kartu Statistik -->
+<div id="statsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
+    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
 </div>
 
-<!-- Service Statistics -->
+<!-- Statistik Layanan -->
 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-    <!-- Card Header -->
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-xl font-bold text-gray-800">Statistik Layanan</h3>
-        <p class="text-sm text-gray-600 mt-1">Performa setiap layanan dalam periode yang dipilih</p>
+    <!-- Header Kartu -->
+    <div class="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+        <h3 class="text-lg md:text-xl font-bold text-gray-800">Statistik Layanan</h3>
+        <p class="text-xs md:text-sm text-gray-600 mt-1">Performa setiap layanan dalam periode yang dipilih</p>
     </div>
 
-    <!-- Table -->
+    <!-- Tabel -->
     <div id="serviceStatsContainer" class="overflow-x-auto">
-        <div class="p-12 text-center text-gray-500">
-            <i class="fas fa-spinner text-5xl mb-4 text-gray-300 animate-spin"></i>
-            <p class="text-lg">Memuat data laporan...</p>
+        <div class="p-8 md:p-12 text-center text-gray-500">
+            <i class="fas fa-spinner text-4xl md:text-5xl mb-4 text-gray-300 animate-spin"></i>
+            <p class="text-sm md:text-lg">Memuat data laporan...</p>
         </div>
     </div>
 </div>
@@ -125,7 +125,7 @@ async function loadReports() {
     }
 }
 
-// Render statistics cards
+// Render statistik kartu
 function renderStats(ringkasan) {
     const container = document.getElementById('statsContainer');
     
@@ -162,15 +162,15 @@ function renderStats(ringkasan) {
     ];
     
     const html = stats.map(stat => `
-        <div class="bg-gradient-to-br ${stat.color} rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="opacity-90 text-sm font-medium">${stat.title}</p>
-                    <h3 class="text-3xl font-bold mt-2">${stat.isAmount ? stat.value : stat.value}</h3>
-                    <p class="opacity-75 text-xs mt-1">${stat.subtitle}</p>
+        <div class="bg-gradient-to-br ${stat.color} rounded-lg md:rounded-xl shadow-md md:shadow-lg p-3 md:p-4 lg:p-6 text-white transform hover:scale-105 transition">
+            <div class="flex flex-col items-start justify-between gap-2">
+                <div class="w-full">
+                    <p class="opacity-90 text-xs md:text-sm font-medium line-clamp-2">${stat.title}</p>
+                    <h3 class="text-lg md:text-2xl lg:text-3xl font-bold mt-1 truncate">${stat.isAmount ? stat.value : stat.value}</h3>
+                    <p class="opacity-75 text-xs mt-1 truncate">${stat.subtitle}</p>
                 </div>
-                <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <i class="fas ${stat.icon} text-2xl"></i>
+                <div class="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0 self-end">
+                    <i class="fas ${stat.icon} text-sm md:text-lg lg:text-2xl"></i>
                 </div>
             </div>
         </div>
@@ -179,16 +179,16 @@ function renderStats(ringkasan) {
     container.innerHTML = html;
 }
 
-// Render service statistics table
+// Render tabel statistik layanan
 function renderServiceStats(serviceStats) {
     const container = document.getElementById('serviceStatsContainer');
     
     if (!serviceStats || serviceStats.length === 0) {
         container.innerHTML = `
-            <div class="p-12 text-center text-gray-500">
-                <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                <p class="text-lg">Belum ada data untuk periode ini</p>
-                <p class="text-sm mt-2">Silakan pilih periode lain atau tunggu hingga ada booking</p>
+            <div class="p-8 md:p-12 text-center text-gray-500">
+                <i class="fas fa-inbox text-4xl md:text-5xl mb-4 text-gray-300"></i>
+                <p class="text-sm md:text-lg">Belum ada data untuk periode ini</p>
+                <p class="text-xs md:text-sm mt-2">Silakan pilih periode lain atau tunggu hingga ada booking</p>
             </div>
         `;
         return;
@@ -197,39 +197,74 @@ function renderServiceStats(serviceStats) {
     const totalOrders = serviceStats.reduce((sum, s) => sum + s.jumlah, 0);
     const totalRevenue = serviceStats.reduce((sum, s) => sum + s.pendapatan, 0);
     
+    // DESKTOP TABLE VIEW
     const tableRows = serviceStats.map(stat => `
         <tr class="hover:bg-gray-50 transition">
-            <td class="px-6 py-4" data-label="Layanan">
+            <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold mr-3">
-                        <i class="fas fa-shoe-prints"></i>
+                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs md:text-sm mr-2 md:mr-3 flex-shrink-0">
+                        <i class="fas fa-shoe-prints text-xs"></i>
                     </div>
-                    <span class="font-medium text-gray-800">${stat.layanan || '-'}</span>
+                    <span class="font-medium text-gray-800 truncate">${stat.layanan || '-'}</span>
                 </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Jumlah Order">
-                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+            <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm">
+                <span class="px-2 md:px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs md:text-sm font-medium">
                     ${stat.jumlah} order
                 </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Total Pendapatan">
-                <span class="font-semibold text-gray-800">Rp ${formatCurrency(stat.pendapatan)}</span>
+            <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                <span class="font-semibold text-gray-800 text-xs md:text-sm">Rp ${formatCurrency(stat.pendapatan)}</span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap" data-label="Rata-rata/Order">
-                <span class="text-gray-700">Rp ${formatCurrency(Math.round(stat.pendapatan / stat.jumlah))}</span>
+            <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                <span class="text-gray-700 text-xs md:text-sm">Rp ${formatCurrency(Math.round(stat.pendapatan / stat.jumlah))}</span>
             </td>
         </tr>
     `).join('');
     
+    // MOBILE CARD VIEW
+    const mobileCards = serviceStats.map(stat => `
+        <div class="bg-white rounded-lg shadow border border-gray-100 p-4 mb-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2 flex-1 min-w-0">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                        <i class="fas fa-shoe-prints text-xs"></i>
+                    </div>
+                    <span class="font-bold text-gray-900 text-sm truncate">${stat.layanan || '-'}</span>
+                </div>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="flex justify-between">
+                    <span class="text-gray-600 font-medium">Jumlah Order:</span>
+                    <span class="font-semibold text-blue-600">${stat.jumlah} pesanan</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600 font-medium">Total Pendapatan:</span>
+                    <span class="font-semibold text-gray-900">Rp ${formatCurrency(stat.pendapatan)}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600 font-medium">Rata-rata/Pesanan:</span>
+                    <span class="font-semibold text-gray-900">Rp ${formatCurrency(Math.round(stat.pendapatan / stat.jumlah))}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
     const html = `
-        <div class="overflow-x-auto table-responsive">
+        <!-- Tampilan Mobile (Kartu) -->
+        <div class="block md:hidden p-4">
+            ${mobileCards}
+        </div>
+        
+        <!-- Tampilan Desktop (Tabel) -->
+        <div class="hidden md:block overflow-x-auto table-responsive">
         <table class="w-full">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Order</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Pendapatan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rata-rata/Order</th>
+                    <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Layanan</th>
+                    <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Order</th>
+                    <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Pendapatan</th>
+                    <th class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rata-rata/Order</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">

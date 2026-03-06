@@ -3,14 +3,14 @@
 <?= $this->section('content') ?>
 
 <div class="admin-container">
-    <div class="dashboard-header" style="margin-bottom: 2rem;">
+    <div class="profile-header" style="margin-bottom: 2rem;">
         <h1><i class="fas fa-user-circle"></i> Akun Admin</h1>
         <p style="margin: 0.5rem 0 0; color: #6b7280;">Kelola informasi akun Anda</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <div class="profile-cards-grid">
         <!-- Card: Edit Profil -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
                 <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
                 <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Edit Profil</h3>
@@ -24,7 +24,7 @@
                     </label>
                     <div style="position: relative; display: flex; align-items: center;">
                         <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" required>
-                        <button type="button" onclick="focusField('nama_lengkap')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                        <button type="button" onclick="focusField('nama_lengkap')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </div>
@@ -38,7 +38,7 @@
                     </label>
                     <div style="position: relative; display: flex; align-items: center;">
                         <input type="email" id="email" name="email" class="form-control" required>
-                        <button type="button" onclick="focusField('email')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                        <button type="button" onclick="focusField('email')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </div>
@@ -52,7 +52,7 @@
                     </label>
                     <div style="position: relative; display: flex; align-items: center;">
                         <input type="text" id="no_hp" name="no_hp" class="form-control" required>
-                        <button type="button" onclick="focusField('no_hp')" style="position: absolute; right: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                        <button type="button" onclick="focusField('no_hp')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </div>
@@ -65,8 +65,8 @@
                         Alamat
                     </label>
                     <div style="position: relative; display: flex; align-items: flex-start;">
-                        <textarea id="alamat" name="alamat" rows="3" class="form-control" style="padding-right: 40px;"></textarea>
-                        <button type="button" onclick="focusField('alamat')" style="position: absolute; right: 12px; top: 12px; background: none; border: none; color: #6b7280; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; padding: 0.5rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
+                        <textarea id="alamat" name="alamat" rows="3" class="form-control"></textarea>
+                        <button type="button" onclick="focusField('alamat')" class="pencil-btn hidden md:flex" style="margin-top: 0.75rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </div>
@@ -110,12 +110,12 @@
     </div>
 
     <!-- Card: Detail Akun -->
-    <div class="bg-white rounded-lg shadow-md p-6" style="margin-top: 1.5rem;">
+    <div class="bg-white rounded-lg shadow-md p-4 md:p-6" style="margin-top: 1.5rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
             <i class="fas fa-info-circle" style="color: #5d00ff; font-size: 1.25rem;"></i>
             <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail Akun</h3>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        <div class="detail-cards-grid">
             <!-- Role -->
             <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #5d00ff;">
                 <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
@@ -152,6 +152,58 @@
 
 <?= $this->section('extra_css') ?>
 <style>
+.profile-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .profile-cards-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+.detail-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .detail-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .detail-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+}
+
+.pencil-btn {
+    position: relative;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pencil-btn:hover {
+    color: #5d00ff;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -161,16 +213,29 @@
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: #374151;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+    .form-group label {
+        font-size: 0.95rem;
+    }
 }
 
 .form-control {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.375rem;
     width: 100%;
-    font-size: 1rem;
+    font-size: 0.875rem;
     transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    .form-control {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
 }
 
 .form-control:focus {
@@ -180,7 +245,7 @@
 }
 
 .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.375rem;
     font-weight: 600;
@@ -189,6 +254,14 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
+    font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
 }
 
 .btn-primary {

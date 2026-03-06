@@ -9,59 +9,59 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
     <!-- Total Booking Card -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between">
-            <div class="flex-1">
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
                 <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Pesanan</p>
-                <h3 class="text-4xl font-bold mt-2" data-stat="total_bookings">0</h3>
+                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="total_bookings">0</h3>
                 <p class="text-blue-100 text-xs mt-2">Total semua pesanan</p>
             </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-shopping-bag text-2xl"></i>
+            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-shopping-bag text-lg md:text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Dalam Proses Card -->
-    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between">
-            <div class="flex-1">
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
                 <p class="text-cyan-100 text-xs font-semibold uppercase tracking-wide">Dalam Proses</p>
-                <h3 class="text-4xl font-bold mt-2" data-stat="proses_bookings">0</h3>
+                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="proses_bookings">0</h3>
                 <p class="text-cyan-100 text-xs mt-2">Sedang dikerjakan</p>
             </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-cog text-2xl"></i>
+            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-cog text-lg md:text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Selesai Card -->
-    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between">
-            <div class="flex-1">
+    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
                 <p class="text-emerald-100 text-xs font-semibold uppercase tracking-wide">Selesai</p>
-                <h3 class="text-4xl font-bold mt-2" data-stat="completed_bookings">0</h3>
+                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="completed_bookings">0</h3>
                 <p class="text-emerald-100 text-xs mt-2">Siap diambil</p>
             </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-check-circle text-2xl"></i>
+            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check-circle text-lg md:text-2xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Total Pendapatan Card -->
-    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow-md p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between">
-            <div class="flex-1">
+    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
                 <p class="text-violet-100 text-xs font-semibold uppercase tracking-wide">Total Pendapatan</p>
-                <h3 class="text-2xl font-bold mt-2" data-stat="total_revenue">Rp 0</h3>
+                <h3 class="text-2xl md:text-3xl font-bold mt-2" data-stat="total_revenue">Rp 0</h3>
                 <p class="text-violet-100 text-xs mt-2">Dari pesanan selesai</p>
             </div>
-            <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-money-bill-wave text-2xl"></i>
+            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-money-bill-wave text-lg md:text-2xl"></i>
             </div>
         </div>
     </div>
@@ -70,35 +70,33 @@
 <!-- Data Booking Table -->
 <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
     <!-- Card Header -->
-    <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50">
+    <div class="px-4 md:px-6 py-4 border-b border-gray-200 flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-gray-50">
         <div>
-            <h3 class="text-lg font-bold text-gray-900">Data Pesanan</h3>
-            <p class="text-sm text-gray-600 mt-1">Kelola semua pesanan customer</p>
+            <h3 class="text-base md:text-lg font-bold text-gray-900">Data Pesanan</h3>
+            <p class="text-xs md:text-sm text-gray-600 mt-1">Kelola semua pesanan customer</p>
         </div>
-        <div class="relative w-full sm:w-64">
+        <div class="relative w-full md:w-64">
             <input 
                 type="text" 
                 id="searchBooking" 
                 placeholder="Cari pesanan..." 
                 onkeyup="searchTable()"
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             >
             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto">
-        <div id="bookingsTableContainer">
-            <div class="p-16 text-center">
-                <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
-                <p class="text-gray-600 text-lg font-medium">Memuat data pesanan...</p>
-            </div>
+    <div id="bookingsTableContainer">
+        <div class="p-16 text-center">
+            <i class="fas fa-spinner fa-spin text-blue-600 text-6xl mb-4"></i>
+            <p class="text-gray-600 text-lg font-medium">Memuat data pesanan...</p>
         </div>
     </div>
     
     <!-- Pagination -->
-    <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200 bg-gray-50 hidden">
+    <div id="paginationContainer" class="px-4 md:px-6 py-4 border-t border-gray-200 bg-gray-50 hidden">
     </div>
 </div>
 
@@ -230,27 +228,32 @@ function renderBookingsTable(bookings) {
         'batal': 'Dibatalkan'
     };
     
+    // Desktop table
     let tableHTML = `
-        <div class="overflow-x-auto table-responsive">
+        <div class="overflow-x-auto table-responsive hidden md:block">
         <table class="w-full" id="bookingTable">
             <thead class="bg-gray-100 border-b-2 border-gray-200">
                 <tr>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-center">Jumlah</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider text-right">Total</th>
-                    <th class="px-5 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                    <th class="px-5 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Customer</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Kontak</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Layanan</th>
+                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Jumlah</th>
+                    <th class="px-4 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Total</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
     `;
     
+    // Mobile card layout
+    let cardHTML = `
+        <div class="md:hidden space-y-3 p-4">
+    `;
+    
     bookings.forEach(booking => {
         const bookingId = String(booking.id).padStart(3, '0');
-        // API returns: nama_customer, not customer_name
         const customerName = booking.nama_customer || booking.customer_name || '?';
         const customerInitial = customerName.charAt(0).toUpperCase();
         const statusClass = statusClasses[booking.status] || 'bg-gray-100 text-gray-800';
@@ -259,7 +262,7 @@ function renderBookingsTable(bookings) {
         // Format date
         const date = new Date(booking.created_at);
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        const formattedDate = `${date.getDate()} ${months[date.getMonth()]}`;
         
         // Format phone number for WhatsApp
         const phone = (booking.no_hp || '').replace(/[^0-9]/g, '');
@@ -269,38 +272,33 @@ function renderBookingsTable(bookings) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : '-';
         
+        // Desktop row
         tableHTML += `
             <tr class="hover:bg-blue-50 transition duration-200">
-                <td class="px-5 py-4 whitespace-nowrap" data-label="ID">
+                <td class="px-4 py-3 whitespace-nowrap">
                     <span class="font-semibold text-gray-800 text-sm">BK${bookingId}</span>
                 </td>
-                <td class="px-5 py-4" data-label="Customer">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                <td class="px-4 py-3 text-sm">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
                             ${customerInitial}
                         </div>
                         <div>
-                            <div class="font-medium text-gray-900 text-sm">${customerName}</div>
+                            <div class="font-medium text-gray-900">${customerName}</div>
                             <div class="text-xs text-gray-500">${formattedDate}</div>
                         </div>
                     </div>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap" data-label="Kontak">
-                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm">
+                <td class="px-4 py-3 text-sm">
+                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 text-sm inline-flex items-center space-x-1">
                         <i class="fab fa-whatsapp"></i>
                         <span>${booking.no_hp || '-'}</span>
                     </a>
                 </td>
-                <td class="px-5 py-4" data-label="Layanan">
-                    <span class="text-sm text-gray-700">${serviceName}</span>
-                </td>
-                <td class="px-5 py-4 whitespace-nowrap text-center" data-label="Jumlah">
-                    <span class="text-sm text-gray-700 font-medium">${booking.jumlah || 1}</span>
-                </td>
-                <td class="px-5 py-4 whitespace-nowrap text-right" data-label="Total">
-                    <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
-                </td>
-                <td class="px-5 py-4" data-label="Status">
+                <td class="px-4 py-3 text-sm text-gray-700">${serviceName}</td>
+                <td class="px-4 py-3 text-center text-sm text-gray-700 font-medium">${booking.jumlah || 1}</td>
+                <td class="px-4 py-3 text-right text-sm font-semibold text-gray-900">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</td>
+                <td class="px-4 py-3 text-sm">
                     <select 
                         class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
                         data-booking-id="${booking.id}"
@@ -315,21 +313,75 @@ function renderBookingsTable(bookings) {
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap text-center" data-label="Aksi">
+                <td class="px-4 py-3 text-center text-sm">
                     <div class="flex items-center justify-center space-x-1">
                         <a href="/admin/bookings/${booking.id}" 
-                           class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
+                           class="p-1 text-blue-600 hover:bg-blue-100 rounded transition text-xs"
                            title="Lihat Detail">
-                            <i class="fas fa-eye text-sm"></i>
+                            <i class="fas fa-eye"></i>
                         </a>
                         <button onclick="deleteBooking(${booking.id})" 
-                                class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"
+                                class="p-1 text-red-600 hover:bg-red-100 rounded transition text-xs"
                                 title="Hapus">
-                            <i class="fas fa-trash text-sm"></i>
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </td>
             </tr>
+        `;
+        
+        // Mobile card
+        cardHTML += `
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                            ${customerInitial}
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-900 text-sm">${customerName}</div>
+                            <div class="text-xs text-gray-500">BK${bookingId}</div>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${statusClass}">
+                        ${statusLabels[booking.status] || booking.status}
+                    </span>
+                </div>
+                
+                <div class="space-y-2 mb-3 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Layanan:</span>
+                        <span class="font-medium text-gray-900">${serviceName}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Jumlah:</span>
+                        <span class="font-medium text-gray-900">${booking.jumlah || 1}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Total:</span>
+                        <span class="font-semibold text-gray-900">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 text-sm flex items-center space-x-1">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>${booking.no_hp || '-'}</span>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <a href="/admin/bookings/${booking.id}" 
+                           class="p-2 text-blue-600 hover:bg-blue-100 rounded transition text-sm"
+                           title="Lihat Detail">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button onclick="deleteBooking(${booking.id})" 
+                                class="p-2 text-red-600 hover:bg-red-100 rounded transition text-sm"
+                                title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         `;
     });
     
@@ -339,7 +391,11 @@ function renderBookingsTable(bookings) {
         </div>
     `;
     
-    container.innerHTML = tableHTML;
+    cardHTML += `
+        </div>
+    `;
+    
+    container.innerHTML = tableHTML + cardHTML;
 }
 
 // Render empty bookings state
