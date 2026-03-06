@@ -1203,7 +1203,7 @@ async function confirmLogout(e) {
     e.preventDefault();
     if (confirm('Apakah Anda yakin ingin logout?')) {
         try {
-            console.log('🚀 Logging out via API...');
+            console.log('🚀 Sedang Keluar... via API...');
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
                 headers: {

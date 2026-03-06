@@ -132,7 +132,7 @@
             }
             
             #sidebar nav {
-                overflow-y-auto;
+                overflow-y-auto;    
                 max-height: calc(100vh - 12rem);
                 padding-bottom: 2rem;
             }
@@ -454,7 +454,7 @@
         </div>
         
         <!-- Text -->
-        <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Logging Out...</h2>
+        <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Sedang Keluar...</h2>
         <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Sampai jumpa lagi, Admin!</p>
         
         <!-- Loading dots -->
@@ -660,7 +660,7 @@
             }
             
             try {
-                console.log('🚀 Admin logging out via API...');
+                console.log('🚀 Admin Sedang keluar via API...');
                 const response = await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {
