@@ -3,23 +3,23 @@
 <?= $this->section('content') ?>
 
 <div class="admin-container">
-    <div style="margin-bottom: 2rem;">
-        <a href="/admin/bookings" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Kembali ke Pesanan
+    <div class="mb-6">
+        <a href="/admin/bookings" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Pesanan
         </a>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
         <!-- Kolom Kiri -->
         <div>
             <!-- Order Header -->
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start gap-3 md:gap-4">
                     <div>
-                        <h1 style="margin: 0 0 0.5rem 0; color: #1f2937;">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
                             Pesanan #<?= $booking['id'] ?>
                         </h1>
-                        <p style="margin: 0; color: #6b7280;">
+                        <p class="text-gray-600 text-sm md:text-base">
                             <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
                         </p>
                         <?php
@@ -38,32 +38,32 @@
                             'ditolak' => '#ef4444'
                         ];
                         ?>
-                        <div style="margin-top: 1rem;">
-                            <span style="background: <?= $statusColors[$booking['status']] ?? '#6b7280' ?>; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; display: inline-block;">
+                        <div class="mt-2 md:mt-3">
+                            <span class="inline-block px-3 md:px-4 py-1 md:py-2 rounded-lg font-semibold text-white text-sm md:text-base" style="background: <?= $statusColors[$booking['status']] ?? '#6b7280' ?>;">
                                 <?= $statusLabels[$booking['status']] ?? ucfirst($booking['status']) ?>
                             </span>
                         </div>
                     </div>
                     
                     <!-- Action Buttons -->
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div class="flex flex-col gap-2 w-full md:w-auto">
                         <?php if ($booking['status'] === 'pending'): ?>
-                            <button onclick="approveBooking()" class="btn" style="background: #10b981; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
+                            <button onclick="approveBooking()" class="w-full px-3 md:px-4 py-2 md:py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base whitespace-nowrap">
                                 <i class="fas fa-check"></i> Setujui
                             </button>
-                            <button onclick="showRejectModal()" class="btn" style="background: #ef4444; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                            <button onclick="showRejectModal()" class="w-full px-3 md:px-4 py-2 md:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base whitespace-nowrap">
                                 <i class="fas fa-times"></i> Tolak
                             </button>
                         <?php elseif ($booking['status'] === 'disetujui'): ?>
-                            <button onclick="changeStatus('proses')" class="btn" style="background: #8b5cf6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);">
+                            <button onclick="changeStatus('proses')" class="w-full px-3 md:px-4 py-2 md:py-2.5 bg-violet-500 hover:bg-violet-600 text-white rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base whitespace-nowrap">
                                 <i class="fas fa-cog"></i> Mulai Proses
                             </button>
                         <?php elseif ($booking['status'] === 'proses'): ?>
-                            <button onclick="showCompleteModal()" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.75rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 700; font-size: 0.875rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
+                            <button onclick="showCompleteModal()" class="w-full px-3 md:px-4 py-2 md:py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-lg font-bold transition transform hover:-translate-y-0.5 text-sm md:text-base">
                                 <i class="fas fa-check-circle"></i> Unggah Foto
                             </button>
                         <?php elseif ($booking['status'] === 'selesai'): ?>
-                            <button onclick="sendWhatsApp()" class="btn" style="background: #25D366; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; white-space: nowrap; box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);">
+                            <button onclick="sendWhatsApp()" class="w-full px-3 md:px-4 py-2 md:py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition transform hover:-translate-y-0.5 text-sm md:text-base whitespace-nowrap">
                                 <i class="fab fa-whatsapp"></i> WhatsApp
                             </button>
                         <?php endif; ?>
@@ -72,12 +72,12 @@
                 
                 <!-- Alasan Penolakan (jika ditolak) -->
                 <?php if ($booking['status'] === 'ditolak' && !empty($booking['alasan_penolakan'])): ?>
-                    <div style="margin-top: 1.5rem; padding: 1rem; background: #fee2e2; border-left: 4px solid #ef4444; border-radius: 0.375rem;">
-                        <div style="display: flex; align-items: start; gap: 0.75rem;">
-                            <i class="fas fa-exclamation-circle" style="color: #ef4444; margin-top: 0.25rem;"></i>
+                    <div class="mt-4 md:mt-6 p-4 bg-red-50 border-l-4 border-red-500 rounded">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-exclamation-circle text-red-500 mt-1"></i>
                             <div>
-                                <strong style="color: #991b1b;">Alasan Penolakan:</strong>
-                                <p style="margin: 0.5rem 0 0; color: #7f1d1d;"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
+                                <strong class="text-red-900">Alasan Penolakan:</strong>
+                                <p class="mt-1 text-red-800 text-sm md:text-base"><?= nl2br(htmlspecialchars($booking['alasan_penolakan'], ENT_QUOTES, 'UTF-8')) ?></p>
                             </div>
                         </div>
                     </div>
@@ -86,57 +86,55 @@
 
             <!-- Customer Info -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
-                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-user" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Pelanggan</h3>
+                <div class="p-4 md:p-6 border-b border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-user text-blue-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800">Informasi Pelanggan</h3>
                     </div>
                 </div>
-                <div style="padding: 1.5rem;">
-                    <div class="info-row">
-                        <label>Nama:</label>
-                        <span><?= $booking['full_name'] ?></span>
+                <div class="p-4 md:p-6 space-y-3 md:space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Nama:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= $booking['full_name'] ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Email:</label>
-                        <span><?= $booking['email'] ?></span>
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Email:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= $booking['email'] ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Telepon:</label>
-                        <span><?= $booking['no_hp'] ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Telepon:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= $booking['no_hp'] ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Alamat:</label>
-                        <span><?= $booking['address'] ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Alamat:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= $booking['address'] ?></span>
                     </div>
-                    
                 </div>
             </div>
 
             <!-- Detail Pesanan -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-shopping-bag" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail Pesanan</h3>
+                <div class="p-4 md:p-6 border-b border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shopping-bag text-blue-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800">Detail Pesanan</h3>
                     </div>
                 </div>
-                <div style="padding: 1.5rem;">
-                    <div class="info-row">
-                        <label>Layanan:</label>
-                        <span><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
+                <div class="p-4 md:p-6 space-y-3 md:space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Layanan:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= ucfirst(str_replace('-', ' ', $booking['service'])) ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Kondisi Sepatu:</label>
-                        <span><?= ucfirst(str_replace('_', ' ', $booking['shoe_condition'])) ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Kondisi Sepatu:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= ucfirst(str_replace('_', ' ', $booking['shoe_condition'])) ?></span>
                     </div>
-                    <div class="info-row">
-                        <label>Jumlah:</label>
-                        <span><?= $booking['quantity'] ?> pasang</span>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Jumlah:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= $booking['quantity'] ?> pasang</span>
                     </div>
-                    <div class="info-row">
-                        <label>Pengiriman:</label>
-                        <span><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
+                        <label class="font-semibold text-gray-700 text-sm md:text-base">Pengiriman:</label>
+                        <span class="text-gray-600 text-sm md:text-base"><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
                     </div>
                 </div>
             </div>
@@ -145,60 +143,64 @@
         <!-- Kolom Kanan -->
         <div>
             <!-- Price Summary -->
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 mb-6 text-white">
-                <h3 style="margin: 0 0 1.5rem 0; font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-4 md:p-6 mb-6 text-white">
+                <h3 class="text-xl md:text-2xl font-bold mb-4 flex items-center gap-2">
                     <i class="fas fa-receipt"></i> Ringkasan Pesanan
                 </h3>
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                        <span style="color: rgba(255, 255, 255, 0.9);">Layanan:</span>
-                        <span style="font-weight: 600;">
+                <div class="bg-white bg-opacity-10 p-3 md:p-4 rounded mb-4 space-y-2 md:space-y-3">
+                    <div class="flex justify-between text-sm md:text-base">
+                        <span class="opacity-90">Layanan:</span>
+                        <span class="font-semibold">
                             <?= !empty($booking['service_name']) ? $booking['service_name'] : ucfirst(str_replace('-', ' ', $booking['service'])) ?>
                         </span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                        <span style="color: rgba(255, 255, 255, 0.9);">Harga/Sepatu:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format(!empty($booking['service_price']) ? intval($booking['service_price']) : intval($booking['subtotal'] / $booking['quantity']), 0, '', '.') ?></span>
+                    <div class="flex justify-between text-sm md:text-base">
+                        <span class="opacity-90">Harga/Sepatu:</span>
+                        <span class="font-semibold">Rp <?= number_format(!empty($booking['service_price']) ? intval($booking['service_price']) : intval($booking['subtotal'] / $booking['quantity']), 0, '', '.') ?></span>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: rgba(255, 255, 255, 0.9);">Jumlah:</span>
-                        <span style="font-weight: 600;"><?= $booking['quantity'] ?> pasang</span>
+                    <div class="flex justify-between text-sm md:text-base">
+                        <span class="opacity-90">Jumlah:</span>
+                        <span class="font-semibold"><?= $booking['quantity'] ?> pasang</span>
                     </div>
                 </div>
-                <div style="background: white; color: #374151; padding: 1rem; border-radius: 0.5rem;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <div class="bg-white text-gray-700 p-3 md:p-4 rounded space-y-2">
+                    <div class="flex justify-between text-sm md:text-base">
                         <span>Subtotal:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format(intval($booking['subtotal']), 0, '', '.') ?></span>
+                        <span class="font-semibold">Rp <?= number_format(intval($booking['subtotal']), 0, '', '.') ?></span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+                    <div class="flex justify-between text-sm md:text-base pb-2 border-b border-gray-300">
                         <span>Biaya Pengiriman:</span>
-                        <span style="font-weight: 600;">Rp <?= number_format(intval($booking['delivery_fee']), 0, '', '.') ?></span>
+                        <span class="font-semibold">Rp <?= number_format(intval($booking['delivery_fee']), 0, '', '.') ?></span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 0.75rem;">
-                        <span style="font-weight: 700; font-size: 1.1rem;">Total</span>
-                        <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">Rp <?= number_format(intval($booking['total']), 0, '', '.') ?></span>
+                    <div class="flex justify-between pt-2 md:pt-3">
+                        <span class="font-bold text-base md:text-lg">Total</span>
+                        <span class="text-blue-600 text-lg md:text-2xl font-bold">Rp <?= number_format(intval($booking['total']), 0, '', '.') ?></span>
                     </div>
                 </div>
             </div>
 
             <!-- Status Timeline -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-clock" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Timeline Status</h3>
+                <div class="p-4 md:p-6 border-b border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-clock text-blue-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800">Timeline Status</h3>
                     </div>
                 </div>
-                <div style="padding: 1.5rem;">
-                    <div class="timeline-item">
-                        <div class="timeline-status completed">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div>
-                            <strong style="color: #1f2937;">Dibuat</strong>
-                            <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
-                                <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
-                            </p>
+                <div class="p-4 md:p-6">
+                    <div class="py-2 md:py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="relative flex-shrink-0">
+                                <div class="w-8 h-8 md:w-10 md:h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-sm md:text-base">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800 text-sm md:text-base">Dibuat</strong>
+                                <p class="mt-1 text-gray-600 text-xs md:text-sm">
+                                    <?= date('d M Y H:i', strtotime($booking['created_at'])) ?>
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -220,15 +222,19 @@
 
                     <?php if ($is_rejected): ?>
                         <!-- Timeline untuk pesanan yang ditolak -->
-                        <div class="timeline-item">
-                            <div class="timeline-status" style="background-color: #fee2e2; color: #991b1b;">
-                                <i class="fas fa-times"></i>
-                            </div>
-                            <div>
-                                <strong style="color: #ef4444;">Pesanan Ditolak</strong>
-                                <p style="margin: 0.25rem 0 0; color: #991b1b; font-size: 0.875rem;">
-                                    Pesanan tidak dapat diproses
-                                </p>
+                        <div class="py-2 md:py-3">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex-shrink-0">
+                                    <div class="w-8 h-8 md:w-10 md:h-10 bg-red-100 text-red-700 rounded-full flex items-center justify-center font-bold text-sm md:text-base">
+                                        <i class="fas fa-times"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong class="text-red-600 text-base md:text-lg">Pesanan Ditolak</strong>
+                                    <p class="mt-1 text-red-700 text-sm">
+                                        Pesanan tidak dapat diproses
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     <?php else: ?>
@@ -241,18 +247,23 @@
                                 $is_completed = ($current_index !== false && $status_index !== false && $current_index >= $status_index);
                                 $is_current = ($current_status === $status);
                                 ?>
-                                <div class="timeline-item">
-                                    <div class="timeline-status <?= $is_completed ? 'completed' : 'pending' ?>" <?= $is_current ? 'style="box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); border: 2px solid #3b82f6;"' : '' ?>>
-                                        <i class="fas <?= $is_completed ? 'fa-check' : 'fa-circle' ?>"></i>
-                                    </div>
-                                    <div>
-                                        <strong style="color: <?= $is_current ? '#3b82f6' : '#1f2937' ?>;">
-                                            <?= $statuses[$status] ?>
-                                            <?= $is_current ? '<span style="font-size: 0.75rem; color: #3b82f6; font-weight: normal;"> (Saat ini)</span>' : '' ?>
-                                        </strong>
-                                        <p style="margin: 0.25rem 0 0; color: #6b7280; font-size: 0.875rem;">
-                                            <?= $is_completed ? 'Selesai' : 'Menunggu' ?>
-                                        </p>
+                                <div class="py-2 md:py-3" <?= $is_current ? 'style="opacity: 1; background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 0.5rem;"' : '' ?>>
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative flex-shrink-0">
+                                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-sm md:text-base transition" 
+                                                style="background: <?= $is_completed ? '#dcfce7' : '#f0f9ff' ?>; color: <?= $is_completed ? '#15803d' : '#0369a1' ?>;">
+                                                <i class="fas <?= $is_completed ? 'fa-check' : 'fa-circle' ?>"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <strong style="color: <?= $is_current ? '#3b82f6' : '#1f2937' ?>; font-size: 0.95rem; md:text-base;">
+                                                <?= $statuses[$status] ?>
+                                                <?= $is_current ? '<span style="font-size: 0.75rem; color: #3b82f6; font-weight: normal; display: inline-block; margin-left: 0.5rem;">(Saat ini)</span>' : '' ?>
+                                            </strong>
+                                            <p style="margin: 0.5rem 0 0; color: #6b7280; font-size: 0.875rem;">
+                                                <?= $is_completed ? 'Selesai' : 'Menunggu' ?>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -264,24 +275,24 @@
     </div>
 
     <!-- Foto & Detail Lainnya -->
-    <div style="margin-top: 2rem;">
+    <div class="mt-8 md:mt-10">
             <?php if (!empty($photos) && count($photos) > 0): ?>
-                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                        <i class="fas fa-camera" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Foto Sepatu dari Customer (<?= count($photos) ?>)</h3>
+                <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
+                    <div class="flex items-center gap-2 mb-4 md:mb-6">
+                        <i class="fas fa-camera text-blue-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800">Foto Sepatu dari Customer (<?= count($photos) ?>)</h3>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                         <?php foreach ($photos as $photo): ?>
-                            <div style="position: relative; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;" onclick="openPhotoModal('<?= base_url('uploads/' . $photo['photo_path']) ?>')">
+                            <div class="relative rounded-lg overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition group" onclick="openPhotoModal('<?= base_url('uploads/' . $photo['photo_path']) ?>')">
                                 <img 
                                     src="<?= base_url('uploads/' . $photo['photo_path']) ?>" 
                                     alt="Foto Sepatu" 
-                                    style="width: 100%; height: 200px; object-fit: cover;"
+                                    class="w-full h-40 md:h-48 object-cover"
                                     onerror="this.src='<?= base_url('assets/images/no-image.png') ?>'"
                                 >
-                                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 0.5rem; color: white; font-size: 0.75rem;">
-                                    <i class="fas fa-search-plus"></i> Klik untuk memperbesar
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent opacity-0 group-hover:opacity-100 transition p-2 text-white text-xs md:text-sm flex items-center justify-center h-full">
+                                    <i class="fas fa-search-plus mr-1"></i> <span class="hidden sm:inline">Klik untuk memperbesar</span>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -291,19 +302,19 @@
             
             <!-- Foto Sepatu Lama -->
             <?php if (!empty($booking['foto_sepatu'])): ?>
-                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                        <i class="fas fa-camera" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Foto Kondisi Sepatu</h3>
+                <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
+                    <div class="flex items-center gap-2 mb-4 md:mb-6">
+                        <i class="fas fa-camera text-blue-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-800">Foto Kondisi Sepatu</h3>
                     </div>
-                    <div style="text-align: center;">
+                    <div class="text-center">
                         <img 
                             src="<?= base_url('uploads/' . $booking['foto_sepatu']) ?>" 
                             alt="Foto Sepatu" 
-                            style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); cursor: pointer;"
+                            class="max-w-full h-auto rounded-lg shadow-md hover:shadow-lg transition cursor-pointer"
                             onclick="openPhotoModal(this.src)"
                         >
-                        <p style="margin: 1rem 0 0; color: #6b7280; font-size: 0.9rem;">
+                        <p class="mt-3 text-gray-600 text-sm">
                             <i class="fas fa-info-circle"></i> Klik gambar untuk memperbesar
                         </p>
                     </div>
@@ -312,19 +323,19 @@
 
             <!-- Foto Hasil Cucian (Setelah) -->
             <?php if (!empty($booking['foto_hasil']) && $booking['status'] === 'selesai'): ?>
-                <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem; border: 2px solid #10b981;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid #10b981;">
-                        <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #10b981; font-weight: 600; font-size: 1.1rem;">Foto Hasil Cucian (Dikirim ke Customer)</h3>
+                <div class="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6 border-2 border-emerald-500">
+                    <div class="flex items-center gap-2 mb-4 md:mb-6 pb-3 md:pb-4 border-b-2 border-emerald-500">
+                        <i class="fas fa-check-circle text-emerald-500 text-lg md:text-xl"></i>
+                        <h3 class="text-lg md:text-xl font-semibold text-emerald-600">Foto Hasil Cucian (Dikirim ke Customer)</h3>
                     </div>
-                    <div style="text-align: center;">
+                    <div class="text-center">
                         <img 
                             src="<?= base_url('uploads/' . $booking['foto_hasil']) ?>" 
                             alt="Foto Hasil Cucian" 
-                            style="max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); cursor: pointer;"
+                            class="max-w-full h-auto rounded-lg shadow-md hover:shadow-lg transition cursor-pointer"
                             onclick="openPhotoModal(this.src)"
                         >
-                        <p style="margin: 1rem 0 0; color: #059669; font-size: 0.9rem; font-weight: 600;">
+                        <p class="mt-3 text-teal-600 text-sm font-semibold">
                             <i class="fas fa-check-double"></i> Foto ini sudah dikirim ke customer
                         </p>
                     </div>
@@ -332,28 +343,28 @@
             <?php endif; ?>
 
             <!-- Delivery Info -->
-            <div style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); padding: 1.5rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                    <i class="fas fa-truck" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                    <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Pengiriman</h3>
+            <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
+                <div class="flex items-center gap-2 mb-4 md:mb-6">
+                    <i class="fas fa-truck text-blue-500 text-lg md:text-xl"></i>
+                    <h3 class="text-lg md:text-xl font-semibold text-gray-800">Pengiriman</h3>
                 </div>
-                <div style="padding: 1rem;">
-                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: center;">
-                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Tipe Pengiriman:</label>
-                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
+                <div class="space-y-0 divide-y divide-gray-200">
+                    <div class="flex flex-col md:flex-row justify-between py-3 md:py-4 gap-2">
+                        <label class="font-semibold text-gray-600 text-sm md:text-base">Tipe Pengiriman:</label>
+                        <span class="text-gray-800 text-sm md:text-base font-medium"><?= ucfirst(str_replace('-', ' ', $booking['delivery_option'])) ?></span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: center;">
-                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Tanggal Pengiriman:</label>
-                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= date('d M Y', strtotime($booking['delivery_date'])) ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-3 md:py-4 gap-2">
+                        <label class="font-semibold text-gray-600 text-sm md:text-base">Tanggal Pengiriman:</label>
+                        <span class="text-gray-800 text-sm md:text-base font-medium"><?= date('d M Y', strtotime($booking['delivery_date'])) ?></span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6; align-items: flex-start;">
-                        <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Alamat Pengiriman:</label>
-                        <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= $booking['delivery_address'] ?></span>
+                    <div class="flex flex-col md:flex-row justify-between py-3 md:py-4 gap-2">
+                        <label class="font-semibold text-gray-600 text-sm md:text-base">Alamat Pengiriman:</label>
+                        <span class="text-gray-800 text-sm md:text-base font-medium text-right md:text-right"><?= $booking['delivery_address'] ?></span>
                     </div>
                     <?php if (!empty($booking['notes'])): ?>
-                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; align-items: flex-start;">
-                            <label style="font-weight: 600; color: #6b7280; font-size: 0.95rem;">Catatan:</label>
-                            <span style="color: #1f2937; text-align: right; font-weight: 500;"><?= $booking['notes'] ?></span>
+                        <div class="flex flex-col md:flex-row justify-between py-3 md:py-4 gap-2">
+                            <label class="font-semibold text-gray-600 text-sm md:text-base">Catatan:</label>
+                            <span class="text-gray-800 text-sm md:text-base font-medium text-right md:text-right"><?= $booking['notes'] ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -362,33 +373,32 @@
 
        
 
-
 <!-- Photo Modal -->
-<div id="photoModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9);" onclick="closePhotoModal()">
-    <span style="position: absolute; top: 20px; right: 40px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
-    <img id="modalPhoto" style="margin: auto; display: block; max-width: 90%; max-height: 90%; margin-top: 50px;">
+<div id="photoModal" class="hidden fixed z-50 inset-0 bg-black bg-opacity-90 flex items-center justify-center overflow-auto" onclick="if(event.target.id === 'photoModal') closePhotoModal()">
+    <button onclick="closePhotoModal()" class="absolute top-4 right-6 text-white text-4xl font-bold hover:opacity-80 transition">&times;</button>
+    <img id="modalPhoto" class="max-w-full max-h-screen m-auto">
 </div>
 
 <!-- Reject Modal -->
-<div id="rejectModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
-    <div style="background: white; max-width: 500px; margin: 100px auto; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
-        <h3 style="margin: 0 0 1rem 0; color: #1f2937;">
-            <i class="fas fa-times-circle" style="color: #ef4444;"></i> Tolak Pesanan
+<div id="rejectModal" class="hidden fixed z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center" onclick="if(event.target.id === 'rejectModal') closeRejectModal()">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-times-circle text-red-500"></i> Tolak Pesanan
         </h3>
-        <p style="color: #6b7280; margin-bottom: 1.5rem;">Berikan alasan kenapa pesanan ini ditolak:</p>
+        <p class="text-gray-600 mb-4">Berikan alasan kenapa pesanan ini ditolak:</p>
         
         <textarea 
             id="rejectReason" 
             rows="4" 
-            style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; font-family: inherit;"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition font-inherit"
             placeholder="Contoh: Stok bahan habis, jadwal penuh, dll..."
         ></textarea>
         
-        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
-            <button onclick="confirmReject()" class="btn" style="flex: 1; background: #ef4444; color: white; padding: 0.75rem;">
+        <div class="flex gap-3 mt-6">
+            <button onclick="confirmReject()" class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
                 <i class="fas fa-times"></i> Tolak Pesanan
             </button>
-            <button onclick="closeRejectModal()" class="btn" style="flex: 1; background: #6b7280; color: white; padding: 0.75rem;">
+            <button onclick="closeRejectModal()" class="flex-1 px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
                 <i class="fas fa-ban"></i> Batal
             </button>
         </div>
@@ -396,73 +406,72 @@
 </div>
 
 <!-- Complete Modal with Photo Upload -->
-<div id="completeModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); overflow-y: auto; padding: 20px 0;">
-    <div style="background: white; max-width: 600px; margin: 20px auto; padding: 0; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden;">
+<div id="completeModal" class="hidden fixed z-50 inset-0 bg-black bg-opacity-70 flex items-center justify-center overflow-y-auto p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 1.5rem; text-align: center;">
-            <div style="width: 60px; height: 60px; background: white; border-radius: 50%; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);">
-                <i class="fas fa-camera" style="font-size: 1.75rem; color: #10b981;"></i>
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 md:p-8 text-center">
+            <div class="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center shadow-lg">
+                <i class="fas fa-camera text-emerald-500 text-2xl"></i>
             </div>
-            <h3 style="margin: 0; color: white; font-size: 1.5rem; font-weight: 700;">
+            <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">
                 Unggah Foto Hasil Cucian
             </h3>
-            <p style="margin: 0.5rem 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">
+            <p class="text-emerald-50 text-sm md:text-base">
                 Pesanan #<?= $booking['id'] ?> - <?= $booking['full_name'] ?>
             </p>
         </div>
 
         <!-- Body -->
-        <div style="padding: 1.5rem;">
-            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 0.875rem; border-radius: 0.5rem; margin-bottom: 1.25rem;">
-                <div style="display: flex; align-items: start; gap: 0.75rem;">
-                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b; font-size: 1.1rem; margin-top: 0.25rem;"></i>
+        <div class="p-6 md:p-8">
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 md:p-5 rounded mb-6">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-exclamation-triangle text-amber-600 mt-1 text-lg"></i>
                     <div>
-                        <strong style="color: #92400e; display: block; margin-bottom: 0.25rem; font-size: 0.95rem;">Penting!</strong>
-                        <p style="margin: 0; color: #78350f; font-size: 0.875rem; line-height: 1.5;">
+                        <strong class="text-amber-900 block text-base mb-1">Penting!</strong>
+                        <p class="text-amber-800 text-sm md:text-base leading-relaxed m-0">
                             Unggah foto hasil cucian sepatu yang sudah selesai dikerjakan. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
                         </p>
                     </div>
                 </div>
             </div>
             
-            <div style="margin-bottom: 1.25rem;">
-                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.75rem; font-size: 1rem;">
-                    <i class="fas fa-image"></i> Pilih Foto Hasil Cucian <span style="color: #ef4444;">*</span>
+            <div class="mb-6">
+                <label class="block font-semibold text-gray-800 mb-3 text-base md:text-lg">
+                    <i class="fas fa-image"></i> Pilih Foto Hasil Cucian <span class="text-red-500">*</span>
                 </label>
                 <input 
                     type="file" 
                     id="fotoHasil" 
                     accept="image/jpeg,image/jpg,image/png"
-                    style="width: 100%; padding: 0.875rem; border: 2px dashed #d1d5db; border-radius: 0.5rem; cursor: pointer; font-size: 0.95rem;"
-                    onchange="this.style.borderColor='#10b981'"
+                    class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-500 focus:outline-none focus:border-emerald-500 transition text-sm md:text-base"
                 >
-                <div style="display: flex; gap: 1rem; margin-top: 0.625rem;">
-                    <small style="color: #6b7280; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Format: JPG, JPEG, PNG
+                <div class="flex flex-col md:flex-row gap-3 md:gap-4 mt-3">
+                    <small class="text-gray-600 flex items-center gap-2 text-xs md:text-sm">
+                        <i class="fas fa-check-circle text-emerald-500"></i> Format: JPG, JPEG, PNG
                     </small>
-                    <small style="color: #6b7280; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Maksimal: 5MB
+                    <small class="text-gray-600 flex items-center gap-2 text-xs md:text-sm">
+                        <i class="fas fa-check-circle text-emerald-500"></i> Maksimal: 5MB
                     </small>
                 </div>
             </div>
 
             <!-- Preview -->
-            <div id="previewContainer" style="display: none; margin-bottom: 1.25rem;">
-                <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 0.625rem; font-size: 0.95rem;">
+            <div id="previewContainer" class="hidden mb-6">
+                <label class="block font-semibold text-gray-800 mb-3 text-base">
                     <i class="fas fa-eye"></i> Preview Foto:
                 </label>
-                <div style="text-align: center; padding: 0.75rem; background: #f9fafb; border-radius: 0.5rem; border: 2px solid #10b981;">
-                    <img id="previewImage" style="max-width: 100%; max-height: 250px; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div class="p-4 text-center bg-gray-50 rounded-lg border-2 border-emerald-500">
+                    <img id="previewImage" class="max-w-full max-h-60 rounded-lg shadow-md mx-auto">
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
-        <div style="background: #f9fafb; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; border-top: 1px solid #e5e7eb;">
-            <button onclick="confirmComplete()" class="btn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); transition: all 0.2s;">
+        <div class="bg-gray-50 p-6 md:p-8 flex flex-col md:flex-row gap-3 border-t border-gray-200">
+            <button onclick="confirmComplete()" class="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-lg font-bold transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm md:text-base">
                 <i class="fas fa-check-circle"></i> Unggah & Tandai Selesai
             </button>
-            <button onclick="closeCompleteModal()" class="btn" style="flex: 1; background: #e5e7eb; color: #374151; padding: 0.875rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.2s;">
+            <button onclick="closeCompleteModal()" class="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-semibold transition flex items-center justify-center gap-2 text-sm md:text-base">
                 <i class="fas fa-times"></i> Batal
             </button>
         </div>
@@ -590,22 +599,22 @@ function approveBooking() {
 }
 
 function showRejectModal() {
-    document.getElementById('rejectModal').style.display = 'block';
+    document.getElementById('rejectModal').classList.remove('hidden');
 }
 
 function closeRejectModal() {
-    document.getElementById('rejectModal').style.display = 'none';
+    document.getElementById('rejectModal').classList.add('hidden');
     document.getElementById('rejectReason').value = '';
 }
 
 function showCompleteModal() {
-    document.getElementById('completeModal').style.display = 'block';
+    document.getElementById('completeModal').classList.remove('hidden');
 }
 
 function closeCompleteModal() {
-    document.getElementById('completeModal').style.display = 'none';
+    document.getElementById('completeModal').classList.add('hidden');
     document.getElementById('fotoHasil').value = '';
-    document.getElementById('previewContainer').style.display = 'none';
+    document.getElementById('previewContainer').classList.add('hidden');
 }
 
 // Preview foto sebelum upload
@@ -618,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('previewImage').src = e.target.result;
-                    document.getElementById('previewContainer').style.display = 'block';
+                    document.getElementById('previewContainer').classList.remove('hidden');
                 }
                 reader.readAsDataURL(file);
             }
@@ -780,12 +789,12 @@ function sendWhatsApp() {
 function openPhotoModal(src) {
     const modal = document.getElementById('photoModal');
     const modalImg = document.getElementById('modalPhoto');
-    modal.style.display = 'block';
+    modal.classList.remove('hidden');
     modalImg.src = src;
 }
 
 function closePhotoModal() {
-    document.getElementById('photoModal').style.display = 'none';
+    document.getElementById('photoModal').classList.add('hidden');
 }
 
 // Close modal when ESC key is pressed

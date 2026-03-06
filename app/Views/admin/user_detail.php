@@ -9,9 +9,9 @@
         </a>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <div class="user-detail-grid">
         <!-- Profile Card -->
-        <div>
+        <div class="profile-section">
             <div class="admin-card">
                 <div class="card-body" style="text-align: center;">
                     <div class="user-avatar" style="
@@ -60,12 +60,12 @@
         <!-- Details & Bookings -->
         <div class="w-full">
             <!-- Grid 2 Kolom untuk Info Cards -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="info-cards-grid">
                 <!-- Card: Informasi Customer -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <div class="info-card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
                         <i class="fas fa-user" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Customer</h3>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600;">Informasi Customer</h3>
                     </div>
                     <div class="info-row">
                         <label>Nama:</label>
@@ -82,10 +82,10 @@
                 </div>
 
                 <!-- Card: Informasi Alamat -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <div class="info-card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
                         <i class="fas fa-map-marker-alt" style="color: #3b82f6; font-size: 1.25rem;"></i>
-                        <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Informasi Alamat</h3>
+                        <h3 style="margin: 0; color: #1f2937; font-weight: 600;">Informasi Alamat</h3>
                     </div>
                     <div class="info-row">
                         <label>Alamat:</label>
@@ -157,6 +157,88 @@
 
 <?= $this->section('extra_css') ?>
 <style>
+.user-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+    .user-detail-grid {
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+    }
+}
+
+.profile-section {
+    order: 2;
+}
+
+@media (min-width: 768px) {
+    .profile-section {
+        order: 1;
+    }
+}
+
+.info-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .info-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+.info-card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .info-card {
+        padding: 1.5rem;
+    }
+}
+
+.info-card h3 {
+    font-size: 0.95rem;
+}
+
+@media (min-width: 768px) {
+    .info-card h3 {
+        font-size: 1.1rem;
+    }
+}
+
+.info-row label {
+    font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+    .info-row label {
+        font-size: 0.9rem;
+    }
+}
+
+.info-row span {
+    font-size: 0.875rem;
+    word-break: break-word;
+}
+
+@media (min-width: 768px) {
+    .info-row span {
+        font-size: 0.95rem;
+    }
+}
+
 .btn-back {
     display: inline-flex;
     align-items: center;

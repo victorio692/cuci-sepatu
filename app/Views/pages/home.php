@@ -1236,26 +1236,29 @@ async function loadServices() {
                     : `<i class="fas ${icon} text-white text-3xl"></i>`;
                 
                 return `
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border ${borderClass}">
-                        <div class="relative h-24 flex items-center justify-center" style="${headerStyle}">
+                    <div class="bg-white rounded-lg shadow hover:shadow-md transition overflow-hidden border ${borderClass} flex flex-col h-full">
+                        <div class="relative h-28 sm:h-32 md:h-36 flex items-center justify-center flex-shrink-0" style="${headerStyle}">
                             ${headerContent}
                             ${hasImage ? '<div class="absolute inset-0 bg-black/20 flex items-center justify-center"></div>' : ''}
                         </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-bold text-gray-900 mb-1 truncate" title="${service.nama_layanan}">${service.nama_layanan}</h3>
-                            <p class="text-xs text-gray-500 mb-2 h-8 line-clamp-2" title="${service.deskripsi}">${service.deskripsi}</p>
+                        <div class="p-3 sm:p-4 flex flex-col flex-grow">
+                            <h3 class="text-xs sm:text-sm font-bold text-gray-900 mb-1 line-clamp-2" title="${service.nama_layanan}">${service.nama_layanan}</h3>
+                            <p class="text-xs text-gray-600 mb-3 h-8 line-clamp-2 flex-grow" title="${service.deskripsi}">${service.deskripsi}</p>
                             <div class="flex items-baseline space-x-1 mb-2">
-                                <span class="text-base font-bold text-blue-600">Rp ${priceFormatted}</span>
+                                <span class="text-sm sm:text-base font-bold text-blue-600">Rp ${priceFormatted}</span>
                             </div>
-                            <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                                <span>⏱️ ${durationText}</span>
+                            <div class="flex items-center gap-1 text-xs text-gray-500 mb-3">
+                                <i class="fas fa-clock text-xs"></i>
+                                <span>${durationText}</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-1">
-                                <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${price})" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition" title="Tambah ke Keranjang">
-                                    <i class="fas fa-shopping-cart"></i>
+                            <div class="grid grid-cols-2 gap-2 mt-auto">
+                                <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${price})" class="py-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-1 min-h-[2.5rem]" title="Tambah ke Keranjang">
+                                    <i class="fas fa-shopping-cart text-xs"></i>
+                                    <span class="hidden sm:inline">Keranjang</span>
                                 </button>
-                                <a href="/make-booking?service=${service.kode_layanan}" class="block py-1.5 bg-blue-600 text-white text-center rounded text-xs font-semibold hover:bg-blue-700 transition">
-                                    Booking
+                                <a href="/make-booking?service=${service.kode_layanan}" class="py-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-1 min-h-[2.5rem]">
+                                    <i class="fas fa-calendar-alt text-xs"></i>
+                                    <span>Booking</span>
                                 </a>
                             </div>
                         </div>
