@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title><?= $title ?? 'SYH Cleaning' ?></title>
     
     <!-- Tailwind CSS CDN -->
@@ -367,6 +369,104 @@
         @supports (transition: background-color) {
             #mobile-menu a {
                 transition: background-color 0.3s ease, color 0.3s ease !important;
+            }
+        }
+
+        /* ============================================
+           PREVENT ZOOM ON MOBILE
+           ============================================ */
+        html {
+            -webkit-text-size-adjust: 100% !important;
+            text-size-adjust: 100% !important;
+        }
+
+        input, select, textarea, button {
+            font-size: 16px !important;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            font-size: 16px !important;
+        }
+
+        /* Touch targets minimum 44px */
+        button, a.btn, [role="button"], input[type="button"], input[type="submit"], 
+        input[type="reset"], .touch-target {
+            min-height: 44px !important;
+            min-width: 44px !important;
+            padding: calc((44px - 1.5rem) / 2) 1rem !important;
+        }
+
+        /* ============================================
+           RESPONSIVE MOBILE STYLES
+           ============================================ */
+        @media (max-width: 640px) {
+            /* Prevent double-tap zoom delay */
+            input, button, a, select {
+                touch-action: manipulation;
+            }
+
+            /* Better spacing for touch targets */
+            .nav-link, .btn-mobile {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Form inputs */
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            input[type="number"],
+            input[type="tel"],
+            input[type="date"],
+            select,
+            textarea {
+                font-size: 16px !important;
+                padding: 12px !important;
+                min-height: 44px !important;
+            }
+
+            /* Image responsiveness */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Prevent text selection on buttons */
+            button, [role="button"], .btn {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Disable double-tap zoom on links */
+            a, button {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            /* Responsive card layouts */
+            .card-grid, .product-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Modal responsive */
+            .modal-content {
+                width: 90vw !important;
+                max-width: 500px !important;
+            }
+
+            /* Table responsive */
+            table {
+                font-size: 14px;
+            }
+
+            table tbody td {
+                padding: 8px 12px !important;
             }
         }
     </style>

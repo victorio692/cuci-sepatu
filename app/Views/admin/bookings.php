@@ -155,6 +155,7 @@ function renderBookingsTable(bookings, pagination = {}) {
     };
     
     let tableHTML = `
+        <div class="overflow-x-auto table-responsive">
         <table class="w-full">
             <thead class="bg-gray-100 border-b-2 border-gray-200">
                 <tr>
@@ -194,10 +195,10 @@ function renderBookingsTable(bookings, pagination = {}) {
         
         tableHTML += `
             <tr class="hover:bg-blue-50 transition duration-200">
-                <td class="px-5 py-4 whitespace-nowrap">
+                <td class="px-5 py-4 whitespace-nowrap" data-label="ID">
                     <span class="font-semibold text-gray-800 text-sm">BK${bookingId}</span>
                 </td>
-                <td class="px-5 py-4">
+                <td class="px-5 py-4" data-label="Pelanggan">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                             ${customerInitial}
@@ -208,22 +209,22 @@ function renderBookingsTable(bookings, pagination = {}) {
                         </div>
                     </div>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap">
+                <td class="px-5 py-4 whitespace-nowrap" data-label="Kontak">
                     <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:text-green-700 hover:bg-green-50 px-2 py-1 rounded inline-flex items-center space-x-1 transition text-sm" title="Hubungi via WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                         <span>${booking.no_hp || '-'}</span>
                     </a>
                 </td>
-                <td class="px-5 py-4">
+                <td class="px-5 py-4" data-label="Layanan">
                     <span class="text-sm text-gray-700">${serviceName}</span>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap text-center">
+                <td class="px-5 py-4 whitespace-nowrap text-center" data-label="Jumlah">
                     <span class="text-sm text-gray-700 font-medium">${booking.quantity || booking.jumlah || 1}</span>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap text-right">
+                <td class="px-5 py-4 whitespace-nowrap text-right" data-label="Total">
                     <span class="font-semibold text-gray-900 text-sm">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
                 </td>
-                <td class="px-5 py-4">
+                <td class="px-5 py-4" data-label="Status">
                     <select 
                         class="px-2 py-1 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
                         data-booking-id="${booking.id}"
@@ -238,7 +239,7 @@ function renderBookingsTable(bookings, pagination = {}) {
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>
                 </td>
-                <td class="px-5 py-4 whitespace-nowrap text-center">
+                <td class="px-5 py-4 whitespace-nowrap text-center" data-label="Aksi">
                     <div class="flex items-center justify-center space-x-1">
                         <a href="/admin/bookings/${booking.id}" 
                            class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"
@@ -258,6 +259,7 @@ function renderBookingsTable(bookings, pagination = {}) {
     tableHTML += `
             </tbody>
         </table>
+        </div>
         
         <!-- Pagination & Info -->
         <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">

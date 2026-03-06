@@ -478,5 +478,17 @@ function showToast(message, type) {
 .animate-slide-in {
     animation: slide-in 0.3s ease;
 }
+
+/* Responsive Grid Layouts for Mobile */
+@media (max-width: 768px) {
+    .admin-container > div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .admin-container > div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+}
 </style>
 <?= $this->endSection() ?>

@@ -675,14 +675,14 @@ function confirmComplete() {
             closeCompleteModal();
             
             // Show success message
-            alert('✅ Pesanan berhasil ditandai selesai!\n\n📸 Foto hasil cucian telah diupload\n🔔 Customer telah menerima notifikasi\n📦 Sepatu siap diambil/diantar');
+            alert('Pesanan berhasil ditandai selesai!\n\nFoto hasil cucian telah diupload\nCustomer telah menerima notifikasi\nSepatu siap diambil/diantar');
             
             // Reload page to show updated status
             setTimeout(() => {
                 location.reload();
             }, 1000);
         } else {
-            alert('❌ Error: ' + (data.message || 'Gagal mengubah status'));
+            alert('Error: ' + (data.message || 'Gagal mengubah status'));
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
@@ -691,7 +691,7 @@ function confirmComplete() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('❌ Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
+        alert('Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
