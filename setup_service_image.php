@@ -4,7 +4,7 @@ require 'app/Config/Database.php';
 
 try {
     $config = new \Config\Database();
-    $db = \CodeIgniter\Database\Database::connect('default');
+    $db = \Config\Database::connect('default');
     
     // Check if icon_image column exists
     $fields = $db->getFieldData('services');
