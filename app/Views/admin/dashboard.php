@@ -104,6 +104,9 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+// Pagination state for dashboard
+let currentDashboardPage = 1;
+
 // Load data on page load
 document.addEventListener('DOMContentLoaded', function() {
     loadDashboardStatistics();
@@ -159,14 +162,20 @@ async function loadDashboardStatistics() {
     }
 }
 
-// Load recent bookings from API
-async function loadRecentBookings() {
-    console.log('🚀 Loading recent bookings...');
+// Load recent bookings from API with pagination
+async function loadRecentBookings(page = 1) {
+    console.log('🚀 Loading recent bookings...', { page });
+    currentDashboardPage = page;
     
     const container = document.getElementById('bookingsTableContainer');
     
     try {
-        const response = await fetch('/api/admin/dashboard/recent-bookings', {
+        let url = '/api/admin/dashboard/recent-bookings';
+        if (page > 1) {
+            url += '?page=' + page;
+        }
+        
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -181,13 +190,15 @@ async function loadRecentBookings() {
         const result = await response.json();
         console.log('✅ Recent bookings loaded:', result);
 
-        // Extract bookings from API response - API returns data.booking
+        // Extract bookings and pagination from API response
         const bookings = result.data?.booking || result.bookings || [];
+        const pagination = result.data?.pagination || {};
 
         console.log('📋 Bookings to render:', bookings);
+        console.log('📄 Pagination:', pagination);
 
         if (bookings.length > 0) {
-            renderBookingsTable(bookings);
+            renderBookingsTable(bookings, pagination);
         } else {
             renderEmptyBookings();
         }
@@ -207,7 +218,7 @@ async function loadRecentBookings() {
 }
 
 // Render bookings table
-function renderBookingsTable(bookings) {
+function renderBookingsTable(bookings, pagination = {}) {
     const container = document.getElementById('bookingsTableContainer');
     
     const statusClasses = {
@@ -314,14 +325,14 @@ function renderBookingsTable(bookings) {
                     </select>
                 </td>
                 <td class="px-4 py-3 text-center text-sm">
-                    <div class="flex items-center justify-center space-x-1">
+                    <div class="flex items-center justify-center space-x-0.5">
                         <a href="/admin/bookings/${booking.id}" 
-                           class="p-1 text-blue-600 hover:bg-blue-100 rounded transition text-xs"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs"
                            title="Lihat Detail">
                             <i class="fas fa-eye"></i>
                         </a>
                         <button onclick="deleteBooking(${booking.id})" 
-                                class="p-1 text-red-600 hover:bg-red-100 rounded transition text-xs"
+                                class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs"
                                 title="Hapus">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -368,14 +379,14 @@ function renderBookingsTable(bookings) {
                         <i class="fab fa-whatsapp"></i>
                         <span>${booking.no_hp || '-'}</span>
                     </a>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-0.5">
                         <a href="/admin/bookings/${booking.id}" 
-                           class="p-2 text-blue-600 hover:bg-blue-100 rounded transition text-sm"
+                           class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs"
                            title="Lihat Detail">
                             <i class="fas fa-eye"></i>
                         </a>
                         <button onclick="deleteBooking(${booking.id})" 
-                                class="p-2 text-red-600 hover:bg-red-100 rounded transition text-sm"
+                                class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs"
                                 title="Hapus">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -395,7 +406,81 @@ function renderBookingsTable(bookings) {
         </div>
     `;
     
-    container.innerHTML = tableHTML + cardHTML;
+    // Add pagination if available
+    let paginationHTML = '';
+    if (pagination.total) {
+        paginationHTML = `
+            <div class="px-4 md:px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
+                    <div class="text-xs md:text-sm text-gray-600">
+                        Total: <span class="font-semibold">${pagination.total || 0} pesanan</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.last_page || 1}</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-1 md:gap-2 flex-wrap">
+                        ${pagination.current_page > 1 ? `<button onclick="loadRecentBookings(${pagination.current_page - 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-left"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-left"></i></button>`}
+                        ${generateDashboardPageNumbers(pagination.current_page || 1, pagination.last_page || 1)}
+                        ${pagination.current_page < pagination.last_page ? `<button onclick="loadRecentBookings(${pagination.current_page + 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-right"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-right"></i></button>`}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = tableHTML + cardHTML + paginationHTML;
+}
+
+// Generate page numbers for dashboard pagination
+function generateDashboardPageNumbers(currentPage, totalPages) {
+    let html = '';
+    
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    
+    // Show first page if not visible
+    if (startPage > 1) {
+        html += `
+            <button onclick="loadRecentBookings(1)" 
+                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                1
+            </button>
+        `;
+        if (startPage > 2) {
+            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+        }
+    }
+    
+    // Show page numbers
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            html += `
+                <button class="px-2 md:px-3 py-1 md:py-2 text-xs bg-blue-600 text-white rounded-lg font-medium">
+                    ${i}
+                </button>
+            `;
+        } else {
+            html += `
+                <button onclick="loadRecentBookings(${i})" 
+                        class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                    ${i}
+                </button>
+            `;
+        }
+    }
+    
+    // Show last page if not visible
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+        }
+        html += `
+            <button onclick="loadRecentBookings(${totalPages})" 
+                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                ${totalPages}
+            </button>
+        `;
+    }
+    
+    return html;
 }
 
 // Render empty bookings state

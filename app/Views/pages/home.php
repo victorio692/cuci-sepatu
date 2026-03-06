@@ -1254,11 +1254,10 @@ async function loadServices() {
                             <div class="grid grid-cols-2 gap-2 mt-auto">
                                 <button onclick="addToCartQuick('${service.kode_layanan}', '${service.nama_layanan}', ${price})" class="py-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-1 min-h-[2.5rem]" title="Tambah ke Keranjang">
                                     <i class="fas fa-shopping-cart text-xs"></i>
-                                    <span class="hidden sm:inline">Keranjang</span>
+                                    <span class="hidden sm:inline"></span>
                                 </button>
                                 <a href="/make-booking?service=${service.kode_layanan}" class="py-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-1 min-h-[2.5rem]">
-                                    <i class="fas fa-calendar-alt text-xs"></i>
-                                    <span>Booking</span>
+                                    <span>Pesan</span>
                                 </a>
                             </div>
                         </div>
@@ -1289,7 +1288,7 @@ async function loadServices() {
                 moreServicesExpandedGrid.classList.add('hidden');
             }
             
-            console.log('✨ Services rendered successfully!');
+            console.log(' Services rendered successfully!');
         } else {
             servicesGrid.innerHTML = `
                 <div class="col-span-full text-center py-12">
@@ -1301,7 +1300,7 @@ async function loadServices() {
             moreServicesExpandedGrid.classList.add('hidden');
         }
     } catch (error) {
-        console.error('❌ Error loading services:', error);
+        console.error(' Error loading services:', error);
         servicesGrid.innerHTML = `
             <div class="col-span-full text-center py-12">
                 <i class="fas fa-exclamation-triangle text-red-400 text-4xl mb-3"></i>
