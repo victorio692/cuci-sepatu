@@ -132,7 +132,7 @@
             }
             
             #sidebar nav {
-                overflow-y-auto;
+                overflow-y-auto;    
                 max-height: calc(100vh - 12rem);
                 padding-bottom: 2rem;
             }
@@ -660,7 +660,7 @@
             }
             
             try {
-                console.log('🚀 Admin logging out via API...');
+                console.log('🚀 Admin Sedang keluar via API...');
                 const response = await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {

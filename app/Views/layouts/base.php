@@ -1235,7 +1235,7 @@
             }
             
             try {
-                console.log('🚀 Logging out via API...');
+                console.log('🚀 Admin sedang keluar via API...');
                 const response = await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {
