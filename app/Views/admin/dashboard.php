@@ -191,8 +191,19 @@ async function loadRecentBookings(page = 1) {
         console.log('✅ Recent bookings loaded:', result);
 
         // Extract bookings and pagination from API response
-        const bookings = result.data?.booking || result.bookings || [];
-        const pagination = result.data?.pagination || {};
+            const bookings = result.data?.booking || result.bookings || [];
+            const halaman = result.data?.halaman || {};
+
+        //Convert API structure to pagination format
+        const pagination ={
+            current_page: halaman.current || 1,
+            last_page: halaman.total_halaman || 1,
+            total: halaman.total_data || 0,
+            per_page: halaman.per_halaman || 10,
+            from: ((halaman.current ||1)-1)*(halaman.per_halaman || 10) + 1,
+            to: Math.min((halaman.current ||1)*(halaman.per_halaman || 10), halaman.total_data || 0)
+        };
+
 
         console.log('📋 Bookings to render:', bookings);
         console.log('📄 Pagination:', pagination);
@@ -405,79 +416,66 @@ function renderBookingsTable(bookings, pagination = {}) {
     cardHTML += `
         </div>
     `;
-    
-    // Add pagination if available
-    let paginationHTML = '';
-    if (pagination.total) {
-        paginationHTML = `
-            <div class="px-4 md:px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
-                    <div class="text-xs md:text-sm text-gray-600">
-                        Total: <span class="font-semibold">${pagination.total || 0} pesanan</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.last_page || 1}</span>
-                    </div>
-                    
-                    <div class="flex items-center gap-1 md:gap-2 flex-wrap">
-                        ${pagination.current_page > 1 ? `<button onclick="loadRecentBookings(${pagination.current_page - 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-left"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-left"></i></button>`}
-                        ${generateDashboardPageNumbers(pagination.current_page || 1, pagination.last_page || 1)}
-                        ${pagination.current_page < pagination.last_page ? `<button onclick="loadRecentBookings(${pagination.current_page + 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-right"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-right"></i></button>`}
-                    </div>
+
+    container.innerHTML = tableHTML + cardHTML;
+
+    // Render pagination separately in pagination container
+    const paginationContainer = document.getElementById('paginationContainer');
+    if (pagination && pagination.total > 0) {
+        paginationContainer.classList.remove('hidden');
+        paginationContainer.innerHTML = `
+             <div class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
+                <div class="text-xs md:text-sm text-gray-600">
+                    Total: <span class="font-semibold">${pagination.total || 0} pesanan</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.last_page || 1}</span>
+                </div>
+                
+                <div class="flex items-center gap-1 md:gap-2 flex-wrap">
+                    ${pagination.current_page > 1 ? `<button onclick="loadRecentBookings(${pagination.current_page - 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-left"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-left"></i></button>`}
+                    ${generateDashboardPageNumbers(pagination.current_page || 1, pagination.last_page || 1)}
+                    ${pagination.current_page < pagination.last_page ? `<button onclick="loadRecentBookings(${pagination.current_page + 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-right"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-right"></i></button>`}
                 </div>
             </div>
         `;
+        } else {
+            paginationContainer.classList.add('hidden');
     }
-    
-    container.innerHTML = tableHTML + cardHTML + paginationHTML;
 }
 
 // Generate page numbers for dashboard pagination
 function generateDashboardPageNumbers(currentPage, totalPages) {
     let html = '';
+    const maxVisible = 5;
     
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
     
-    // Show first page if not visible
+    if (endPage - startPage + 1 < maxVisible) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    
+    // Tombol halaman pertama
     if (startPage > 1) {
-        html += `
-            <button onclick="loadRecentBookings(1)" 
-                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                1
-            </button>
-        `;
+        html += `<button onclick="loadRecentBookings(1)" class="px-3 py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">1</button>`;
         if (startPage > 2) {
-            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+            html += `<span class="px-2 py-2 text-xs text-gray-400">...</span>`;
         }
     }
     
-    // Show page numbers
+    // Tombol nomor halaman
     for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
-            html += `
-                <button class="px-2 md:px-3 py-1 md:py-2 text-xs bg-blue-600 text-white rounded-lg font-medium">
-                    ${i}
-                </button>
-            `;
+            html += `<button class="px-3 py-2 text-xs bg-blue-600 text-white rounded-lg font-medium shadow-sm">${i}</button>`;
         } else {
-            html += `
-                <button onclick="loadRecentBookings(${i})" 
-                        class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                    ${i}
-                </button>
-            `;
+            html += `<button onclick="loadRecentBookings(${i})" class="px-3 py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">${i}</button>`;
         }
     }
     
-    // Show last page if not visible
+    // Tombol halaman terakhir
     if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
-            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+            html += `<span class="px-2 py-2 text-xs text-gray-400">...</span>`;
         }
-        html += `
-            <button onclick="loadRecentBookings(${totalPages})" 
-                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                ${totalPages}
-            </button>
-        `;
+        html += `<button onclick="loadRecentBookings(${totalPages})" class="px-3 py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">${totalPages}</button>`;
     }
     
     return html;
