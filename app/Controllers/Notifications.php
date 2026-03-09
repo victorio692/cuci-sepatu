@@ -79,6 +79,7 @@ class Notifications extends Controller
             ->update(['dibaca' => 1]);
 
         return $this->response->setJSON(['success' => true]);
+        
     }
 
     public function markAllAsRead()

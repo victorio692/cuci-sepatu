@@ -1011,7 +1011,7 @@
                             const isUnread = notif.dibaca == 0 ? 'font-semibold' : '';
                             
                             html += `
-                                <div class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition ${bgColor} ${isUnread}" onclick="markAsRead(${notif.id})">
+                                <div class="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition ${bgColor} ${isUnread}" onclick="markAsRead(${notif.id}, ${notif.booking_id ?? 'null'})">
                                     <div class="flex items-start gap-3">
                                         <div class="flex-1">
                                             <p class="text-sm font-semibold text-gray-900">${notif.judul}</p>
@@ -1053,7 +1053,7 @@
         }
         
         // Mark notification as read
-        function markAsRead(notifId) {
+        function markAsRead(notifId, bookingId = null) {
             fetch(`/api/notifications/${notifId}/read`, {
                 method: 'PUT',
                 credentials: 'include',
@@ -1065,6 +1065,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    if (bookingId && Number(bookingId) > 0) {
+                        window.location.href = `/booking-detail/${bookingId}`;
+                        return;
+                    }
                     loadNotifications();
                 }
             });
