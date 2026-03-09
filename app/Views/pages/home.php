@@ -84,7 +84,7 @@
                                     <div class="ongkir-text">ONGKIR</div>
                                     <!-- CTA Button inside red box -->
                                     <div class="banner-cta banner-cta-ongkir">
-                                        <a href="#services" class="cta-button cta-button-red">Booking Sekarang</a>
+                                        <a href="#services" class="cta-button cta-button-red">Pesan Sekarang</a>
                                     </div>
                                 </div>
                                 
@@ -890,6 +890,7 @@ function showSlide(n) {
 }
 </script>
 
+
 <!-- Services Section - Shopee Style -->
 <section class="py-6 bg-white" id="services">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1009,6 +1010,55 @@ function showSlide(n) {
             </div>
         </div>
 
+
+        <!-- Keunggulan Kami Section -->
+<section class="py-8 bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Keunggulan Kami</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
+                <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-semibold text-sm text-gray-900">Profesional</div>
+                    <div class="text-xs text-gray-600">Berpengalaman</div>
+                </div>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
+                <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <i class="fas fa-truck text-blue-600 text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-semibold text-sm text-gray-900">Gratis Antar</div>
+                    <div class="text-xs text-gray-600">Radius 5km</div>
+                </div>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
+                <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <i class="fas fa-tags text-yellow-600 text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-semibold text-sm text-gray-900">Harga Murah</div>
+                    <div class="text-xs text-gray-600">Terjangkau</div>
+                </div>
+            </div>
+            
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
+                <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                    <i class="fas fa-clock text-purple-600 text-2xl"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-semibold text-sm text-gray-900">Cepat</div>
+                    <div class="text-xs text-gray-600">1-3 hari</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
         <!-- Service Area Info -->
         <div class="mt-4 md:mt-6 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl shadow-lg p-4 md:p-6 text-white">
             <div class="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
@@ -1029,52 +1079,7 @@ function showSlide(n) {
     </div>
 </section>
 
-<!-- Features Banner - Compact -->
-<section class="py-4 bg-white border-t border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-check-circle text-green-600"></i>
-                </div>
-                <div>
-                    <div class="font-semibold text-xs text-gray-900">Profesional</div>
-                    <div class="text-xs text-gray-500">Berpengalaman</div>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-truck text-blue-600"></i>
-                </div>
-                <div>
-                    <div class="font-semibold text-xs text-gray-900">Gratis Antar</div>
-                    <div class="text-xs text-gray-500">Radius 5km</div>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-tags text-yellow-600"></i>
-                </div>
-                <div>
-                    <div class="font-semibold text-xs text-gray-900">Harga Murah</div>
-                    <div class="text-xs text-gray-500">Terjangkau</div>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-clock text-purple-600"></i>
-                </div>
-                <div>
-                    <div class="font-semibold text-xs text-gray-900">Cepat</div>
-                    <div class="text-xs text-gray-500">1-3 hari</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <script>
 // Quick add to cart function

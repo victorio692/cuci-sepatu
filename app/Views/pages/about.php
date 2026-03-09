@@ -42,34 +42,6 @@
                 </div>
             </div>
 
-            <!-- Why Choose Us Section -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-xl p-8 md:p-10 text-white hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
-                <h2 class="text-3xl font-bold mb-6 text-white text-center">Kenapa Memilih SYH Cleaning?</h2>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="text-center group cursor-pointer">
-                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
-                            <i class="fas fa-star text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold mb-2">Profesional</h4>
-                        <p class="text-white text-sm">Tim berpengalaman & terlatih</p>
-                    </div>
-                    <div class="text-center group cursor-pointer">
-                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
-                            <i class="fas fa-truck text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold mb-2">Gratis Antar-Jemput</h4>
-                        <p class="text-white text-sm">Radius 5 km dari toko</p>
-                    </div>
-                    <div class="text-center group cursor-pointer">
-                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
-                            <i class="fas fa-tags text-2xl"></i>
-                        </div>
-                        <h4 class="text-white font-bold mb-2">Harga Terjangkau</h4>
-                        <p class="text-white text-sm">Mulai dari Rp 20.000</p>
-                    </div>
-                </div>
-            </div>
-
             <!-- CTA Section -->
             <div class="text-center mt-12">
                 <a href="/#services" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">

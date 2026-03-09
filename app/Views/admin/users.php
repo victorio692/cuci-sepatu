@@ -5,12 +5,12 @@
 <!-- Page Header -->
 <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Pengguna</h1>
-        <p class="text-sm md:text-base text-gray-600">Kelola pengguna dan akses mereka</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Pelanggan</h1>
+        <p class="text-sm md:text-base text-gray-600">Kelola pelanggan dan akses mereka</p>
     </div>
     <a href="/admin/users/create" class="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm md:text-base rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center md:justify-start space-x-2">
         <i class="fas fa-plus"></i>
-        <span>Tambah User</span>
+        <span>Tambah Pelanggan</span>
     </a>
 </div>
 
@@ -18,7 +18,7 @@
 <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pengguna</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Cari Pelanggan</label>
             <div class="relative">
                 <input 
                     type="text" 
@@ -157,7 +157,7 @@ function renderUsersTable(users, total, pagination = {}) {
                             </td>
                             <td class="px-3 py-3">
                                 <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-xs mr-2">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-xs mr-2">
                                         ${name.charAt(0).toUpperCase()}
                                     </div>
                                     <span class="font-medium text-sm text-gray-800">${name}</span>
@@ -215,18 +215,29 @@ function renderUsersTable(users, total, pagination = {}) {
     
     // Add pagination if available
     let paginationHTML = '';
-    if (pagination.total) {
+    // Check if pagination exists and there are multiple pages
+    const hasPagination = pagination && (pagination.last_page > 1 || pagination.total > users.length);
+    
+    if (hasPagination) {
+        const currentPage = pagination.current_page || 1;
+        const lastPage = pagination.last_page || Math.ceil((pagination.total || 0) / 10);
+        const totalItems = pagination.total || 0;
+        
         paginationHTML = `
-            <div class="px-4 md:px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
-                    <div class="text-xs md:text-sm text-gray-600">
-                        Total: <span class="font-semibold">${pagination.total || 0} pengguna</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.last_page || 1}</span>
+            <div class="px-4 md:px-6 py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-gray-700 font-semibold">
+                        <i class="fas fa-list mr-2 text-blue-600"></i>
+                        Total: <span class="text-gray-900 font-bold text-lg">${totalItems}</span> pengguna | 
+                        Halaman <span class="text-blue-600 font-bold">${currentPage}</span> dari <span class="text-blue-600 font-bold">${lastPage}</span>
                     </div>
                     
-                    <div class="flex items-center gap-1 md:gap-2 flex-wrap">
-                        ${pagination.current_page > 1 ? `<button onclick="loadUsers('${currentUserSearch}', ${pagination.current_page - 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-left"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-left"></i></button>`}
-                        ${generateUserPageNumbers(pagination.current_page || 1, pagination.last_page || 1)}
-                        ${pagination.current_page < pagination.last_page ? `<button onclick="loadUsers('${currentUserSearch}', ${pagination.current_page + 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-right"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-right"></i></button>`}
+                    <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
+                        ${currentPage > 1 ? `<button onclick="paginateUsers(${currentPage - 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm"><i class="fas fa-chevron-left mr-1"></i>Sebelumnya</button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold"><i class="fas fa-chevron-left mr-1"></i>Sebelumnya</button>`}
+                        <div class="flex gap-1">
+                            ${generateUserPageNumbers(currentPage, lastPage)}
+                        </div>
+                        ${currentPage < lastPage ? `<button onclick="paginateUsers(${currentPage + 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm">Berikutnya<i class="fas fa-chevron-right ml-1"></i></button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold">Berikutnya<i class="fas fa-chevron-right ml-1"></i></button>`}
                     </div>
                 </div>
             </div>
@@ -234,6 +245,11 @@ function renderUsersTable(users, total, pagination = {}) {
     }
     
     container.innerHTML = tableHTML + paginationHTML;
+}
+
+// Helper function for pagination navigation
+function paginateUsers(page) {
+    loadUsers(currentUserSearch, page);
 }
 
 // Generate page numbers for user pagination
@@ -245,46 +261,27 @@ function generateUserPageNumbers(currentPage, totalPages) {
     
     // Show first page if not visible
     if (startPage > 1) {
-        html += `
-            <button onclick="loadUsers('${currentUserSearch}', 1)" 
-                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                1
-            </button>
-        `;
+        html += `<button onclick="paginateUsers(1)" class="px-3 py-2 text-sm bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">1</button>`;
         if (startPage > 2) {
-            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+            html += `<span class="px-2 py-2 text-gray-400 font-bold">...</span>`;
         }
     }
     
     // Show page numbers
     for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
-            html += `
-                <button class="px-2 md:px-3 py-1 md:py-2 text-xs bg-blue-600 text-white rounded-lg font-medium">
-                    ${i}
-                </button>
-            `;
+            html += `<button class="px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-bold shadow-md">${i}</button>`;
         } else {
-            html += `
-                <button onclick="loadUsers('${currentUserSearch}', ${i})" 
-                        class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                    ${i}
-                </button>
-            `;
+            html += `<button onclick="paginateUsers(${i})" class="px-3 py-2 text-sm bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">${i}</button>`;
         }
     }
     
     // Show last page if not visible
     if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
-            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+            html += `<span class="px-2 py-2 text-gray-400 font-bold">...</span>`;
         }
-        html += `
-            <button onclick="loadUsers('${currentUserSearch}', ${totalPages})" 
-                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
-                ${totalPages}
-            </button>
-        `;
+        html += `<button onclick="paginateUsers(${totalPages})" class="px-3 py-2 text-sm bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-semibold">${totalPages}</button>`;
     }
     
     return html;
