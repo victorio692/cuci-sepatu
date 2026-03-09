@@ -47,11 +47,11 @@
 </div>
 
 <!-- Kartu Statistik -->
-<div id="statsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
-    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
-    <div class="bg-gray-100 rounded-xl shadow-lg p-4 md:p-6 animate-pulse"></div>
+<div id="statsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 mb-6 md:mb-8">
+    <div class="bg-gray-100 rounded-xl shadow-lg p-3 md:p-4 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-3 md:p-4 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-3 md:p-4 animate-pulse"></div>
+    <div class="bg-gray-100 rounded-xl shadow-lg p-3 md:p-4 animate-pulse"></div>
 </div>
 
 <!-- Statistik Layanan -->
@@ -162,15 +162,15 @@ function renderStats(ringkasan) {
     ];
     
     const html = stats.map(stat => `
-        <div class="bg-gradient-to-br ${stat.color} rounded-lg md:rounded-xl shadow-md md:shadow-lg p-3 md:p-4 lg:p-6 text-white transform hover:scale-105 transition">
-            <div class="flex flex-row items-center justify-between gap-3 md:gap-4">
+        <div class="bg-gradient-to-br ${stat.color} rounded-lg md:rounded-xl shadow-md p-3 md:p-4 text-white transition">
+            <div class="flex flex-row items-center justify-between gap-2">
                 <div class="flex-1 min-w-0">
-                    <p class="opacity-90 text-xs md:text-sm font-medium line-clamp-2">${stat.title}</p>
-                    <h3 class="text-lg md:text-2xl lg:text-3xl font-bold mt-1 truncate">${stat.isAmount ? stat.value : stat.value}</h3>
+                    <p class="opacity-90 text-xs font-semibold uppercase tracking-tight line-clamp-2">${stat.title}</p>
+                    <h3 class="text-lg md:text-2xl font-bold mt-1 truncate">${stat.isAmount ? stat.value : stat.value}</h3>
                     <p class="opacity-75 text-xs mt-1 truncate">${stat.subtitle}</p>
                 </div>
-                <div class="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fas ${stat.icon} text-sm md:text-lg lg:text-2xl"></i>
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas ${stat.icon} text-lg md:text-xl"></i>
                 </div>
             </div>
         </div>

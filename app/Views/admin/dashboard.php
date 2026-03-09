@@ -9,59 +9,59 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 mb-8">
     <!-- Total Booking Card -->
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between gap-3">
+    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-3 md:p-4 text-white hover:shadow-lg transition duration-300">
+        <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
-                <p class="text-blue-100 text-xs font-semibold uppercase tracking-wide">Total Pesanan</p>
-                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="total_bookings">0</h3>
-                <p class="text-blue-100 text-xs mt-2">Total semua pesanan</p>
+                <p class="text-blue-100 text-xs font-semibold uppercase tracking-tight">Total Pesanan</p>
+                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="total_bookings">0</h3>
+                <p class="text-blue-100 text-xs mt-1 truncate">Total semua pesanan</p>
             </div>
-            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-shopping-bag text-lg md:text-2xl"></i>
+            <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-shopping-bag text-lg md:text-xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Dalam Proses Card -->
-    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between gap-3">
+    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg shadow-md p-3 md:p-4 text-white hover:shadow-lg transition duration-300">
+        <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
-                <p class="text-cyan-100 text-xs font-semibold uppercase tracking-wide">Dalam Proses</p>
-                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="proses_bookings">0</h3>
-                <p class="text-cyan-100 text-xs mt-2">Sedang dikerjakan</p>
+                <p class="text-cyan-100 text-xs font-semibold uppercase tracking-tight">Dalam Proses</p>
+                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="proses_bookings">0</h3>
+                <p class="text-cyan-100 text-xs mt-1 truncate">Sedang dikerjakan</p>
             </div>
-            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-cog text-lg md:text-2xl"></i>
+            <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-cog text-lg md:text-xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Selesai Card -->
-    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between gap-3">
+    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg shadow-md p-3 md:p-4 text-white hover:shadow-lg transition duration-300">
+        <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
-                <p class="text-emerald-100 text-xs font-semibold uppercase tracking-wide">Selesai</p>
-                <h3 class="text-3xl md:text-4xl font-bold mt-2" data-stat="completed_bookings">0</h3>
-                <p class="text-emerald-100 text-xs mt-2">Siap diambil</p>
+                <p class="text-emerald-100 text-xs font-semibold uppercase tracking-tight">Selesai</p>
+                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="completed_bookings">0</h3>
+                <p class="text-emerald-100 text-xs mt-1 truncate">Siap diambil</p>
             </div>
-            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-check-circle text-lg md:text-2xl"></i>
+            <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check-circle text-lg md:text-xl"></i>
             </div>
         </div>
     </div>
 
     <!-- Total Pendapatan Card -->
-    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow-md p-3 md:p-5 text-white hover:shadow-lg hover:scale-102 transition duration-300">
-        <div class="flex items-center justify-between gap-3">
+    <div class="bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg shadow-md p-3 md:p-4 text-white hover:shadow-lg transition duration-300">
+        <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
-                <p class="text-violet-100 text-xs font-semibold uppercase tracking-wide">Total Pendapatan</p>
-                <h3 class="text-2xl md:text-3xl font-bold mt-2" data-stat="total_revenue">Rp 0</h3>
-                <p class="text-violet-100 text-xs mt-2">Dari pesanan selesai</p>
+                <p class="text-violet-100 text-xs font-semibold uppercase tracking-tight">Total Pendapatan</p>
+                <h3 class="text-xl md:text-2xl font-bold mt-1 truncate" data-stat="total_revenue">Rp 0</h3>
+                <p class="text-violet-100 text-xs mt-1 truncate">Dari pesanan selesai</p>
             </div>
-            <div class="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-money-bill-wave text-lg md:text-2xl"></i>
+            <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-money-bill-wave text-lg md:text-xl"></i>
             </div>
         </div>
     </div>
