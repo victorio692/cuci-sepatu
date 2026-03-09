@@ -136,7 +136,7 @@
 
     <!-- Header -->
     <div class="header">
-        <h1>LAPORAN BOOKING</h1>
+        <h1>LAPORAN PESANAN</h1>
         <p>SYH Cleaning - Jasa Cuci Sepatu Profesional</p>
     </div>
 
@@ -150,15 +150,15 @@
         <h3>Ringkasan Statistik</h3>
         <div class="summary-grid">
             <div class="summary-item">
-                <label>Total Booking</label>
+                <label>Total Pesanan</label>
                 <strong><?= count($bookings) ?></strong>
             </div>
             <div class="summary-item">
-                <label>Booking Selesai</label>
+                <label>Pesanan Selesai</label>
                 <strong><?= count(array_filter($bookings, fn($b) => $b['status'] === 'selesai')) ?></strong>
             </div>
             <div class="summary-item">
-                <label>Booking Pending</label>
+                <label>Pesanan Pending</label>
                 <strong><?= count(array_filter($bookings, fn($b) => $b['status'] === 'pending')) ?></strong>
             </div>
             <div class="summary-item">
@@ -172,7 +172,7 @@
     <table>
         <thead>
             <tr>
-                <th>ID Booking</th>
+                <th>ID Pesanan</th>
                 <th>Pelanggan</th>
                 <th>Layanan</th>
                 <th>Tanggal</th>
@@ -184,7 +184,7 @@
             <?php if (empty($bookings)): ?>
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">
-                        Tidak ada data booking untuk periode ini
+                        Tidak ada data pesanan untuk periode ini
                     </td>
                 </tr>
             <?php else: ?>
