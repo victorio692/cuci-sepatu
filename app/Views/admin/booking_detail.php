@@ -97,6 +97,7 @@
                         <label class="font-semibold text-gray-700 text-sm md:text-base">Nama:</label>
                         <span class="text-gray-600 text-sm md:text-base"><?= $booking['full_name'] ?></span>
                     </div>
+                    <div class="flex flex-col md:flex-row justify-between py-2">
                         <label class="font-semibold text-gray-700 text-sm md:text-base">Email:</label>
                         <span class="text-gray-600 text-sm md:text-base"><?= $booking['email'] ?></span>
                     </div>

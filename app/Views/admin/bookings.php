@@ -289,9 +289,9 @@ function renderBookingsTable(bookings, pagination = {}) {
                     </select>
                 </td>
                 <td class="px-4 py-3 whitespace-nowrap text-center">
-                    <div class="flex items-center justify-center space-x-1">
-                        <a href="/admin/bookings/${booking.id}" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition"><i class="fas fa-eye text-sm"></i></a>
-                        <button onclick="deleteBooking(${booking.id})" class="p-1.5 text-red-600 hover:bg-red-100 rounded transition"><i class="fas fa-trash text-sm"></i></button>
+                    <div class="flex items-center space-x-0.5">
+                        <a href="/admin/bookings/${booking.id}" class="inline-flex items-center justify-center w-8 h-8 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition text-xs"><i class="fas fa-eye"></i></a>
+                        <button onclick="deleteBooking(${booking.id})" class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs"><i class="fas fa-trash"></i></button>
                     </div>
                 </td>
             </tr>

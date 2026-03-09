@@ -418,9 +418,9 @@ async function markAllAsReadCustomer(event) {
 // Logout confirmation and API call
 async function confirmLogout(e) {
     e.preventDefault();
-    if (confirm('Apakah Anda yakin ingin logout?')) {
+    if (confirm('Apakah Anda yakin ingin keluar?')) {
         try {
-            console.log('🚀 Logging out via API...');
+            console.log('🚀 Sedang Keluar... via API...');
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
                 headers: {

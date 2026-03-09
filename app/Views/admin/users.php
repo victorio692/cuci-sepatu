@@ -31,7 +31,7 @@
         </div>
 
         <div class="flex items-end">
-            <button type="button" onclick="loadUsers()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
+            <button type="button" onclick="applyUserSearch()" class="w-full px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-2">
                 <i class="fas fa-search"></i>
                 <span>Cari</span>
             </button>
@@ -51,15 +51,27 @@
 
 <?= $this->section('extra_js') ?>
 <script>
+// Pagination state for users page
+let currentUserPage = 1;
+let currentUserSearch = '';
+
 // Load users from API
-async function loadUsers() {
+async function loadUsers(search = '', page = 1) {
     const container = document.getElementById('usersContainer');
-    const searchInput = document.getElementById('searchInput');
-    const search = searchInput?.value || '';
+    currentUserPage = page;
+    currentUserSearch = search;
     
     try {
-        console.log('🚀 Loading users from API...', { search });
-        const url = search ? `/api/users?search=${encodeURIComponent(search)}` : '/api/users';
+        console.log('🚀 Loading users from API...', { search, page });
+        let url = '/api/users';
+        const params = new URLSearchParams();
+        
+        if (search) params.append('search', encodeURIComponent(search));
+        if (page > 1) params.append('page', page);
+        
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
         
         const response = await fetch(url, {
             method: 'GET',
@@ -78,13 +90,14 @@ async function loadUsers() {
 
         // Handle API response structure
         const users = result.data?.users || result.data || [];
-        const total = result.data?.pagination?.total || 0;
+        const pagination = result.data?.pagination || {};
+        const total = pagination.total || users.length;
         
         console.log('📊 Extracted users:', users);
-        console.log('📊 Total:', total);
+        console.log('📊 Pagination:', pagination);
 
         if (users && users.length > 0) {
-            renderUsersTable(users, total);
+            renderUsersTable(users, total, pagination);
         } else {
             renderEmptyState();
         }
@@ -104,8 +117,15 @@ async function loadUsers() {
     }
 }
 
+// Apply search filter for users
+function applyUserSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const search = searchInput?.value || '';
+    loadUsers(search, 1);  // Reset to page 1 when searching
+}
+
 // Render users table
-function renderUsersTable(users, total) {
+function renderUsersTable(users, total, pagination = {}) {
     const container = document.getElementById('usersContainer');
     
     const tableHTML = `
@@ -193,7 +213,81 @@ function renderUsersTable(users, total) {
         </div>
     `;
     
-    container.innerHTML = tableHTML;
+    // Add pagination if available
+    let paginationHTML = '';
+    if (pagination.total) {
+        paginationHTML = `
+            <div class="px-4 md:px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
+                    <div class="text-xs md:text-sm text-gray-600">
+                        Total: <span class="font-semibold">${pagination.total || 0} pengguna</span> | Halaman <span class="font-semibold">${pagination.current_page || 1}</span> dari <span class="font-semibold">${pagination.last_page || 1}</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-1 md:gap-2 flex-wrap">
+                        ${pagination.current_page > 1 ? `<button onclick="loadUsers('${currentUserSearch}', ${pagination.current_page - 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-left"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-left"></i></button>`}
+                        ${generateUserPageNumbers(pagination.current_page || 1, pagination.last_page || 1)}
+                        ${pagination.current_page < pagination.last_page ? `<button onclick="loadUsers('${currentUserSearch}', ${pagination.current_page + 1})" class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition font-medium"><i class="fas fa-chevron-right"></i></button>` : `<button disabled class="px-2 md:px-3 py-1 md:py-2 text-xs bg-gray-100 border border-gray-200 text-gray-400 rounded cursor-not-allowed font-medium"><i class="fas fa-chevron-right"></i></button>`}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    container.innerHTML = tableHTML + paginationHTML;
+}
+
+// Generate page numbers for user pagination
+function generateUserPageNumbers(currentPage, totalPages) {
+    let html = '';
+    
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    
+    // Show first page if not visible
+    if (startPage > 1) {
+        html += `
+            <button onclick="loadUsers('${currentUserSearch}', 1)" 
+                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                1
+            </button>
+        `;
+        if (startPage > 2) {
+            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+        }
+    }
+    
+    // Show page numbers
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            html += `
+                <button class="px-2 md:px-3 py-1 md:py-2 text-xs bg-blue-600 text-white rounded-lg font-medium">
+                    ${i}
+                </button>
+            `;
+        } else {
+            html += `
+                <button onclick="loadUsers('${currentUserSearch}', ${i})" 
+                        class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                    ${i}
+                </button>
+            `;
+        }
+    }
+    
+    // Show last page if not visible
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            html += `<span class="px-1 md:px-2 py-1 md:py-2 text-xs text-gray-400">...</span>`;
+        }
+        html += `
+            <button onclick="loadUsers('${currentUserSearch}', ${totalPages})" 
+                    class="px-2 md:px-3 py-1 md:py-2 text-xs bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium">
+                ${totalPages}
+            </button>
+        `;
+    }
+    
+    return html;
 }
 
 // Render empty state
@@ -267,12 +361,12 @@ function showToast(message, type) {
 }
 
 // Load users on page load
-document.addEventListener('DOMContentLoaded', loadUsers);
+document.addEventListener('DOMContentLoaded', () => loadUsers(''));
 
 // Add Enter key to search input
 document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-        loadUsers();
+        applyUserSearch();
     }
 });
 </script>

@@ -132,7 +132,7 @@
             }
             
             #sidebar nav {
-                overflow-y-auto;
+                overflow-y-auto;    
                 max-height: calc(100vh - 12rem);
                 padding-bottom: 2rem;
             }
@@ -326,7 +326,7 @@
                     </button>
                     <a href="<?= base_url('admin') ?>" class="flex items-center space-x-2 group">
                         <img src="<?= base_url('assets/images/SYH.CLEANING.png') ?>" alt="SYH Cleaning" class="h-10 w-10 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                        <span class="text-xs sm:text-sm md:text-lg lg:text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-blue-500 transition-all duration-300 whitespace-nowrap">SYH.CLEANING</span>
+                        <span class="text-xs sm:text-sm md:text-lg lg:text-xl font-bold text-black group-hover:text-gray-800 transition-all duration-300 whitespace-nowrap">SYH.CLEANING</span>
                     </a>
                 </div>
                 
@@ -454,7 +454,7 @@
         </div>
         
         <!-- Text -->
-        <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">Logging Out...</h2>
+        <h2 class="text-white text-2xl font-bold mt-8 animate-fade-in">sedang keluar...</h2>
         <p class="text-blue-100 text-sm mt-2 animate-fade-in-delay">Sampai jumpa lagi, Admin!</p>
         
         <!-- Loading dots -->
@@ -660,7 +660,7 @@
             }
             
             try {
-                console.log('🚀 Admin logging out via API...');
+                console.log('🚀 Admin Sedang keluar via API...');
                 const response = await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {
