@@ -16,16 +16,18 @@ class Auth extends BaseController
     // Show Login Page
     public function login()
     {
+    if (session()->get('is_logged_in')) {
+
         $role = session()->get('role');
-        if ($role){
-            if ($user->role === 'admin') {
-                return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
-            } else {
-                return redirect()->to('/dashboard')->with('info', 'Anda sudah login');
-            }
+
+        if ($role === 'admin') {
+            return redirect()->to('/admin')->with('info', 'Anda sudah login sebagai admin');
+        } else {
+            return redirect()->to('/')->with('info', 'Anda sudah login');
         }
-        
-        return view('auth/login', ['title' => 'Login - SYH Cleaning']);
+    }
+
+    return view('auth/login', ['title' => 'Login - SYH Cleaning']);
     }
 
     // Process Login

@@ -233,11 +233,11 @@ function renderUsersTable(users, total, pagination = {}) {
                     </div>
                     
                     <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
-                        ${currentPage > 1 ? `<button onclick="paginateUsers(${currentPage - 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm"><i class="fas fa-chevron-left mr-1"></i>Sebelumnya</button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold"><i class="fas fa-chevron-left mr-1"></i>Sebelumnya</button>`}
+                        ${currentPage > 1 ? `<button onclick="paginateUsers(${currentPage - 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm"><i class="fas fa-chevron-left mr-1"></i></button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold"><i class="fas fa-chevron-left mr-1"></i></button>`}
                         <div class="flex gap-1">
                             ${generateUserPageNumbers(currentPage, lastPage)}
                         </div>
-                        ${currentPage < lastPage ? `<button onclick="paginateUsers(${currentPage + 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm">Berikutnya<i class="fas fa-chevron-right ml-1"></i></button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold">Berikutnya<i class="fas fa-chevron-right ml-1"></i></button>`}
+                        ${currentPage < lastPage ? `<button onclick="paginateUsers(${currentPage + 1})" class="px-3 py-2 text-sm bg-white border-2 border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition font-semibold shadow-sm"><i class="fas fa-chevron-right ml-1"></i></button>` : `<button disabled class="px-3 py-2 text-sm bg-gray-100 border-2 border-gray-300 text-gray-400 rounded-lg cursor-not-allowed font-semibold"><i class="fas fa-chevron-right ml-1"></i></button>`}
                     </div>
                 </div>
             </div>
