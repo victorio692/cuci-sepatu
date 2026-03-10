@@ -5,7 +5,7 @@
 <div class="admin-container">
     <div class="page-header-section">
         <a href="/admin/users" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Kembali ke Pengguna
+            <i class="fas fa-arrow-left"></i> Kembali ke Pelanggan
         </a>
     </div>
 
@@ -54,7 +54,7 @@
                 <div class="info-card">
                     <div class="card-header-icon">
                         <i class="fas fa-user"></i>
-                        <h3>Informasi Customer</h3>
+                        <h3>Informasi Pelanggan</h3>
                     </div>
                     <div class="info-row">
                         <label>Nama:</label>
@@ -81,10 +81,7 @@
                         <span><?= $user['alamat'] ?: '-' ?></span>
                     </div>
                     
-                    <div class="info-row">
-                        <label>Bergabung:</label>
-                        <span><?= date('d M Y', strtotime($user['created_at'])) ?></span>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -93,6 +90,11 @@
                 <div class="card-header-main">
                     <i class="fas fa-history"></i>
                     <h3>Riwayat Pesanan</h3>
+                    <?php if ($bookingsPager['total'] > 0): ?>
+                        <span class="pagination-badge">
+                            <?= $bookingsPager['total'] ?> pesanan
+                        </span>
+                    <?php endif; ?>
                 </div>
                 <div class="card-content">
                     <?php if (!empty($bookings)): ?>
@@ -130,6 +132,49 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination Controls -->
+                        <?php if ($bookingsPager['totalPages'] > 1): ?>
+                            <div class="pagination-container">
+                                <div class="pagination-controls">
+                                    <!-- Previous Button -->
+                                    <?php if ($bookingsPager['currentPage'] > 1): ?>
+                                        <a href="?page=<?= $bookingsPager['currentPage'] - 1 ?>" class="pagination-btn pagination-btn-prev">
+                                            <i class="fas fa-chevron-left"></i> Sebelumnya
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="pagination-btn pagination-btn-disabled">
+                                            <i class="fas fa-chevron-left"></i> Sebelumnya
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <!-- Page Numbers -->
+                                    <div class="pagination-numbers">
+                                        <?php for ($i = 1; $i <= $bookingsPager['totalPages']; $i++): ?>
+                                            <?php if ($i === $bookingsPager['currentPage']): ?>
+                                                <span class="pagination-number active"><?= $i ?></span>
+                                            <?php else: ?>
+                                                <a href="?page=<?= $i ?>" class="pagination-number"><?= $i ?></a>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
+                                    </div>
+
+                                    <!-- Next Button -->
+                                    <?php if ($bookingsPager['currentPage'] < $bookingsPager['totalPages']): ?>
+                                        <a href="?page=<?= $bookingsPager['currentPage'] + 1 ?>" class="pagination-btn pagination-btn-next">
+                                            Selanjutnya <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="pagination-btn pagination-btn-disabled">
+                                            Selanjutnya <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="pagination-info">
+                                    Halaman <?= $bookingsPager['currentPage'] ?> dari <?= $bookingsPager['totalPages'] ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     <?php else: ?>
                         <div class="empty-state">
                             <i class="fas fa-inbox"></i>
@@ -610,6 +655,110 @@
     transform: scale(1.2);
 }
 
+/* Pagination Styles */
+.pagination-badge {
+    margin-left: auto;
+    background-color: #eff6ff;
+    color: #0c4a6e;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.pagination-container {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: #fafafa;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.pagination-btn:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.pagination-btn-disabled {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background-color: #d1d5db;
+    color: #9ca3af;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: not-allowed;
+    border: none;
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.pagination-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background-color: white;
+    color: #374151;
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pagination-number:hover {
+    background-color: #f3f4f6;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.pagination-number.active {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.pagination-info {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
 /* Responsive adjustments for small screens */
 @media (max-width: 640px) {
     .admin-container {
@@ -692,6 +841,47 @@
 
     .action-link {
         padding: 0.75rem 1rem;
+    }
+}
+
+/* Mobile pagination adjustments */
+@media (max-width: 640px) {
+    .card-header-main {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pagination-badge {
+        margin-left: 0;
+        margin-top: 0.75rem;
+    }
+
+    .pagination-controls {
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .pagination-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        gap: 0.25rem;
+    }
+
+    .pagination-numbers {
+        gap: 0.25rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pagination-number {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+    }
+
+    .pagination-info {
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
     }
 }
 </style>

@@ -77,16 +77,37 @@ class Users extends Controller
         // Add aktif field for compatibility with view (always true for now)
         $user['aktif'] = 1;
        
+        // Pagination setup
+        $page = (int)($this->request->getVar('page') ?? 1);
+        $perPage = 5;
+
+        // Get total bookings count
+        $totalBookings = $this->db->table('bookings')
+            ->where('id_user', $id)
+            ->countAllResults();
+
+        // Get bookings for current page
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->orderBy('created_at', 'DESC')
+            ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
+
+        // Calculate pagination info
+        $totalPages = ceil($totalBookings / $perPage);
+        $currentPage = min($page, max(1, $totalPages));
 
         $data = [
             'title' => 'Detail User - Admin SYH Cleaning',
             'user' => $user,
             'bookings' => $bookings,
+            'bookingsPager' => [
+                'currentPage' => $currentPage,
+                'totalPages' => $totalPages,
+                'perPage' => $perPage,
+                'total' => $totalBookings,
+            ],
         ];
 
         return view('admin/user_detail', $data);
