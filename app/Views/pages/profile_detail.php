@@ -53,21 +53,21 @@
 
             <!-- Mobile Menu Cards - Visible only on Mobile -->
             <div class="lg:hidden col-span-1 grid grid-cols-2 gap-3 mb-6">
-                <a href="#" onclick="showSection('profile'); return false;" id="mobile-menu-profile" class="bg-blue-600 text-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 transition">
+                <a href="#" onclick="showSection('profile'); return false;" id="mobile-menu-profile" class="bg-blue-600 text-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-3 transition min-h-24">
                     <i class="fas fa-user-circle text-2xl"></i>
                     <span class="text-sm font-medium">Akun</span>
                 </a>
-                <a href="#" onclick="showSection('email'); return false;" id="mobile-menu-email" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
-                    <i class="fas fa-envelope text-2xl text-gray-600"></i>
-                    <span class="text-sm font-medium">Ubah Email</span>
+                <a href="#" onclick="showSection('email'); return false;" id="mobile-menu-email" class="group bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
+                    <i class="fas fa-envelope text-2xl group-hover:!text-white"></i>
+                    <span class="text-sm font-medium group-hover:!text-white">Ubah Email</span>
                 </a>
-                <a href="#" onclick="showSection('phone'); return false;" id="mobile-menu-phone" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
-                    <i class="fas fa-phone text-2xl text-gray-600"></i>
-                    <span class="text-sm font-medium">Ubah Nomor Telepon</span>
+                <a href="#" onclick="showSection('phone'); return false;" id="mobile-menu-phone" class="group bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
+                    <i class="fas fa-phone text-2xl group-hover:!text-white"></i>
+                    <span class="text-sm font-medium group-hover:!text-white">Ubah Nomor Telepon</span>
                 </a>
-                <a href="#" onclick="showSection('password'); return false;" id="mobile-menu-password" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
-                    <i class="fas fa-lock text-2xl text-gray-600"></i>
-                    <span class="text-sm font-medium">Ubah Kata Sandi</span>
+                <a href="#" onclick="showSection('password'); return false;" id="mobile-menu-password" class="group bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
+                    <i class="fas fa-lock text-2xl group-hover:!text-white"></i>
+                    <span class="text-sm font-medium group-hover:!text-white">Ubah Kata Sandi</span>
                 </a>
             </div>
 

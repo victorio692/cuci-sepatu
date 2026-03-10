@@ -187,7 +187,7 @@ function renderServicesGrid(services) {
                 <div class="grid grid-cols-3 gap-3">
                     <button type="button" 
                        onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
-                       class="py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       class="py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-semibold text-sm transition hover:scale-105 transform flex items-center justify-center"
                        title="Edit Harga">
                         Edit
                     </button>
@@ -443,6 +443,14 @@ function showToast(message, type) {
 }
 
 .service-card button:hover {
+    transform: scale(1.05);
+}
+
+.service-card a {
+    transition: all 0.2s ease;
+}
+
+.service-card a:hover {
     transform: scale(1.05);
 }
 
