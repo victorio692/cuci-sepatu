@@ -37,13 +37,13 @@
                             <a href="#" onclick="showSection('profile'); return false;" id="menu-profile" class="flex items-center gap-3 px-4 py-3 text-sm text-white bg-blue-600 rounded-lg font-medium shadow-sm mb-1">
                                 <i class="fas fa-user-circle w-5"></i> Akun
                             </a>
-                            <a href="#" onclick="showSection('email'); return false;" id="menu-email" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition mb-1">
+                            <a href="#" onclick="showSection('email'); return false;" id="menu-email" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg transition mb-1">
                                 <i class="fas fa-envelope w-5"></i> Ubah Email
                             </a>
-                            <a href="#" onclick="showSection('phone'); return false;" id="menu-phone" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition mb-1">
+                            <a href="#" onclick="showSection('phone'); return false;" id="menu-phone" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg transition mb-1">
                                 <i class="fas fa-phone w-5"></i> Ubah Nomor Telepon
                             </a>
-                            <a href="#" onclick="showSection('password'); return false;" id="menu-password" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition">
+                            <a href="#" onclick="showSection('password'); return false;" id="menu-password" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg transition">
                                 <i class="fas fa-lock w-5"></i> Ubah Kata Sandi
                             </a>
                         </div>
@@ -57,15 +57,15 @@
                     <i class="fas fa-user-circle text-2xl"></i>
                     <span class="text-sm font-medium">Akun</span>
                 </a>
-                <a href="#" onclick="showSection('email'); return false;" id="mobile-menu-email" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
+                <a href="#" onclick="showSection('email'); return false;" id="mobile-menu-email" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
                     <i class="fas fa-envelope text-2xl text-gray-600"></i>
                     <span class="text-sm font-medium">Ubah Email</span>
                 </a>
-                <a href="#" onclick="showSection('phone'); return false;" id="mobile-menu-phone" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
+                <a href="#" onclick="showSection('phone'); return false;" id="mobile-menu-phone" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
                     <i class="fas fa-phone text-2xl text-gray-600"></i>
                     <span class="text-sm font-medium">Ubah Nomor Telepon</span>
                 </a>
-                <a href="#" onclick="showSection('password'); return false;" id="mobile-menu-password" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-gray-50 transition border border-gray-200">
+                <a href="#" onclick="showSection('password'); return false;" id="mobile-menu-password" class="bg-white text-gray-700 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition border border-gray-200">
                     <i class="fas fa-lock text-2xl text-gray-600"></i>
                     <span class="text-sm font-medium">Ubah Kata Sandi</span>
                 </a>
@@ -799,7 +799,7 @@ function showSection(section) {
     desktopMenus.forEach(menuId => {
         const menu = document.getElementById(menuId);
         menu.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
-        menu.classList.add('text-gray-700', 'hover:bg-gray-50');
+        menu.classList.add('text-gray-700', 'hover:bg-blue-600', 'hover:text-white');
     });
     
     // Update mobile menu
