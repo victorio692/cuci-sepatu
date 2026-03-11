@@ -21,6 +21,19 @@
             <!-- Form -->
             <div id="loginFormContainer" class="space-y-6">
 
+                <!-- Alert Box (untuk error message) -->
+                <div id="alertBox" class="hidden p-3 border-l-4 border-red-500 bg-red-50 rounded flex items-center gap-2 animate-fadeIn">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p id="alertMessage" class="text-red-800 font-medium text-sm m-0"></p>
+                    </div>
+                    <button type="button" onclick="closeAlert()" class="flex-shrink-0 text-red-400 hover:text-red-600 focus:outline-none">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
@@ -105,7 +118,46 @@
     </div>
 </div>
 
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+</style>
+
 <script>
+// Fungsi untuk menampilkan alert error
+function showAlert(message) {
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+    
+    alertMessage.textContent = message;
+    alertBox.classList.remove('hidden');
+    alertBox.classList.add('block');
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        closeAlert();
+    }, 5000);
+}
+
+// Fungsi untuk menutup alert
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.add('hidden');
+    alertBox.classList.remove('block');
+}
+
 // Toast notification function
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toastContainer');
@@ -139,7 +191,7 @@ async function submitLoginForm() {
     
     // Validation
     if (!email || !password) {
-        showToast('Email dan Kata sandi  harus diisi', 'error');
+        showAlert('Email dan Kata Sandi harus diisi!');
         return;
     }
     
@@ -192,9 +244,10 @@ async function submitLoginForm() {
                 }
             }, 500);
         } else {
-            // Error response
-            console.log('❌ Login failed:', result.message);
-            showToast(result.message || '', 'error');
+            // Error response - tampilkan alert dengan pesan error
+            const errorMessage = result.message || 'Email atau kata sandi anda salah, silakan coba lagi';
+            console.log('❌ Login failed:', errorMessage);
+            showAlert(errorMessage);
             
             // Hide overlay
             if (overlay) {
@@ -210,7 +263,7 @@ async function submitLoginForm() {
         }
     } catch (error) {
         console.error('❌ Login error:', error);
-        showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        showAlert('Terjadi kesalahan. Silakan coba lagi!');
         
         // Hide overlay
         if (overlay) {
