@@ -138,8 +138,6 @@ $routes->group('api', static function($routes) {
 $routes->group('api', ['filter' => 'auth:admin'], static function($routes) {
     // Users API - For admin panel
     $routes->get('users', 'Api\UsersApi::index');
-    // Debug API - temporary
-    $routes->get('debug', 'Api\TestApi::debug');
 });
 // apiservice
 $routes->group('api', function($routes) {
