@@ -30,7 +30,7 @@
                 <option value="">Semua Status</option>
                 <option value="pending">Menunggu</option>
                 <option value="disetujui">Disetujui</option>
-                <option value="proses">Sedang Dikerjakan</option>
+                <option value="proses">Diproses</option>
                 <option value="selesai">Selesai</option>
                 <option value="ditolak">Ditolak</option>
             </select>
@@ -238,7 +238,7 @@ function renderBookingsTable(bookings, pagination = {}) {
                         ${isDisabled ? 'disabled' : ''}>
                         <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
                         <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
-                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Dikerjakan</option>
+                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Diproses</option>
                         <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>
@@ -283,7 +283,7 @@ function renderBookingsTable(bookings, pagination = {}) {
                         ${isDisabled ? 'disabled' : ''}>
                         <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
                         <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
-                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Dikerjakan</option>
+                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Diproses</option>
                         <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>

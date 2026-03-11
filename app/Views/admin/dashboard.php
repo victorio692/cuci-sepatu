@@ -30,7 +30,7 @@
             <div class="flex-1 min-w-0">
                 <p class="text-cyan-100 text-xs font-semibold uppercase tracking-tight">Dalam Proses</p>
                 <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="proses_bookings">0</h3>
-                <p class="text-cyan-100 text-xs mt-1 truncate">Sedang dikerjakan</p>
+                <p class="text-cyan-100 text-xs mt-1 truncate">Diproses</p>
             </div>
             <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-cog text-lg md:text-xl"></i>
@@ -244,7 +244,7 @@ function renderBookingsTable(bookings, pagination = {}) {
     const statusLabels = {
         'pending': 'Menunggu',
         'disetujui': 'Disetujui',
-        'proses': 'Sedang Dikerjakan',
+        'proses': 'Diproses',
         'selesai': 'Selesai',
         'ditolak': 'Ditolak',
         'batal': 'Dibatalkan'
@@ -330,7 +330,7 @@ function renderBookingsTable(bookings, pagination = {}) {
                     >
                         <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
                         <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
-                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Sedang Dikerjakan</option>
+                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Diproses</option>
                         <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
                         <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
                     </select>

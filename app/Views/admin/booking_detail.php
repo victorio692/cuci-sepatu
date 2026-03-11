@@ -430,7 +430,7 @@
                     <div>
                         <strong class="text-amber-900 block text-base mb-1">Penting!</strong>
                         <p class="text-amber-800 text-sm md:text-base leading-relaxed m-0">
-                            Unggah foto hasil cucian sepatu yang sudah selesai dikerjakan. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
+                            Unggah foto hasil cucian sepatu yang sudah selesai diproses. Foto ini akan dikirim ke customer sebagai bukti pekerjaan selesai.
                         </p>
                     </div>
                 </div>
