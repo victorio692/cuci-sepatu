@@ -356,7 +356,8 @@ class AdminServicesApi extends BaseController
             }
 
             $service = $this->db->table('services')
-                ->select('id, kode_layanan')                ->select('id, kode_layanan')                ->where('id', $id)
+                ->select('id, kode_layanan')
+                ->where('id', $id)
                 ->get()
                 ->getRowArray();
 
