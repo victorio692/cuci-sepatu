@@ -34,7 +34,7 @@
                             <div class="px-3 py-2 text-xs font-bold text-gray-500 uppercase flex items-center gap-2 mb-2">
                                 <i class="fas fa-user"></i> Akun Saya
                             </div>
-                            <a href="#" onclick="showSection('profile'); return false;" id="menu-profile" class="flex items-center gap-3 px-4 py-3 text-sm text-white bg-blue-600 rounded-lg font-medium shadow-sm mb-1">
+                            <a href="#" onclick="showSection('profile'); return false;" id="menu-profile" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 rounded-lg font-medium mb-1 transition cursor-pointer">
                                 <i class="fas fa-user-circle w-5"></i> Akun
                             </a>
                             <a href="#" onclick="showSection('email'); return false;" id="menu-email" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg transition mb-1">
@@ -612,6 +612,34 @@
 
 <?= $this->endSection() ?>
 <?= $this->section('extra_js') ?>
+<style>
+    /* Prevent double hover effect on menu items */
+    #menu-profile,
+    #menu-email,
+    #menu-phone,
+    #menu-password {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* Active state - no hover effect needed */
+    #menu-profile.bg-blue-600:hover,
+    #menu-email.bg-blue-600:hover,
+    #menu-phone.bg-blue-600:hover,
+    #menu-password.bg-blue-600:hover {
+        background-color: rgb(37, 99, 235); /* Keep current color on hover */
+        text-decoration: none;
+    }
+    
+    /* Ensure text is always visible and no conflicts */
+    #menu-profile.bg-blue-600,
+    #menu-email.bg-blue-600,
+    #menu-phone.bg-blue-600,
+    #menu-password.bg-blue-600 {
+        color: white;
+        position: relative;
+        z-index: auto;
+    }
+</style>
 <script>
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toastContainer');
@@ -798,8 +826,10 @@ function showSection(section) {
     const desktopMenus = ['menu-profile', 'menu-email', 'menu-phone', 'menu-password'];
     desktopMenus.forEach(menuId => {
         const menu = document.getElementById(menuId);
+        // Remove all active states
         menu.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
-        menu.classList.add('text-gray-700', 'hover:bg-blue-600', 'hover:text-white');
+        // Remove potential hover conflicts
+        menu.classList.remove('hover:shadow');
     });
     
     // Update mobile menu
@@ -838,15 +868,23 @@ function showSection(section) {
         // Show section
         document.getElementById(sectionMap[section].section).classList.remove('hidden');
         
-        // Highlight desktop menu
+        // Highlight desktop menu - ADD active state, don't mix with hover states
         const desktopMenu = document.getElementById(sectionMap[section].desktop);
         desktopMenu.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
-        desktopMenu.classList.remove('text-gray-700', 'hover:bg-gray-50');
+        desktopMenu.classList.remove('text-gray-700', 'hover:bg-blue-600', 'hover:text-white');
+        
+        // Add non-active menu classes to other items
+        desktopMenus.forEach(menuId => {
+            if (menuId !== sectionMap[section].desktop) {
+                const menu = document.getElementById(menuId);
+                menu.classList.add('text-gray-700', 'hover:bg-blue-600', 'hover:text-white');
+            }
+        });
         
         // Highlight mobile menu
         const mobileMenu = document.getElementById(sectionMap[section].mobile);
-        mobileMenu.classList.add('bg-blue-600', 'text-white');
         mobileMenu.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+        mobileMenu.classList.add('bg-blue-600', 'text-white');
     }
 }
 
@@ -932,6 +970,9 @@ document.getElementById('profilePhoto').addEventListener('change', function(e) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize profile section on page load
+    showSection('profile');
+    
     loadProfileDetail();
 
     const profileForm = document.getElementById('profileForm');
