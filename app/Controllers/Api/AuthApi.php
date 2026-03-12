@@ -62,21 +62,15 @@ class AuthApi extends ResourceController
             $user = $this->model->find($userId);
             unset($user['password_hash']);
 
-            // Create session
-            session()->set([
-                'user_id' => $user['id'],
-                'email' => $user['email'],
-                'nama_lengkap' => $user['nama_lengkap'],
-                'is_logged_in' => true,
-                'is_admin' => $user['role'] === 'admin'
-            ]);
+            
+            $user = $this->model->find($userId);
+            unset($user['password_hash']);
 
             return $this->respondCreated([
                 'status' => 'success',
-                'message' => 'Registrasi berhasil',
+                'message' => 'Registrasi berhasil, silakan login',
                 'data' => [
-                    'user' => $user,
-                    'token' => session_id()
+                    'user' => $user
                 ]
             ]);
 

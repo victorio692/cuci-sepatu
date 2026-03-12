@@ -341,7 +341,7 @@ async function submitRegisterForm() {
             
             // Redirect to home
             setTimeout(() => {
-                window.location.href = '/';
+                window.location.href = '/login';
             }, 1000);
         } else {
             // Error response - jika email sudah terdaftar atau error lainnya
