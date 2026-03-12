@@ -44,13 +44,37 @@
 
             <!-- CTA Section -->
             <div class="text-center mt-12">
-                <a href="/#services" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                <a href="/#services" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl cta-pesan-button" style="color: white !important; text-decoration: none !important;">
                     <i class="fas fa-shopping-cart"></i>
-                    <span>Pesan Sekarang</span>
+                    <span style="color: white !important; display: inline !important;">Pesan Sekarang</span>
                 </a>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+/* CTA Button - Pesan Sekarang */
+.cta-pesan-button {
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.cta-pesan-button:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25) !important;
+    background: linear-gradient(to right, #1d4ed8, #1e3a8a) !important;
+    color: white !important;
+}
+
+.cta-pesan-button span {
+    color: white !important;
+    display: inline !important;
+}
+
+.cta-pesan-button:hover span {
+    color: white !important;
+}
+</style>
 
 <?= $this->endSection() ?>

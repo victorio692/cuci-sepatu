@@ -1261,8 +1261,8 @@ async function loadServices() {
                                     <i class="fas fa-shopping-cart text-xs"></i>
                                     <span class="hidden sm:inline"></span>
                                 </button>
-                                <a href="/make-booking?service=${service.kode_layanan}" class="py-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-1 min-h-[2.5rem]">
-                                    <span>Pesan</span>
+                                <a href="/make-booking?service=${service.kode_layanan}" class="py-2 px-2 bg-blue-600 text-white rounded text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 min-h-[2.5rem] no-underline" style="color: white !important; overflow: visible !important; text-decoration: none !important;">
+                                    <span style="color: white !important; display: inline !important;">Pesan</span>
                                 </a>
                             </div>
                         </div>
@@ -1427,6 +1427,38 @@ function toggleMoreServices() {
         left: 1rem;
         max-width: none;
     }
+}
+
+/* Ensure Pesan button text always visible */
+#servicesGrid a[href*="make-booking"],
+#moreServicesExpandedGrid a[href*="make-booking"] {
+    color: white !important;
+}
+
+#servicesGrid a[href*="make-booking"] span,
+#moreServicesExpandedGrid a[href*="make-booking"] span {
+    color: white !important;
+}
+
+#servicesGrid a[href*="make-booking"]:hover,
+#moreServicesExpandedGrid a[href*="make-booking"]:hover {
+    color: white !important;
+    background: #1d4ed8 !important;
+}
+
+/* Button raised effect */
+.grid button,
+.grid a[href*="make-booking"] {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+.grid button:hover,
+.grid button:active,
+.grid a[href*="make-booking"]:hover,
+.grid a[href*="make-booking"]:active {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(-2px);
 }
 </style>
 

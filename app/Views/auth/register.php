@@ -21,6 +21,19 @@
             <!-- Form -->
             <div id="registerFormContainer" class="space-y-5">
 
+                <!-- Alert Box (untuk error message) -->
+                <div id="alertBox" class="hidden p-3 border-l-4 border-red-500 bg-red-50 rounded flex items-center gap-2 animate-fadeIn">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p id="alertMessage" class="text-red-800 font-medium text-sm m-0"></p>
+                    </div>
+                    <button type="button" onclick="closeAlert()" class="flex-shrink-0 text-red-400 hover:text-red-600 focus:outline-none">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+
                 <!-- Nama Lengkap -->
                 <div>
                     <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
@@ -106,16 +119,23 @@
                 </div>
 
                 <!-- Terms & Conditions -->
-                <div class="flex items-start">
-                    <input 
-                        type="checkbox" 
-                        id="terms"
-                        class="w-5 h-5 mt-0.5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
-                        required
-                    >
-                    <label for="terms" class="ml-3 text-sm text-gray-700 cursor-pointer">
-                        Saya setuju dengan <a href="/syarat" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Syarat & Ketentuan</a> dan <a href="/kebijakan" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Kebijakan Privasi</a>
-                    </label>
+                <div>
+                    <div class="flex items-start">
+                        <input 
+                            type="checkbox" 
+                            id="terms"
+                            class="w-5 h-5 mt-0.5 text-blue-600 border-gray-300 rounded cursor-pointer custom-checkbox"
+                            required
+                        >
+                        <label for="terms" class="ml-3 text-sm text-gray-700 cursor-pointer">
+                            Saya setuju dengan <a href="/syarat" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Syarat & Ketentuan</a> dan <a href="/kebijakan" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Kebijakan Privasi</a>
+                        </label>
+                    </div>
+                    <!-- Warning message untuk terms tidak dicentang -->
+                    <div id="termsWarning" class="hidden mt-2 text-red-600 text-xs flex items-center gap-1">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Anda harus setuju dengan Syarat & Ketentuan</span>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
@@ -156,7 +176,46 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('extra_js') ?>
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+</style>
+
 <script>
+// Fungsi untuk menampilkan alert error
+function showAlert(message) {
+    const alertBox = document.getElementById('alertBox');
+    const alertMessage = document.getElementById('alertMessage');
+    
+    alertMessage.textContent = message;
+    alertBox.classList.remove('hidden');
+    alertBox.classList.add('block');
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        closeAlert();
+    }, 5000);
+}
+
+// Fungsi untuk menutup alert
+function closeAlert() {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.classList.add('hidden');
+    alertBox.classList.remove('block');
+}
+
 // Toast notification function
 function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toastContainer');
@@ -208,22 +267,30 @@ async function submitRegisterForm() {
     
     // Validation
     if (!fullName || !email || !phone || !password || !confirmPassword) {
-        showToast('Semua field harus diisi', 'error');
+        showAlert('Semua field harus diisi');
         return;
     }
     
     if (!terms) {
-        showToast('Anda harus setuju dengan Syarat & Ketentuan', 'error');
+        // Tampilkan warning kecil di bawah checkbox, jangan gunakan alert box
+        const warningDiv = document.getElementById('termsWarning');
+        warningDiv.classList.remove('hidden');
+        warningDiv.classList.add('block');
         return;
+    } else {
+        // Sembunyikan warning jika checkbox di-centang
+        const warningDiv = document.getElementById('termsWarning');
+        warningDiv.classList.add('hidden');
+        warningDiv.classList.remove('block');
     }
     
     if (password !== confirmPassword) {
-        showToast('Konfirmasi password tidak sesuai', 'error');
+        showAlert('Konfirmasi password tidak sesuai');
         return;
     }
     
     if (password.length < 6) {
-        showToast('Password minimal 6 karakter', 'error');
+        showAlert('Password minimal 6 karakter');
         return;
     }
     
@@ -277,16 +344,17 @@ async function submitRegisterForm() {
                 window.location.href = '/';
             }, 1000);
         } else {
-            // Error response
+            // Error response - jika email sudah terdaftar atau error lainnya
             console.log('❌ Registration failed:', result.message);
             
             // Show error messages
             if (result.errors) {
-                // Show validation errors
+                // Show validation errors from API
                 const errorMessages = Object.values(result.errors).join(', ');
-                showToast(errorMessages, 'error');
+                showAlert(errorMessages);
             } else {
-                showToast(result.message || 'Registrasi gagal', 'error');
+                const errorMessage = result.message || 'Email sudah terdaftar. Silakan gunakan email lain atau masuk';
+                showAlert(errorMessage);
             }
             
             // Hide overlay
@@ -303,7 +371,7 @@ async function submitRegisterForm() {
         }
     } catch (error) {
         console.error('❌ Registration error:', error);
-        showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        showAlert('Terjadi kesalahan. Silakan coba lagi!');
         
         // Hide overlay
         if (overlay) {
@@ -334,6 +402,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    
+    // Event listener untuk checkbox terms - sembunyikan warning ketika di-centang
+    const termsCheckbox = document.getElementById('terms');
+    if (termsCheckbox) {
+        termsCheckbox.addEventListener('change', function() {
+            const warningDiv = document.getElementById('termsWarning');
+            if (this.checked) {
+                warningDiv.classList.add('hidden');
+                warningDiv.classList.remove('block');
+            }
+        });
+    }
 });
 </script>
 <?= $this->endSection() ?>

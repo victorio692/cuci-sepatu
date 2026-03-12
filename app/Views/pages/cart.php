@@ -415,24 +415,8 @@ function showNotification(message, type = 'success') {
 // Load cart on page load
 document.addEventListener('DOMContentLoaded', async function() {
     await loadCart();
-    
-    // Test API connection (for visibility in inspector)
-    testCartAPI();
-});
+ });
 
-// Test Cart API (untuk visibility di network inspector)
-async function testCartAPI() {
-    try {
-        console.log(' Testing Cart API...');
-        const response = await fetch('/api/cart', {
-            credentials: 'include'
-        });
-        const result = await response.json();
-        console.log(' Cart API Response:', result);
-    } catch (error) {
-        console.log(' Cart API info:', error.message);
-    }
-}
 </script>
 
 <style>
