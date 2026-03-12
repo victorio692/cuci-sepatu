@@ -175,6 +175,8 @@ $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($ro
     $routes->get('profile', 'UsersApi::getProfile');  // Get current user profile
     $routes->put('profile', 'UsersApi::updateProfile');  // Update current user profile
     $routes->post('profile', 'UsersApi::updateProfile');  // Allow POST for profile update
+    $routes->put('change-password', 'UsersApi::changePassword');  // Change password endpoint
+    $routes->post('change-password', 'UsersApi::changePassword');  // Allow POST for password change
     $routes->get('statistics', 'UsersApi::statistics');
     $routes->get('(:num)', 'UsersApi::detail/$1');
     $routes->post('/', 'UsersApi::create');

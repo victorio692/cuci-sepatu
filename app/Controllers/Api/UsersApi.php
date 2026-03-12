@@ -379,7 +379,7 @@ class UsersApi extends BaseController
 
     public function updateProfile()
     {
-        // Update current user's own profile
+        // Update current user's own profile (WITHOUT password change)
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -392,16 +392,12 @@ class UsersApi extends BaseController
 
         $json = $this->request->getJSON(true);
 
-        // Validation rules for profile update
+        // Validation rules for profile update (NO PASSWORD)
         $rules = [
             'nama_lengkap' => 'required|min_length[3]',
             'email' => "required|valid_email|is_unique[users.email,id,{$user_id}]",
             'no_hp' => 'required|min_length[10]',
         ];
-
-        if (isset($json['password']) && !empty($json['password'])) {
-            $rules['password'] = 'required|min_length[6]';
-        }
 
         if (!$this->validate($rules)) {
             return $this->failValidationErrors($this->validator->getErrors());
@@ -414,11 +410,6 @@ class UsersApi extends BaseController
             'alamat' => $json['alamat'] ?? $user['alamat'],
             'updated_at' => date('Y-m-d H:i:s')
         ];
-
-        // Update password if provided
-        if (isset($json['password']) && !empty($json['password'])) {
-            $data['password_hash'] = password_hash($json['password'], PASSWORD_DEFAULT);
-        }
 
         try {
             if ($this->db->table('users')->where('id', $user_id)->update($data)) {
@@ -435,6 +426,57 @@ class UsersApi extends BaseController
             return $this->failServerError('Gagal memperbarui profil');
         } catch (\Exception $e) {
             return $this->failServerError('Gagal memperbarui profil: ' . $e->getMessage());
+        }
+    }
+
+    public function changePassword()
+    {
+        // Change password with current password verification
+        $user_id = session()->get('user_id');
+        if (!$user_id) {
+            return $this->failUnauthorized('Silakan login terlebih dahulu');
+        }
+
+        $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
+        if (!$user) {
+            return $this->failNotFound('User tidak ditemukan');
+        }
+
+        $json = $this->request->getJSON(true);
+
+        // Validation rules for password change
+        $rules = [
+            'current_password' => 'required',
+            'password' => 'required|min_length[6]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->failValidationErrors($this->validator->getErrors());
+        }
+
+        // Verify current password
+        if (!password_verify($json['current_password'], $user['password_hash'])) {
+            return $this->fail('Password saat ini salah', 400);
+        }
+
+        // Update password
+        $data = [
+            'password_hash' => password_hash($json['password'], PASSWORD_DEFAULT),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        try {
+            if ($this->db->table('users')->where('id', $user_id)->update($data)) {
+                return $this->respond([
+                    'success' => true,
+                    'message' => 'Password berhasil diubah',
+                    'code' => 200
+                ]);
+            }
+
+            return $this->failServerError('Gagal mengubah password');
+        } catch (\Exception $e) {
+            return $this->failServerError('Gagal mengubah password: ' . $e->getMessage());
         }
     }
 }

@@ -482,7 +482,7 @@ function submitPasswordForm() {
     
     console.log('📤 Submitting password change...');
     
-    fetch(`/api/users/profile`, {
+    fetch(`/api/users/change-password`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
