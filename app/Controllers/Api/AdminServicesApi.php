@@ -371,7 +371,7 @@ class AdminServicesApi extends BaseController
             // Check if service is used in ACTIVE bookings only (not selesai/batal/ditolak)
             $bookingCount = $this->db->table('bookings')
                 ->where('layanan', $service['kode_layanan'])
-                ->whereIn('status', ['pending', 'proses', 'dikonfirmasi'])
+                ->whereIn('status', ['pending', 'proses', 'disetujui'])
                 ->countAllResults();
 
             if ($bookingCount > 0) {

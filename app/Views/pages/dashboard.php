@@ -58,7 +58,7 @@
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                         <i class="fas fa-check-circle text-blue-500 text-xl sm:text-2xl"></i>
                     </div>
-                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Dikonfirmasi</span>
+                    <span class="text-xs sm:text-sm text-gray-700 font-medium text-center">Disetujui</span>
                 </a>
 
                 <!-- Proses -->

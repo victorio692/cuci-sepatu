@@ -65,7 +65,7 @@
                             <i class="fas fa-check-circle text-blue-500 text-xl sm:text-2xl"></i>
                         </div>
                     </div>
-                    <span class="text-xs text-gray-700 text-center leading-tight">Dikonfirmasi</span>
+                    <span class="text-xs text-gray-700 text-center leading-tight">Disetujui</span>
                 </a>
 
                 <!-- Proses -->

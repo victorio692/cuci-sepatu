@@ -34,7 +34,7 @@
                     $tabs = [
                         'all' => ['label' => 'Semua', 'icon' => 'fa-list', 'count' => 0],
                         'pending' => ['label' => 'Menunggu', 'icon' => 'fa-clock', 'count' => 0],
-                        'disetujui' => ['label' => 'Dikonfirmasi', 'icon' => 'fa-check-circle', 'count' => 0],
+                        'disetujui' => ['label' => 'Disetujui', 'icon' => 'fa-check-circle', 'count' => 0],
                         'proses' => ['label' => 'Proses', 'icon' => 'fa-sync-alt', 'count' => 0],
                         'selesai' => ['label' => 'Selesai', 'icon' => 'fa-check-double', 'count' => 0],
                         'batal' => ['label' => 'Dibatalkan', 'icon' => 'fa-times-circle', 'count' => 0],
