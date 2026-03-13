@@ -2,210 +2,280 @@
 
 <?= $this->section('content') ?>
 
-<div class="admin-container">
-    <div class="profile-header" style="margin-bottom: 2rem;">
-        <h1><i class="fas fa-user-circle"></i> Akun Admin</h1>
-        <p style="margin: 0.5rem 0 0; color: #6b7280;">Kelola informasi akun Anda</p>
+<div class="mb-6 md:mb-8">
+    <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
+        <i class="fas fa-file-chart-line"></i>Akun
+    </h1>
+    <p class="text-xs md:text-base text-gray-600">kelola informasi akun Anda</p>
+</div>
+
+    <!-- Card: Edit Profil (Display Mode) -->
+    <div class="bg-white rounded-lg shadow-md p-4 md:p-6" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
+                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail akun</h3>
+            </div>
+            <button type="button" onclick="openEditModal()" class="btn btn-primary" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                <i class="fas fa-pencil-alt"></i> Edit
+            </button>
+        </div>
+
+        <div class="profile-display-grid">
+            <!-- Nama Lengkap -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">NAMA LENGKAP</p>
+                <p id="displayNamaLengkap" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem;">-</p>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">EMAIL</p>
+                <p id="displayEmail" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem;">-</p>
+            </div>
+
+            <!-- No. HP -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">NO. HP</p>
+                <p id="displayNoHp" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem;">-</p>
+            </div>
+
+            <!-- Alamat -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">ALAMAT</p>
+                <p id="displayAlamat" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem; line-height: 1.5;">-</p>
+            </div>
+
+            <!-- Role -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">ROLE</p>
+                <p id="displayRole" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem; text-transform: capitalize;">-</p>
+            </div>
+
+            <!-- Terdaftar Sejak -->
+            <div>
+                <p style="margin: 0 0 0.5rem; color: #6b7280; font-weight: 600; font-size: 0.85rem;">TERDAFTAR SEJAK</p>
+                <p id="displayCreatedAt" style="margin: 0; color: #1f2937; font-weight: 500; font-size: 1rem;">-</p>
+            </div>
+        </div>
     </div>
 
-    <div class="profile-cards-grid">
-        <!-- Card: Edit Profil -->
-        <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
-                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Edit Profil</h3>
+    <!-- Modal: Edit Profil -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeEditModal()"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fas fa-pencil-alt"></i> Edit Personal Information</h3>
+                <button type="button" onclick="closeEditModal()" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <form id="profileForm" class="space-y-6">
+            <form id="profileForm" class="modal-body">
                 <!-- Nama Lengkap -->
                 <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-user-circle" style="color: #6b7280; font-size: 0.9rem;"></i>
-                        Nama Lengkap
-                    </label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control" required>
-                        <button type="button" onclick="focusField('nama_lengkap')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>
-                    </div>
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="modal_nama_lengkap" name="nama_lengkap" class="form-control" required>
                 </div>
 
                 <!-- Email -->
                 <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-envelope" style="color: #6b7280; font-size: 0.9rem;"></i>
-                        Email
-                    </label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="email" id="email" name="email" class="form-control" required>
-                        <button type="button" onclick="focusField('email')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>
-                    </div>
+                    <label>Email</label>
+                    <input type="email" id="modal_email" name="email" class="form-control" required>
                 </div>
 
                 <!-- No. HP -->
                 <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-phone" style="color: #6b7280; font-size: 0.9rem;"></i>
-                        No. HP
-                    </label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="text" id="no_hp" name="no_hp" class="form-control" required>
-                        <button type="button" onclick="focusField('no_hp')" class="pencil-btn hidden md:flex" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>
-                    </div>
+                    <label>No. HP</label>
+                    <input type="text" id="modal_no_hp" name="no_hp" class="form-control" required>
                 </div>
 
                 <!-- Alamat -->
                 <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-home" style="color: #6b7280; font-size: 0.9rem;"></i>
-                        Alamat
-                    </label>
-                    <div style="position: relative; display: flex; align-items: flex-start;">
-                        <textarea id="alamat" name="alamat" rows="3" class="form-control"></textarea>
-                        <button type="button" onclick="focusField('alamat')" class="pencil-btn hidden md:flex" style="margin-top: 0.75rem;" onmouseover="this.style.color='#5d00ff'" onmouseout="this.style.color='#6b7280'">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>
-                    </div>
+                    <label>Alamat</label>
+                    <textarea id="modal_alamat" name="alamat" rows="3" class="form-control"></textarea>
                 </div>
 
-                <button type="button" onclick="submitProfileForm()" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Simpan Perubahan
-                </button>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Batal</button>
+                    <button type="button" onclick="submitProfileForm()" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                </div>
             </form>
         </div>
+    </div>
 
-        <!-- Card: Ubah Password -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-                <i class="fas fa-lock" style="color: #5d00ff; font-size: 1.25rem;"></i>
-                <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Ubah Kata Sandi</h3>
-            </div>
-            <form id="passwordForm" class="space-y-6">
+    <!-- Card: Ubah Password -->
+    <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+            <i class="fas fa-lock" style="color: #5d00ff; font-size: 1.25rem;"></i>
+            <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Ubah Kata Sandi</h3>
+        </div>
+        <form id="passwordForm" class="password-form">
+            <div class="password-grid">
                 <div class="form-group">
                     <label>Kata Sandi Saat Ini</label>
-                    <input type="password" id="current_password" name="current_password" class="form-control" placeholder="Masukkan kata sandi saat ini" required>
-                    <p class="text-xs text-gray-500 mt-1">Diperlukan untuk verifikasi keamanan</p>
+                    <input type="password" id="current_password" name="current_password" class="form-control form-control-sm" placeholder="Kata sandi saat ini" required>
+                    <small class="text-xs text-gray-500">Diperlukan untuk keamanan</small>
                 </div>
 
                 <div class="form-group">
                     <label>Kata Sandi Baru</label>
-                    <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Minimal 6 karakter" required>
-                    <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter</p>
+                    <input type="password" id="new_password" name="new_password" class="form-control form-control-sm" placeholder="Min 6 karakter" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Konfirmasi Kata Sandi Baru</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Ketik ulang kata sandi baru" required>
+                    <label>Konfirmasi Kata Sandi</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-sm" placeholder="Ulang kata sandi" required>
                 </div>
+            </div>
 
-                <button type="button" onclick="submitPasswordForm()" class="btn btn-primary">
-                    <i class="fas fa-key"></i> Ubah Kata Sandi
-                </button>
-            </form>
-        </div>
+            <button type="button" onclick="submitPasswordForm()" class="btn btn-primary btn-sm" style="margin-top: 1rem; margin-left: auto; margin-right: auto; display: block; width: fit-content;">
+                <i class="fas fa-key"></i> Ubah Kata Sandi
+            </button>
+        </form>
     </div>
 
-    <!-- Card: Detail Akun -->
-    <div class="bg-white rounded-lg shadow-md p-4 md:p-6" style="margin-top: 1.5rem;">
-        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-            <i class="fas fa-info-circle" style="color: #5d00ff; font-size: 1.25rem;"></i>
-            <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail Akun</h3>
-        </div>
-        <div class="detail-cards-grid">
-            <!-- Role -->
-            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #5d00ff;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <i class="fas fa-shield-alt" style="color: #5d00ff; font-size: 1.1rem;"></i>
-                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">ROLE</p>
-                </div>
-                <p id="roleDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1rem; text-transform: capitalize;">-</p>
-            </div>
-
-            <!-- Terdaftar Sejak -->
-            <div style="padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem; border-left: 4px solid #10b981;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <i class="fas fa-calendar-alt" style="color: #10b981; font-size: 1.1rem;"></i>
-                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">TERDAFTAR SEJAK</p>
-                </div>
-                <p id="createdAtDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 0.95rem;">-</p>
-            </div>
-
-            <!-- Status -->
-            <div style="padding: 1.5rem; background: #f0fdf4; border-radius: 0.5rem; border-left: 4px solid #10b981;">
-                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem;"></i>
-                    <p style="margin: 0; color: #6b7280; font-weight: 600; font-size: 0.85rem;">STATUS</p>
-                </div>
-                <p style="margin: 0; color: #10b981; font-weight: 600; font-size: 1rem;">
-                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.5rem;"></i> Aktif
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?= $this->endSection() ?>
 
 <?= $this->section('extra_css') ?>
 <style>
-.profile-cards-grid {
+/* Profile Display Grid */
+.profile-display-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    row-gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
-    .profile-cards-grid {
-        grid-template-columns: 1fr 1fr;
+@media (max-width: 640px) {
+    .profile-display-grid {
+        grid-template-columns: 1fr;
         gap: 1.5rem;
     }
 }
 
-.detail-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 
-@media (min-width: 640px) {
-    .detail-cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
+.modal.hidden {
+    display: none;
 }
 
-@media (min-width: 768px) {
-    .detail-cards-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }
 
-.pencil-btn {
+.modal-container {
     position: relative;
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-header h3 i {
+    color: #5d00ff;
+}
+
+.modal-close {
     background: none;
     border: none;
     color: #6b7280;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    padding: 0.5rem;
-    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.pencil-btn:hover {
-    color: #5d00ff;
+.modal-close:hover {
+    color: #1f2937;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    justify-content: flex-end;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+    box-shadow: none;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -216,26 +286,14 @@
     font-size: 0.875rem;
 }
 
-@media (min-width: 768px) {
-    .form-group label {
-        font-size: 0.95rem;
-    }
-}
-
 .form-control {
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.375rem;
     width: 100%;
     font-size: 0.875rem;
+    font-family: inherit;
     transition: all 0.3s ease;
-}
-
-@media (min-width: 768px) {
-    .form-control {
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-    }
 }
 
 .form-control:focus {
@@ -245,7 +303,7 @@
 }
 
 .btn {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 0.375rem;
     font-weight: 600;
@@ -255,13 +313,6 @@
     gap: 0.5rem;
     transition: all 0.3s ease;
     font-size: 0.875rem;
-}
-
-@media (min-width: 768px) {
-    .btn {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-    }
 }
 
 .btn-primary {
@@ -274,49 +325,36 @@
     box-shadow: 0 4px 6px rgba(93, 0, 255, 0.3);
 }
 
-.alert {
-    padding: 1rem 1.5rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
+/* Password Form Compact */
+.password-form {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
 }
 
-.alert-success {
-    background: #d1fae5;
-    color: #065f46;
-    border: 1px solid #10b981;
+.password-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0;
 }
 
-.alert-danger {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #ef4444;
+.password-grid .form-group {
+    margin-bottom: 0;
 }
 
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #f3f4f6;
-    align-items: center;
+.password-grid .form-group label {
+    margin-bottom: 0.25rem;
+    font-size: 0.8125rem;
 }
 
-.info-row:last-child {
-    border-bottom: none;
+.form-control-sm {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.8125rem;
 }
 
-.info-row label {
-    font-weight: 600;
-    color: #6b7280;
-    font-size: 0.95rem;
-}
-
-.info-row span {
-    color: #1f2937;
-    text-align: right;
-    font-weight: 500;
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
 }
 
 .text-xs {
@@ -331,21 +369,50 @@
     margin-top: 0.25rem;
 }
 
+.space-y-6 > * + * {
+    margin-top: 1.5rem;
+}
+
+/* Password Form Compact */
+.password-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.password-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0;
+}
+
+.password-grid .form-group {
+    margin-bottom: 0;
+}
+
+.password-grid .form-group label {
+    margin-bottom: 0.25rem;
+    font-size: 0.8125rem;
+}
+
+.form-control-sm {
+    padding: 0.5rem 0.625rem;
+    font-size: 0.8125rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+}
+
 /* Responsive untuk mobile */
 @media (max-width: 768px) {
-    /* Edit & Password cards - stack vertically */
-    div[style*="display: grid; grid-template-columns: 1fr 1fr"] {
-        grid-template-columns: 1fr !important;
+    .modal-container {
+        max-width: calc(100% - 2rem);
     }
-    
-    /* Detail Akun - change from 3 columns to 1 column */
-    div[style*="display: grid; grid-template-columns: repeat(3, 1fr)"] {
-        grid-template-columns: 1fr !important;
-    }
-    
-    /* Hide vertical separators */
-    div[style*="width: 1px; height: 40px"] {
-        display: none !important;
+
+    .password-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -378,16 +445,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         const user = result.data;
         
         if (user) {
-            document.getElementById('nama_lengkap').value = user.nama_lengkap || '';
-            document.getElementById('email').value = user.email || '';
-            document.getElementById('no_hp').value = user.no_hp || '';
-            document.getElementById('alamat').value = user.alamat || '';
-            document.getElementById('roleDisplay').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : '-';
+            // Display mode
+            document.getElementById('displayNamaLengkap').textContent = user.nama_lengkap || '-';
+            document.getElementById('displayEmail').textContent = user.email || '-';
+            document.getElementById('displayNoHp').textContent = user.no_hp || '-';
+            document.getElementById('displayAlamat').textContent = user.alamat || '-';
+            document.getElementById('displayRole').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : '-';
             
             if (user.created_at) {
                 const date = new Date(user.created_at);
-                document.getElementById('createdAtDisplay').textContent = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+                document.getElementById('displayCreatedAt').textContent = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
             }
+            
+            // Modal form fields
+            document.getElementById('modal_nama_lengkap').value = user.nama_lengkap || '';
+            document.getElementById('modal_email').value = user.email || '';
+            document.getElementById('modal_no_hp').value = user.no_hp || '';
+            document.getElementById('modal_alamat').value = user.alamat || '';
         }
     } catch (error) {
         console.error('❌ Error loading profile:', error);
@@ -395,15 +469,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-// Focus field helper
-function focusField(fieldId) {
-    const field = document.getElementById(fieldId);
-    if (field) {
-        field.focus();
-        field.style.borderColor = '#5d00ff';
-        field.style.boxShadow = '0 0 0 3px rgba(93, 0, 255, 0.1)';
-    }
+// Modal functions
+function openEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
 }
+
+function closeEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Close modal when pressing Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeEditModal();
+    }
+});
 
 // Submit profile form
 function submitProfileForm() {
@@ -415,10 +499,10 @@ function submitProfileForm() {
     }
     
     const data = {
-        nama_lengkap: document.getElementById('nama_lengkap').value,
-        email: document.getElementById('email').value,
-        no_hp: document.getElementById('no_hp').value,
-        alamat: document.getElementById('alamat').value
+        nama_lengkap: document.getElementById('modal_nama_lengkap').value,
+        email: document.getElementById('modal_email').value,
+        no_hp: document.getElementById('modal_no_hp').value,
+        alamat: document.getElementById('modal_alamat').value
     };
     
     console.log('📤 Submitting profile update:', data);
@@ -438,6 +522,13 @@ function submitProfileForm() {
         
         if (result.success || result.code === 200) {
             showToast('Profil berhasil diperbarui', 'success');
+            closeEditModal();
+            
+            // Update display
+            document.getElementById('displayNamaLengkap').textContent = data.nama_lengkap;
+            document.getElementById('displayEmail').textContent = data.email;
+            document.getElementById('displayNoHp').textContent = data.no_hp;
+            document.getElementById('displayAlamat').textContent = data.alamat;
         } else {
             showToast(result.message || 'Gagal memperbarui profil', 'error');
         }
@@ -550,18 +641,6 @@ function showToast(message, type) {
 }
 .animate-slide-in {
     animation: slide-in 0.3s ease;
-}
-
-/* Responsive Grid Layouts for Mobile */
-@media (max-width: 768px) {
-    .admin-container > div[style*="grid-template-columns: 1fr 1fr"] {
-        grid-template-columns: 1fr !important;
-    }
-    
-    .admin-container > div[style*="grid-template-columns: repeat(3, 1fr)"] {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-    }
 }
 </style>
 <?= $this->endSection() ?>
