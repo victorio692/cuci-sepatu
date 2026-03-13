@@ -26,7 +26,7 @@
 <!-- Page Header -->
 <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
     <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Layanan</h1>
+        <h1 class="text-2xl md:text-2xl font-bold text-gray-800 mb-2">Layanan</h1>
         <p class="text-sm md:text-base text-gray-600">Kelola layanan dan harga SYH Cleaning</p>
     </div>
     <a href="/admin/services/create" class="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm md:text-base rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center md:justify-start space-x-2">

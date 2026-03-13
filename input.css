@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Edge Browser Fixes */
+input[type="password"]::-ms-reveal {
+  display: none !important;
+}
+
+/* Focus states removal */
+html,
+body,
+* {
+  outline: 0 !important;
+}
+
+*:focus,
+*:focus-visible {
+  outline: 0 !important;
+  box-shadow: none !important;
+}

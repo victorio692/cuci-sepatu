@@ -4,7 +4,7 @@
 
 <!-- Page Header -->
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Beranda Admin</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">Beranda Admin</h1>
     <p class="text-gray-600">Kelola semua Pesanan dan layanan SYH Cleaning</p>
 </div>
 
@@ -15,7 +15,7 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <p class="text-blue-100 text-xs font-semibold uppercase tracking-tight">Total Pesanan</p>
-                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="total_bookings">0</h3>
+                <h3 class="text-2xl md:text-2xl font-bold mt-1" data-stat="total_bookings">0</h3>
                 <p class="text-blue-100 text-xs mt-1 truncate">Total semua pesanan</p>
             </div>
             <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -29,7 +29,7 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <p class="text-cyan-100 text-xs font-semibold uppercase tracking-tight">Dalam Proses</p>
-                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="proses_bookings">0</h3>
+                <h3 class="text-2xl md:text-2xl font-bold mt-1" data-stat="proses_bookings">0</h3>
                 <p class="text-cyan-100 text-xs mt-1 truncate">Diproses</p>
             </div>
             <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -43,7 +43,7 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <p class="text-emerald-100 text-xs font-semibold uppercase tracking-tight">Selesai</p>
-                <h3 class="text-2xl md:text-3xl font-bold mt-1" data-stat="completed_bookings">0</h3>
+                <h3 class="text-2xl md:text-2xl font-bold mt-1" data-stat="completed_bookings">0</h3>
                 <p class="text-emerald-100 text-xs mt-1 truncate">Siap diambil</p>
             </div>
             <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -57,7 +57,7 @@
         <div class="flex items-center justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <p class="text-violet-100 text-xs font-semibold uppercase tracking-tight">Total Pendapatan</p>
-                <h3 class="text-xl md:text-2xl font-bold mt-1 truncate" data-stat="total_revenue">Rp 0</h3>
+                <h3 class="text-xl md:text-1xl font-bold mt-1 truncate" data-stat="total_revenue">Rp 0</h3>
                 <p class="text-violet-100 text-xs mt-1 truncate">Dari pesanan selesai</p>
             </div>
             <div class="w-12 h-12 md:w-14 md:h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">

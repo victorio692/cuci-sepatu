@@ -7,21 +7,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title><?= $title ?? 'SYH Cleaning' ?></title>
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS Local -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/tailwind.css') ?>">
     
-    <!-- Tailwind Custom Config -->
+    <!-- Tailwind Custom Config (kept for reference, config is now in tailwind.config.js) -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#2563eb',
-                    }
-                }
-            }
-        }
+        // Custom theme config is now handled by tailwind.config.js during build
+        // This script is kept for backward compatibility if needed
     </script>
     
     <!-- Font Awesome -->
@@ -465,6 +457,11 @@
             table tbody td {
                 padding: 8px 12px !important;
             }
+        }
+
+        /* Hide password reveal button in Edge */
+        input[type="password"]::-ms-reveal {
+            display: none !important;
         }
     </style>
     

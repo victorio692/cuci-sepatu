@@ -4,7 +4,7 @@
 
 <!-- Page Header -->
 <div class="mb-6 md:mb-8">
-    <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">Pesanan</h1>
+    <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-1 md:mb-2">Pesanan</h1>
     <p class="text-xs md:text-base text-gray-600">Kelola semua pesanan pelanggan</p>
 </div>
 

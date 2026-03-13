@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="mb-6 md:mb-8">
-    <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
+    <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-1 md:mb-2">
         <i class="fas fa-file-chart-line"></i>Akun
     </h1>
     <p class="text-xs md:text-base text-gray-600">kelola informasi akun Anda</p>
@@ -114,24 +114,24 @@
         <form id="passwordForm" class="password-form">
             <div class="password-grid">
                 <div class="form-group">
-                    <label>Kata Sandi Saat Ini</label>
+                    <label>Kata sandi saat ini</label>
                     <input type="password" id="current_password" name="current_password" class="form-control form-control-sm" placeholder="Kata sandi saat ini" required>
                     <small class="text-xs text-gray-500">Diperlukan untuk keamanan</small>
                 </div>
 
                 <div class="form-group">
-                    <label>Kata Sandi Baru</label>
+                    <label>Kata sandi baru</label>
                     <input type="password" id="new_password" name="new_password" class="form-control form-control-sm" placeholder="Min 6 karakter" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Konfirmasi Kata Sandi</label>
+                    <label>Konfirmasi kata sandi baru</label>
                     <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-sm" placeholder="Ulang kata sandi" required>
                 </div>
             </div>
 
             <button type="button" onclick="submitPasswordForm()" class="btn btn-primary btn-sm" style="margin-top: 1rem; margin-left: auto; margin-right: auto; display: block; width: fit-content;">
-                <i class="fas fa-key"></i> Ubah Kata Sandi
+                <i class="fas fa-key"></i> Ubah kata sandi
             </button>
         </form>
     </div>

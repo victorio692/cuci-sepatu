@@ -4,7 +4,7 @@
 
 <!-- Halaman Header -->
 <div class="mb-6 md:mb-8">
-    <h1 class="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
+    <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-1 md:mb-2">
         <i class="fas fa-file-chart-line"></i>Laporan
     </h1>
     <p class="text-xs md:text-base text-gray-600">Statistik dan laporan bisnis SYH Cleaning</p>
