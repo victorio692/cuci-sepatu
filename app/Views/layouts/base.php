@@ -5,7 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
     <title><?= $title ?? 'SYH Cleaning' ?></title>
+    
+    <!-- CRITICAL: Prevent flash of unwanted colors during page load -->
+    <style>
+        html, body {
+            background-color: white !important;
+            background-image: none !important;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
     
     <!-- Tailwind CSS Local -->
     <link rel="stylesheet" href="<?= base_url('assets/css/tailwind.css') ?>">
