@@ -98,13 +98,13 @@
                     <div class="grid grid-cols-2 gap-3">
 
                         <a href="https://instagram.com/syh.cleaning" target="_blank"
-                           class="flex items-center justify-center space-x-2 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-md">
+                           class="flex items-center justify-center space-x-2 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 shadow-md instagram-button">
                             <i class="fa-brands fa-instagram text-lg"></i>
                             <span class="text-sm">Instagram</span>
                         </a>
 
                         <a href="https://wa.me/628985709532" target="_blank"
-                           class="flex items-center justify-center space-x-2 bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 hover:scale-105 transition-all duration-300 shadow-md">
+                           class="flex items-center justify-center space-x-2 bg-green-600 text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 shadow-md whatsapp-button-contact">
                             <i class="fa-brands fa-whatsapp text-lg"></i>
                             <span class="text-sm">WhatsApp</span>
                         </a>
@@ -133,5 +133,59 @@
         </div>
     </div>
 </section>
+
+<style>
+    /* Instagram Button */
+    .instagram-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .instagram-button:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 12px 20px rgba(168, 85, 247, 0.4) !important;
+    }
+
+    .instagram-button:hover i,
+    .instagram-button:hover span {
+        color: white !important;
+    }
+
+    .instagram-button i {
+        color: white !important;
+    }
+
+    .instagram-button span {
+        color: white !important;
+    }
+
+    /* WhatsApp Button - Contact Page */
+    .whatsapp-button-contact {
+        background-color: #16a34a !important;
+        color: white !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .whatsapp-button-contact:hover {
+        background-color: #15803d !important;
+        color: white !important;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 12px 20px rgba(22, 163, 74, 0.4) !important;
+    }
+
+    .whatsapp-button-contact:hover i,
+    .whatsapp-button-contact:hover span {
+        color: white !important;
+    }
+
+    .whatsapp-button-contact i {
+        color: white !important;
+    }
+
+    .whatsapp-button-contact span {
+        color: white !important;
+    }
+</style>
 
 <?= $this->endSection() ?>

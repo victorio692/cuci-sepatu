@@ -25,7 +25,7 @@
                         <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-spray-can text-blue-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Apa saja layanan yang tersedia?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Apa saja layanan yang tersedia?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq1"></i>
                 </button>
@@ -48,7 +48,7 @@
                         <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-clock text-green-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Berapa lama waktu pengerjaan?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Berapa lama waktu pengerjaan?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq2"></i>
                 </button>
@@ -72,7 +72,7 @@
                         <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-calendar-check text-purple-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Bagaimana cara melakukan pesanan?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Bagaimana cara melakukan pesanan?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq3"></i>
                 </button>
@@ -95,7 +95,7 @@
                         <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-credit-card text-blue-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Metode pembayaran apa saja yang tersedia?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Metode pembayaran apa saja yang tersedia?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq4"></i>
                 </button>
@@ -118,7 +118,7 @@
                         <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-map-marker-alt text-red-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Apakah ada layanan antar jemput?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Apakah ada layanan antar jemput?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq5"></i>
                 </button>
@@ -140,7 +140,7 @@
                         <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-shield-alt text-teal-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Apakah ada garansi untuk layanan?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Apakah ada garansi untuk layanan?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq6"></i>
                 </button>
@@ -162,7 +162,7 @@
                         <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-times-circle text-yellow-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Bagaimana jika ingin membatalkan booking?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Bagaimana jika ingin membatalkan booking?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq7"></i>
                 </button>
@@ -184,7 +184,7 @@
                         <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                             <i class="fas fa-phone text-indigo-600"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Bagaimana cara menghubungi customer service?</h3>
+                        <h3 class="font-semibold text-gray-900 text-sm">Bagaimana cara menghubungi customer service?</h3>
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq8"></i>
                 </button>
@@ -203,8 +203,8 @@
 
         <!-- CTA Section -->
         <div class="mt-8 bg-blue-600 rounded-2xl p-6 text-center text-white">
-            <h3 class="text-xl font-bold mb-2">Masih Ada Pertanyaan?</h3>
-            <p class="mb-4">Jangan ragu untuk menghubungi kami. Tim kami siap membantu Anda!</p>
+            <h3 class="text-xl font-bold mb-2 text-white">Masih ada pertanyaan lain?</h3>
+            <p class="mb-4 text-white">Jangan ragu untuk menghubungi kami. Tim kami siap membantu anda!</p>
             <a href="/kontak" class="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
                 <i class="fas fa-phone-alt mr-2"></i>
                 Hubungi Kami

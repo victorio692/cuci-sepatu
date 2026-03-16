@@ -1000,7 +1000,7 @@ function showSlide(n) {
                                     <span>Instagram: @syh.cleaning</span>
                                 </div>
                             </div>
-                            <a href="https://wa.me/628985709532?text=Halo%20SYH%20Cleaning,%20saya%20ingin%20bertanya" target="_blank" class="inline-flex items-center justify-center space-x-2 bg-green-600 text-white py-2 md:py-2.5 px-4 rounded-lg text-sm md:text-base font-semibold hover:bg-green-700 transition shadow-md hover:shadow-lg w-full">
+                            <a href="https://wa.me/628985709532?text=Halo%20SYH%20Cleaning,%20saya%20ingin%20bertanya" target="_blank" class="inline-flex items-center justify-center space-x-2 bg-green-600 text-white py-2 md:py-2.5 px-4 rounded-lg text-sm md:text-base font-semibold transition shadow-md hover:shadow-lg w-full whatsapp-button">
                                 <i class="fab fa-whatsapp text-lg"></i>
                                 <span>Chat WhatsApp</span>
                             </a>
@@ -1427,6 +1427,40 @@ function toggleMoreServices() {
         left: 1rem;
         max-width: none;
     }
+}
+
+/* WhatsApp Button Hover Effect - Harmonis */
+.whatsapp-button {
+    background-color: #16a34a !important;
+    color: white !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.whatsapp-button:hover {
+    background-color: #15803d !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(22, 163, 74, 0.4) !important;
+}
+
+.whatsapp-button:active {
+    transform: translateY(0);
+}
+
+/* Ensure icon and text stay white on hover */
+.whatsapp-button:hover i,
+.whatsapp-button:hover span {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.whatsapp-button i {
+    color: white !important;
+}
+
+.whatsapp-button span {
+    color: white !important;
 }
 
 /* Ensure Pesan button text always visible */
