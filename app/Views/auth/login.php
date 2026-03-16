@@ -308,7 +308,7 @@ function togglePassword(fieldId, button) {
         field.type = 'text';
         icon.classList.remove('fa-eye');
         icon.classList.add('fa-eye-slash');
-    } else {
+    } else { 
         field.type = 'password';
         icon.classList.remove('fa-eye-slash');
         icon.classList.add('fa-eye');

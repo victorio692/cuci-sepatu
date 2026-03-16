@@ -16,10 +16,10 @@
                     <p class="text-xs md:text-sm text-gray-600 mt-2">Kelola dan lacak semua pesanan cuci sepatu Anda</p>
                 </div>
                 <div>
-                    <a href="/profile" class="inline-flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm md:text-base rounded-lg transition shadow-sm whitespace-nowrap">
+                    <a href="/profile" class="inline-flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm md:text-base rounded-lg transition shadow-sm whitespace-nowrap back-to-profile-btn" style="color: white !important; text-decoration: none !important;">
                         <i class="fas fa-arrow-left"></i>
-                        <span class="hidden sm:inline">Kembali ke Profil</span>
-                        <span class="sm:hidden">Kembali</span>
+                        <span class="hidden sm:inline" style="color: white !important;">Kembali ke profil</span>
+                        <span class="sm:hidden" style="color: white !important;">Kembali</span>
                     </a>
                 </div>
             </div>
@@ -77,6 +77,11 @@
 // Get current status filter from URL
 const urlParams = new URLSearchParams(window.location.search);
 const currentStatus = urlParams.get('status') || 'all';
+
+// Pagination variables
+let allBookings = [];
+let currentPage = 1;
+const itemsPerPage = 10;
 
 // Load bookings on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -165,15 +170,18 @@ async function loadBookings(status = 'all') {
         console.log('✅ Bookings loaded:', result);
 
         // Handle different response formats
-        const bookings = result.bookings || result.data || [];
+        allBookings = result.bookings || result.data || [];
         const statusCounts = result.status_counts || {};
 
         // Update tab counts
         updateTabCounts(statusCounts);
 
+        // Reset to page 1 when loading new data
+        currentPage = 1;
+
         // Render bookings table
-        if (bookings.length > 0) {
-            renderBookingsTable(bookings);
+        if (allBookings.length > 0) {
+            renderBookingsTable(currentPage);
         } else {
             renderEmptyState();
         }
@@ -211,13 +219,19 @@ function updateTabCounts(counts) {
 }
 
 // Render bookings table - DIPERBAIKI dengan responsive mobile/desktop layout
-function renderBookingsTable(bookings) {
+function renderBookingsTable(page = 1) {
     const container = document.getElementById('bookingsContainer');
+    
+    // Calculate pagination
+    const totalPages = Math.ceil(allBookings.length / itemsPerPage);
+    const startIdx = (page - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    const pageBookings = allBookings.slice(startIdx, endIdx);
     
     // Mobile cards HTML
     let mobileCardsHTML = `<div class="block md:hidden space-y-3">`;
     
-    bookings.forEach(booking => {
+    pageBookings.forEach(booking => {
         const status = booking.status || 'pending';
         const statusInfo = statusConfig[status] || statusConfig['pending'];
         const serviceName = serviceNames[booking.layanan] || booking.layanan;
@@ -263,12 +277,28 @@ function renderBookingsTable(bookings) {
                 </div>
                 
                 <a href="/booking-detail/${booking.id}" 
-                   class="w-full inline-flex items-center justify-center px-3 py-2 ${booking.status === 'selesai' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white text-xs font-medium rounded-lg transition-colors duration-200">
+                   class="w-full inline-flex items-center justify-center px-3 py-2 ${booking.status === 'selesai' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white text-xs font-medium rounded-lg transition-colors duration-200 booking-action-link" style="color: white !important; text-decoration: none !important;">
                     ${hasFoto ? '<i class="fas fa-image mr-1"></i> Detail & Foto' : '<i class="fas fa-eye mr-1"></i> Lihat'}
                 </a>
             </div>
         `;
     });
+    
+    // Add pagination info for mobile
+    mobileCardsHTML += `
+        <div class="bg-white rounded-lg shadow-md p-4 text-center">
+            <p class="text-sm text-gray-600 mb-3">${page} dari ${totalPages}</p>
+            <p class="text-xs text-gray-500 mb-3">Menampilkan ${pageBookings.length} dari ${allBookings.length} pesanan</p>
+            <div class="flex gap-2 justify-center">
+                <button id="mobilePrevBtn" onclick="goToPage(${Math.max(1, page - 1)})" class="px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${page === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <button id="mobileNextBtn" onclick="goToPage(${Math.min(totalPages, page + 1)})" class="px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium ${page === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${page === totalPages ? 'disabled' : ''}>
+                    Berikutnya <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
     
     mobileCardsHTML += `</div>`;
     
@@ -296,7 +326,7 @@ function renderBookingsTable(bookings) {
                     <tbody class="bg-white divide-y divide-gray-200">
     `;
 
-    bookings.forEach(booking => {
+    pageBookings.forEach(booking => {
         const status = booking.status || 'pending';
         const statusInfo = statusConfig[status] || statusConfig['pending'];
         const serviceName = serviceNames[booking.layanan] || booking.layanan;
@@ -335,7 +365,7 @@ function renderBookingsTable(bookings) {
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <a href="/booking-detail/${booking.id}" 
-                       class="inline-flex items-center px-4 py-2 ${booking.status === 'selesai' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                       class="inline-flex items-center px-4 py-2 ${booking.status === 'selesai' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white text-sm font-medium rounded-lg transition-colors duration-200 booking-action-link" style="color: white !important; text-decoration: none !important;">
                         ${hasFoto ? '<i class="fas fa-image mr-1"></i> Detail & Foto' : '<i class="fas fa-eye mr-1"></i> Lihat'}
                     </a>
                 </td>
@@ -347,12 +377,19 @@ function renderBookingsTable(bookings) {
                     </tbody>
                 </table>
             </div>
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-sm text-gray-600">
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div class="flex justify-between items-center">
-                    <span>Menampilkan ${bookings.length} pesanan</span>
-                    <div class="flex gap-2">
-                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white hover:bg-gray-50 disabled:opacity-50" disabled>Prev</button>
-                        <button class="px-3 py-1 border border-gray-300 rounded-md bg-white hover:bg-gray-50">Next</button>
+                    <span class="text-sm text-gray-600">
+                        Menampilkan ${pageBookings.length} dari ${allBookings.length} pesanan (Halaman ${page}/${totalPages})
+                    </span>
+                    <div class="flex gap-2 items-center">
+                        <button id="desktopPrevBtn" onclick="goToPage(${Math.max(1, page - 1)})" class="px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium transition ${page === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${page === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-left"></i> Sebelumnya
+                        </button>
+                        <span class="text-sm text-gray-600 font-medium">Halaman ${page}/${totalPages}</span>
+                        <button id="desktopNextBtn" onclick="goToPage(${Math.min(totalPages, page + 1)})" class="px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium transition ${page === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${page === totalPages ? 'disabled' : ''}>
+                            Berikutnya <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -360,6 +397,16 @@ function renderBookingsTable(bookings) {
     `;
 
     container.innerHTML = mobileCardsHTML + desktopTableHTML;
+}
+
+// Go to specific page
+function goToPage(page) {
+    const totalPages = Math.ceil(allBookings.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        renderBookingsTable(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 // Render empty state
@@ -375,13 +422,67 @@ function renderEmptyState() {
                 Anda belum memiliki pesanan apapun. Mulai pesan layanan cuci sepatu sekarang!
             </p>
             <a href="/make-booking" 
-               class="inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition">
-                <i class="fas fa-plus mr-2"></i>
-                Pesan Sekarang
+               class="inline-block px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition empty-state-cta" style="color: white !important; text-decoration: none !important;">
+                <i class="fas fa-plus mr-2" style="color: white !important;"></i>
+                <span style="color: white !important;">Pesan Sekarang</span>
             </a>
         </div>
     `;
 }
 </script>
+
+<style>
+/* Back to profile button */
+.back-to-profile-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s ease !important;
+}
+
+.back-to-profile-btn:hover {
+    color: white !important;
+    background-color: #1d4ed8 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-1px);
+}
+
+.back-to-profile-btn span {
+    color: white !important;
+    display: inline !important;
+}
+
+/* Booking action links */
+.booking-action-link {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s ease !important;
+    color: white !important;
+}
+
+.booking-action-link:hover {
+    color: white !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-1px);
+}
+
+.booking-action-link i {
+    color: white !important;
+}
+
+/* Empty state CTA */
+.empty-state-cta {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+.empty-state-cta:hover {
+    color: white !important;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(-2px);
+}
+
+.empty-state-cta i,
+.empty-state-cta span {
+    color: white !important;
+}
+</style>
 
 <?= $this->endSection() ?>

@@ -639,6 +639,48 @@
         position: relative;
         z-index: auto;
     }
+
+    /* Override input autofill styling */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        box-shadow: 0 0 0 1000px white inset !important;
+    }
+
+    input:-webkit-autofill {
+        -webkit-text-fill-color: #374151 !important;
+    }
+
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        box-shadow: 0 0 0 1000px white inset !important;
+    }
+
+    textarea:-webkit-autofill {
+        -webkit-text-fill-color: #374151 !important;
+    }
+
+    /* Fix placeholder color */
+    input::placeholder,
+    textarea::placeholder {
+        color: #9CA3AF !important;
+        opacity: 1 !important;
+    }
+
+    input::-webkit-input-placeholder,
+    textarea::-webkit-input-placeholder {
+        color: #9CA3AF !important;
+    }
+
+    /* Fix text color in input and textarea */
+    input,
+    textarea {
+        color: #1F2937 !important;
+    }
 </style>
 <script>
 function showToast(message, type = 'success') {

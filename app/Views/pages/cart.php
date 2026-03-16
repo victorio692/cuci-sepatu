@@ -469,6 +469,19 @@ input[type="checkbox"]:checked::after {
     font-weight: bold;
     line-height: 1;
 }
+
+/* Quantity button styling */
+button[onclick*="updateQuantity"] {
+    color: inherit !important;
+}
+
+button[onclick*="updateQuantity"] span {
+    color: #1F2937 !important;
+}
+
+button[onclick*="updateQuantity"] i {
+    color: white !important;
+}
 </style>
 
 <?= $this->endSection() ?>

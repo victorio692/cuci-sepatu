@@ -836,6 +836,73 @@ button:hover:not(:disabled), a.inline-flex:hover {
 html {
     scroll-behavior: smooth;
 }
+
+/* Override input autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: #374151 !important;
+}
+
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+}
+
+textarea:-webkit-autofill {
+    -webkit-text-fill-color: #374151 !important;
+}
+
+/* Fix placeholder color */
+input::placeholder,
+textarea::placeholder {
+    color: #9CA3AF !important;
+    opacity: 1 !important;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #9CA3AF !important;
+}
+
+/* Fix text color in input and textarea */
+input,
+textarea {
+    color: #1F2937 !important;
+}
+
+/* Fix number input spinner */
+input[type="number"],
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    color: #1F2937 !important;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Fix buttons color - ensure they don't turn green */
+button.text-white,
+button[class*="text-white"],
+button.ripple.text-white {
+    color: white !important;
+}
+
+button.text-white i,
+button.text-white .fas {
+    color: white !important;
+}
 </style>
 
 <?= $this->endSection() ?>

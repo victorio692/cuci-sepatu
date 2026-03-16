@@ -811,6 +811,108 @@
         animation: fade-in 0.5s ease-out 0.3s forwards;
         opacity: 0;
     }
+
+    /* ============================================
+       FIX INPUT AUTOFILL AND PLACEHOLDER COLORS
+       ============================================ */
+    /* Override input autofill styling - prevent green/yellow tint */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        box-shadow: 0 0 0 1000px white inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    input:-webkit-autofill {
+        -webkit-text-fill-color: #374151 !important;
+    }
+
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        box-shadow: 0 0 0 1000px white inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    textarea:-webkit-autofill {
+        -webkit-text-fill-color: #374151 !important;
+    }
+
+    /* Fix placeholder color */
+    input::placeholder,
+    textarea::placeholder,
+    select {
+        color: #9CA3AF !important;
+        opacity: 1 !important;
+    }
+
+    input::-webkit-input-placeholder,
+    textarea::-webkit-input-placeholder {
+        color: #9CA3AF !important;
+    }
+
+    input::-moz-placeholder,
+    textarea::-moz-placeholder {
+        color: #9CA3AF !important;
+        opacity: 1 !important;
+    }
+
+    input:-ms-input-placeholder,
+    textarea:-ms-input-placeholder {
+        color: #9CA3AF !important;
+    }
+
+    /* Ensure text color in input and textarea */
+    input,
+    textarea,
+    select {
+        color: #1F2937 !important;
+    }
+
+    /* ============================================
+       FIX PURPLE/MAGENTA BACKGROUND BAR AT BOTTOM
+       ============================================ */
+    /* Remove any borders, backgrounds, or shadows from html/body that could create colored lines */
+    html {
+        border: 0 !important;
+        border-bottom: 0 !important;
+        border-top: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        box-shadow: none !important;
+        background: white !important;
+        background-image: none !important;
+        outline: none !important;
+    }
+
+    body {
+        border: 0 !important;
+        border-bottom: 0 !important;
+        border-top: 0 !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        box-shadow: none !important;
+        background: white !important;
+        background-image: none !important;
+        background-color: white !important;
+        outline: none !important;
+        min-height: auto !important;
+    }
+
+    /* Remove pseudo-elements that might create colored bars */
+    html::before,
+    html::after,
+    body::before,
+    body::after {
+        display: none !important;
+        content: "" !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: none !important;
+    }
 </style>
 
 <div id="logoutOverlay" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-blue-800 hidden items-center justify-center z-[9999]">
