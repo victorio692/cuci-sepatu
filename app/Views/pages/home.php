@@ -3,9 +3,9 @@
 <?= $this->section('content') ?>
 
 <!-- Promo Banner Slider -->
-<section class="bg-gray-50 py-4">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative rounded-xl overflow-hidden shadow-lg">
+<section class="bg-gray-50 py-4 w-full">
+    <div class="w-full px-0">
+        <div class="relative rounded-none md:rounded-xl overflow-hidden shadow-none md:shadow-lg mx-0">
             <!-- Slider Container -->
             <div class="slider-container relative">
                 <!-- Slides -->
@@ -338,6 +338,7 @@
     line-height: 1.1;
     letter-spacing: 1px;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    margin: 0;
 }
 
 .banner-jumat .desc-text {
@@ -520,226 +521,161 @@
     background: rgba(255, 255, 255, 0.8);
 }
 
-/* Responsive Design */
+/* Responsive Design - Tablet */
 @media (max-width: 768px) {
     .promo-banner {
-        min-height: 180px;
-        padding: 10px;
+        min-height: 200px;
+        padding: 12px 8px 16px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
     
     .banner-content {
-        gap: 8px;
-        justify-content: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding: 0 40px;
     }
     
     .banner-icon-circle {
         width: 80px;
         height: 80px;
+        flex-shrink: 0;
     }
     
     .shoe-icon-wrapper i {
-        font-size: 28px;
+        font-size: 32px;
+    }
+    
+    .bubbles {
+        display: none !important;
     }
     
     .bubble:nth-child(1) {
+        width: 4px;
+        height: 4px;
+    }
+    
+    .bubble:nth-child(2) {
         width: 6px;
         height: 6px;
     }
     
-    .bubble:nth-child(2) {
-        width: 8px;
-        height: 8px;
+    .bubble:nth-child(3) {
+        width: 4px;
+        height: 4px;
     }
     
-    .bubble:nth-child(3) {
+    .bubble:nth-child(4) {
         width: 5px;
         height: 5px;
     }
     
-    .bubble:nth-child(4) {
-        width: 7px;
-        height: 7px;
-    }
-    
     .promo-badge {
-        font-size: 7px;
-        padding: 3px 8px;
-        left: 95px;
-        top: 3px;
+        display: none !important;
     }
     
     .banner-main {
-        padding: 5px;
+        padding: 0;
+        flex: 0 0 auto;
     }
     
     .discount-text {
-        font-size: 22px;
-        letter-spacing: 1px;
-    }
-    
-    .discount-amount {
-        font-size: 55px;
-        letter-spacing: -3px;
-    }
-    
-    .gratis-text, .ongkir-text {
-        font-size: 26px;
-        letter-spacing: 1px;
-    }
-    
-    .banner-main-ongkir {
-        padding: 12px 20px;
-        border-radius: 10px;
-    }
-    
-    .banner-divider {
-        width: 3px;
-        height: 60px;
-    }
-    
-    .banner-desc {
-        padding: 0 5px;
-    }
-    
-    .desc-text {
         font-size: 16px;
         letter-spacing: 0.5px;
-    }
-    
-    .cta-button {
-        font-size: 7px;
-        padding: 5px 12px;
-        border-radius: 10px;
-    }
-    
-    .banner-cta {
-        bottom: 20px;
-        left: 50%;
-    }
-    
-    .brand-text {
-        font-size: 14px;
-        right: 10px;
-        top: 12px;
-    }
-    
-    .brand-note {
-        font-size: 8px;
-        bottom: 12px;
-        right: 10px;
-    }
-    
-    .deco-shoe {
-        font-size: 20px;
-    }
-    
-    .slider-arrow {
-        padding: 8px 10px;
-        font-size: 14px;
-    }
-    
-    .slider-arrow.left {
-        left: 5px;
-    }
-    
-    .slider-arrow.right {
-        right: 5px;
-    }
-    
-    .slider-pagination {
-        bottom: 10px;
-        gap: 6px;
-    }
-    
-    .dot {
-        width: 8px;
-        height: 8px;
-        border: 1px solid white;
-    }
-}
-
-/* Extra Small Mobile (Portrait) */
-@media (max-width: 480px) {
-    .promo-banner {
-        min-height: 150px;
-        padding: 8px;
-    }
-    
-    .banner-content {
-        gap: 5px;
-    }
-    
-    .banner-icon-circle {
-        width: 65px;
-        height: 65px;
-    }
-    
-    .shoe-icon-wrapper i {
-        font-size: 22px;
-    }
-    
-    .promo-badge {
-        font-size: 6px;
-        padding: 2px 6px;
-        left: 75px;
-        top: 2px;
-    }
-    
-    .discount-text {
-        font-size: 18px;
-        letter-spacing: 0.5px;
+        line-height: 0.8;
+        margin: 0;
     }
     
     .discount-amount {
-        font-size: 42px;
+        font-size: 48px;
         letter-spacing: -2px;
+        line-height: 0.8;
+        margin: 0;
     }
     
     .gratis-text, .ongkir-text {
-        font-size: 20px;
-        letter-spacing: 0.5px;
+        font-size: 24px;
+        letter-spacing: 0.3px;
+        line-height: 0.85;
+        margin: 0;
+        white-space: nowrap;
     }
     
     .banner-main-ongkir {
-        padding: 8px 15px;
+        padding: 4px 8px;
         border-radius: 8px;
+        gap: 2px;
+        margin-left: 0;
     }
     
     .banner-divider {
         width: 2px;
-        height: 45px;
+        height: 60px;
+        flex-shrink: 0;
+        margin: 0 2px;
+    }
+    
+    .banner-desc {
+        padding: 0;
+        flex: 0 0 auto;
+        min-width: 0;
+        margin-left: 0;
+        text-align: right;
+    }
+    
+    .banner-jumat .banner-desc {
+        margin-right: 0 !important;
+    }
+    
+    .banner-ongkir .banner-desc {
+        margin-right: 0 !important;
     }
     
     .desc-text {
-        font-size: 12px;
-        letter-spacing: 0.3px;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        line-height: 0.95;
+        margin: 0;
+        word-break: break-word;
+        word-wrap: break-word;
+        white-space: normal;
     }
     
     .cta-button {
-        font-size: 6px;
+        font-size: 7px;
         padding: 4px 10px;
         border-radius: 8px;
+        white-space: nowrap;
     }
     
     .banner-cta {
-        bottom: 15px;
+        position: absolute;
+        bottom: 20px;
         left: 50%;
+        transform: translateX(-50%);
     }
     
     .brand-text {
-        font-size: 11px;
-        right: 8px;
-        top: 8px;
+        display: none !important;
     }
     
     .brand-note {
-        font-size: 6px;
-        bottom: 8px;
-        right: 8px;
+        display: none !important;
+    }
+    
+    .deco-shoes {
+        display: none !important;
     }
     
     .deco-shoe {
-        font-size: 15px;
+        display: none !important;
     }
     
     .slider-arrow {
@@ -756,13 +692,177 @@
     }
     
     .slider-pagination {
-        bottom: 8px;
+        bottom: 6px;
         gap: 5px;
     }
     
     .dot {
-        width: 7px;
-        height: 7px;
+        width: 6px;
+        height: 6px;
+        border: 1px solid white;
+    }
+}
+
+/* Extra Small Mobile (Portrait) */
+@media (max-width: 480px) {
+    .promo-banner {
+        min-height: 130px;
+        padding: 8px 4px 12px 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    
+    .banner-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2px;
+        width: 100%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        padding: 0 70px;
+    }
+    
+    .banner-icon-circle {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+    }
+    
+    .shoe-icon-wrapper i {
+        font-size: 18px;
+    }
+    
+    .bubbles {
+        display: none !important;
+    }
+    
+    .promo-badge {
+        display: none !important;
+    }
+    
+    .banner-main {
+        padding: 0;
+        flex: 0 0 auto;
+    }
+    
+    .discount-text {
+        font-size: 10px;
+        letter-spacing: 0.3px;
+        line-height: 0.7;
+        margin: 0;
+    }
+    
+    .discount-amount {
+        font-size: 22px;
+        letter-spacing: -1px;
+        line-height: 0.75;
+        margin: 0;
+    }
+    
+    .gratis-text, .ongkir-text {
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        line-height: 0.8;
+        margin: 0;
+        white-space: nowrap;
+    }
+    
+    .banner-main-ongkir {
+        padding: 1px 3px;
+        border-radius: 4px;
+        gap: 0;
+        margin-left: 0;
+    }
+    
+    .banner-divider {
+        width: 1px;
+        height: 35px;
+        flex-shrink: 0;
+        margin: 0 1px;
+    }
+    
+    .banner-desc {
+        padding: 0;
+        flex: 0 0 auto;
+        min-width: 0;
+        overflow: hidden;
+        margin-left: 0;
+        text-align: right;
+    }
+    
+    .banner-jumat .banner-desc {
+        margin-right: 0 !important;
+    }
+    
+    .banner-ongkir .banner-desc {
+        margin-right: 0 !important;
+    }
+    
+    .desc-text {
+        font-size: 8px;
+        letter-spacing: 0.1px;
+        line-height: 0.85;
+        margin: 0;
+        word-break: break-word;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+    
+    .cta-button {
+        font-size: 4px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+    
+    .banner-cta {
+        position: absolute;
+        bottom: 0.50px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .brand-text {
+        display: none !important;
+    }
+    
+    .brand-note {
+        display: none !important;
+    }
+    
+    .deco-shoes {
+        display: none !important;
+    }
+    
+    .deco-shoe {
+        display: none !important;
+    }
+    
+    .slider-arrow {
+        padding: 5px 6px;
+        font-size: 10px;
+    }
+    
+    .slider-arrow.left {
+        left: 2px;
+    }
+    
+    .slider-arrow.right {
+        right: 2px;
+    }
+    
+    .slider-pagination {
+        bottom: 4px;
+        gap: 4px;
+    }
+    
+    .dot {
+        width: 5px;
+        height: 5px;
+        border: none;
     }
 }
 
@@ -1012,46 +1112,46 @@ function showSlide(n) {
 
 
         <!-- Keunggulan Kami Section -->
-<section class="py-8 bg-white border-t border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Keunggulan Kami</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
-                <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                    <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+<section class="py-4 md:py-8 bg-white border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <h2 class="text-base md:text-2xl font-bold text-gray-900 mb-3 md:mb-6 text-center">Keunggulan Kami</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+                <div class="w-10 md:w-14 h-10 md:h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-check-circle text-green-600 text-lg md:text-2xl"></i>
                 </div>
-                <div class="flex-1">
-                    <div class="font-semibold text-sm text-gray-900">Profesional</div>
+                <div class="flex-1 flex flex-col items-center sm:items-start">
+                    <div class="font-semibold text-xs md:text-sm text-gray-900">Profesional</div>
                     <div class="text-xs text-gray-600">Berpengalaman</div>
                 </div>
             </div>
             
-            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
-                <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                    <i class="fas fa-truck text-blue-600 text-2xl"></i>
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+                <div class="w-10 md:w-14 h-10 md:h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-truck text-blue-600 text-lg md:text-2xl"></i>
                 </div>
-                <div class="flex-1">
-                    <div class="font-semibold text-sm text-gray-900">Gratis Antar</div>
+                <div class="flex-1 flex flex-col items-center sm:items-start">
+                    <div class="font-semibold text-xs md:text-sm text-gray-900">Gratis Antar</div>
                     <div class="text-xs text-gray-600">Radius 5km</div>
                 </div>
             </div>
             
-            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
-                <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                    <i class="fas fa-tags text-yellow-600 text-2xl"></i>
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+                <div class="w-10 md:w-14 h-10 md:h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-tags text-yellow-600 text-lg md:text-2xl"></i>
                 </div>
-                <div class="flex-1">
-                    <div class="font-semibold text-sm text-gray-900">Harga Murah</div>
+                <div class="flex-1 flex flex-col items-center sm:items-start">
+                    <div class="font-semibold text-xs md:text-sm text-gray-900">Harga Murah</div>
                     <div class="text-xs text-gray-600">Terjangkau</div>
                 </div>
             </div>
             
-            <div class="group bg-gradient-to-br from-gray-50 to-white p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex items-center gap-4">
-                <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                    <i class="fas fa-clock text-purple-600 text-2xl"></i>
+            <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+                <div class="w-10 md:w-14 h-10 md:h-14 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-clock text-purple-600 text-lg md:text-2xl"></i>
                 </div>
-                <div class="flex-1">
-                    <div class="font-semibold text-sm text-gray-900">Cepat</div>
+                <div class="flex-1 flex flex-col items-center sm:items-start">
+                    <div class="font-semibold text-xs md:text-sm text-gray-900">Cepat</div>
                     <div class="text-xs text-gray-600">1-3 hari</div>
                 </div>
             </div>

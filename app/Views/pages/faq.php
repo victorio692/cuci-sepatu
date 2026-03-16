@@ -29,7 +29,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq1"></i>
                 </button>
-                <div id="faq1" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq1" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Kami menyediakan berbagai layanan cleaning sepatu termasuk:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• <strong>Fast Cleaning</strong> - Pembersihan cepat untuk sepatu kotor ringan</li>
@@ -52,7 +52,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq2"></i>
                 </button>
-                <div id="faq2" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq2" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Waktu pengerjaan bervariasi tergantung jenis layanan:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• <strong>Fast Cleaning:</strong> 1-2 hari kerja</li>
@@ -76,7 +76,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq3"></i>
                 </button>
-                <div id="faq3" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq3" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Anda dapat memesan dengan mudah:</p>
                     <ol class="pl-13 mt-2 space-y-2">
                         <li>1. Pilih menu <strong>Layanan</strong> dan pilih jenis layanan yang diinginkan</li>
@@ -99,7 +99,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq4"></i>
                 </button>
-                <div id="faq4" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq4" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Kami menerima berbagai metode pembayaran:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• Transfer Bank (BCA, Mandiri, BNI, BRI)</li>
@@ -122,7 +122,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq5"></i>
                 </button>
-                <div id="faq5" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq5" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Ya, kami menyediakan layanan antar jemput untuk area:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• Sumberagung</li>
@@ -144,7 +144,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq6"></i>
                 </button>
-                <div id="faq6" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq6" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Ya, kami memberikan garansi untuk setiap layanan:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• Garansi cuci ulang jika hasil kurang memuaskan</li>
@@ -166,7 +166,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq7"></i>
                 </button>
-                <div id="faq7" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq7" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Pembatalan booking dapat dilakukan dengan ketentuan:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• Pembatalan gratis jika dilakukan sebelum booking dikonfirmasi</li>
@@ -188,7 +188,7 @@
                     </div>
                     <i class="fas fa-chevron-down text-gray-400 transition-transform" id="icon-faq8"></i>
                 </button>
-                <div id="faq8" class="hidden px-6 pb-4 text-gray-600">
+                <div id="faq8" class="hidden px-6 pb-4 text-gray-600 text-sm">
                     <p class="pl-13">Anda dapat menghubungi kami melalui:</p>
                     <ul class="pl-13 mt-2 space-y-1">
                         <li>• <strong>WhatsApp:</strong> 08985709532</li>
