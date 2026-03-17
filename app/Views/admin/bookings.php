@@ -18,9 +18,9 @@
                     type="text" 
                     id="searchInput" 
                     placeholder="Nama, email..." 
-                    class="w-full pl-9 pr-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full pl-4 md:pl-10 pr-10 md:pr-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
-                <i class="fas fa-search absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                <i class="fas fa-search absolute right-3 md:right-auto md:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
             </div>
         </div>
 

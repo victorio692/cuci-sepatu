@@ -24,9 +24,9 @@
                     type="text" 
                     id="searchInput"
                     placeholder="Cari nama, email, nomor telepon..." 
-                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full pl-4 md:pl-12 pr-10 md:pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <i class="fas fa-search absolute right-3 md:right-auto md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
             </div>
         </div>
 
