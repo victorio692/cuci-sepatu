@@ -4,9 +4,8 @@
 
 <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div class="mb-6">
-        <a href="/admin/users" class="inline-flex items-center text-blue-600 hover:text-blue-700 transition">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Kembali ke Daftar Pengguna
+        <a href="/admin/users" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Kembali ke pelanggan
         </a>
     </div>
 
@@ -119,18 +118,18 @@
             </div>
 
             <!-- Buttons -->
-            <div class="flex items-center space-x-4 pt-4 border-t border-gray-200">
+            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 md:space-x-4 pt-4 border-t border-gray-200">
                 <button 
                     type="button"
                     onclick="submitUserForm()"
-                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
+                    class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center md:justify-start space-x-2"
                 >
                     <i class="fas fa-save"></i>
                     <span>Simpan Perubahan</span>
                 </button>
                 <a 
                     href="/admin/users" 
-                    class="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center space-x-2"
+                    class="w-full md:w-auto px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition flex items-center justify-center md:justify-start space-x-2"
                 >
                     <i class="fas fa-times"></i>
                     <span>Batal</span>
