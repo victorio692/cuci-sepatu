@@ -94,6 +94,28 @@ class Notifications extends Controller
         return $this->response->setJSON(['success' => true]);
     }
 
+    private function generateWhatsAppMessage($booking, $bookingId, $deliveryType = 'pickup')
+    {
+        $message = "Halo {$booking['nama_lengkap']},\n\n";
+        $message .= "Sepatu Anda dengan ID Pesanan #{$bookingId} sudah selesai dicuci!\n\n";
+        $message .= "Layanan: {$booking['layanan']}\n";
+        $message .= "Jumlah: {$booking['jumlah']} pasang\n";
+        $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";
+        
+        
+        if ($deliveryType === 'diantar' || $deliveryType === 'delivery') {
+            $message .= "Sepatu Anda akan kami antar ke alamat Anda.\n";
+            $message .= "Silakan tunggu konfirmasi jadwal pengiriman dari kami.\n\n";
+        } else {
+            
+            $message .= "Silakan ambil sepatu Anda di SYH.CLEANING.\n\n";
+        }
+        
+        $message .= "Terima kasih!";
+        
+        return $message;
+    }
+
     public function sendWhatsApp($bookingId)
     {
         $userId = session()->get('user_id');
@@ -102,10 +124,9 @@ class Notifications extends Controller
             return $this->response->setStatusCode(401)->setJSON(['success' => false, 'message' => 'Unauthorized']);
         }
 
-        // SUpport 2 tipe session login: web login (role) dan API login (is_admin)
+       
         $isAdmin = session()->get('role') === 'admin' || session()->get('is_admin') === true;
 
-        // Fallback cek ke database supaya konsisten dengan filter auth:admin
         if (!$isAdmin) {
             $user = $this->db->table('users')
                 ->select('role')
@@ -120,7 +141,6 @@ class Notifications extends Controller
             return $this->response->setStatusCode(403)->setJSON(['success' => false, 'message' => 'Unauthorized']);
         }
 
-        // Get booking and customer info
         $booking = $this->db->table('bookings')
             ->select('bookings.*, users.nama_lengkap, users.no_hp')
             ->join('users', 'bookings.id_user = users.id')
@@ -132,20 +152,14 @@ class Notifications extends Controller
             return $this->response->setJSON(['success' => false, 'message' => 'Pesanan tidak ditemukan']);
         }
 
-        // Format phone number (remove leading 0, add 62)
         $phone = $booking['no_hp'];
         if (substr($phone, 0, 1) === '0') {
             $phone = '62' . substr($phone, 1);
         }
 
-        // Create WhatsApp message
-        $message = "Halo {$booking['nama_lengkap']},\n\n";
-        $message .= "Sepatu Anda dengan ID Pesanan  #{$bookingId} sudah selesai dicuci!\n\n";
-        $message .= "Layanan: {$booking['layanan']}\n";
-        $message .= "Jumlah: {$booking['jumlah']} pasang\n";
-        $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";
-        $message .= "Silakan ambil sepatu Anda di SYH.CLEANING.\n\n";
-        $message .= "Terima kasih!";
+        $deliveryType = isset($booking['opsi_kirim']) ? $booking['opsi_kirim'] : 'pickup';
+
+        $message = $this->generateWhatsAppMessage($booking, $bookingId, $deliveryType);
 
         $waLink = "https://wa.me/" . $phone . "?text=" . urlencode($message);
 
