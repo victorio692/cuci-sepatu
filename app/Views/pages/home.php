@@ -4,8 +4,8 @@
 
 <!-- Promo Banner Slider -->
 <section class="bg-gray-50 py-4 w-full">
-    <div class="w-full px-0">
-        <div class="relative rounded-none md:rounded-xl overflow-hidden shadow-none md:shadow-lg mx-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative rounded-lg overflow-hidden shadow-lg">
             <!-- Slider Container -->
             <div class="slider-container relative">
                 <!-- Slides -->
@@ -641,7 +641,7 @@
     .desc-text {
         font-size: 14px;
         letter-spacing: 0.2px;
-        line-height: 0.95;
+        line-height: 1.1;
         margin: 0;
         word-break: break-word;
         word-wrap: break-word;
@@ -657,7 +657,7 @@
     
     .banner-cta {
         position: absolute;
-        bottom: 20px;
+        bottom: 24px;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -726,13 +726,13 @@
     }
     
     .banner-icon-circle {
-        width: 50px;
-        height: 50px;
+        width: 70px;
+        height: 70px;
         flex-shrink: 0;
     }
     
     .shoe-icon-wrapper i {
-        font-size: 18px;
+        font-size: 28px;
     }
     
     .bubbles {
@@ -749,23 +749,23 @@
     }
     
     .discount-text {
-        font-size: 10px;
+        font-size: 14px;
         letter-spacing: 0.3px;
-        line-height: 0.7;
+        line-height: 0.95;
         margin: 0;
     }
     
     .discount-amount {
-        font-size: 22px;
+        font-size: 32px;
         letter-spacing: -1px;
-        line-height: 0.75;
+        line-height: 1;
         margin: 0;
     }
     
     .gratis-text, .ongkir-text {
-        font-size: 14px;
+        font-size: 20px;
         letter-spacing: 0.2px;
-        line-height: 0.8;
+        line-height: 1.1;
         margin: 0;
         white-space: nowrap;
     }
@@ -802,9 +802,9 @@
     }
     
     .desc-text {
-        font-size: 8px;
+        font-size: 13px;
         letter-spacing: 0.1px;
-        line-height: 0.85;
+        line-height: 1.3;
         margin: 0;
         word-break: break-word;
         word-wrap: break-word;
@@ -812,15 +812,15 @@
     }
     
     .cta-button {
-        font-size: 4px;
-        padding: 2px 6px;
-        border-radius: 4px;
+        font-size: 7px;
+        padding: 4px 10px;
+        border-radius: 6px;
         white-space: nowrap;
     }
     
     .banner-cta {
         position: absolute;
-        bottom: 0.50px;
+        bottom: -16px;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -1114,45 +1114,45 @@ function showSlide(n) {
         <!-- Keunggulan Kami Section -->
 <section class="py-4 md:py-8 bg-white border-t border-gray-200">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <h2 class="text-base md:text-2xl font-bold text-gray-900 mb-3 md:mb-6 text-center">Keunggulan Kami</h2>
+        <h2 class="text-lg md:text-2xl font-bold text-gray-900 mb-3 md:mb-6 text-center">Keunggulan Kami</h2>
         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
             <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
-                <div class="w-10 md:w-14 h-10 md:h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
-                    <i class="fas fa-check-circle text-green-600 text-lg md:text-2xl"></i>
+                <div class="w-12 md:w-14 h-12 md:h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-check-circle text-green-600 text-xl md:text-2xl"></i>
                 </div>
                 <div class="flex-1 flex flex-col items-center sm:items-start">
-                    <div class="font-semibold text-xs md:text-sm text-gray-900">Profesional</div>
-                    <div class="text-xs text-gray-600">Berpengalaman</div>
+                    <div class="font-semibold text-sm md:text-sm text-gray-900">Profesional</div>
+                    <div class="text-xs md:text-xs text-gray-600">Berpengalaman</div>
                 </div>
             </div>
             
             <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
-                <div class="w-10 md:w-14 h-10 md:h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
-                    <i class="fas fa-truck text-blue-600 text-lg md:text-2xl"></i>
+                <div class="w-12 md:w-14 h-12 md:h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-truck text-blue-600 text-xl md:text-2xl"></i>
                 </div>
                 <div class="flex-1 flex flex-col items-center sm:items-start">
-                    <div class="font-semibold text-xs md:text-sm text-gray-900">Gratis Antar</div>
-                    <div class="text-xs text-gray-600">Radius 5km</div>
+                    <div class="font-semibold text-sm md:text-sm text-gray-900">Gratis Antar</div>
+                    <div class="text-xs md:text-xs text-gray-600">Radius 5km</div>
                 </div>
             </div>
             
             <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
-                <div class="w-10 md:w-14 h-10 md:h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
-                    <i class="fas fa-tags text-yellow-600 text-lg md:text-2xl"></i>
+                <div class="w-12 md:w-14 h-12 md:h-14 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-tags text-yellow-600 text-xl md:text-2xl"></i>
                 </div>
                 <div class="flex-1 flex flex-col items-center sm:items-start">
-                    <div class="font-semibold text-xs md:text-sm text-gray-900">Harga Murah</div>
-                    <div class="text-xs text-gray-600">Terjangkau</div>
+                    <div class="font-semibold text-sm md:text-sm text-gray-900">Harga Murah</div>
+                    <div class="text-xs md:text-xs text-gray-600">Terjangkau</div>
                 </div>
             </div>
             
             <div class="group bg-gradient-to-br from-gray-50 to-white p-3 md:p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
-                <div class="w-10 md:w-14 h-10 md:h-14 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
-                    <i class="fas fa-clock text-purple-600 text-lg md:text-2xl"></i>
+                <div class="w-12 md:w-14 h-12 md:h-14 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform mx-auto sm:mx-0">
+                    <i class="fas fa-clock text-purple-600 text-xl md:text-2xl"></i>
                 </div>
                 <div class="flex-1 flex flex-col items-center sm:items-start">
-                    <div class="font-semibold text-xs md:text-sm text-gray-900">Cepat</div>
-                    <div class="text-xs text-gray-600">1-3 hari</div>
+                    <div class="font-semibold text-sm md:text-sm text-gray-900">Cepat</div>
+                    <div class="text-xs md:text-xs text-gray-600">1-3 hari</div>
                 </div>
             </div>
         </div>

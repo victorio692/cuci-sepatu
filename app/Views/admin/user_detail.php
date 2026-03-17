@@ -5,7 +5,7 @@
 <div class="admin-container">
     <div class="page-header-section">
         <a href="/admin/users" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Kembali ke Pelanggan
+            <i class="fas fa-arrow-left"></i> Kembali ke pelanggan
         </a>
     </div>
 
@@ -646,13 +646,18 @@
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    display: inline-block;
-    padding: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background-color: transparent;
 }
 
 .action-link:hover {
     color: #1d4ed8;
-    transform: scale(1.2);
+    background-color: #eff6ff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
 }
 
 /* Pagination Styles */
