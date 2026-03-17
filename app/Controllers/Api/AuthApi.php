@@ -131,6 +131,7 @@ class AuthApi extends ResourceController
             'user_id' => $user['id'],
             'email' => $user['email'],
             'nama_lengkap' => $user['nama_lengkap'],
+            'role' => $user['role'],
             'is_logged_in' => true,
             'is_admin' => $user['role'] === 'admin'
         ]);

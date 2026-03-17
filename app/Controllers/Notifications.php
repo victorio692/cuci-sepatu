@@ -97,10 +97,27 @@ class Notifications extends Controller
     public function sendWhatsApp($bookingId)
     {
         $userId = session()->get('user_id');
-        $userRole = session()->get('role');
+        
+        if (!$userId) {
+            return $this->response->setStatusCode(401)->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
 
-        if ($userRole !== 'admin') {
-            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        // SUpport 2 tipe session login: web login (role) dan API login (is_admin)
+        $isAdmin = session()->get('role') === 'admin' || session()->get('is_admin') === true;
+
+        // Fallback cek ke database supaya konsisten dengan filter auth:admin
+        if (!$isAdmin) {
+            $user = $this->db->table('users')
+                ->select('role')
+                ->where('id', $userId)
+                ->get()
+                ->getRowArray();
+
+            $isAdmin = $user && $user['role'] === 'admin';
+        }
+
+        if (!$isAdmin) {
+            return $this->response->setStatusCode(403)->setJSON(['success' => false, 'message' => 'Unauthorized']);
         }
 
         // Get booking and customer info
@@ -125,7 +142,7 @@ class Notifications extends Controller
         $message = "Halo {$booking['nama_lengkap']},\n\n";
         $message .= "Sepatu Anda dengan ID Pesanan  #{$bookingId} sudah selesai dicuci!\n\n";
         $message .= "Layanan: {$booking['layanan']}\n";
-        $message .= "Jumlah: {$booking['jumlah_sepatu']} pasang\n";
+        $message .= "Jumlah: {$booking['jumlah']} pasang\n";
         $message .= "Total: Rp " . number_format($booking['total'], 0, ',', '.') . "\n\n";
         $message .= "Silakan ambil sepatu Anda di SYH.CLEANING.\n\n";
         $message .= "Terima kasih!";
