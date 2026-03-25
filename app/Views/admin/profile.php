@@ -11,12 +11,12 @@
 
     <!-- Card: Edit Profil (Display Mode) -->
     <div class="bg-white rounded-lg shadow-md p-4 md:p-6" style="margin-bottom: 1.5rem;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem;">
                 <i class="fas fa-user" style="color: #5d00ff; font-size: 1.25rem;"></i>
                 <h3 style="margin: 0; color: #1f2937; font-weight: 600; font-size: 1.1rem;">Detail akun</h3>
             </div>
-            <button type="button" onclick="openEditModal()" class="btn btn-primary" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+            <button type="button" onclick="openEditModal()" class="btn btn-primary" style="font-size: 0.875rem; padding: 0.5rem 1rem; width: auto; flex-shrink: 0;">
                 <i class="fas fa-pencil-alt"></i> Edit
             </button>
         </div>
@@ -188,13 +188,20 @@
 .modal-container {
     position: relative;
     background: white;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    max-width: calc(100vw - 2rem);
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     animation: slideUp 0.3s ease-out;
+}
+
+@media (min-width: 640px) {
+    .modal-container {
+        max-width: 500px;
+        border-radius: 0.75rem;
+    }
 }
 
 @keyframes slideUp {
@@ -212,18 +219,31 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem;
+    padding: 1rem;
     border-bottom: 1px solid #e5e7eb;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .modal-header h3 {
     margin: 0;
     color: #1f2937;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+
+@media (min-width: 640px) {
+    .modal-header {
+        padding: 1.5rem;
+    }
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
 }
 
 .modal-header h3 i {
@@ -250,18 +270,34 @@
 }
 
 .modal-body {
-    padding: 1.5rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .modal-body {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
 }
 
 .modal-footer {
     display: flex;
-    gap: 1rem;
-    padding: 1.5rem;
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    padding: 1rem;
     border-top: 1px solid #e5e7eb;
-    justify-content: flex-end;
+}
+
+@media (min-width: 640px) {
+    .modal-footer {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1.5rem;
+        justify-content: flex-end;
+    }
 }
 
 .btn-secondary {
@@ -287,13 +323,14 @@
 }
 
 .form-control {
-    padding: 0.75rem;
+    padding: 0.625rem 0.75rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.375rem;
     width: 100%;
     font-size: 0.875rem;
     font-family: inherit;
     transition: all 0.3s ease;
+    min-height: 44px;
 }
 
 .form-control:focus {
@@ -302,17 +339,33 @@
     box-shadow: 0 0 0 3px rgba(93, 0, 255, 0.1);
 }
 
+@media (max-width: 640px) {
+    .form-control {
+        font-size: 16px;
+    }
+}
+
 .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.625rem 1.25rem;
     border: none;
     border-radius: 0.375rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
     font-size: 0.875rem;
+    min-height: 44px;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .btn {
+        width: auto;
+        padding: 0.75rem 1.5rem;
+    }
 }
 
 .btn-primary {
@@ -323,6 +376,16 @@
 .btn-primary:hover {
     background: #4c00cc;
     box-shadow: 0 4px 6px rgba(93, 0, 255, 0.3);
+}
+
+.modal-footer .btn {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .modal-footer .btn {
+        width: auto;
+    }
 }
 
 /* Password Form Compact */
@@ -371,38 +434,6 @@
 
 .space-y-6 > * + * {
     margin-top: 1.5rem;
-}
-
-/* Password Form Compact */
-.password-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.password-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-bottom: 0;
-}
-
-.password-grid .form-group {
-    margin-bottom: 0;
-}
-
-.password-grid .form-group label {
-    margin-bottom: 0.25rem;
-    font-size: 0.8125rem;
-}
-
-.form-control-sm {
-    padding: 0.5rem 0.625rem;
-    font-size: 0.8125rem;
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.8125rem;
 }
 
 /* Responsive untuk mobile */

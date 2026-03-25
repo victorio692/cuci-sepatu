@@ -3,20 +3,20 @@
 <?= $this->section('content') ?>
 
 <!-- Page Header -->
-<div class="mb-8">
-    <div class="flex items-center space-x-4 mb-4">
-        <a href="/admin/services" class="text-gray-600 hover:text-gray-900">
+<div class="mb-6 sm:mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-2">
+        <a href="/admin/services" class="text-gray-600 hover:text-gray-900 w-fit">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Layanan</h1>
-            <p class="text-gray-600">Update informasi layanan <?= $service['nama_layanan'] ?></p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Edit Layanan</h1>
+            <p class="text-sm sm:text-base text-gray-600">Update informasi layanan <?= $service['nama_layanan'] ?></p>
         </div>
     </div>
 </div>
 
 <!-- Form -->
-<div class="bg-white rounded-xl shadow-lg p-8 max-w-3xl">
+<div class="bg-white rounded-xl shadow-lg p-6 sm:p-8 max-w-4xl mx-auto">
     <?php if (session()->getFlashdata('error')): ?>
         <div class="mb-6 px-4 py-3 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
             <i class="fas fa-exclamation-circle mr-2"></i>
@@ -35,11 +35,11 @@
         </div>
     <?php endif; ?>
 
-    <form id="serviceForm" class="space-y-6">
+    <form id="serviceForm" class="space-y-7">
         <input type="hidden" id="serviceId" value="<?= $service['id'] ?>">
 
         <!-- Kode Layanan -->
-        <div>
+        <div class="pb-2">
             <label for="kode_layanan" class="block text-sm font-medium text-gray-700 mb-2">
                 Kode Layanan <span class="text-red-500">*</span>
             </label>
@@ -48,15 +48,15 @@
                 id="kode_layanan" 
                 name="kode_layanan" 
                 value="<?= old('kode_layanan', $service['kode_layanan']) ?>"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 placeholder="fast-cleaning"
                 required
             >
-            <p class="mt-1 text-sm text-gray-500">Gunakan format: huruf-kecil-dengan-tanda-hubung</p>
+            <p class="mt-2 text-sm text-gray-500">Gunakan format: huruf-kecil-dengan-tanda-hubung</p>
         </div>
 
         <!-- Nama Layanan -->
-        <div>
+        <div class="pb-2">
             <label for="nama_layanan" class="block text-sm font-medium text-gray-700 mb-2">
                 Nama Layanan <span class="text-red-500">*</span>
             </label>
@@ -65,43 +65,43 @@
                 id="nama_layanan" 
                 name="nama_layanan" 
                 value="<?= old('nama_layanan', $service['nama_layanan']) ?>"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 placeholder="Fast Cleaning"
                 required
             >
         </div>
 
         <!-- Deskripsi -->
-        <div>
+        <div class="pb-2">
             <label for="deskripsi" class="block text-sm font-medium text-gray-700 mb-2">
                 Deskripsi <span class="text-red-500">*</span>
             </label>
             <textarea 
                 id="deskripsi" 
                 name="deskripsi" 
-                rows="3"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                rows="4"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-none"
                 placeholder="Pembersihan cepat untuk sepatu"
                 required
             ><?= old('deskripsi', $service['deskripsi']) ?></textarea>
         </div>
 
         <!-- Icon/Image Upload -->
-        <div>
-            <label for="icon_path" class="block text-sm font-medium text-gray-700 mb-2">
+        <div class="pb-2">
+            <label for="icon_path" class="block text-sm font-medium text-gray-700 mb-3">
                 Icon/Gambar Layanan (Opsional)
             </label>
-            <div class="flex items-center gap-4">
-                <div id="iconPreview" class="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+            <div class="flex flex-col sm:flex-row gap-6 items-start">
+                <div id="iconPreview" class="w-32 h-32 flex-shrink-0 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50 overflow-hidden">
                     <i class="fas fa-image text-gray-400 text-3xl"></i>
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 w-full">
                     <input 
                         type="file" 
                         id="icon_image" 
                         name="icon_image" 
                         accept="image/*"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         onchange="previewIcon(this)"
                     >
                     <p class="mt-2 text-xs text-gray-500">
@@ -111,9 +111,9 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- Harga Dasar -->
-            <div>
+            <div class="pb-2">
                 <label for="harga_dasar" class="block text-sm font-medium text-gray-700 mb-2">
                     Harga Dasar (Rp) <span class="text-red-500">*</span>
                 </label>
@@ -121,7 +121,7 @@
                     type="text" 
                     id="harga_dasar_display" 
                     value="<?= number_format(old('harga_dasar', intval($service['harga_dasar'])), 0, ',', '.') ?>"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     placeholder="15.000"
                     onkeyup="formatRupiah(this)"
                     required
@@ -130,7 +130,7 @@
             </div>
 
             <!-- Durasi Hari -->
-            <div>
+            <div class="pb-2">
                 <label for="durasi_hari" class="block text-sm font-medium text-gray-700 mb-2">
                     Durasi (Hari) <span class="text-red-500">*</span>
                 </label>
@@ -139,7 +139,7 @@
                     id="durasi_hari" 
                     name="durasi_hari" 
                     value="<?= old('durasi_hari', $service['durasi_hari']) ?>"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     placeholder="1"
                     min="1"
                     required
@@ -148,33 +148,33 @@
         </div>
 
         <!-- Status Aktif -->
-        <div class="flex items-center">
+        <div class="flex items-center py-2">
             <input 
                 type="checkbox" 
                 id="aktif" 
                 name="aktif" 
                 value="1"
                 <?= old('aktif', $service['aktif']) ? 'checked' : '' ?>
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-            <label for="aktif" class="ml-2 text-sm font-medium text-gray-700">
+            <label for="aktif" class="ml-2 text-sm font-medium text-gray-700 cursor-pointer">
                 Layanan Aktif
             </label>
         </div>
 
         <!-- Buttons -->
-        <div class="flex items-center space-x-4 pt-4">
+        <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
             <button 
                 type="button"
                 onclick="submitServiceForm()"
-                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium"
+                class="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium"
             >
                 <i class="fas fa-save mr-2"></i>
                 Update Layanan
             </button>
             <a 
                 href="/admin/services"
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium text-center"
             >
                 <i class="fas fa-times mr-2"></i>
                 Batal

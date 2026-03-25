@@ -18,8 +18,8 @@
                 <div>
                     <a href="/profile" class="inline-flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm md:text-base rounded-lg transition shadow-sm whitespace-nowrap back-to-profile-btn" style="color: white !important; text-decoration: none !important;">
                         <i class="fas fa-arrow-left"></i>
-                        <span class="hidden sm:inline" style="color: white !important;">Kembali ke profil</span>
-                        <span class="sm:hidden" style="color: white !important;">Kembali</span>
+                        <span class="hidden sm:inline" style="color: white !important;">kembali keprofil</span>
+                        <span class="sm:hidden" style="color: white !important;"></span>
                     </a>
                 </div>
             </div>
