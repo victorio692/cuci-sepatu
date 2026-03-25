@@ -8,10 +8,7 @@
         <a href="/admin/services" class="text-gray-600 hover:text-gray-900 w-fit">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Edit Layanan</h1>
-            <p class="text-sm sm:text-base text-gray-600">Update informasi layanan <?= $service['nama_layanan'] ?></p>
-        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Edit Layanan <span id="serviceName"><?= $service['nama_layanan'] ?></span></h1>
     </div>
 </div>
 
@@ -49,10 +46,17 @@
                 name="kode_layanan" 
                 value="<?= old('kode_layanan', $service['kode_layanan']) ?>"
                 class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                placeholder="fast-cleaning"
+                placeholder="contoh-format-kode"
                 required
+                onkeyup="validateKodeLayanan(this)"
             >
-            <p class="mt-2 text-sm text-gray-500">Gunakan format: huruf-kecil-dengan-tanda-hubung</p>
+            <p class="mt-2 text-sm text-gray-500">
+                Format: <strong>huruf kecil</strong> dan <strong>tanda hubung (-)</strong> saja. Contoh: <em>premium-treat</em>, <em>fast-cleaning</em>
+            </p>
+            <div id="kodeError" class="mt-2 text-sm text-red-600 hidden flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="kodeErrorMsg"></span>
+            </div>
         </div>
 
         <!-- Nama Layanan -->
@@ -184,6 +188,42 @@
 </div>
 
 <script>
+function validateKodeLayanan(input) {
+    const value = input.value.trim();
+    const errorDiv = document.getElementById('kodeError');
+    const errorMsg = document.getElementById('kodeErrorMsg');
+    const regex = /^[a-z0-9]+([-]?[a-z0-9]+)*$/;
+    
+    if (value === '') {
+        errorDiv.classList.add('hidden');
+        input.classList.remove('border-red-500', 'bg-red-50');
+        input.classList.add('border-gray-300');
+        return true;
+    }
+    
+    if (!regex.test(value)) {
+        errorDiv.classList.remove('hidden');
+        input.classList.remove('border-gray-300');
+        input.classList.add('border-red-500', 'bg-red-50');
+        
+        if (value.match(/[A-Z]/)) {
+            errorMsg.textContent = 'Tidak boleh ada huruf besar. Gunakan huruf kecil saja.';
+        } else if (value.match(/[^\w-]/)) {
+            errorMsg.textContent = 'Hanya boleh menggunakan huruf, angka, dan tanda hubung (-).';
+        } else if (value.startsWith('-') || value.endsWith('-')) {
+            errorMsg.textContent = 'Tidak boleh dimulai atau diakhiri dengan tanda hubung.';
+        } else if (value.includes('--')) {
+            errorMsg.textContent = 'Tidak boleh ada tanda hubung berturutan.';
+        }
+        return false;
+    } else {
+        errorDiv.classList.add('hidden');
+        input.classList.remove('border-red-500', 'bg-red-50');
+        input.classList.add('border-gray-300');
+        return true;
+    }
+}
+
 function formatRupiah(input) {  
     let value = input.value.replace(/\D/g, '');  // Hapus semua non-digit
     
@@ -234,6 +274,13 @@ async function submitServiceForm() {
         showToast('Kode Layanan harus diisi!', 'error');
         return;
     }
+    
+    // Validate kode layanan format
+    if (!validateKodeLayanan(document.getElementById('kode_layanan'))) {
+        showToast('Format Kode Layanan tidak valid! Gunakan huruf kecil dan tanda hubung.', 'error');
+        return;
+    }
+    
     if (!nama) {
         showToast('Nama Layanan harus diisi!', 'error');
         return;
@@ -367,13 +414,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('harga_dasar_display').value = (service.harga_dasar || service.price || 0).toLocaleString('id-ID');
             document.getElementById('durasi_hari').value = service.durasi_hari || 1;
             document.getElementById('aktif').checked = service.aktif ? true : false;
-        if (service.icon_path) {
-            document.getElementById('iconPreview').innerHTML = `
-                <img src="/${service.icon_path}" 
-                    class="w-full h-full object-cover rounded-lg">
-            `;
-        }
-            document.querySelector('.text-gray-600').textContent = `Update informasi layanan ${service.nama_layanan || service.name}`;
+            
+            // Update page title with service name
+            document.getElementById('serviceName').textContent = service.nama_layanan || service.name;
+            
+            if (service.icon_path) {
+                document.getElementById('iconPreview').innerHTML = `
+                    <img src="/${service.icon_path}" 
+                        class="w-full h-full object-cover rounded-lg">
+                `;
+            }
         }
 
     } catch (error) {

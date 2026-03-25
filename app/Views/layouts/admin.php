@@ -317,21 +317,21 @@
 <body class="bg-gray-50 font-sans antialiased">
     <!-- Top Navbar -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+        <div class="px-2 sm:px-4 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2 sm:gap-4">
                 <!-- Left: Logo & Menu Toggle -->
-                <div class="flex items-center space-x-4">
-                    <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg focus:outline-none transition-all duration-300">
+                <div class="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0">
+                    <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-2 rounded-lg focus:outline-none transition-all duration-300 flex-shrink-0">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <a href="<?= base_url('admin') ?>" class="flex items-center space-x-2 group">
-                        <img src="<?= base_url('assets/images/SYH.CLEANING.png') ?>" alt="SYH Cleaning" class="h-10 w-10 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                        <span class="text-xs sm:text-sm md:text-lg lg:text-xl font-bold text-black group-hover:text-gray-800 transition-all duration-300 whitespace-nowrap">SYH.CLEANING</span>
+                    <a href="<?= base_url('admin') ?>" class="flex items-center gap-2 group min-w-0">
+                        <img src="<?= base_url('assets/images/SYH.CLEANING.png') ?>" alt="SYH Cleaning" class="h-10 w-10 transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 flex-shrink-0">
+                        <span class="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-black group-hover:text-gray-800 transition-all duration-300 truncate">SYH.CLEANING</span>
                     </a>
                 </div>
                 
                 <!-- Right: Notifications & Actions -->
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                     <!-- Notification Bell -->
                     <div class="relative">
                         <button onclick="toggleNotifications()" class="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transform hover:scale-110 transition-all duration-300 group">
