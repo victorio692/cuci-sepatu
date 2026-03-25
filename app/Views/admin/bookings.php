@@ -226,29 +226,33 @@ function renderBookingsTable(bookings, pagination = {}) {
                         <span class="text-gray-900 font-semibold">Rp ${parseInt(booking.total || 0).toLocaleString('id-ID')}</span>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2 mb-2">
-                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:bg-green-50 px-2 py-1.5 rounded text-xs font-semibold transition flex items-center justify-center space-x-1">
+                <div class="mt-1.5 mb-2 relative">
+                    <button 
+                        class="w-full px-1.5 py-1 rounded border text-xs font-medium text-left focus:outline-none focus:ring-1 focus:ring-blue-500 transition cursor-pointer leading-tight flex items-center justify-between
+                        ${booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : booking.status === 'disetujui' ? 'bg-blue-100 text-blue-800 border-blue-300' : booking.status === 'proses' ? 'bg-purple-100 text-purple-800 border-purple-300' : booking.status === 'selesai' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-red-100 text-red-800 border-red-300'}"
+                        onclick="toggleStatusDropdown(this, ${booking.id})"
+                        ${isDisabled ? 'disabled' : ''}>
+                        <span class="flex-1">${booking.status === 'pending' ? ' Menunggu' : booking.status === 'disetujui' ? ' Disetujui' : booking.status === 'proses' ? ' Diproses' : booking.status === 'selesai' ? ' Selesai' : ' Ditolak'}</span>
+                        <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div class="hidden absolute top-full left-0 mt-0.5 w-full sm:w-40 bg-white border border-gray-300 rounded shadow-lg z-50 dropdown-menu-${booking.id}">
+                        <button class="block w-full text-left px-2 py-1.5 text-xs hover:bg-yellow-50 transition text-yellow-800" onclick="selectStatus(this, ${booking.id}, 'pending')"> Menunggu</button>
+                        <button class="block w-full text-left px-2 py-1.5 text-xs hover:bg-blue-50 transition text-blue-800 border-t border-gray-200" onclick="selectStatus(this, ${booking.id}, 'disetujui')"> Disetujui</button>
+                        <button class="block w-full text-left px-2 py-1.5 text-xs hover:bg-purple-50 transition text-purple-800 border-t border-gray-200" onclick="selectStatus(this, ${booking.id}, 'proses')"> Diproses</button>
+                        <button class="block w-full text-left px-2 py-1.5 text-xs hover:bg-green-50 transition text-green-800 border-t border-gray-200" onclick="selectStatus(this, ${booking.id}, 'selesai')"> Selesai</button>
+                        <button class="block w-full text-left px-2 py-1.5 text-xs hover:bg-red-50 transition text-red-800 border-t border-gray-200" onclick="selectStatus(this, ${booking.id}, 'ditolak')"> Ditolak</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center gap-2 pb-1">
+                    <a href="https://wa.me/${phone}" target="_blank" class="text-green-600 hover:bg-green-50 px-1.5 py-0.5 rounded text-xs font-medium transition flex items-center justify-center space-x-1 whitespace-nowrap">
                         <i class="fab fa-whatsapp"></i>
                         <span>Chat</span>
                     </a>
-                    <select class="px-2 py-1.5 rounded text-xs font-semibold border-0 focus:ring-2 focus:ring-blue-500 transition cursor-pointer ${statusClass}"
-                        data-booking-id="${booking.id}"
-                        data-original-status="${booking.status}"
-                        onchange="updateBookingStatus(this)"
-                        ${isDisabled ? 'disabled' : ''}>
-                        <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Menunggu</option>
-                        <option value="disetujui" ${booking.status === 'disetujui' ? 'selected' : ''}>Disetujui</option>
-                        <option value="proses" ${booking.status === 'proses' ? 'selected' : ''}>Diproses</option>
-                        <option value="selesai" ${booking.status === 'selesai' ? 'selected' : ''}>Selesai</option>
-                        <option value="ditolak" ${booking.status === 'ditolak' ? 'selected' : ''}>Ditolak</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="/admin/bookings/${booking.id}" class="py-1.5 text-blue-600 hover:bg-blue-50 rounded text-xs font-semibold transition flex items-center justify-center space-x-1">
+                    <a href="/admin/bookings/${booking.id}" class="text-blue-600 hover:bg-blue-50 px-1.5 py-0.5 rounded text-xs font-medium transition flex items-center justify-center space-x-1 whitespace-nowrap">
                         <i class="fas fa-eye"></i>
                         <span>Detail</span>
                     </a>
-                    <button onclick="deleteBooking(${booking.id})" class="py-1.5 text-red-600 hover:bg-red-50 rounded text-xs font-semibold transition flex items-center justify-center space-x-1">
+                    <button onclick="deleteBooking(${booking.id})" class="text-red-600 hover:bg-red-50 px-1.5 py-0.5 rounded text-xs font-medium transition flex items-center justify-center space-x-1 whitespace-nowrap">
                         <i class="fas fa-trash"></i>
                         <span>Hapus</span>
                     </button>
@@ -389,13 +393,14 @@ function renderEmptyBookings() {
     `;
 }
 
-function updateBookingStatus(selectElement) {
-    const bookingId = selectElement.getAttribute('data-booking-id');
-    const newStatus = selectElement.value;
-    const originalStatus = selectElement.getAttribute('data-original-status');
+function updateBookingStatus(element) {
+    const bookingId = element.getAttribute('data-booking-id');
+    // Get status from either select.value (desktop) or button data-value (mobile)
+    const newStatus = element.value || element.getAttribute('data-value');
+    const originalStatus = element.getAttribute('data-original-status');
     
     if (!originalStatus) {
-        selectElement.setAttribute('data-original-status', newStatus);
+        element.setAttribute('data-original-status', newStatus);
     }
     
     if (newStatus === 'selesai') {
@@ -403,7 +408,7 @@ function updateBookingStatus(selectElement) {
         if (confirm(confirmMsg)) {
             window.location.href = '/admin/bookings/' + bookingId;
         } else {
-            selectElement.value = originalStatus;
+            if (element.value) element.value = originalStatus;
         }
         return;
     }
@@ -413,7 +418,7 @@ function updateBookingStatus(selectElement) {
         if (confirm(confirmMsg)) {
             window.location.href = '/admin/bookings/' + bookingId;
         } else {
-            selectElement.value = originalStatus;
+            if (element.value) element.value = originalStatus;
         }
         return;
     }
@@ -430,7 +435,7 @@ function updateBookingStatus(selectElement) {
     .then(response => response.json())
     .then(data => {
         if (data.success || data.code === 200) {
-            selectElement.setAttribute('data-original-status', newStatus);
+            element.setAttribute('data-original-status', newStatus);
             showToast('Status berhasil diupdate', 'success');
             
             // Reload bookings with current filters
@@ -439,13 +444,13 @@ function updateBookingStatus(selectElement) {
             setTimeout(() => loadBookings(search, status), 500);
         } else {
             showToast(data.message || 'Gagal update status', 'error');
-            selectElement.value = originalStatus;
+            if (element.value) element.value = originalStatus;
         }
     })
     .catch(error => {
         console.error('Error:', error);
         showToast('Terjadi kesalahan koneksi', 'error');
-        selectElement.value = originalStatus;
+        if (element.value) element.value = originalStatus;
     });
 }
 
@@ -510,6 +515,48 @@ function deleteBooking(id) {
         showToast('Terjadi kesalahan', 'error');
     });
 }
+
+// Toggle status dropdown (for custom dropdown)
+function toggleStatusDropdown(button, bookingId) {
+    const menu = document.querySelector(`.dropdown-menu-${bookingId}`);
+    const isHidden = menu.classList.contains('hidden');
+    
+    // Close all other dropdowns
+    document.querySelectorAll('[class*="dropdown-menu-"]').forEach(m => m.classList.add('hidden'));
+    
+    if (isHidden) {
+        menu.classList.remove('hidden');
+    } else {
+        menu.classList.add('hidden');
+    }
+}
+
+// Select status from dropdown
+function selectStatus(button, bookingId, newStatus) {
+    // Close dropdown
+    const menu = document.querySelector(`.dropdown-menu-${bookingId}`);
+    menu.classList.add('hidden');
+    
+    // Create a pseudo-element to pass to updateBookingStatus
+    const pseudo = {
+        getAttribute: (attr) => {
+            if (attr === 'data-booking-id') return bookingId;
+            if (attr === 'data-original-status') return newStatus;
+            return null;
+        },
+        setAttribute: () => {},
+        value: newStatus
+    };
+    
+    updateBookingStatus(pseudo);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('[class*="relative"]')) {
+        document.querySelectorAll('[class*="dropdown-menu-"]').forEach(m => m.classList.add('hidden'));
+    }
+});
 </script>
 
 <style>
@@ -525,6 +572,19 @@ function deleteBooking(id) {
 }
 .animate-slide-in {
     animation: slide-in 0.3s ease;
+}
+
+/* Custom dropdown styling for mobile */
+@media (max-width: 768px) {
+    .dropdown-menu-{booking.id} {
+        min-width: 100%;
+        left: 0 !important;
+    }
+}
+
+/* Ensure dropdown stays within viewport */
+div[class*="dropdown-menu-"] {
+    z-index: 50;
 }
 </style>
 <?= $this->endSection() ?>

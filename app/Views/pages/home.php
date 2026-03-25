@@ -4,8 +4,8 @@
 
 <!-- Promo Banner Slider -->
 <section class="bg-gray-50 py-4 w-full">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative rounded-lg overflow-hidden shadow-lg">
+    <div class="w-full px-0">
+        <div class="relative rounded-none md:rounded-xl overflow-hidden shadow-none md:shadow-lg mx-0">
             <!-- Slider Container -->
             <div class="slider-container relative">
                 <!-- Slides -->

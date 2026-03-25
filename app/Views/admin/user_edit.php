@@ -21,7 +21,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nama Lengkap -->
                 <div>
-                    <label for="nama_lengkap" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="nama_lengkap" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                         Nama Lengkap <span class="text-red-500">*</span>
                     </label>
                     <input 
@@ -29,7 +29,7 @@
                         id="nama_lengkap" 
                         name="nama_lengkap" 
                         value="<?= old('nama_lengkap', $user['nama_lengkap']) ?>"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         placeholder="John Doe"
                         required
                     >
@@ -37,7 +37,7 @@
 
                 <!-- Email -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="email" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                         Email <span class="text-red-500">*</span>
                     </label>
                     <input 
@@ -45,7 +45,7 @@
                         id="email" 
                         name="email" 
                         value="<?= old('email', $user['email']) ?>"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         placeholder="john@example.com"
                         required
                     >
@@ -55,7 +55,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Nomor HP -->
                 <div>
-                    <label for="no_hp" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="no_hp" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                         Nomor HP <span class="text-red-500">*</span>
                     </label>
                     <input 
@@ -63,7 +63,7 @@
                         id="no_hp" 
                         name="no_hp" 
                         value="<?= old('no_hp', $user['no_hp']) ?>"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         placeholder="08123456789"
                         required
                     >
@@ -71,48 +71,63 @@
 
                 <!-- Role -->
                 <div>
-                    <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                         Role <span class="text-red-500">*</span>
                     </label>
-                    <select 
-                        id="role" 
-                        name="role" 
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                        required
-                    >
-                        <option value="pelanggan" <?= old('role', $user['role']) == 'pelanggan' ? 'selected' : '' ?>>Pelanggan</option>
-                        <option value="admin" <?= old('role', $user['role']) == 'admin' ? 'selected' : '' ?>>Admin</option>
-                    </select>
+                    <div class="flex items-center gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                type="radio" 
+                                name="role" 
+                                value="pelanggan" 
+                                <?= old('role', $user['role']) == 'pelanggan' ? 'checked' : '' ?>
+                                class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                                required
+                            >
+                            <span class="text-xs sm:text-sm text-gray-700">Pelanggan</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input 
+                                type="radio" 
+                                name="role" 
+                                value="admin" 
+                                <?= old('role', $user['role']) == 'admin' ? 'checked' : '' ?>
+                                class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                                required
+                            >
+                            <span class="text-xs sm:text-sm text-gray-700">Admin</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- Alamat -->
             <div>
-                <label for="alamat" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="alamat" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                     Alamat
                 </label>
                 <textarea 
                     id="alamat" 
                     name="alamat" 
                     rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     placeholder="Masukkan alamat lengkap"
                 ><?= old('alamat', $user['alamat']) ?></textarea>
             </div>
 
             <!-- Password (Optional) -->
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                     Password Baru (Kosongkan jika tidak ingin mengubah)
                 </label>
                 <input 
                     type="password" 
                     id="password" 
                     name="password" 
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     placeholder="Minimal 6 karakter"
                 >
-                <p class="mt-1 text-sm text-gray-500">
+                <p class="mt-1 text-xs sm:text-sm text-gray-500">
                     <i class="fas fa-info-circle"></i> Kosongkan jika tidak ingin mengubah password
                 </p>
             </div>

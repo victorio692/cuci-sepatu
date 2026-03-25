@@ -570,16 +570,23 @@
                             </button>
                             
                             <!-- Notification Dropdown -->
-                            <div id="landingNotificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-50">
-                                <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                            <div id="landingNotificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] pointer-events-auto max-h-96 flex flex-col overflow-hidden">
+                                <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
                                     <span class="font-semibold text-gray-800">Notifikasi</span>
-                                    <button onclick="markAllNotificationsAsRead()" class="text-xs text-blue-600 hover:text-blue-700 font-medium">Tandai dibaca</button>
+                                    <button onclick="toggleLandingNotifications()" class="p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition text-lg">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
-                                <div id="landingNotificationList" class="max-h-96 overflow-y-auto">
+                                <div id="landingNotificationList" class="flex-1 overflow-y-auto divide-y divide-gray-100">
                                     <div class="p-8 text-center text-gray-500">
                                         <i class="fas fa-inbox text-4xl mb-2"></i>
                                         <p class="text-sm">Tidak ada notifikasi baru</p>
                                     </div>
+                                </div>
+                                <div class="px-4 py-3 border-t border-gray-200 bg-gray-50 sticky bottom-0">
+                                    <button onclick="markAllNotificationsAsRead()" class="w-full text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded transition">
+                                        Tandai semua dibaca
+                                    </button>
                                 </div>
                             </div>
                         </li>
