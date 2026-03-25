@@ -264,19 +264,108 @@
             }
         }
 
-        /* Notification dropdown responsive */
-        @media (max-width: 640px) {
+        /* Notification Overlay */
+        #notificationOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease;
+            opacity: 1;
+            z-index: 40;
+        }
+
+        #notificationOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Notification Dropdown Base - Centered Modal Popup */
+        #notificationDropdown {
+            background: white;
+        }
+
+        #notificationDropdown.hidden {
+            display: none !important;
+        }
+
+        /* Notification Popup - Desktop & Mobile Centered Modal */
+        @media (min-width: 640px) {
             #notificationDropdown {
-                position: fixed;
-                right: 0;
-                left: 0;
-                top: auto;
-                bottom: 0;
-                width: 100% !important;
-                max-width: 100% !important;
-                border-radius: 1rem 1rem 0 0;
-                max-height: 70vh;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 0;
+                transition: all 0.3s ease;
+                width: 28rem !important;
+                max-width: 90vw !important;
+                max-height: 70vh !important;
+                border-radius: 1rem !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+                overflow-y: auto !important;
+                z-index: 50 !important;
             }
+
+            #notificationDropdown:not(.hidden) {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Notification Popup - Mobile Centered Modal */
+        @media (max-width: 639px) {
+            #notificationDropdown {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) scale(0.95);
+                opacity: 0;
+                transition: all 0.3s ease;
+                width: 90vw !important;
+                max-width: 24rem !important;
+                max-height: 80vh !important;
+                border-radius: 1rem !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+                overflow-y: auto !important;
+                z-index: 50 !important;
+            }
+
+            #notificationDropdown:not(.hidden) {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Notification List Styling */
+        #notificationList {
+            max-height: calc(100vh - 12rem);
+            overflow-y: auto;
+        }
+
+        #notificationList > div:last-child {
+            border-bottom: none !important;
+        }
+
+        /* Notification Header Sticky */
+        #notificationDropdown > div:first-child {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        /* Notification Footer Sticky */
+        #notificationDropdown > div:last-child {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            z-index: 10;
         }
 
         /* Hide elements on mobile if needed */
@@ -338,20 +427,6 @@
                             <i class="fas fa-bell text-xl group-hover:animate-swing"></i>
                             <span id="notificationBadge" class="absolute top-1 right-1 hidden items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">0</span>
                         </button>
-                        
-                        <!-- Notification Dropdown -->
-                        <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 notification-dropdown">
-                            <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                                <span class="font-semibold text-gray-800">Notifikasi</span>
-                                <button onclick="markAllAsRead(event)" class="text-xs text-blue-600 hover:text-blue-700 font-medium">Tandai semua dibaca</button>
-                            </div>
-                            <div id="notificationList" class="max-h-96 overflow-y-auto">
-                                <div class="p-8 text-center text-gray-500">
-                                    <i class="fas fa-inbox text-4xl mb-2"></i>
-                                    <p class="text-sm">Tidak ada notifikasi baru</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     
                     <!-- Print Report Button -->
@@ -363,6 +438,43 @@
             </div>
         </div>
     </nav>
+
+    <!-- Notification Drawer Overlay (Mobile) -->
+    <div id="notificationOverlay" class="hidden" onclick="closeNotifications()"></div>
+
+    <!-- Notification Dropdown Container -->
+    <div id="notificationDropdown" class="hidden">
+        <!-- Notification Header -->
+        <div class="px-4 py-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+            <div>
+                <h3 class="font-semibold text-gray-900">Notifikasi</h3>
+                <p class="text-xs text-gray-500 mt-1">Pesanan dan update terbaru</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="markAllAsRead(event)" class="hidden md:block text-xs text-blue-600 hover:text-blue-700 font-medium px-2 py-1 hover:bg-blue-50 rounded transition">
+                    Tandai dibaca
+                </button>
+                <button onclick="closeNotifications()" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Notification List -->
+        <div id="notificationList" class="divide-y divide-gray-100">
+            <div class="p-8 text-center text-gray-500">
+                <i class="fas fa-inbox text-4xl mb-2"></i>
+                <p class="text-sm">Tidak ada notifikasi baru</p>
+            </div>
+        </div>
+
+        <!-- Mark All As Read (Mobile) -->
+        <div class="md:hidden sticky bottom-0 px-4 py-3 border-t border-gray-200 bg-white">
+            <button onclick="markAllAsRead(event)" class="w-full text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded transition">
+                Tandai semua dibaca
+            </button>
+        </div>
+    </div>
 
     <!-- Main Container -->
     <div class="flex">
@@ -516,19 +628,46 @@
 
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
+            const overlay = document.getElementById('notificationOverlay');
+            
             notificationDropdownOpen = !notificationDropdownOpen;
-            dropdown.classList.toggle('hidden');
             
             if (notificationDropdownOpen) {
+                dropdown.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
                 loadNotifications();
+            } else {
+                closeNotifications();
             }
+        }
+
+        function closeNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            const overlay = document.getElementById('notificationOverlay');
+            
+            dropdown.classList.add('hidden');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            notificationDropdownOpen = false;
         }
 
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('notificationDropdown');
-            const button = event.target.closest('button[onclick="toggleNotifications()"]');
+            const button = event.target.closest('button[onclick*="toggleNotifications"]');
+            const bellArea = event.target.closest('button[onclick*="toggleNotifications"]')?.closest('div');
             
-            if (!button && !dropdown?.contains(event.target) && notificationDropdownOpen) {
+            // Only close on desktop dropdown click outside (for dropdown behavior)
+            const isMobile = window.innerWidth < 768;
+            
+            // If clicking overlay (mobile), close
+            if (event.target.id === 'notificationOverlay') {
+                closeNotifications();
+                return;
+            }
+            
+            // If desktop and clicking outside dropdown and bell button, close
+            if (!isMobile && !button && dropdown && !dropdown.contains(event.target) && notificationDropdownOpen) {
                 dropdown.classList.add('hidden');
                 notificationDropdownOpen = false;
             }
@@ -552,22 +691,25 @@
                     list.innerHTML = '';
                     data.notifications.forEach(notif => {
                         const div = document.createElement('div');
-                        div.className = 'px-4 py-3 hover:bg-blue-50 border-b border-gray-100 cursor-pointer transition';
+                        div.className = 'px-4 py-3 hover:bg-blue-50 cursor-pointer transition border-b border-gray-100 last:border-b-0';
                         div.onclick = () => markAsRead(notif.id, notif.booking_id);
                         
                         const timeAgo = getTimeAgo(notif.created_at);
                         const iconClass = getNotificationIcon(notif.tipe);
-                        const iconColor = notif.tipe === 'new_booking' ? 'text-green-500' : 'text-blue-500';
+                        const iconColor = notif.tipe === 'new_booking' ? 'text-green-500' : notif.tipe === 'success' ? 'text-green-500' : 'text-blue-500';
                         
                         div.innerHTML = `
-                            <div class="flex items-start space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center flex-shrink-0">
-                                    <i class="fas ${iconClass} ${iconColor}"></i>
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i class="fas ${iconClass} ${iconColor} text-sm"></i>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="font-semibold text-gray-800 text-sm">${notif.judul}</div>
+                                    <div class="font-semibold text-gray-800 text-sm leading-tight">${notif.judul}</div>
                                     <div class="text-gray-600 text-xs mt-0.5 line-clamp-2">${notif.pesan}</div>
-                                    <div class="text-gray-500 text-xs mt-1">${timeAgo}</div>
+                                    <div class="text-gray-400 text-xs mt-1 flex items-center gap-1">
+                                        <i class="fas fa-clock text-xs"></i>
+                                        ${timeAgo}
+                                    </div>
                                 </div>
                             </div>
                         `;
