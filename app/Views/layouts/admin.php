@@ -365,6 +365,86 @@
             -ms-text-size-adjust: 100%;
             -moz-text-size-adjust: 100%;
         }
+
+        /* Custom Select Dropdown Styles - Keep in viewport */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 20px;
+            padding-right: 32px !important;
+            cursor: pointer;
+        }
+
+        select:hover {
+            border-color: #3b82f6;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            ring: #3b82f6;
+        }
+
+        select option {
+            padding: 8px 12px;
+            line-height: 1.5;
+            background: #ffffff;
+            color: #1f2937;
+            border: none;
+            border-radius: 0;
+        }
+
+        select option:hover {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        select option:checked {
+            background: linear-gradient(#dbeafe, #dbeafe);
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Restrict dropdown height to prevent overflow */
+        @supports (max-height: 200px) {
+            select {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+        }
+
+        /* Mobile-specific select optimization */
+        @media (max-width: 768px) {
+            select {
+                font-size: 16px !important;
+                padding: 10px 32px 10px 12px !important;
+                background-position: right 8px center;
+            }
+        }
+
+        /* Smooth selection transitions */
+        select {
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* Hide scrollbar for status filter chips on mobile */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;      /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;              /* Chrome, Safari and Opera */
+        }
+
+        /* Smooth horizontal scroll */
+        .overflow-x-auto {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
     </style>
     
     <?= $this->renderSection('extra_css') ?>

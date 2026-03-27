@@ -9,38 +9,54 @@
 </div>
 
 <!-- Filter & Search -->
-<div class="bg-white rounded-xl shadow-lg p-3 md:p-6 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
+<div class="bg-white rounded-xl shadow-lg p-3 md:p-4 mb-6">
+    <div class="space-y-4">
+        <!-- Search Bar -->
         <div>
-            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Cari Pesanan</label>
+            <label class="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5">Cari Pesanan</label>
             <div class="relative">
                 <input 
                     type="text" 
                     id="searchInput" 
                     placeholder="Nama, email..." 
-                    class="w-full pl-4 md:pl-10 pr-10 md:pr-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    class="w-full pl-4 md:pl-9 pr-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
-                <i class="fas fa-search absolute right-3 md:right-auto md:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none md:block hidden"></i>
             </div>
         </div>
 
+        <!-- Filter Status - Horizontal Scroll -->
         <div>
-            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Filter Status</label>
-            <select id="statusFilter" class="w-full px-3 py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                <option value="">Semua Status</option>
-                <option value="pending">Menunggu</option>
-                <option value="disetujui">Disetujui</option>
-                <option value="proses">Diproses</option>
-                <option value="selesai">Selesai</option>
-                <option value="ditolak">Ditolak</option>
-            </select>
-        </div>
+            <label class="block text-xs md:text-sm font-semibold text-gray-700 mb-2.5">Filter status</label>
+            <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-end">
+                <!-- Filter Buttons -->
+                <div class="flex-1 grid grid-cols-3 md:flex md:flex-wrap gap-1.5 md:gap-2">
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-blue-600 text-white shadow-md hover:shadow-lg hover:bg-blue-700 active:shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="">
+                        <i class="fas fa-list mr-1 hidden md:inline"></i>semua
+                    </button>
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300 hover:border-blue-300 shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="pending">
+                        <i class="fas fa-clock mr-1 hidden md:inline"></i>menunggu
+                    </button>
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300 hover:border-blue-300 shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="disetujui">
+                        <i class="fas fa-check-circle mr-1 hidden md:inline"></i>disetujui
+                    </button>
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300 hover:border-blue-300 shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="proses">
+                        <i class="fas fa-sync-alt mr-1 hidden md:inline"></i>proses
+                    </button>
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300 hover:border-blue-300 shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="selesai">
+                        <i class="fas fa-check-double mr-1 hidden md:inline"></i>selesai
+                    </button>
+                    <button type="button" class="status-filter-btn px-2.5 py-2 md:px-4 md:py-2.5 rounded-lg text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-300 hover:border-blue-300 shadow-sm min-h-9 md:min-h-10 leading-snug" data-status="ditolak">
+                        <i class="fas fa-ban mr-1 hidden md:inline"></i>ditolak
+                    </button>
+                </div>
 
-        <div class="flex items-end">
-            <button type="button" onclick="applyFilters()" class="w-full px-4 md:px-6 py-2 text-xs md:text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
-                <i class="fas fa-search text-xs"></i>
-                <span>Cari & Filter</span>
-            </button>
+                <!-- Apply Filter Button -->
+                <button type="button" onclick="applyFilters()" class="w-full md:w-auto md:flex-shrink-0 px-4 md:px-6 py-1.5 md:py-2 text-xs md:text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg hover:from-blue-600 hover:to-blue-700 active:shadow-sm transition-all duration-200 font-bold flex items-center justify-center space-x-2 whitespace-nowrap shadow-md">
+                    <i class="fas fa-search text-xs md:text-sm"></i>
+                    <span>Cari & filter</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -65,9 +81,29 @@ let currentFilters = {
     status: '',
     page: 1
 };
+let selectedStatusFilter = ''; // Track selected status filter
 
 // Load bookings on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize status filter buttons
+    const statusButtons = document.querySelectorAll('.status-filter-btn');
+    statusButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active state from all buttons
+            statusButtons.forEach(b => {
+                b.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'hover:shadow-lg', 'hover:bg-blue-700', 'active:shadow-sm');
+                b.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300', 'hover:bg-blue-50', 'hover:text-blue-700', 'hover:border-blue-300', 'shadow-sm');
+            });
+            
+            // Add active state to clicked button
+            this.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-300', 'hover:bg-blue-50', 'hover:text-blue-700', 'hover:border-blue-300', 'shadow-sm');
+            this.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'hover:shadow-lg', 'hover:bg-blue-700', 'active:shadow-sm');
+            
+            // Store selected status
+            selectedStatusFilter = this.dataset.status;
+        });
+    });
+    
     loadBookings();
 });
 
@@ -137,7 +173,7 @@ async function loadBookings(search = '', status = '', page = 1) {
 // Apply filters
 function applyFilters() {
     const search = document.getElementById('searchInput').value;
-    const status = document.getElementById('statusFilter').value;
+    const status = selectedStatusFilter; // Use selected status from button
     loadBookings(search, status, 1);  // Reset to page 1 when filtering
 }
 
