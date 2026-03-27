@@ -13,7 +13,7 @@ class Auth extends BaseController
         $this->db = Database::connect();
     }
 
-    // Show Login Page
+    // tampilkan halaman login
     public function login()
     {
     if (session()->get('is_logged_in')) {
@@ -30,7 +30,7 @@ class Auth extends BaseController
     return view('auth/login', ['title' => 'Login - SYH Cleaning']);
     }
 
-    // Process Login
+    // Proses login
     public function loginSubmit()
     {
         $email = $this->request->getPost('email');
@@ -67,7 +67,7 @@ class Auth extends BaseController
         }
     }
 
-    // Show Register Page
+    // tampilkan halaman register
     public function register()
     {
         // Redirect jika sudah login
@@ -85,7 +85,7 @@ class Auth extends BaseController
         return view('auth/register', ['title' => 'Daftar - SYH Cleaning']);
     }
 
-    // Process Register
+    // Proses register
     public function registerSubmit()
     {
         $data = [
@@ -130,7 +130,7 @@ class Auth extends BaseController
         return redirect()->to('/')->with('success', 'Anda telah logout.');
     }
 
-    // Forgot Password
+    // Lupa password
     public function forgotPassword()
     {
         return view('auth/forgot_password');
@@ -199,7 +199,7 @@ class Auth extends BaseController
             return redirect()->back()->with('error', 'Konfirmasi password tidak sesuai');
         }
 
-        // Get email from session
+        // Ambil email dari session
         $email = session()->get('reset_email');
 
         // Update password
@@ -208,7 +208,7 @@ class Auth extends BaseController
             ->where('email', $email)
             ->update(['password_hash' => $hashedPassword]);
 
-        // Clear session
+        // Hapus session
         session()->remove('reset_token');
         session()->remove('reset_email');
 

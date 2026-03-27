@@ -13,7 +13,7 @@ class Booking extends BaseController
         $this->db = Database::connect();
     }
 
-    // Show Booking Form
+    // Tampolkan form booking
     public function makeBooking()
     {
         $user_id = session()->get('user_id');
@@ -31,7 +31,7 @@ class Booking extends BaseController
             return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
         }
 
-        // Get services dari database
+        // Ambil data layanan dari database
         $services = $this->db->table('services')
             ->where('aktif', 1)
             ->orderBy("FIELD(kode_layanan, 'fast-cleaning', 'deep-cleaning', 'white-shoes', 'suede-treatment', 'unyellowing')", '', false)
@@ -46,7 +46,7 @@ class Booking extends BaseController
         return view('pages/booking', $data);
     }
 
-    // Quick Booking - Direct checkout without cart
+    // Quick booking (langsung checkout tanpa cart)
     public function quickBooking()
     {
         $user_id = session()->get('user_id');
@@ -64,13 +64,13 @@ class Booking extends BaseController
             return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
         }
 
-        // Get service from query parameter
+        // aAmbil layanan berdasarkan kode layanan dari query parameter
         $serviceCode = $this->request->getGet('service');
         if (!$serviceCode) {
             return redirect()->to('/')->with('error', 'Layanan tidak ditemukan');
         }
 
-        // Get service details
+        // Ambil detail layanan
         $service = $this->db->table('services')
             ->where('kode_layanan', $serviceCode)
             ->where('aktif', 1)
@@ -90,7 +90,7 @@ class Booking extends BaseController
         return view('pages/quick_booking', $data);
     }
 
-    // Submit Quick Booking
+    // Proses quick booking
     public function submitQuickBooking()
     {
         $user_id = session()->get('user_id');
@@ -101,7 +101,7 @@ class Booking extends BaseController
             return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat booking dari sini');
         }
 
-        // Validate file upload
+        // Validasi upload foto sepatu
         $validationRule = [
             'shoe_photo' => [
                 'label' => 'Foto Sepatu',
@@ -118,7 +118,7 @@ class Booking extends BaseController
                 ->with('error', 'Foto sepatu wajib diupload (format PNG/JPG/JPEG, maksimal 5MB)');
         }
 
-        // Handle file upload
+        // Handle upload foto sepatu
         $file = $this->request->getFile('shoe_photo');
         $fileName = null;
         
@@ -142,7 +142,7 @@ class Booking extends BaseController
         $delivery_address = $this->request->getPost('delivery_address') ?? $user['alamat'];
         $notes = $this->request->getPost('notes');
 
-        // Get service details (name and price)
+        // Ambil detail layanan (nama dan harga)
         $serviceDetails = $this->db->table('services')->where('kode_layanan', $serviceCode)->get()->getRowArray();
         if (!$serviceDetails) {
             return redirect()->back()
@@ -152,15 +152,15 @@ class Booking extends BaseController
         $serviceName = $serviceDetails['nama_layanan'];
         $servicePrice = $serviceDetails['harga_dasar'];
         
-        // Calculate fees based on delivery and quantity options
+        // Hitung biaya berdasarkan opsi pengiriman dan jumlah sepatu
         $delivery_fee = 0;
         
-        // Add fee for delivery to home (only for 1 shoe, free for 2+)
+        // Tambah biaya untuk pengiriman rumah jika hanya 1 sepatu (gratis untuk 2 atau lebih)
         if ($delivery_option === 'home' && $quantity == 1) {
             $delivery_fee = 5000;
         }
         
-        // Add fee for single shoe pickup (if applicable) - only for 1 shoe
+        // Tambah biaya pickup untuk 1 sepatu (gratis untuk 2 atau lebih)
         if ($delivery_option === 'pickup' && $quantity == 1) {
             $delivery_fee += 5000;
         }
@@ -168,7 +168,7 @@ class Booking extends BaseController
         $subtotal = $servicePrice * $quantity;
         $total = $subtotal + $delivery_fee;
 
-        // Insert booking directly
+        // Simpan booking langsung
         $booking_data = [
             'id_user' => $user_id,
             'layanan' => $serviceName,
@@ -191,7 +191,7 @@ class Booking extends BaseController
         $this->db->table('bookings')->insert($booking_data);
         $booking_id = $this->db->insertID();
 
-        // Create notification for all admins
+        // Buat notifikasi untuk semua admin
         $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
         
         foreach ($admins as $admin) {
@@ -228,7 +228,7 @@ class Booking extends BaseController
                 return redirect()->to('/admin')->with('error', 'Admin tidak bisa membuat pesanan dari sini');
             }
 
-            // Get form data
+            // Ambil data dari form
             $service = $this->request->getPost('service');
             $quantity = intval($this->request->getPost('quantity')) ?? 1;
             $delivery_date = $this->request->getPost('delivery_date');
@@ -238,7 +238,7 @@ class Booking extends BaseController
             $delivery_option = $this->request->getPost('delivery_option');
             $delivery_address = $this->request->getPost('delivery_address');
 
-            // Validate all required fields
+            // Validasi semua field wajib diisi
             $validationRule = [
                 'service' => 'required',
                 'quantity' => 'required|numeric|greater_than[0]',
@@ -255,7 +255,7 @@ class Booking extends BaseController
                 ],
             ];
 
-            // Custom error messages
+            // Pesan error untuk validasi
             $errors = [
                 'service' => 'Pilih layanan terlebih dahulu',
                 'quantity' => 'Jumlah sepatu harus lebih dari 0',
@@ -271,13 +271,13 @@ class Booking extends BaseController
                 ],
             ];
 
-            // Add pickup address validation if item entry option is pickup
+            // Validasi alamat pickup jika opsi barang masuk adalah pickup
             if ($item_entry_option === 'pickup') {
                 $validationRule['pickup_address'] = 'required|min_length[10]';
                 $errors['pickup_address'] = 'Alamat penjemputan minimal 10 karakter';
             }
 
-            // Add delivery address validation if delivery option is delivery
+            // Validasi alamat pengiriman jika opsi pengiriman adalah delivery
             if ($delivery_option === 'delivery') {
                 $validationRule['delivery_address'] = 'required|min_length[10]';
                 $errors['delivery_address'] = 'Alamat pengiriman minimal 10 karakter';
@@ -289,24 +289,24 @@ class Booking extends BaseController
                     ->with('errors', $this->validator->getErrors());
             }
 
-            // Validate delivery date is today or future
+            // Validasi tanggal pengiriman harus diisi hari ini atau ke depan
             if (strtotime($delivery_date) < strtotime(date('Y-m-d'))) {
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'Tanggal pengiriman harus hari ini atau hari berikutnya');
             }
 
-            // Handle file upload
+            // Handle upload file
             $file = $this->request->getFile('shoe_photo');
             $fileName = null;
             
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                // Generate unique filename
+                // Buat nama yang unik
                 $fileName = $file->getRandomName();
-                // Move to public/uploads directory
+                // Pindahkan ke folder public/uploads
                 $uploadPath = FCPATH . 'uploads';
                 
-                // Create directory if not exists
+                // Buat folder jika belum ada 
                 if (!is_dir($uploadPath)) {
                     mkdir($uploadPath, 0777, true);
                 }
@@ -321,31 +321,31 @@ class Booking extends BaseController
             $shoe_condition = $this->request->getPost('shoe_condition');
             $notes = $this->request->getPost('notes');
             
-            // Set delivery address based on delivery option
+            // Tentukan alamat pengiriman berdasarkan opsi pengiriman 
             if (!$delivery_address) {
                 $delivery_address = $user['alamat'] ?? '';
             }
 
-            // Get service price
+            // Ambil harga layanan 
             $servicePrice = $this->getServicePrice($service);
             if ($servicePrice === 0) {
                 return redirect()->back()
                     ->with('error', 'Layanan tidak ditemukan');
             }
             
-            // Get service name
+            // Ambil nama layanan 
             $serviceDetails = $this->db->table('services')->where('kode_layanan', $service)->get()->getRowArray();
             $serviceName = $serviceDetails['nama_layanan'] ?? $service;
             
-            // Calculate fees based on delivery and entry options
+            // Hitung biaya berdasarkan opsi pengiriman dan jumlah sepatu
             $delivery_fee = 0;
             
-            // Add delivery fee for single shoe only (free for 2+)
+            // Tambah biaya untuk pengiriman rumah jika hanya 1 sepatu (gratis untuk 2 atau lebih)
             if ($delivery_option === 'delivery' && $quantity == 1) {
                 $delivery_fee += 5000;
             }
             
-            // Add pickup fee for single shoe (1 sepatu) only
+            // Tambah biaya untuk penjemputan jika hanya 1 sepatu (gratis untuk 2 atau lebih)
             if ($item_entry_option === 'pickup' && $quantity == 1) {
                 $delivery_fee += 5000;
             }
@@ -353,7 +353,7 @@ class Booking extends BaseController
             $subtotal = $servicePrice * $quantity;
             $total = $subtotal + $delivery_fee;
 
-            // Insert booking
+            // Simpan booking 
             $booking_data = [
                 'id_user' => $user_id,
                 'layanan' => $serviceName,
@@ -383,7 +383,7 @@ class Booking extends BaseController
 
             $booking_id = $this->db->insertID();
 
-            // Create notification for all admins
+            // Buat notifikasi untuk semua admin
             $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
             
             foreach ($admins as $admin) {
@@ -408,7 +408,7 @@ class Booking extends BaseController
         }
     }
 
-    // Booking Detail
+    // Detail booking
         public function detail($bookingId)
     {
         $user_id = session()->get('user_id');
@@ -429,7 +429,7 @@ class Booking extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        // Get uploaded photos
+        // Ambil foto yang di upload
         $photos = $this->db->table('booking_photos')
             ->where('booking_id', $bookingId)
             ->orderBy('id', 'ASC')
@@ -445,7 +445,7 @@ class Booking extends BaseController
         return view('pages/booking_detail', $data);
     }
 
-    // Cancel Booking
+    // Batalkan booking
     public function cancelBooking($bookingId)
     {
         $user_id = session()->get('user_id');
@@ -466,20 +466,20 @@ class Booking extends BaseController
             return redirect()->to('/my-bookings')->with('error', 'Pesanan tidak ditemukan');
         }
 
-        // Only allow cancel if status is pending
+        // Hanya boleh dibatalkan jika status masih pending
         if ($booking['status'] !== 'pending') {
             return redirect()->back()->with('error', 'Pesanan tidak bisa dibatalkan pada status ini');
         }
 
-        // Get alasan pembatalan from POST request
+        // Ambil alasan pembatalan dari form
         $alasan_pembatalan = $this->request->getPost('alasan_pembatalan');
         
-        // Validate alasan pembatalan
+        // Validasi alasan pembatalan
         if (empty($alasan_pembatalan) || strlen(trim($alasan_pembatalan)) < 10) {
             return redirect()->back()->with('error', 'Alasan pembatalan minimal 10 karakter');
         }
 
-        // Update booking with status batal and alasan pembatalan
+        // Update booking dengan status batal dan alasan pembatalan
         $this->db->table('bookings')->update([
             'status' => 'batal',
             'alasan_pembatalan' => trim($alasan_pembatalan),
@@ -489,10 +489,10 @@ class Booking extends BaseController
         return redirect()->to('/my-bookings')->with('success', 'Pesanan berhasil dibatalkan');
     }
 
-    // Get Service Price
+    // Ambil harga layanan
     private function getServicePrice($service)
     {
-        // Get price from services table
+        // Ambil harga dari database berdasarkan kode layanan
         $serviceData = $this->db->table('services')
             ->where('kode_layanan', $service)
             ->where('aktif', 1)
@@ -507,7 +507,7 @@ class Booking extends BaseController
         return 0;
     }
 
-    // Checkout from Cart
+    // Checkout dari cart
     public function checkout()
     {
         $user_id = session()->get('user_id');
@@ -533,7 +533,7 @@ class Booking extends BaseController
         return view('pages/checkout', $data);
     }
 
-    // Submit Checkout
+    // Proses checkout dari cart
     public function submitCheckout()
     {
         $user_id = session()->get('user_id');
@@ -550,20 +550,20 @@ class Booking extends BaseController
             ]);
         }
 
-        // Get data from form
+        // Ambil data dari form
         $items = json_decode($this->request->getPost('items'), true);
         $pickupDate = $this->request->getPost('pickup_date');
         $address = $this->request->getPost('address') ?? '';
         $notes = $this->request->getPost('notes') ?? '';
         $deliveryMethod = $this->request->getPost('delivery_method');
 
-        // Handle photo uploads - support both single and multiple files
+        // Handle upload foto sepatu (bisa multiple)
         $uploadedPhotos = [];
         
-        // Try getting multiple files first
+        // Coba ambil multiple files terlebih dahulu
         $photoFiles = $this->request->getFileMultiple('shoe_photos');
         
-        // If no multiple files or empty, try single file
+        // Jika tidak ada multiple files, coba ambil single file (untuk kompatibilitas dengan input file biasa)
         if (empty($photoFiles) || (count($photoFiles) === 1 && !$photoFiles[0]->isValid())) {
             $singleFile = $this->request->getFile('shoe_photos');
             if ($singleFile && $singleFile->isValid()) {
@@ -586,10 +586,10 @@ class Booking extends BaseController
                         continue;
                     }
                     
-                    // Generate unique name
+                    // Buat nama file yang unik
                     $newName = $file->getRandomName();
                     
-                    // Move to public uploads folder
+                    // Pindahkan file ke folder uploads
                     if ($file->move(FCPATH . 'uploads', $newName)) {
                         $uploadedPhotos[] = $newName;
                     }
@@ -611,13 +611,13 @@ class Booking extends BaseController
             ]);
         }
 
-        // Calculate total quantity for fee calculation
+        // Hitung total jumlah untuk perhitungan biaya
         $totalQuantity = 0;
         foreach ($items as $item) {
             $totalQuantity += intval($item['quantity']);
         }
 
-        // Calculate biaya kirim (only for 1 shoe with pickup/delivery)
+        // Hitung biaya kirim berdasarkan metode pengiriman dan jumlah sepatu
         $biayaKirim = 0;
         if ($totalQuantity === 1) {
             // Rp 5,000 untuk pickup (dijemput)
@@ -635,7 +635,7 @@ class Booking extends BaseController
             // - dijemput-diantar (pickup + delivery) = 10000
         }
 
-        // Insert each item as separate booking
+        // Simpan setiap item sebagai booking terpisah
         $successCount = 0;
         $bookingIds = [];
 
@@ -645,7 +645,7 @@ class Booking extends BaseController
             $price = $this->getServicePrice($serviceCode);
             $subtotal = $price * $quantity;
             
-            // Get service name from database
+            // Ambil nama layanan dari database
             $serviceData = $this->db->table('services')
                 ->where('kode_layanan', $serviceCode)
                 ->where('aktif', 1)
@@ -654,7 +654,7 @@ class Booking extends BaseController
             
             $serviceName = $serviceData ? $serviceData['nama_layanan'] : $serviceCode;
             
-            // Distribute biaya_kirim proportionally if multiple items (but usually only 1 item in checkout)
+            // Distribusikan biaya kirim secara proporsional jika ada lebih dari 1 item, jika hanya 1 item maka biaya kirim penuh
             $itemBiayaKirim = count($items) === 1 ? $biayaKirim : round($biayaKirim * ($quantity / $totalQuantity));
             $total = $subtotal + $itemBiayaKirim;
 
@@ -679,7 +679,7 @@ class Booking extends BaseController
                 $bookingId = $this->db->insertID();
                 $bookingIds[] = $bookingId;
                 
-                // Save photos linked to this booking
+                // Simpan foto yang terkait dengan booking ini 
                 foreach ($uploadedPhotos as $photo) {
                     $this->db->table('booking_photos')->insert([
                         'booking_id' => $bookingId,
@@ -688,7 +688,7 @@ class Booking extends BaseController
                     ]);
                 }
                 
-                // Create notification for all admins
+                // Buat notifikasi untuk semua admin
                 $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
                 
                 foreach ($admins as $admin) {
