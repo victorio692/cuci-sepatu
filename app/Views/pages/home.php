@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <!-- Promo Banner Slider -->
-<section class="bg-gray-50 py-6 w-full">
+<section class="bg-gray-50 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative rounded-lg md:rounded-xl overflow-hidden shadow-sm md:shadow-lg">
             <!-- Slider Container -->
@@ -1243,38 +1243,44 @@ function showCartNotification(serviceName, totalItems) {
     
     // Create notification element
     const notification = document.createElement('div');
-    notification.className = 'cart-notification-popup fixed bottom-4 right-4 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-xl shadow-2xl z-[9999] max-w-sm animate-slide-up';
+    notification.className = 'cart-notification-popup fixed bottom-6 right-6 bg-white text-gray-900 px-6 py-5 rounded-2xl shadow-2xl z-[9999] max-w-md border-l-4 border-green-500 animate-slide-up';
+    notification.style.position = 'fixed';
+    notification.style.zIndex = '9999';
     notification.innerHTML = `
-        <div class="flex items-start space-x-3">
-            <div class="flex-shrink-0 w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center animate-bounce-once">
-                <i class="fas fa-check-circle text-2xl"></i>
+        <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-green-50 to-green-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-check text-2xl text-green-600"></i>
             </div>
-            <div class="flex-1">
-                <div class="font-bold text-lg mb-1">✓ Berhasil Ditambahkan!</div>
-                <div class="text-sm opacity-90 mb-2">${serviceName}</div>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs bg-white bg-opacity-20 px-3 py-1 rounded-full">
-                        <i class="fas fa-shopping-cart mr-1"></i>
-                        ${totalItems} item di keranjang
+            <div class="flex-1 pt-1">
+                <div class="font-bold text-base text-gray-900 mb-1">Berhasil!</div>
+                <div class="text-sm text-gray-600 mb-3 leading-relaxed">${serviceName}</div>
+                <div class="flex items-center justify-between gap-3">
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1.5 rounded-lg">
+                        <i class="fas fa-shopping-cart"></i>
+                        ${totalItems} item
                     </span>
-                    <a href="/cart" class="text-xs font-semibold underline hover:no-underline">
-                        Lihat Keranjang →
+                    <a href="/cart" class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                        Lihat →
                     </a>
                 </div>
             </div>
-            <button onclick="this.parentElement.parentElement.remove()" class="text-white opacity-70 hover:opacity-100 transition-opacity">
-                <i class="fas fa-times"></i>
+            <button onclick="this.closest('.cart-notification-popup').remove()" class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors pt-0.5">
+                <i class="fas fa-times text-lg"></i>
             </button>
         </div>
-        <div class="notification-progress"></div>
+        <div class="notification-progress-bar"></div>
     `;
     
     document.body.appendChild(notification);
     
+    // Force reflow to ensure styles apply
+    notification.offsetHeight;
+    
     // Auto remove after 4 seconds with progress bar
     setTimeout(() => {
         notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
+        notification.style.transform = 'translateX(400px)';
+        notification.style.transition = 'all 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 4000);
 }
@@ -1503,29 +1509,44 @@ function toggleMoreServices() {
 }
 
 /* Notification progress bar */
-.notification-progress {
+.notification-progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.3);
+    height: 2px;
+    background: linear-gradient(to right, #16a34a, #22c55e);
     width: 100%;
-    border-radius: 0 0 12px 12px;
-    animation: progressBar 4s linear;
+    border-radius: 0 0 16px 16px;
+    animation: progressBar 4s ease-out forwards;
 }
 
 @keyframes progressBar {
-    from { width: 100%; }
-    to { width: 0%; }
+    from { 
+        width: 100%;
+        opacity: 1;
+    }
+    to { 
+        width: 0%;
+        opacity: 0.5;
+    }
 }
 
 /* Responsive notification */
 @media (max-width: 640px) {
     .cart-notification-popup {
-        bottom: 1rem;
-        right: 1rem;
-        left: 1rem;
+        bottom: 1.5rem !important;
+        right: 1rem !important;
+        left: 1rem !important;
         max-width: none;
+    }
+}
+
+@media (min-width: 641px) {
+    .cart-notification-popup {
+        bottom: 2rem !important;
+        right: 2rem !important;
+        left: auto !important;
+        max-width: 28rem;
     }
 }
 
