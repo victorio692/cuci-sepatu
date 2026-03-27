@@ -48,22 +48,22 @@ class Bookings extends Controller
                 ->groupEnd();
         }
 
-        // Get total count for pagination
+        // Hitung total bookings untuk pagination
         $totalBookings = $builder->countAllResults(false);
         
-        // Get paginated results
+        // Ambil data bookings dengan pagination
         $bookings = $builder->orderBy('bookings.created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
         
-        // Map Indonesian columns to English for view
+        // Mapping kolom indonesia ke format yang dipakai di view
         foreach ($bookings as &$booking) {
             $booking['service'] = $booking['layanan'];
             $booking['created_at'] = $booking['created_at'];
         }
 
-        // Calculate pagination
+        // Hitung total halaman untuk pagination
         $totalPages = ceil($totalBookings / $perPage);
 
         $data = [
@@ -96,7 +96,7 @@ class Bookings extends Controller
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        // Map Indonesian columns to English for view compatibility
+        // Mapping kolom indonesia ke format yang dipakai di view
         $booking['service'] = $booking['layanan'];
         $booking['quantity'] = $booking['jumlah'];
         $booking['delivery_date'] = $booking['tanggal_kirim'];
@@ -112,7 +112,7 @@ class Bookings extends Controller
         $booking['subtotal'] = $booking['subtotal'] ?? $booking['total'];
         $booking['delivery_fee'] = $booking['biaya_kirim'] ?? 0;
 
-        // Get uploaded photos from customer
+        // Dapatkan foto yang diunggah dari customer
         $photos = $this->db->table('booking_photos')
             ->where('booking_id', $id)
             ->orderBy('id', 'ASC')
@@ -130,21 +130,21 @@ class Bookings extends Controller
 
     public function updateStatus($id)
     {
-        // Check if this is multipart form data (file upload)
+        // Cek apakah request berupa multipart (upload file)
         $contentType = $this->request->getHeaderLine('Content-Type');
         
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            // Handle file upload (POST request)
+            // Handle upload file (request POST)
             $status = $this->request->getPost('status');
             $alasan = $this->request->getPost('alasan_penolakan');
         } else {
-            // Handle JSON (PUT request)
+            // Handle request JSON (PUT)
             $json = $this->request->getJSON(true);
             $status = $json['status'] ?? $this->request->getPost('status');
             $alasan = $json['alasan_penolakan'] ?? $this->request->getPost('alasan_penolakan');
         }
 
-        // Get current booking
+        // Ambil data booking dari database
         $booking = $this->db->table('bookings')->where('id', $id)->get()->getRowArray();
         
         if (!$booking) {
@@ -165,7 +165,7 @@ class Bookings extends Controller
             'ditolak' => []                          // ditolak tidak bisa diubah (status final)
         ];
 
-        // Check if current status exists in valid transitions
+        // Cek apakah status sekarang ada di alur yang valid
         if (!isset($validTransitions[$currentStatus])) {
             return $this->response->setJSON([
                 'success' => false,
@@ -173,7 +173,7 @@ class Bookings extends Controller
             ]);
         }
 
-        // Check if status is final (selesai or ditolak)
+        // Cek apakah status sudah final (selesai atau ditolak)
         if ($currentStatus === 'selesai' || $currentStatus === 'ditolak') {
             return $this->response->setJSON([
                 'success' => false,
@@ -181,7 +181,7 @@ class Bookings extends Controller
             ]);
         }
 
-        // Check if transition is allowed (tidak bisa melompati status)
+        // Cek apakah perubahan status diperbolehkan (tidak melompati status)
         if (!in_array($status, $validTransitions[$currentStatus])) {
             $errorMessages = [
                 'pending' => 'Dari status Menunggu hanya bisa disetujui atau ditolak',
@@ -205,7 +205,7 @@ class Bookings extends Controller
             ]);
         }
 
-        // Initialize foto hasil variable
+        // Inisialisasi variabel foto hasil 
         $newName = null;
         
         // Jika status selesai, foto hasil harus diupload
@@ -227,7 +227,7 @@ class Bookings extends Controller
                 ]);
             }
 
-            // Validate file type
+            // Validate tipe file
             $mimeType = $foto_hasil->getClientMimeType();
             if (!in_array($mimeType, ['image/jpeg', 'image/jpg', 'image/png'])) {
                 return $this->response->setJSON([
@@ -236,7 +236,7 @@ class Bookings extends Controller
                 ]);
             }
 
-            // Validate file size (max 5MB)
+            // Validate ukuran file (maks 5MB)
             $fileSize = $foto_hasil->getSizeByUnit('mb');
             if ($fileSize > 5) {
                 return $this->response->setJSON([
@@ -270,7 +270,7 @@ class Bookings extends Controller
 
         $this->db->table('bookings')->where('id', $id)->update($updateData);
 
-        // Create notification for customer
+        // Buat notifikasi untuk user
         $notificationData = [
             'id_user' => $booking['id_user'],
             'booking_id' => $id,
@@ -306,7 +306,7 @@ class Bookings extends Controller
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Status berhasil diubah',
-            'show_whatsapp' => ($status === 'selesai') // Show WA button if completed
+            'show_whatsapp' => ($status === 'selesai') // tampilkan tombol WhatsApp jika status selesai
         ]);
     }
 
@@ -321,7 +321,7 @@ class Bookings extends Controller
             ]);
         }
 
-        // Delete associated photo if exists
+        // Hapus foto terkait jika ada
         if (!empty($booking['foto_sepatu'])) {
             $photoPath = FCPATH . 'uploads/' . $booking['foto_sepatu'];
             if (file_exists($photoPath)) {

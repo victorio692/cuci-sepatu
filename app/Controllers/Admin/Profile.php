@@ -82,12 +82,12 @@ class Profile extends Controller
 
         $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
 
-        // Verify current password
+        // Cek password saat ini
         if (!password_verify($this->request->getPost('current_password'), $user['password'])) {
             return redirect()->back()->with('error', 'Password lama tidak sesuai');
         }
 
-        // Update password
+        // Perbarui password
         $newPassword = password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT);
         $db->table('users')->where('id', $userId)->update(['password' => $newPassword]);
 

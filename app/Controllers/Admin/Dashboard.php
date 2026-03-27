@@ -29,16 +29,16 @@ class Dashboard extends Controller
             return redirect()->to('/dashboard')->with('error', 'Akses ditolak. Anda bukan admin.');
         }
 
-        // Get statistics
+        // Ambil statistik
 
-        // Users statistics
+        // Statistik pengguna
         $total_users = $db->table('users')->countAllResults();
         $users_this_month = $db->table('users')
             ->where('MONTH(created_at)', date('m'))
             ->where('YEAR(created_at)', date('Y'))
             ->countAllResults();
 
-        // Bookings statistics
+        // Statistik booking
         $total_bookings = $db->table('bookings')->countAllResults();
         $bookings_this_month = $db->table('bookings')
             ->where('MONTH(created_at)', date('m'))
@@ -51,7 +51,7 @@ class Dashboard extends Controller
             ->where('status', 'proses')
             ->countAllResults();
 
-        // Revenue
+        // Pendapatan
         $revenue = $db->table('bookings')
             ->selectSum('total')
             ->where('MONTH(created_at)', date('m'))
@@ -60,15 +60,15 @@ class Dashboard extends Controller
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
 
-        // Recent bookings - dengan pagination
+        // Data booking terbaru - dengan pagination
         $perPage = 10;
         $page = $this->request->getVar('page') ?? 1;
         $offset = ($page - 1) * $perPage;
         
-        // Get total records
+        // Hitung total booking untuk pagination
         $totalBookings = $db->table('bookings')->countAllResults(false);
         
-        // Get paginated data
+        // Ambil data booking dengan pagination
         $recent_bookings = $db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as customer_name, users.no_hp')
             ->join('users', 'bookings.id_user = users.id')
@@ -77,11 +77,11 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
         
-        // Create pager
+        // Buat pagination (pager)
         $pager = \Config\Services::pager();
         $pager->store('default', $page, $perPage, $totalBookings);
 
-        // Pending bookings
+        // Booking dengan status pending
         $pending_count = $db->table('bookings')
             ->where('status', 'pending')
             ->countAllResults();
@@ -94,7 +94,7 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Service statistics
+        // Statistik layanan
         $service_stats = $db->table('bookings')
             ->select('layanan as service, COUNT(*) as count')
             ->groupBy('layanan')
@@ -102,7 +102,7 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Recent users
+        // Pengguna terbaru
         $recent_users = $db->table('users')
             ->select('id, nama_lengkap as full_name, email, created_at')
             ->orderBy('created_at', 'DESC')

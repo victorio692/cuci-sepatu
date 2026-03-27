@@ -17,13 +17,13 @@ class Services extends Controller
 
     public function index()
     {
-        // Get services from database with custom order
+        // Ambil data layanan dari database dengan urutan khusus
         $services = $this->db->table('services')
             ->orderBy("FIELD(kode_layanan, 'fast-cleaning', 'deep-cleaning', 'white-shoes', 'suede-treatment', 'unyellowing')", '', false)
             ->get()
             ->getResultArray();
 
-        // Map Indonesian columns to match view expectations
+        // Mapping kolom agar sesuai dengan kebutuhan view
         foreach ($services as &$service) {
             $service['service_code'] = $service['kode_layanan'];
             $service['service_name'] = $service['nama_layanan'];
@@ -38,7 +38,7 @@ class Services extends Controller
                 $service['icon_type'] = 'image';
                 $service['icon'] = $service['icon_path'];
             } else {
-                // Default Font Awesome icons for each service
+                // Ikon default berdasarkan kode layanan
                 $iconMap = [
                     'fast-cleaning' => 'bolt',
                     'deep-cleaning' => 'water',
@@ -60,7 +60,7 @@ class Services extends Controller
     }
 
     /**
-     * Create new service
+     * Tambah layanan baru
      */
     public function create()
     {
@@ -72,7 +72,7 @@ class Services extends Controller
     }
 
     /**
-     * Store new service
+     * Simpan layanan baru
      */
     public function store()
     {
@@ -129,7 +129,7 @@ class Services extends Controller
     }
 
     /**
-     * Edit service
+     * edit layanan
      */
     public function edit($id)
     {
@@ -148,7 +148,7 @@ class Services extends Controller
     }
 
     /**
-     * Update service
+     * Update layanan 
      */
     public function update($id)
     {
@@ -190,14 +190,14 @@ class Services extends Controller
     }
 
     /**
-     * Delete service
+     * Hapus layanan (hanya jika tidak digunakan dalam booking aktif)
      */
     public function delete($id)
     {
-        // Log the request
+        // Catat request  (logging)
         log_message('info', 'Delete service request received for ID: ' . $id);
         
-        // Get service code first
+        // Ambil kode layanan terlebih dahulu untuk pengecekan
         $service = $this->db->table('services')->where('id', $id)->get()->getRowArray();
         
         if (!$service) {
@@ -205,7 +205,7 @@ class Services extends Controller
             return redirect()->to('/admin/services')->with('error', 'Layanan tidak ditemukan');
         }
 
-        // Check if service is used in ACTIVE bookings only (not selesai/batal/ditolak)
+        // Cek apakah layanan digunakan pada booking yang masih aktif (bukan selesai/batal/ditolak)
         $bookingCount = $this->db->table('bookings')
             ->where('layanan', $service['kode_layanan'])
             ->whereIn('status', ['pending', 'proses', 'disetujui'])
@@ -226,7 +226,7 @@ class Services extends Controller
     }
 
     /**
-     * Toggle service active status
+     * Ubah status aktif/inaktif layanan
      */
     public function toggleActive($id)
     {
@@ -253,14 +253,14 @@ class Services extends Controller
     public function updatePrice()
     {
         $service = $this->request->getPost('service');
-        $price = $this->request->getPost('price');
+        $price = $this->request->getPost('price'); 
 
         if (!$service || !$price) {
             return $this->response->setJSON(['success' => false, 'message' => 'Invalid data']);
         }
 
-        // Update price in session or database
-        // For now, just return success
+        // Update harga di session atau database
+        // Sementara hanya mengembalikan response sukses, implementasi penyimpanan harga bisa disesuaikan dengan kebutuhan
         return $this->response->setJSON(['success' => true, 'message' => 'Price updated']);
     }
 }

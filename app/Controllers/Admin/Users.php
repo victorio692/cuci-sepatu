@@ -31,24 +31,24 @@ class Users extends Controller
                 ->groupEnd();
         }
 
-        // Get total count for pagination
+        // Hitung total untuk pagination
         $totalUsers = $builder->countAllResults(false);
 
-        // Get paginated results
+        // Ambil data dengan pagination 
         $users = $builder->orderBy('created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()
             ->getResultArray();
         
-        // Map Indonesian columns to English for view
+        // Mapping kolom ke format yang digunakan di view
         foreach ($users as &$user) {
             $user['full_name'] = $user['nama_lengkap'];
             $user['phone'] = $user['no_hp'];
             $user['created_at'] = $user['created_at'];
-            $user['is_active'] = 1; // Always active for now
+            $user['is_active'] = 1; // Sementara selalu aktif, bisa disesuaikan jika ada kolom status di database
         }
 
-        // Calculate pagination
+        // Hitung pagination 
         $totalPages = ceil($totalUsers / $perPage);
 
         $data = [
@@ -74,19 +74,19 @@ class Users extends Controller
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        // Add aktif field for compatibility with view (always true for now)
+        // Tambahkan field aktif untuk kebutuhan view (sementara selalu true)
         $user['aktif'] = 1;
        
-        // Pagination setup
+        // Setup pagination
         $page = (int)($this->request->getVar('page') ?? 1);
         $perPage = 5;
 
-        // Get total bookings count
+        // Hitung total booking untuk user ini
         $totalBookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->countAllResults();
 
-        // Get bookings for current page
+        // Ambil data booking untuk halaman saat ini
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->orderBy('created_at', 'DESC')
@@ -94,7 +94,7 @@ class Users extends Controller
             ->get()
             ->getResultArray();
 
-        // Calculate pagination info
+        // Hitung informasi pagination
         $totalPages = ceil($totalBookings / $perPage);
         $currentPage = min($page, max(1, $totalPages));
 
@@ -114,7 +114,7 @@ class Users extends Controller
     }
 
     /**
-     * Create new user
+     * Tambah user baru
      */
     public function create()
     {
@@ -126,7 +126,7 @@ class Users extends Controller
     }
 
     /**
-     * Store new user
+     * Simpan user baru
      */
     public function store()
     {
@@ -223,7 +223,7 @@ class Users extends Controller
             'role' => 'required|in_list[pelanggan,admin]',
         ];
 
-        // Only validate password if provided
+        // Validasi hanya jika password diisi
         if ($this->request->getPost('password')) {
             $rules['password'] = 'min_length[6]';
         }
@@ -243,7 +243,7 @@ class Users extends Controller
             'updated_at' => date('Y-m-d H:i:s')
         ];
 
-        // Update password if provided
+        // Update password jika diisi
         if ($this->request->getPost('password')) {
             $data['password_hash'] = password_hash($this->request->getPost('password'), PASSWORD_DEFAULT);
         }
@@ -256,11 +256,11 @@ class Users extends Controller
     }
 
     /**
-     * Delete user
+     * Hapus user
      */
     public function delete($id)
     {
-        // Check if user has bookings
+        // Cek apakah user memiliki booking yang terkait
         $bookingCount = $this->db->table('bookings')->where('id_user', $id)->countAllResults();
 
         if ($bookingCount > 0) {

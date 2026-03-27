@@ -18,11 +18,11 @@ class Reports extends Controller
     {
         $db = db_connect();
 
-        // Get date range from query parameters
+        // Ambil rentang tanggal dari parameter query, default ke bulan ini
         $startDate = $this->request->getGet('start_date') ?? date('Y-m-01');
         $endDate = $this->request->getGet('end_date') ?? date('Y-m-t');
 
-        // Bookings statistics
+        // Statistik booking
         $total_bookings = $db->table('bookings')
             ->where('created_at >=', $startDate)
             ->where('created_at <=', $endDate . ' 23:59:59')
@@ -46,7 +46,7 @@ class Reports extends Controller
             ->where('created_at <=', $endDate . ' 23:59:59')
             ->countAllResults();
 
-        // Revenue
+        // Pendapatan
         $revenue = $db->table('bookings')
             ->selectSum('total')
             ->where('status', 'selesai')
@@ -56,7 +56,7 @@ class Reports extends Controller
             ->getRow();
         $total_revenue = $revenue->total ?? 0;
 
-        // Service statistics
+        // Statistik layanan
         $service_stats = $db->table('bookings')
             ->select('layanan as service, COUNT(*) as count, COALESCE(SUM(total), 0) as revenue')
             ->where('created_at >=', $startDate)
@@ -66,7 +66,7 @@ class Reports extends Controller
             ->get()
             ->getResultArray();
 
-        // Daily bookings for chart
+        // Data booking harian untuk grafik
         $daily_bookings = $db->table('bookings')
             ->select('DATE(created_at) as date, COUNT(*) as count')
             ->where('created_at >=', $startDate)
@@ -94,12 +94,12 @@ class Reports extends Controller
 
     public function print()
     {
-        // Same logic as index but with print view
+        // logika sama dengan index(), tapi kita akan load view yang berbeda untuk cetak
         $db = db_connect();
         $startDate = $this->request->getGet('start_date') ?? date('Y-m-01');
         $endDate = $this->request->getGet('end_date') ?? date('Y-m-t');
 
-        // Get all data
+        
         $bookings = $db->table('bookings')
             ->select('bookings.*, users.nama_lengkap as customer_name')
             ->join('users', 'bookings.id_user = users.id')
