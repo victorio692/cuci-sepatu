@@ -746,11 +746,11 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                 <!-- Company Info -->
-                <div>
+                <div class="col-span-1">
                     <h4 class="text-white text-lg font-bold mb-4">SYH Cleaning</h4>
-                    <p class="text-gray-400 mb-4">Layanan cuci sepatu terpercaya dengan hasil maksimal dan harga terjangkau.</p>
+                    <p class="text-gray-400 mb-4 text-sm lg:text-base">Layanan cuci sepatu terpercaya dengan hasil maksimal dan harga terjangkau.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-pink-500 transform hover:scale-125 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-instagram text-xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-green-500 transform hover:scale-125 hover:-translate-y-1 transition-all duration-300"><i class="fab fa-whatsapp text-xl"></i></a>
@@ -758,42 +758,42 @@
                 </div>
                 
                 <!-- Services -->
-                <div>
+                <div class="col-span-1">
                     <h4 class="text-white text-lg font-bold mb-4">Layanan</h4>
                     <ul class="space-y-2">
-                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Fast Cleaning</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Deep Cleaning</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">White Shoes</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Suede Treatment</a></li>
-                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Unyelowing</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Fast Cleaning</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Deep Cleaning</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">White Shoes</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Suede Treatment</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Unyelowing</a></li>
                     </ul>
                 </div>
                 
                 <!-- Information -->
-                <div>
+                <div class="col-span-1">
                     <h4 class="text-white text-lg font-bold mb-4">Informasi</h4>
                     <ul class="space-y-2">
-                        <li><a href="/tentang" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Tentang Kami</a></li>
-                        <li><a href="/kebijakan" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Kebijakan Privasi</a></li>
-                        <li><a href="/syarat" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Syarat & Ketentuan</a></li>
-                        <li><a href="/kontak" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block">Hubungi Kami</a></li>
+                        <li><a href="/tentang" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Tentang Kami</a></li>
+                        <li><a href="/kebijakan" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Kebijakan Privasi</a></li>
+                        <li><a href="/syarat" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Syarat & Ketentuan</a></li>
+                        <li><a href="/kontak" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 inline-block text-sm lg:text-base">Hubungi Kami</a></li>
                     </ul>
                 </div>
                 
                 <!-- Contact -->
-                <div>
+                <div class="col-span-1">
                     <h4 class="text-white text-lg font-bold mb-4">Kontak</h4>
                     <ul class="space-y-3">
-                        <li><a href="tel:+6281234567890" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"><i class="fas fa-phone mr-2"></i> 08985709532</a></li>
-                        <li><a href="mailto:info@syhhcleaning@gmail.com" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"><i class="fas fa-envelope mr-2"></i> syhhcleaning@gmail.com</a></li>
-                        <li class="text-gray-400 flex items-start"><i class="fas fa-map-marker-alt mr-2 mt-1"></i> Desa Paten RT04, Sumberaguung, Jetis, Bantul</li>
+                        <li><a href="tel:+6281234567890" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 flex items-center text-sm lg:text-base"><i class="fas fa-phone mr-2"></i> 08985709532</a></li>
+                        <li><a href="mailto:info@syhhcleaning@gmail.com" class="text-gray-400 hover:text-white hover:pl-2 transition-all duration-300 flex items-center text-sm lg:text-base"><i class="fas fa-envelope mr-2"></i> syhhcleaning@gmail.com</a></li>
+                        <li class="text-gray-400 flex items-start text-sm lg:text-base"><i class="fas fa-map-marker-alt mr-2 mt-1 flex-shrink-0"></i> <span>Desa Paten RT04, Sumberaguung, Jetis, Bantul</span></li>
                     </ul>
                 </div>
             </div>
             
             <!-- Copyright -->
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2026 SYH Cleaning. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">&copy; 2026 SYH Cleaning. All rights reserved.</p>
             </div>
         </div>
     </footer>
