@@ -66,10 +66,10 @@ class AdminBookingsApi extends BaseController
                 ->groupEnd();
         }
 
-        // Get total count
+        // Hitung total data
         $totalBookings = $builder->countAllResults(false);
         
-        // Get paginated results
+        // Ambil data dengan pagination
         $bookings = $builder->orderBy('bookings.created_at', 'DESC')
             ->limit($perPage, ($page - 1) * $perPage)
             ->get()

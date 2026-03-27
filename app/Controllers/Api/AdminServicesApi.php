@@ -24,7 +24,7 @@ class AdminServicesApi extends BaseController
             ->get()
             ->getResult();
 
-            // Add icon information to each service
+            // Tambahkan informasi ikon pada setiap layanan
             $iconMap = [
                 'fast-cleaning' => 'bolt',
                 'deep-cleaning' => 'water',
@@ -34,7 +34,7 @@ class AdminServicesApi extends BaseController
             ];
 
             foreach ($data as &$service) {
-                // Convert numeric fields to integers for proper handling
+                // Ubah field numerik menjadi integer agar diproses dengan benar
                 $service->harga_dasar = (int)$service->harga_dasar;
                 $service->durasi_hari = (int)$service->durasi_hari;
                 $service->aktif = (int)$service->aktif;
@@ -85,7 +85,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Convert harga_dasar to integer to prevent parsing issues
+            // Ubah harga_dasar ke integer untuk mencegah error parsing
             $data['harga_dasar'] = (int)$data['harga_dasar'];
             $data['durasi_hari'] = (int)$data['durasi_hari'];
             $data['aktif'] = (int)$data['aktif'];
@@ -108,14 +108,14 @@ class AdminServicesApi extends BaseController
         try {
             log_message('info', 'Create service API called');
             
-            // Get content type
+            // Ambil tipe konten request
             $contentType = $this->request->getHeaderLine('Content-Type');
             
-            // Support both JSON and form-data
+            // Mendukung JSON dan form-data
             if (strpos($contentType, 'application/json') !== false) {
                 $input = $this->request->getJSON(true);
             } else {
-                // For multipart/form-data (file upload) or application/x-www-form-urlencoded
+                // untuk multipart/form-data (upload file) atau application/x-www-form-urlencoded
                 $input = [
                     'kode_layanan' => $this->request->getPost('kode_layanan'),
                     'nama_layanan' => $this->request->getPost('nama_layanan'),
@@ -157,7 +157,7 @@ class AdminServicesApi extends BaseController
                 'aktif' => isset($input['aktif']) ? (int)$input['aktif'] : 1,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
-            ];            // Handle file upload if present
+            ];            // Proses upload file ikon jika ada
             $iconFile = $this->request->getFile('icon_image');
             log_message('info', 'Icon file check: ' . ($iconFile ? 'EXISTS' : 'NULL'));
             
@@ -165,7 +165,7 @@ class AdminServicesApi extends BaseController
                 try {
                     log_message('info', 'Processing icon upload: ' . $iconFile->getClientName() . ' Size: ' . $iconFile->getSize());
                     
-                    // Save to PUBLIC uploads directory (not writable) so it's web-accessible
+                    // Simpan ke folder uploads di public agar bisa diakses dari web
                     $uploadsDir = FCPATH . 'uploads';
                     $servicesDir = $uploadsDir . DIRECTORY_SEPARATOR . 'services';
                     
@@ -179,15 +179,15 @@ class AdminServicesApi extends BaseController
                         log_message('info', 'Created services directory: ' . $servicesDir);
                     }
                     
-                    // Validate file size (max 2MB)
+                    // Validasi ukuran file (maks 2MB)
                     if ($iconFile->getSize() > 2 * 1024 * 1024) {
                         log_message('warning', 'File too large: ' . $iconFile->getSize());
-                        // Continue without icon
+                        // Lanjut tanpa ikon jika file jika tidak ada
                     } else {
-                        // Generate unique filename
+                        // Buat nama file unik untuk mencegah konflik
                         $newName = 'service_' . time() . '_' . $iconFile->getRandomName();
                         
-                        // Move file to uploads directory
+                        // Pindahkan file ke folder uploads/services
                         if ($iconFile->move($servicesDir, $newName)) {
                             $data['icon_path'] = 'uploads/services/' . $newName;
                             log_message('info', 'Icon uploaded successfully: ' . $newName . ' at path: ' . $servicesDir . DIRECTORY_SEPARATOR . $newName);
@@ -197,7 +197,7 @@ class AdminServicesApi extends BaseController
                     }
                 } catch (\Exception $e) {
                     log_message('error', 'File upload exception: ' . $e->getMessage());
-                    // Continue without file if upload fails
+                    // Lanjut tanpa ikon jika terjadi error saat upload
                 }
             }
 
@@ -206,7 +206,7 @@ class AdminServicesApi extends BaseController
             $this->db->table('services')->insert($data);
             $id = $this->db->insertID();
 
-            // Ensure all numeric fields are integers in response
+            // Pastikan semua field numerik bertipe integer pada response
             $data['id'] = $id;
             $data['harga_dasar'] = (int)$data['harga_dasar'];
             $data['durasi_hari'] = (int)$data['durasi_hari'];
@@ -253,17 +253,17 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Check content type to determine how to parse input
+            // Cek tipe konten untuk menentukan cara parsing input
             $contentType = $this->request->getHeaderLine('Content-Type');
             log_message('info', 'Content-Type: ' . $contentType);
             
-            // Parse input based on content type
+            // Parse input berdasarkan tipe konten 
             $input = [];
             if (strpos($contentType, 'application/json') !== false) {
-                // JSON request
+                // Request JSON
                 $input = $this->request->getJSON(true) ?? [];
             } else {
-                // Form data or multipart request
+                // Request form-data atau multipart
                 $input = [
                     'kode_layanan' => $this->request->getPost('kode_layanan'),
                     'nama_layanan' => $this->request->getPost('nama_layanan'),
@@ -298,11 +298,11 @@ class AdminServicesApi extends BaseController
                 $data['durasi_hari'] = (int)$input['durasi_hari'];
             }
 
-            // Handle icon file upload
+            // Handle upload file ikon jika ada
             $file = $this->request->getFile('icon_image');
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                // Create services upload directory if not exists
+                // Buat folder uploads/services jika belum ada
                 $uploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services';
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
@@ -313,11 +313,11 @@ class AdminServicesApi extends BaseController
                     $data['icon_path'] = 'uploads/services/' . $newName;
                 }
             }
-            // Handle aktif status
+            // Handle status aktif
             if (isset($input['aktif'])) {
                 $data['aktif'] = $input['aktif'] ? 1 : 0;
             } else {
-                // If not set, means checkbox is unchecked
+                // Jika tidak di set, berarti checkbox tidak dicentang, set aktif ke 0
                 $data['aktif'] = 0;
             }
 
@@ -368,7 +368,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Check if service is used in ACTIVE bookings only (not selesai/batal/ditolak)
+            // Cek apakah layanan digunakan pada booking yang masih aktif (bukan selesai/batal/ditolak)
             $bookingCount = $this->db->table('bookings')
                 ->where('layanan', $service['kode_layanan'])
                 ->whereIn('status', ['pending', 'proses', 'disetujui'])
@@ -410,7 +410,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Support both JSON and form-data
+            // Dukung request JSON dan form-data
             $input = $this->request->getJSON(true) ?? $this->request->getPost();
             $harga = $input['harga'] ?? null;
 
@@ -494,7 +494,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Validate file
+            // Validasi file
             if ($file->getSize() > 2097152) { // 2MB
                 return $this->response->setJSON([
                     'code' => 400,
@@ -510,20 +510,20 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Create services upload directory if not exists
+            // Buat folder uploads/services jika belum ada
             $uploadDir = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'services';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
 
-            // Generate filename
+            // Buat nama file 
             $filename = 'service_' . $service['id'] . '_' . time() . '.' . $ext;
             $filePath = $uploadDir . DIRECTORY_SEPARATOR . $filename;
 
-            // Move file
+            // Pindahkan file ke folder uploads/services
             $file->move($uploadDir, $filename);
 
-            // Update service with icon path
+            // Update layanan dengan path ikon 
             $iconPath = 'uploads/services/' . $filename;
             $this->db->table('services')
                 ->where('id', $id)
@@ -569,7 +569,7 @@ class AdminServicesApi extends BaseController
                 ]);
             }
 
-            // Delete the file if exists
+            // Hapus file jika ada
             if (!empty($service['icon_path'])) {
                 $filePath = FCPATH . $service['icon_path'];
                 if (file_exists($filePath)) {
@@ -577,7 +577,7 @@ class AdminServicesApi extends BaseController
                 }
             }
 
-            // Update service to remove icon path
+            // Update layanan untuk menghapus path ikon
             $this->db->table('services')
                 ->where('id', $id)
                 ->update([

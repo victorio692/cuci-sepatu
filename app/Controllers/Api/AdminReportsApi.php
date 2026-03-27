@@ -128,7 +128,7 @@ class AdminReportsApi extends BaseController
             $query = $builder->get();   
             $dailyBookings = $query->getResultArray();
             
-            // Breakdown status booking
+            // Rincian status booking
             $builder = $this->db->table('bookings');
             $builder->select('status, COUNT(*) as jumlah');
             $builder->where('created_at >=', $startDate . ' 00:00:00');
@@ -227,7 +227,7 @@ class AdminReportsApi extends BaseController
     {
         $startDate = $this->request->getGet('start_date');
         $endDate = $this->request->getGet('end_date');
-        $groupBy = $this->request->getGet('group_by'); // daily atau monthly
+        $groupBy = $this->request->getGet('group_by'); // Data booking per hari atau per bulan
         
         if(empty($startDate)) {
             $startDate = date('Y-m-01');
