@@ -2,8 +2,119 @@
 
 <?= $this->section('content') ?>
 
-<!-- Main Content With Sidebar -->
-<div class="min-h-screen bg-gray-50 pt-24 pb-8">
+<!-- Mobile Profile View -->
+<div class="block lg:hidden min-h-screen bg-gray-50">
+
+    <!-- Content -->
+    <div class="pb-8 px-4 py-4">
+        <!-- Back Button -->
+        <a href="javascript:history.back()" class="inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition mb-4">
+            <i class="fas fa-chevron-left text-xl text-gray-700 font-bold"></i>
+        </a>
+
+        <!-- User Profile Card -->
+        <button onclick="openEditModal('edit-profile')" class="w-full bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 flex items-center justify-between hover:shadow-md transition">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <?php if (!empty($user['foto_profil'])): ?>
+                        <img src="<?= base_url('uploads/' . $user['foto_profil']) ?>" class="w-14 h-14 rounded-full object-cover border-2 border-blue-200">
+                    <?php else: ?>
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                            <?= strtoupper(substr($user['full_name'] ?? $user['nama_lengkap'] ?? 'U', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                </div>
+                <div class="text-left min-w-0">
+                    <p class="font-semibold text-gray-900 text-sm"><?= $user['full_name'] ?? $user['nama_lengkap'] ?? 'User' ?></p>
+                    <p class="text-xs text-gray-600 truncate"><?= $user['email'] ?></p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right text-gray-400"></i>
+        </button>
+
+        <!-- Profile Photo Upload -->
+        <form id="profilePhotoForm" action="/update-profile-photo" method="POST" enctype="multipart/form-data" class="hidden">
+            <?= csrf_field() ?>
+            <input type="file" id="profilePhoto" name="profile_photo" accept="image/png,image/jpeg,image/jpg">
+        </form>
+
+        <!-- Sections -->
+        <div class="space-y-6">
+            <!-- Personal Information Section -->
+            <div>
+                <h3 class="text-xs font-bold text-gray-500 uppercase px-4 mb-2">Informasi Pribadi</h3>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <!-- Name -->
+                    <button onclick="openEditModal('edit-name')" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition text-left">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <i class="fas fa-user text-gray-400 w-5 flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs text-gray-500 font-medium">Nama</p>
+                                <p class="text-sm font-medium text-gray-900 truncate"><?= $user['full_name'] ?? $user['nama_lengkap'] ?? '-' ?></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-sm flex-shrink-0 ml-2"></i>
+                    </button>
+                    <!-- Email -->
+                    <button onclick="openEditModal('edit-email')" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition text-left">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <i class="fas fa-envelope text-gray-400 w-5 flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs text-gray-500 font-medium">Email</p>
+                                <p class="text-sm font-medium text-gray-900 truncate"><?= $user['email'] ?></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-sm flex-shrink-0 ml-2"></i>
+                    </button>
+                    <!-- Phone -->
+                    <button onclick="openEditModal('edit-phone')" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition text-left">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <i class="fas fa-phone text-gray-400 w-5 flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs text-gray-500 font-medium">Nomor Telepon</p>
+                                <p class="text-sm font-medium text-gray-900 truncate"><?= !empty($user['no_hp']) ? $user['no_hp'] : 'Belum diisi' ?></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-sm flex-shrink-0 ml-2"></i>
+                    </button>
+                    <!-- Address -->
+                    <button onclick="openEditModal('edit-address')" class="w-full flex items-center justify-between px-4 py-4 hover:bg-gray-50 transition text-left">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <i class="fas fa-map-marker-alt text-gray-400 w-5 flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs text-gray-500 font-medium">Alamat</p>
+                                <p class="text-sm font-medium text-gray-900 truncate"><?= !empty($user['address'] ?? $user['alamat']) ? ($user['address'] ?? $user['alamat']) : 'Belum diisi' ?></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-sm flex-shrink-0 ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div>
+                <h3 class="text-xs font-bold text-gray-500 uppercase px-4 mb-2">Keamanan</h3>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <!-- Change Password -->
+                    <button onclick="openEditModal('edit-password')" class="w-full flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition text-left">
+                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                            <i class="fas fa-lock text-gray-400 w-5 flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs text-gray-500 font-medium">Kata Sandi</p>
+                                <p class="text-sm font-medium text-gray-900">Ubah Kata Sandi</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400 text-sm flex-shrink-0 ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Desktop View -->
+<div class="hidden lg:block min-h-screen bg-gray-50 pt-24 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Sidebar - Hidden on Mobile, Visible on Desktop -->
@@ -52,7 +163,7 @@
             </div>
 
             <!-- Mobile Menu Cards - Visible only on Mobile -->
-            <div class="lg:hidden col-span-1 grid grid-cols-2 gap-3 mb-6">
+            <div class="block lg:hidden col-span-1 grid grid-cols-2 gap-3 mb-6">
                 <a href="#" onclick="showSection('profile'); return false;" id="mobile-menu-profile" class="bg-blue-600 text-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-3 transition min-h-24">
                     <i class="fas fa-user-circle text-2xl"></i>
                     <span class="text-sm font-medium">Akun</span>
@@ -150,26 +261,7 @@
                             </div>
 
                             <!-- Profile Photo Section -->
-                            <div class="flex flex-col items-center">
-                                <div class="mb-4">
-                                    <?php if (!empty($user['foto_profil'])): ?>
-                                        <img id="profileImg" src="<?= base_url('uploads/' . $user['foto_profil']) ?>" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200">
-                                    <?php else: ?>
-                                        <div id="profileImg" class="w-32 h-32 bg-purple-500 rounded-full flex items-center justify-center text-white text-5xl font-bold border-4 border-gray-200">
-                                            <?= strtoupper(substr($user['full_name'] ?? $user['nama_lengkap'] ?? 'U', 0, 1)) ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <button type="button" onclick="document.getElementById('profilePhoto').click()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-sm">
-                                    Pilih Gambar
-                                </button>
-                                
-                                <div class="mt-3 text-center">
-                                    <p class="text-xs text-gray-500">Ukuran gambar: maks. 1 MB</p>
-                                    <p class="text-xs text-gray-500">Format gambar: .JPEG, .PNG</p>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -610,6 +702,304 @@
     </div>
 </div>
 
+<!-- Mobile Edit Modals -->
+
+<!-- Edit Profile Modal (Avatar + Name + Email) -->
+<div id="edit-profile" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-profile')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Profil</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-profile')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form id="mobileEditProfileForm" class="space-y-4">
+                <?= csrf_field() ?>
+                <div class="flex flex-col items-center mb-6">
+                    <?php if (!empty($user['foto_profil'])): ?>
+                        <img id="mobileProfileImg" src="<?= base_url('uploads/' . $user['foto_profil']) ?>" class="w-32 h-32 rounded-full object-cover border-2 border-gray-200 mb-3">
+                    <?php else: ?>
+                        <div id="mobileProfileImg" class="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-4xl mb-3">
+                            <?= strtoupper(substr($user['full_name'] ?? $user['nama_lengkap'] ?? 'U', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    <button type="button" onclick="document.getElementById('mobileProfilePhoto').click()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm transition flex items-center gap-2">
+                        <i class="fas fa-camera"></i> Ubah Foto
+                    </button>
+                    <input type="file" id="mobileProfilePhoto" name="profile_photo" accept="image/png,image/jpeg,image/jpg" style="display: none;">
+                    <?= csrf_field() ?>
+                </div>
+                <div>
+                    <label for="mobileFullName" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input 
+                        type="text" 
+                        id="mobileFullName" 
+                        value="<?= $user['full_name'] ?? $user['nama_lengkap'] ?? '' ?>" 
+                        disabled
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                    >
+                </div>
+                <div>
+                    <label for="mobileEmail" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="mobileEmail" 
+                        value="<?= $user['email'] ?>" 
+                        disabled
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                    >
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-profile')">
+                        Tutup
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Name Modal -->
+<div id="edit-name" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-name')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Nama</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-name')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/api/auth/profile" method="PUT" id="mobileEditNameForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label for="mobileNameInput" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                <input 
+                    type="text" 
+                    id="mobileNameInput" 
+                    name="nama_lengkap" 
+                    value="<?= $user['full_name'] ?? $user['nama_lengkap'] ?? '' ?>" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    required
+                >
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-name')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Email Modal -->
+<div id="edit-email" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-email')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Email</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-email')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/change-email" method="POST" id="mobileEditEmailForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label for="mobileCurrentEmail" class="block text-sm font-semibold text-gray-700 mb-2">Email Saat Ini</label>
+                <input 
+                    type="email" 
+                    id="mobileCurrentEmail" 
+                    value="<?= $user['email'] ?>" 
+                    disabled
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                >
+            </div>
+            <div>
+                <label for="mobileNewEmail" class="block text-sm font-semibold text-gray-700 mb-2">Email Baru</label>
+                <input 
+                    type="email" 
+                    id="mobileNewEmail" 
+                    name="new_email" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan email baru"
+                    required
+                >
+            </div>
+            <div>
+                <label for="mobileEmailPassword" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                <input 
+                    type="password" 
+                    id="mobileEmailPassword" 
+                    name="current_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan password Anda"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan password Anda</p>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-email')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Ubah Email
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Phone Modal -->
+<div id="edit-phone" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-phone')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Nomor Telepon</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-phone')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/change-phone" method="POST" id="mobileEditPhoneForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label for="mobileCurrentPhone" class="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon Saat Ini</label>
+                <input 
+                    type="text" 
+                    id="mobileCurrentPhone" 
+                    value="<?= $user['no_hp'] ?? '-' ?>" 
+                    disabled
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+                >
+            </div>
+            <div>
+                <label for="mobileNewPhone" class="block text-sm font-semibold text-gray-700 mb-2">Nomor Telepon Baru</label>
+                <input 
+                    type="tel" 
+                    id="mobileNewPhone" 
+                    name="new_phone" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="08xxxxxxxxxx"
+                    pattern="08[0-9]{9,}"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Format: 08xxxxxxxxxx (minimal 11 digit)</p>
+            </div>
+            <div>
+                <label for="mobilePhonePassword" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                <input 
+                    type="password" 
+                    id="mobilePhonePassword" 
+                    name="current_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan password Anda"
+                    required
+                >
+                <p class="text-xs text-gray-500 mt-1">Untuk keamanan, konfirmasi dengan password Anda</p>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-phone')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Ubah Nomor
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Address Modal -->
+<div id="edit-address" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-address')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Alamat</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-address')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/api/auth/profile" method="PUT" id="mobileEditAddressForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label for="mobileAddressInput" class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+                <textarea 
+                    id="mobileAddressInput" 
+                    name="alamat" 
+                    rows="4"
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan alamat Anda"
+                ><?= $user['address'] ?? $user['alamat'] ?? '' ?></textarea>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-address')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Password Modal -->
+<div id="edit-password" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) closeEditModal('edit-password')">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Ubah Kata Sandi</h3>
+            <button class="text-gray-400 hover:text-gray-600 text-xl" onclick="closeEditModal('edit-password')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form action="/api/auth/change-password" method="POST" id="mobileEditPasswordForm" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label for="mobileCurrentPassword" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi Saat Ini</label>
+                <input 
+                    type="password" 
+                    id="mobileCurrentPassword" 
+                    name="old_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan kata sandi saat ini"
+                    required
+                >
+            </div>
+            <div>
+                <label for="mobileNewPassword" class="block text-sm font-medium text-gray-700 mb-2">Kata Sandi Baru</label>
+                <input 
+                    type="password" 
+                    id="mobileNewPassword" 
+                    name="new_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Masukkan kata sandi baru"
+                    required
+                    minlength="6"
+                >
+                <p class="text-xs text-gray-500 mt-1">Minimal 6 karakter</p>
+            </div>
+            <div>
+                <label for="mobileConfirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Kata Sandi Baru</label>
+                <input 
+                    type="password" 
+                    id="mobileConfirmPassword" 
+                    name="confirm_password" 
+                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Konfirmasi kata sandi baru"
+                    required
+                    minlength="6"
+                >
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition" onclick="closeEditModal('edit-password')">
+                    Batal
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Ubah Kata Sandi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
 <?= $this->section('extra_js') ?>
 <style>
@@ -959,6 +1349,23 @@ function closeModal(modalId) {
     modal.classList.remove('flex');
 }
 
+// Mobile Edit Modal functions
+function openEditModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+function closeEditModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
 // Profile photo upload
 document.getElementById('profilePhoto').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -1197,6 +1604,299 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Error:', error);
                 showToast('Terjadi kesalahan saat mengubah nomor telepon', 'error');
+            }
+        });
+    }
+
+    // ===== MOBILE EDIT FORMS =====
+    
+    // Mobile profile photo upload
+    const mobileProfilePhoto = document.getElementById('mobileProfilePhoto');
+    if (mobileProfilePhoto) {
+        mobileProfilePhoto.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Ukuran file maksimal 2 MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.match('image/(png|jpeg|jpg)')) {
+                    showToast('Format file harus PNG, JPG, atau JPEG', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const profileImg = document.getElementById('mobileProfileImg');
+                    if (profileImg.tagName === 'IMG') {
+                        profileImg.src = event.target.result;
+                    } else {
+                        profileImg.outerHTML = '<img id="mobileProfileImg" src="' + event.target.result + '" class="w-32 h-32 rounded-full object-cover border-2 border-gray-200 mb-3">';
+                    }
+                };
+                reader.readAsDataURL(file);
+                
+                // Get CSRF token
+                const csrfInput = document.querySelector('input[name="<?= csrf_token() ?>"]');
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('profile_photo', file);
+                if (csrfInput) {
+                    formData.append(csrfInput.name, csrfInput.value);
+                }
+                
+                // Submit with AJAX
+                fetch('/update-profile-photo', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showToast('Foto profil berhasil diubah', 'success');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 500);
+                    } else {
+                        showToast('Gagal mengubah foto profil', 'error');
+                    }
+                });
+            }
+        });
+    }
+
+    // Mobile Edit Name Form
+    const mobileEditNameForm = document.getElementById('mobileEditNameForm');
+    if (mobileEditNameForm) {
+        mobileEditNameForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('mobileNameInput')?.value?.trim();
+            if (!fullName) {
+                showToast('Nama wajib diisi', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        nama_lengkap: fullName
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showToast(result.message || 'Nama berhasil diubah', 'success');
+                    closeEditModal('edit-name');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(result.message || 'Gagal mengubah nama', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah nama', 'error');
+            }
+        });
+    }
+
+    // Mobile Edit Email Form
+    const mobileEditEmailForm = document.getElementById('mobileEditEmailForm');
+    if (mobileEditEmailForm) {
+        mobileEditEmailForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newEmail = formData.get('new_email');
+            const password = formData.get('current_password');
+            
+            if (!newEmail || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                showToast('Format email tidak valid', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    showToast('Email berhasil diubah!', 'success');
+                    closeEditModal('edit-email');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast('Gagal mengubah email. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah email', 'error');
+            }
+        });
+    }
+
+    // Mobile Edit Phone Form
+    const mobileEditPhoneForm = document.getElementById('mobileEditPhoneForm');
+    if (mobileEditPhoneForm) {
+        mobileEditPhoneForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newPhone = formData.get('new_phone');
+            const password = formData.get('current_password');
+            
+            if (!newPhone || !password) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            if (!/^08[0-9]{9,}$/.test(newPhone)) {
+                showToast('Format nomor telepon tidak valid (08xxxxxxxxxx)', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    showToast('Nomor telepon berhasil diubah!', 'success');
+                    closeEditModal('edit-phone');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast('Gagal mengubah nomor telepon. Periksa password Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah nomor telepon', 'error');
+            }
+        });
+    }
+
+    // Mobile Edit Address Form
+    const mobileEditAddressForm = document.getElementById('mobileEditAddressForm');
+    if (mobileEditAddressForm) {
+        mobileEditAddressForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const address = document.getElementById('mobileAddressInput')?.value?.trim();
+            if (!address) {
+                showToast('Alamat wajib diisi', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        alamat: address
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showToast(result.message || 'Alamat berhasil diubah', 'success');
+                    closeEditModal('edit-address');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(result.message || 'Gagal mengubah alamat', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah alamat', 'error');
+            }
+        });
+    }
+
+    // Mobile Edit Password Form
+    const mobileEditPasswordForm = document.getElementById('mobileEditPasswordForm');
+    if (mobileEditPasswordForm) {
+        mobileEditPasswordForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('mobileCurrentPassword')?.value;
+            const newPassword = document.getElementById('mobileNewPassword')?.value;
+            const confirmPassword = document.getElementById('mobileConfirmPassword')?.value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Semua field wajib diisi', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showToast('Kata sandi baru minimal 6 karakter', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('Konfirmasi kata sandi tidak sesuai', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        old_password: currentPassword,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.status === 'success') {
+                    showToast('Kata sandi berhasil diubah!', 'success');
+                    closeEditModal('edit-password');
+                    this.reset();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast(result.message || 'Gagal mengubah kata sandi. Periksa password lama Anda.', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Terjadi kesalahan saat mengubah kata sandi', 'error');
             }
         });
     }
