@@ -47,14 +47,14 @@ class DashboardApi extends BaseController
             ->getRow()
             ->total ?? 0;
         
-        // Get user data untuk member_sejak
+        // ambil data user untuk menampilkan sejak kapan menjadi member
         $user = $db->table('users')
             ->select('created_at')
             ->where('id', $userId)
             ->get()
             ->getRow();
         
-        // Status counts untuk setiap status
+        // hitung jumlah booking berdasarkan status
         $statusCounts = [
             'pending' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'pending'])->countAllResults(),
             'disetujui' => $db->table('bookings')->where(['id_user' => $userId, 'status' => 'disetujui'])->countAllResults(),

@@ -77,7 +77,7 @@ class Users extends Controller
         // Tambahkan field aktif untuk kebutuhan view (sementara selalu true)
         $user['aktif'] = 1;
        
-        // Setup pagination
+        // Pagination untuk booking user
         $page = (int)($this->request->getVar('page') ?? 1);
         $perPage = 5;
 

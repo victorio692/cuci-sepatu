@@ -58,7 +58,7 @@ class AuthApi extends ResourceController
                 ], 500);
             }
 
-            // Get user data tanpa password
+            // ambil data user tanpa password
             $user = $this->model->find($userId);
             unset($user['password_hash']);
 
@@ -115,7 +115,7 @@ class AuthApi extends ResourceController
             ], 401);
         }
 
-        // Verify password
+        // Verifikasi password
         if (!password_verify($password, $user['password_hash'])) {
             return $this->fail([
                 'status' => 'error',
@@ -123,10 +123,10 @@ class AuthApi extends ResourceController
             ], 401);
         }
 
-        // Remove password dari response
+        // hapus password dari response
         unset($user['password_hash']);
 
-        // Create session
+        // create session
         session()->set([
             'user_id' => $user['id'],
             'email' => $user['email'],
@@ -300,7 +300,7 @@ class AuthApi extends ResourceController
         $userId = session()->get('user_id');
         $user = $this->model->find($userId);
 
-        // Verify old password
+        // Verifikasi password lama
         if (!password_verify($json['old_password'], $user['password_hash'])) {
             return $this->fail([
                 'status' => 'error',

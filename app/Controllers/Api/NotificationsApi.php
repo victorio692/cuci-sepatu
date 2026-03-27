@@ -135,7 +135,7 @@ class NotificationsApi extends ResourceController
             return $this->failNotFound('Notifikasi tidak ditemukan');
         }
 
-        // Get booking detail if exists
+        // ambil data booking jika notifikasi terkait dengan booking
         if (!empty($notification['booking_id'])) {
             $booking = $this->db->table('bookings')
                 ->select('id, layanan, status, total')

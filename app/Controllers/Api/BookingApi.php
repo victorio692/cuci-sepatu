@@ -26,7 +26,7 @@ class BookingApi extends BaseController
             return $this->failUnauthorized('Silakan login terlebih dahulu');
         }
 
-        // Get user data
+        // ambil data user
         $user = $this->db->table('users')
             ->select('id, role')
             ->where('id', $user_id)
@@ -36,12 +36,12 @@ class BookingApi extends BaseController
             return $this->failUnauthorized('User tidak ditemukan');
         }
 
-        // Check if admin
+        // cek jika role admin, karena admin tidak boleh buat booking melalui API ini
         if ($user['role'] === 'admin') {
             return $this->failForbidden('Admin tidak bisa membuat booking melalui API ini');
         }
 
-        // Get JSON input
+        // ambil data dari request
         $json = $this->request->getJSON(true);
         
         // Validation rules
@@ -58,7 +58,7 @@ class BookingApi extends BaseController
             return $this->failValidationErrors($this->validator->getErrors());
         }
 
-        // Get request data
+        // ambil data dari request
         $layanan = $json['layanan'] ?? '';
         $opsi_barang_masuk = $json['opsi_barang_masuk']??'dropoff';
         $opsi_kirim = $json['opsi_kirim']??'';
@@ -71,38 +71,38 @@ class BookingApi extends BaseController
         $alamat_kirim = $json['alamat_kirim'] ?? $user['alamat'] ?? '';
         $catatan = $json['catatan'] ?? '';
 
-        // validate pickup address if item entry option is pickup
+        // validasi alamat penjemputan jika memilih opsi barang masuk pickup 
         if ($opsi_barang_masuk === 'pickup') {
             if (empty($pickup_addres) || strlen($pickup_addres) < 10) {
                 return $this->fail('Alamat penjemputan minimal 10 karakter untuk opsi pickup');
             }
         }
 
-        // Validate delivery address if needed
+        // validasi alamat pengiriman jika opsi kirim delivery atau home
         if ($opsi_kirim === 'delivery' || $opsi_kirim === 'home') {
             if (empty($alamat_kirim) || strlen($alamat_kirim) < 10) {
                 return $this->fail('Alamat kirim minimal 10 karakter untuk opsi delivery');
             }
         }
 
-        // Validate booking time (12:00 - 23:59)
+        // validasi jam booking (harus antara 12:00 - 23:59)
         [$hours, $minutes] = explode(':', $jam_booking);
         $hours = (int)$hours;
         if ($hours < 12 || $hours > 23) {
             return $this->fail('Jam booking harus antara 12:00 - 23:59');
         }
 
-        // Validate delivery date
+        // validasi tanggal pengiriman
         if (strtotime($tanggal_kirim) < strtotime(date('Y-m-d'))) {
             return $this->fail('Tanggal pengiriman harus hari ini atau hari berikutnya');
         }
 
-        // Handle file upload (foto sepatu)
+        // handle file upload
         $fileName = null;
         $file = $this->request->getFile('foto_sepatu');
         
         if ($file && $file->isValid() && !$file->hasMoved()) {
-            // Validate file
+            // Validasi tipe file
             $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
             if (!in_array($file->getMimeType(), $allowedTypes)) {
                 return $this->fail('Format foto harus JPG, JPEG, atau PNG');
@@ -124,7 +124,7 @@ class BookingApi extends BaseController
             $file->move($uploadPath, $fileName);
         }
 
-        // Get service price
+        // ambil data layanan untuk menghitung harga
         $serviceData = $this->db->table('services')
             ->where('kode_layanan', $layanan)
             ->where('aktif', 1)
@@ -154,7 +154,7 @@ class BookingApi extends BaseController
         }
         $total = $subtotal + $biaya_kirim;
 
-        // Insert booking
+        // simpan data booking
         $booking_data = [
             'id_user' => $user_id,
             'layanan' => $namaLayanan,
@@ -180,7 +180,7 @@ class BookingApi extends BaseController
             $this->db->table('bookings')->insert($booking_data);
             $booking_id = $this->db->insertID();
 
-            // Create notification for all admins
+            // buat notifikasi untuk admin
             $admins = $this->db->table('users')->where('role', 'admin')->get()->getResultArray();
             
             $pelangganName = $user['nama'] ?? $user['username'] ?? $user['email'] ?? 'pelanggan';
@@ -197,7 +197,8 @@ class BookingApi extends BaseController
                 ]);
             }
 
-            // Get created booking
+            // ambil data booking yang baru dibuat untuk response
+
             $booking = $this->db->table('bookings')->where('id', $booking_id)->get()->getRowArray();
 
             $estimation = $this->calculateEstimatedFinish($layanan, $tanggal_kirim, $jam_booking);
@@ -246,13 +247,13 @@ class BookingApi extends BaseController
         $limit = $this->request->getGet('limit') ?? 20;
         $offset = $this->request->getGet('offset') ?? 0;
 
-        // Get all bookings for status counts
+        // ambil semua booking untuk menghitung statistik status
         $allBookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
             ->get()
             ->getResultArray();
 
-        // Count bookings by status
+        // hitung jumlah booking per status
         $statusCounts = [
             'pending' => 0,
             'disetujui' => 0,
@@ -282,7 +283,7 @@ class BookingApi extends BaseController
             ->get()
             ->getResultArray();
 
-        // Debug logging
+        // debug log
         log_message('debug', ' BookingApi::myBookings - User ID: ' . $user_id);
         log_message('debug', ' BookingApi::myBookings - Status filter: ' . ($status ?? 'none'));
         log_message('debug', ' BookingApi::myBookings - Found bookings: ' . count($bookings));
@@ -313,7 +314,7 @@ class BookingApi extends BaseController
                 return $this->failUnauthorized('Silakan login terlebih dahulu');
             }
 
-            // Validate booking ID
+            // validasi ID booking
             if (!is_numeric($id) || $id <= 0) {
                 return $this->fail('ID booking tidak valid');
             }
@@ -412,13 +413,13 @@ class BookingApi extends BaseController
         ];
     }
 
-    // Duration in hours (from database durasi_pengerjaan)
+    // durasi pengerjaan dalam jam, default 24 jam jika tidak ada
     $durationHours = ($service['durasi_pengerjaan'] ?? 24);
 
-    //Parse delivery date and booking  time
+    // hitung estimasi selesai
     $startDateTime = new \DateTime($tanggalKirim . ' ' . $jamBooking);
 
-    // Add duration
+    // tambahkan durasi pengerjaan
     $startDateTime->modify("+ {$durationHours} hours");
 
     return [

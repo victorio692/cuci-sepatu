@@ -172,11 +172,11 @@ $routes->group('api', function($routes) {
 // Users API
 $routes->group('api/users', ['namespace' => 'App\Controllers\Api'], function($routes) {
     $routes->get('/', 'UsersApi::index');
-    $routes->get('profile', 'UsersApi::getProfile');  // Get current user profile
-    $routes->put('profile', 'UsersApi::updateProfile');  // Update current user profile
-    $routes->post('profile', 'UsersApi::updateProfile');  // Allow POST for profile update
-    $routes->put('change-password', 'UsersApi::changePassword');  // Change password endpoint
-    $routes->post('change-password', 'UsersApi::changePassword');  // Allow POST for password change
+    $routes->get('profile', 'UsersApi::getProfile');  
+    $routes->put('profile', 'UsersApi::updateProfile');  
+    $routes->post('profile', 'UsersApi::updateProfile');  
+    $routes->put('change-password', 'UsersApi::changePassword');  
+    $routes->post('change-password', 'UsersApi::changePassword');  
     $routes->get('statistics', 'UsersApi::statistics');
     $routes->get('(:num)', 'UsersApi::detail/$1');
     $routes->post('/', 'UsersApi::create');
@@ -206,32 +206,32 @@ $routes->group('api/admin/services', ['namespace' => 'App\Controllers\Api'], fun
     $routes->get('/', 'AdminServicesApi::index');
     $routes->get('(:num)', 'AdminServicesApi::show/$1');
     $routes->post('/', 'AdminServicesApi::create');
-    $routes->post('(:num)', 'AdminServicesApi::update/$1');  // Handle POST for update (method override)
+    $routes->post('(:num)', 'AdminServicesApi::update/$1');  
     $routes->put('(:num)', 'AdminServicesApi::update/$1');
     $routes->delete('(:num)', 'AdminServicesApi::delete/$1');
     $routes->put('(:num)/price', 'AdminServicesApi::updatePrice/$1');
-    $routes->post('(:num)/price', 'AdminServicesApi::updatePrice/$1');  // Handle POST for price update
-    $routes->post('(:num)/upload-icon', 'AdminServicesApi::uploadIcon/$1');  // Upload service icon
-    $routes->delete('(:num)/remove-icon', 'AdminServicesApi::removeIcon/$1');  // Remove service icon
+    $routes->post('(:num)/price', 'AdminServicesApi::updatePrice/$1');  
+    $routes->post('(:num)/upload-icon', 'AdminServicesApi::uploadIcon/$1');  
+    $routes->delete('(:num)/remove-icon', 'AdminServicesApi::removeIcon/$1');  
 });
 
 
 // Admin Reports API
 $routes->group('api/admin/reports', ['namespace' => 'App\Controllers\Api'], function($routes) {
-    $routes->get('/', 'AdminReportsApi::index');                // GET statistik laporan utama
-    $routes->get('bookings', 'AdminReportsApi::bookings');      // GET detail bookings untuk print
-    $routes->get('revenue', 'AdminReportsApi::revenue');        // GET laporan revenue
-    $routes->get('customers', 'AdminReportsApi::customers');    // GET statistik customer
+    $routes->get('/', 'AdminReportsApi::index');                
+    $routes->get('bookings', 'AdminReportsApi::bookings');      
+    $routes->get('revenue', 'AdminReportsApi::revenue');        
+    $routes->get('customers', 'AdminReportsApi::customers');    
 });
 
 
 // Admin Dashboard API
 $routes->group('api/admin/dashboard', ['namespace' => 'App\Controllers\Api'], function($routes) {
-    $routes->get('/', 'AdminDashboardApi::index');                          // GET statistik utama
-    $routes->get('recent-bookings', 'AdminDashboardApi::recentBookings');   // GET booking terbaru
-    $routes->get('pending-bookings', 'AdminDashboardApi::pendingBookings'); // GET pending bookings
-    $routes->get('service-stats', 'AdminDashboardApi::serviceStats');       // GET statistik layanan
-    $routes->get('recent-users', 'AdminDashboardApi::recentUsers');         // GET user terbaru
-    $routes->get('monthly-chart', 'AdminDashboardApi::monthlyChart');       // GET data chart bulanan
-    $routes->get('status-breakdown', 'AdminDashboardApi::statusBreakdown'); // GET breakdown status
+    $routes->get('/', 'AdminDashboardApi::index');                          
+    $routes->get('recent-bookings', 'AdminDashboardApi::recentBookings');   
+    $routes->get('pending-bookings', 'AdminDashboardApi::pendingBookings'); 
+    $routes->get('service-stats', 'AdminDashboardApi::serviceStats');       
+    $routes->get('recent-users', 'AdminDashboardApi::recentUsers');         
+    $routes->get('monthly-chart', 'AdminDashboardApi::monthlyChart');       
+    $routes->get('status-breakdown', 'AdminDashboardApi::statusBreakdown'); 
 });

@@ -78,7 +78,7 @@ class UsersApi extends BaseController
     
     public function detail($id)
     {
-        // Check if logged in
+        // cek session
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -86,7 +86,7 @@ class UsersApi extends BaseController
 
         $currentUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
         
-        // Allow if: 1) User is admin, OR 2) User is viewing their own profile
+        // validasi akses: admin bisa lihat semua, pelanggan hanya bisa lihat profil sendiri
         if (!$currentUser || ($currentUser['role'] !== 'admin' && $user_id != $id)) {
             return $this->failForbidden('Akses ditolak');
         }
@@ -100,7 +100,7 @@ class UsersApi extends BaseController
         
         unset($user['password_hash']);
 
-        // If user is viewing their own profile, return simplified response
+        // jika user melihat profil sendiri, tampilkan juga statistik dan booking
         if ($user_id == $id) {
             return $this->respond([
                 'success' => true,
@@ -108,7 +108,7 @@ class UsersApi extends BaseController
             ]);
         }
 
-        // If admin viewing other user's profile, include bookings and stats
+        // jika admin melihat profil user lain, tampilkan data lengkap termasuk booking dan statistik
         $bookings = $this->db->table('bookings')
             ->where('id_user', $id)
             ->orderBy('created_at', 'DESC')
@@ -145,7 +145,7 @@ class UsersApi extends BaseController
     
     public function create()
     {
-        // Check if admin
+        // cek session admin
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -205,7 +205,7 @@ class UsersApi extends BaseController
     
     public function update($id)
     {
-        // Check if admin OR updating own profile
+        // cek session untuk admin atau user itu sendiri yang mengupdate
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -213,7 +213,7 @@ class UsersApi extends BaseController
 
         $currentUser = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
         
-        // Allow if admin or updating own profile
+        // validasi akses: admin bisa update semua, pelanggan hanya bisa update profil sendiri
         if (!$currentUser || ($currentUser['role'] !== 'admin' && $user_id != $id)) {
             return  $this->failForbidden('Akses ditolak');
         }
@@ -256,7 +256,7 @@ class UsersApi extends BaseController
             $data['role'] = $json['role'];
         }
 
-        // Update password if provided
+        // update password hanya jika field password diisi
         if (isset($json['password']) && !empty($json['password'])) {
             $data['password_hash'] = password_hash($json['password'], PASSWORD_DEFAULT);
         }
@@ -356,7 +356,7 @@ class UsersApi extends BaseController
 
     public function getProfile()
     {
-        // Get current user profile without needing ID parameter
+        // ambil data terbaru user yang login berdasarkan session
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -368,7 +368,7 @@ class UsersApi extends BaseController
             return $this->failNotFound('User tidak ditemukan');
         }
 
-        // Remove sensitive data
+        // hapus password hash sebelum mengirim response
         unset($user['password_hash']);
 
         return $this->respond([
@@ -379,7 +379,7 @@ class UsersApi extends BaseController
 
     public function updateProfile()
     {
-        // Update current user's own profile (WITHOUT password change)
+        // update user saat ini tanpa mengubah password
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -392,7 +392,7 @@ class UsersApi extends BaseController
 
         $json = $this->request->getJSON(true);
 
-        // Validation rules for profile update (NO PASSWORD)
+        // Validasi untuk update profil (password tidak wajib diisi)
         $rules = [
             'nama_lengkap' => 'required|min_length[3]',
             'email' => "required|valid_email|is_unique[users.email,id,{$user_id}]",
@@ -431,7 +431,7 @@ class UsersApi extends BaseController
 
     public function changePassword()
     {
-        // Change password with current password verification
+        // ubah password dengan verifikasi password saat ini
         $user_id = session()->get('user_id');
         if (!$user_id) {
             return $this->failUnauthorized('Silakan login terlebih dahulu');
@@ -444,7 +444,7 @@ class UsersApi extends BaseController
 
         $json = $this->request->getJSON(true);
 
-        // Validation rules for password change
+        // validasi untuk ganti password: pastikan current_password dan new password valid
         $rules = [
             'current_password' => 'required',
             'password' => 'required|min_length[6]',
@@ -454,7 +454,7 @@ class UsersApi extends BaseController
             return $this->failValidationErrors($this->validator->getErrors());
         }
 
-        // Verify current password
+        // verifikasi password saat ini
         if (!password_verify($json['current_password'], $user['password_hash'])) {
             return $this->fail('Password saat ini salah', 400);
         }

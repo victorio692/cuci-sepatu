@@ -36,7 +36,7 @@ class Auth extends BaseController
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
-        // Validate
+        // Validasi input
         if (!$this->validate([
             'email' => 'required|valid_email',
             'password' => 'required|min_length[6]',
@@ -44,7 +44,7 @@ class Auth extends BaseController
             return redirect()->back()->with('errors', $this->validator->getErrors());
         }
 
-        // Find user
+        // Cari user berdasarkan email
         $user = $this->db->table('users')->where('email', $email)->get()->getRow();
 
         if (!$user || !password_verify($password, $user->password_hash)) {
@@ -99,7 +99,7 @@ class Auth extends BaseController
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        // Validate
+        // Validasi input
         if (!$this->validate([
             'full_name' => 'required|min_length[3]',
             'email' => 'required|valid_email|is_unique[users.email]',
@@ -109,17 +109,17 @@ class Auth extends BaseController
             return redirect()->back()->with('errors', $this->validator->getErrors());
         }
 
-        // Check if email exists
+        // cek email sudah terdaftar
         $existing = $this->db->table('users')->where('email', $data['email'])->get()->getRow();
         if ($existing) {
             return redirect()->back()->with('error', 'Email sudah terdaftar');
         }
 
-        // Insert user
+        // Simpan user baru
         $this->db->table('users')->insert($data);
         $user_id = $this->db->insertID();
 
-        // Don't auto-login, redirect to login page for security
+        // redirect ke login dengan pesan sukses
         return redirect()->to('/login')->with('success', 'Pendaftaran berhasil! Silakan login dengan akun Anda.');
     }
 
@@ -141,12 +141,12 @@ class Auth extends BaseController
         $email = $this->request->getPost('email');
         $noHp = $this->request->getPost('no_hp');
 
-        // Validate
+        // Validasi input
         if (empty($email) || empty($noHp)) {
             return redirect()->back()->with('error', 'Email dan nomor HP harus diisi');
         }
 
-        // Check if user exists with email and phone number
+        // Cek user berdasarkan email dan nomor HP
         $user = $this->db->table('users')
             ->where('email', $email)
             ->where('no_hp', $noHp)
@@ -160,7 +160,7 @@ class Auth extends BaseController
         // Generate reset token
         $token = bin2hex(random_bytes(32));
         
-        // Store token in session (simplified for local app without email)
+        // Simpan token di session (atau bisa juga disimpan di database dengan expiry)
         session()->set('reset_token', $token);
         session()->set('reset_email', $email);
         session()->setTempdata('reset_token', $token, 1800); // 30 minutes
@@ -185,12 +185,12 @@ class Auth extends BaseController
         $password = $this->request->getPost('password');
         $confirmPassword = $this->request->getPost('confirm_password');
 
-        // Validate token
+        // Validasi token
         if ($token !== session()->get('reset_token')) {
             return redirect()->to('/forgot-password')->with('error', 'Token tidak valid');
         }
 
-        // Validate password
+        // Validasi password
         if (strlen($password) < 6) {
             return redirect()->back()->with('error', 'Password minimal 6 karakter');
         }
