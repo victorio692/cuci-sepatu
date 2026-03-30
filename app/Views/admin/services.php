@@ -167,12 +167,20 @@ function renderServicesGrid(services) {
             
             <!-- White Content Area - Horizontal Layout -->
             <div class="p-6 flex-1 flex flex-col justify-between">
-                <!-- Row 1: Nama Layanan (left) | Harga (right) -->
-                <div class="flex justify-between items-start mb-3 pb-3 border-b border-gray-200">
+                <!-- Row 1: Nama Layanan (left) | Harga + Edit Icon (right) -->
+                <div class="flex justify-between items-center mb-3 pb-3 border-b border-gray-200 gap-3">
                     <!-- Nama Layanan -->
-                    <h3 class="text-xl font-bold text-gray-800 line-clamp-1 flex-1">${service.name || service.nama_layanan}</h3>
-                    <!-- Harga -->
-                    <p class="text-2xl font-bold text-blue-600 ml-4 whitespace-nowrap">Rp ${formatCurrency(service.harga_dasar || service.base_price || service.price || 0)}</p>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 line-clamp-1 flex-1">${service.name || service.nama_layanan}</h3>
+                    <!-- Harga dan Edit Icon -->
+                    <div class="flex items-center gap-2 md:gap-3 whitespace-nowrap flex-shrink-0">
+                        <p class="text-xl md:text-2xl font-bold text-blue-600">Rp ${formatCurrency(service.harga_dasar || service.base_price || service.price || 0)}</p>
+                        <button type="button" 
+                           onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
+                           class="edit-price-btn text-gray-400 hover:text-blue-600 hover:bg-blue-50"
+                           title="Edit Harga">
+                            <i class="fas fa-edit text-lg md:text-xl"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Row 2: Deskripsi (left) | Durasi (right) -->
@@ -183,23 +191,19 @@ function renderServicesGrid(services) {
                     <p class="text-xs text-gray-600 ml-4 whitespace-nowrap">⏱️ ${durationText}</p>
                 </div>
 
-                <!-- Row 3: 3 Action Buttons -->
-                <div class="grid grid-cols-3 gap-3">
-                    <button type="button" 
-                       onclick="openEditPrice(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}', ${service.harga_dasar || service.base_price || service.price || 0})"
-                       class="py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-semibold text-sm transition hover:scale-105 transform flex items-center justify-center"
-                       title="Edit Harga">
-                        Edit
-                    </button>
+                <!-- Row 3: 2 Action Buttons -->
+                <div class="grid grid-cols-2 gap-3">
                     <a href="/admin/services/edit/${service.id}" 
-                       class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       class="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold text-sm transition flex items-center justify-center hover:scale-105 active:scale-95 transform"
                        title="Detail/Edit">
-                        Detail
+                        <i class="fas fa-pencil-alt mr-1"></i>
+                        Edit detail
                     </a>
                     <button type="button" 
                        onclick="deleteService(${service.id}, '${(service.name || service.nama_layanan || '').replace(/'/g, "\\'")}')"
-                       class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded font-semibold text-sm transition flex items-center justify-center"
+                       class="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded font-semibold text-sm transition flex items-center justify-center hover:scale-105 active:scale-95 transform"
                        title="Hapus">
+                        <i class="fas fa-trash-alt mr-1"></i>
                         Hapus
                     </button>
                 </div>
@@ -266,38 +270,44 @@ function confirmDelete(serviceId, serviceName) {
 
 // Delete service with API
 function deleteService(serviceId, serviceName) {
-    // Show confirmation dialog
-    const confirmDelete = confirm(`Yakin ingin menghapus layanan "${serviceName}"?\n\n`);
-    
-    if (!confirmDelete) {
-        return;
-    }
+    // Prepare delete action
+    const performDelete = () => {
+        fetch(`/api/admin/services/${serviceId}`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Delete response:', data);
+            
+            if (data.code === 200) {
+                showToast('Layanan berhasil dihapus', 'success');
+                setTimeout(() => {
+                    loadServices();
+                }, 1000);
+            } else {
+                showToast(data.message || 'Gagal menghapus layanan', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting service:', error);
+            showToast('Terjadi kesalahan: ' + error.message, 'error');
+        });
+    };
 
-    fetch(`/api/admin/services/${serviceId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+    const message = `Yakin ingin menghapus layanan "${serviceName}"?\n\nLayanan yang sudah digunakan dalam pesanan tidak dapat dihapus.`;
+    
+    if (Modal) {
+        Modal.danger(message, performDelete, null, 'Konfirmasi Penghapusan');
+    } else {
+        if (confirm(message)) {
+            performDelete();
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Delete response:', data);
-        
-        if (data.code === 200) {
-            showToast('Layanan berhasil dihapus', 'success');
-            setTimeout(() => {
-                loadServices();
-            }, 1000);
-        } else {
-            showToast(data.message || 'Gagal menghapus layanan', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting service:', error);
-        showToast('Terjadi kesalahan: ' + error.message, 'error');
-    });
+    }
 }
 
 // Open edit price modal
@@ -462,6 +472,33 @@ function showToast(message, type) {
 
 .service-card a:hover {
     transform: scale(1.05);
+}
+
+/* Edit Price Icon Button Styling */
+.edit-price-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.edit-price-btn:hover {
+    color: #2563eb !important;
+    background-color: #eff6ff;
+}
+
+.edit-price-btn:active {
+    transform: scale(0.95);
+}
+
+/* Response untuk mobile */
+@media (max-width: 640px) {
+    .edit-price-btn i {
+        font-size: 1.125rem;
+    }
 }
 
 /* Background image styling */

@@ -829,6 +829,66 @@
         }
     </script>
     
+    <!-- Modal System Script -->
+    <script src="/assets/js/modal-system.js"></script>
+    
+    <!-- Global Modal -->
+    <div id="globalModalOverlay" class="hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"></div>
+    
+    <div id="globalModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 transition-all duration-300">
+        <div class="modal-content-wrapper relative w-full max-w-sm bg-white rounded-lg shadow-2xl transform scale-95 opacity-0 transition-all duration-300 max-h-[90vh] overflow-y-auto">
+            <!-- Close Button X -->
+            <button id="modalCloseBtn" type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-full text-gray-700 transition" style="border: none; cursor: pointer;">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+            
+            <!-- Modal Icon -->
+            <div class="flex justify-center pt-4 sm:pt-5 px-4">
+                <div class="modal-icon w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0 text-lg sm:text-xl"></div>
+            </div>
+            
+            <!-- Modal Title -->
+            <h2 class="modal-title text-base sm:text-lg font-bold text-gray-900 text-center mb-2 px-4 mt-2"></h2>
+            
+            <!-- Modal Content -->
+            <div class="modal-content text-gray-600 text-center px-4 py-3 text-xs sm:text-sm leading-relaxed break-words"></div>
+            
+            <!-- Modal Buttons -->
+            <div class="modal-buttons flex flex-col sm:flex-row gap-2 px-4 pb-4 sm:pb-5 justify-center"></div>
+        </div>
+    </div>
+    
+    <!-- Modal Buttons Styling -->
+    <style>
+        .modal-buttons {
+            display: flex !important;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 1rem;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .modal-buttons button {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none !important;
+            outline: none !important;
+            transition: all 0.3s ease;
+            color: white;
+            flex: 1 1 auto;
+            min-width: 100px;
+        }
+    </style>
+    
     <?= $this->renderSection('extra_js') ?>
 </body>
 </html>
