@@ -13,7 +13,7 @@ class Dashboard extends BaseController
         $this->db = Database::connect();
     }
 
-    // Dashboard Index
+    // Dashboard utama 
     public function index()
     {
         $user_id = session()->get('user_id');
@@ -85,7 +85,7 @@ class Dashboard extends BaseController
         return view('pages/dashboard', $data);
     }
 
-    // My Bookings
+    // Halaman bookings saya
     public function myBookings()
     {
         $user_id = session()->get('user_id');
@@ -101,17 +101,17 @@ class Dashboard extends BaseController
             return redirect()->to('/admin/bookings')->with('info', 'Anda login sebagai admin. Silakan gunakan dashboard admin untuk melihat semua bookings.');
         }
 
-        // Get status filter from query parameter
+        // Ambil filter status dari query parameter
         $statusFilter = $this->request->getGet('status');
 
-        // Get all bookings for count
+        // Ambil semua data booking untuk user ini (tanpa filter) untuk menghitung jumlah berdasarkan status
         $allBookings = $this->db->table('bookings')
             ->where('id_user', $user_id)
             ->orderBy('created_at', 'DESC')
             ->get()
             ->getResultArray();
 
-        // Filter bookings based on status
+        // Filter booking berdasarkan status 
         if ($statusFilter && $statusFilter !== 'all') {
             $bookings = $this->db->table('bookings')
                 ->where('id_user', $user_id)
@@ -123,7 +123,7 @@ class Dashboard extends BaseController
             $bookings = $allBookings;
         }
 
-        // Count bookings by status
+        // Hitung jumlah booking berdasarkan status 
         $statusCounts = [
             'pending' => 0,
             'disetujui' => 0,
@@ -232,7 +232,7 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('error', 'Akses ditolak.');
         }
 
-        // Validate file upload
+        // Cek file upload valid atu tidak
         $validationRule = [
             'profile_photo' => [
                 'label' => 'Foto Profil',
@@ -247,28 +247,28 @@ class Dashboard extends BaseController
             return redirect()->back()->with('error', 'Gagal unggah foto. Pastikan file format PNG/JPG/JPEG dan maksimal 2MB');
         }
 
-        // Get old photo
+        // Ambil foto lama
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
         $oldPhoto = $user['foto_profil'];
 
-        // Handle file upload
+        // Proses upload file
         $file = $this->request->getFile('profile_photo');
         $fileName = null;
         
         if ($file->isValid() && !$file->hasMoved()) {
-            // Generate unique filename
+            // Buat nama file unik untuk mencegah konflik
             $fileName = 'profile_' . $user_id . '_' . time() . '.' . $file->getExtension();
-            // Move to public/uploads directory
+            // Pindahkan file ke folder uploads/services
             $uploadPath = FCPATH . 'uploads';
             
-            // Create directory if not exists
+            // Buat folder jika belum ada
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
             
             $file->move($uploadPath, $fileName);
 
-            // Delete old photo if exists
+            // Hapus foto lama jika ada
             if ($oldPhoto && file_exists($uploadPath . '/' . $oldPhoto)) {
                 unlink($uploadPath . '/' . $oldPhoto);
             }
@@ -282,14 +282,14 @@ class Dashboard extends BaseController
         return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
     }
 
-    // Change Password
+    // Ubah password
     public function changePassword()
     {
         $user_id = session()->get('user_id');
         $current_password = $this->request->getPost('current_password');
         $new_password = $this->request->getPost('new_password');
 
-        // Get user
+        // Ambil data user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
         // Cek jika user adalah admin
@@ -297,7 +297,7 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('error', 'Akses ditolak.');
         }
 
-        // Verify current password
+        // Verifikasi password saat ini
         if (!password_verify($current_password, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password saat ini salah');
         }
@@ -310,7 +310,7 @@ class Dashboard extends BaseController
         return redirect()->back()->with('success', 'Password berhasil diubah!');
     }
 
-    // Change Password Page
+    // Halaman Ubah Password
     public function changePasswordPage()
     {
         $user_id = session()->get('user_id');
@@ -329,7 +329,7 @@ class Dashboard extends BaseController
         return view('auth/change_password', $data);
     }
 
-    // Change Email Page
+    // Halaman Ubah Email
     public function changeEmailPage()
     {
         $user_id = session()->get('user_id');
@@ -355,7 +355,7 @@ class Dashboard extends BaseController
         $new_email = $this->request->getPost('new_email');
         $current_password = $this->request->getPost('current_password');
 
-        // Get user
+        // Ambil data user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
         // Cek jika user adalah admin
@@ -363,12 +363,12 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('error', 'Akses ditolak.');
         }
 
-        // Verify current password
+        // Verifikasi password saat ini
         if (!password_verify($current_password, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password tidak sesuai');
         }
 
-        // Check if email already exists
+        // Validasi format email
         $emailExists = $this->db->table('users')->where('email', $new_email)->where('id !=', $user_id)->countAllResults();
         if ($emailExists) {
             return redirect()->back()->with('error', 'Email sudah terdaftar');
@@ -382,7 +382,7 @@ class Dashboard extends BaseController
         return redirect()->to('/profile/detail')->with('success', 'Email berhasil diubah!');
     }
 
-    // Change Phone Page
+    // Halaman Ubah Nomor Telepon
     public function changePhonePage()
     {
         $user_id = session()->get('user_id');
@@ -401,14 +401,14 @@ class Dashboard extends BaseController
         return view('pages/change_phone', $data);
     }
 
-    // Change Phone
+    // Ubah Nomor Telepon
     public function changePhone()
     {
         $user_id = session()->get('user_id');
         $new_phone = $this->request->getPost('new_phone');
         $current_password = $this->request->getPost('current_password');
 
-        // Get user
+        // Ambil data user
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
         if (!$user) {
@@ -420,17 +420,17 @@ class Dashboard extends BaseController
             return redirect()->to('/admin')->with('error', 'Akses ditolak.');
         }
 
-        // Verify current password
+        // Verifikasi password saat ini
         if (!password_verify($current_password, $user['password_hash'])) {
             return redirect()->back()->with('error', 'Password tidak sesuai');
         }
 
-        // Validate phone format
+        // Validasi format nomor telepon
         if (empty($new_phone)) {
             return redirect()->back()->with('error', 'Nomor telepon tidak boleh kosong');
         }
 
-        // Remove non-numeric characters for validation
+        // Hapus karakter selain angka untuk validasi
         $phone_digits = preg_replace('/\D/', '', $new_phone);
         
         // Check if phone starts with 08 and has at least 11 digits
@@ -438,7 +438,7 @@ class Dashboard extends BaseController
             return redirect()->back()->with('error', 'Nomor telepon harus dimulai dengan 08 dan minimal 11 digit');
         }
 
-        // Update phone
+        // Update nomor telepon
         if ($this->db->table('users')->update([
             'no_hp' => $new_phone
         ], ['id' => $user_id])) {

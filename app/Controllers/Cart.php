@@ -13,7 +13,7 @@ class Cart extends BaseController
         $this->db = Database::connect();
     }
 
-    // Add item to cart (session)
+    // Tambah item ke keranjang (session)
     public function addToCart()
     {
         $user_id = session()->get('user_id');
@@ -27,7 +27,7 @@ class Cart extends BaseController
             return redirect()->to('/admin')->with('error', 'Admin tidak bisa menggunakan keranjang belanja');
         }
 
-        // Validate file upload
+        // Cek file yang diupload valid atau tidak
         $validationRule = [
             'shoe_photo' => [
                 'label' => 'Foto Sepatu',
@@ -44,7 +44,7 @@ class Cart extends BaseController
                 ->with('error', 'Foto sepatu wajib diupload (format PNG/JPG/JPEG, maksimal 5MB)');
         }
 
-        // Handle file upload
+        // Proses upload file
         $file = $this->request->getFile('shoe_photo');
         $fileName = null;
         
@@ -59,7 +59,7 @@ class Cart extends BaseController
             $file->move($uploadPath, $fileName);
         }
 
-        // Get form data
+        // Ambil data dari form
         $serviceCode = $this->request->getPost('service');
         $quantity = $this->request->getPost('quantity');
         $shoeCondition = $this->request->getPost('shoe_condition');
@@ -67,17 +67,17 @@ class Cart extends BaseController
         $deliveryAddress = $this->request->getPost('delivery_address');
         $notes = $this->request->getPost('notes');
 
-        // Get service details by code
+        // Ambil detail layanan berdasarkan kode layanan
         $service = $this->db->table('services')->where('kode_layanan', $serviceCode)->get()->getRowArray();
         
         if (!$service) {
             return redirect()->back()->with('error', 'Layanan tidak ditemukan');
         }
 
-        // Get or create cart from session
+        // Ambil keranjang dari session atau buat baru jika belum ada
         $cart = session()->get('cart') ?? [];
 
-        // Add item to cart
+        // Masukkan item ke keranjang
         $cartItem = [
             'service_id' => $service['id'],
             'service_code' => $service['kode_layanan'],
@@ -94,13 +94,13 @@ class Cart extends BaseController
 
         $cart[] = $cartItem;
 
-        // Save to session
+        // Simpan ke session
         session()->set('cart', $cart);
 
         return redirect()->to('/cart')->with('success', 'Layanan berhasil ditambahkan ke keranjang!');
     }
 
-    // View cart
+    // Tampilkan isi keranjang
     public function viewCart()
     {
         $user_id = session()->get('user_id');
@@ -130,13 +130,13 @@ class Cart extends BaseController
         return view('pages/cart', $data);
     }
 
-    // Remove item from cart
+    // Hapus item dari keranjang
     public function removeFromCart($index)
     {
         $cart = session()->get('cart') ?? [];
 
         if (isset($cart[$index])) {
-            // Delete photo file if exists
+            // Hapus file foto kalau ada
             if (!empty($cart[$index]['shoe_photo'])) {
                 $photoPath = FCPATH . 'uploads/' . $cart[$index]['shoe_photo'];
                 if (file_exists($photoPath)) {
@@ -145,7 +145,7 @@ class Cart extends BaseController
             }
 
             unset($cart[$index]);
-            $cart = array_values($cart); // Re-index array
+            $cart = array_values($cart); // Rapikan ulang indeks array
             session()->set('cart', $cart);
 
             return redirect()->to('/cart')->with('success', 'Item berhasil dihapus dari keranjang');
@@ -154,7 +154,7 @@ class Cart extends BaseController
         return redirect()->to('/cart')->with('error', 'Item tidak ditemukan');
     }
 
-    // Update quantity
+    // Update jumlah item
     public function updateQuantity()
     {
         $index = $this->request->getPost('index');
@@ -178,7 +178,7 @@ class Cart extends BaseController
         ]);
     }
 
-    // Checkout - save to bookings and clear cart
+    // Proses checkout (simpan ke booking lalu kosongkan keranjang) 
     public function checkout()
     {
         $user_id = session()->get('user_id');
@@ -198,7 +198,7 @@ class Cart extends BaseController
             return redirect()->to('/cart')->with('error', 'Keranjang kosong');
         }
 
-        // Get selected item indices
+        // Ambil index item yang dipilih untuk checkout
         $selectedItems = $this->request->getPost('selected_items');
         
         if (empty($selectedItems)) {
@@ -207,7 +207,7 @@ class Cart extends BaseController
 
         $user = $this->db->table('users')->where('id', $user_id)->get()->getRowArray();
 
-        // Get booking date and time from request
+        // Ambil tanggal dan waktu booking dari request
         $deliveryDate = $this->request->getPost('delivery_date');
         $bookingTime = $this->request->getPost('booking_time');
 
@@ -215,11 +215,11 @@ class Cart extends BaseController
             return redirect()->back()->with('error', 'Tanggal dan waktu pengiriman harus diisi');
         }
 
-        // Start transaction
+        // Mulai transaksi
         $this->db->transStart();
 
         try {
-            // Save only selected cart items as bookings
+            // Simpan setiap item yang dipilih ke tabel bookings    
             $checkedOutItems = [];
             foreach ($selectedItems as $index) {
                 if (!isset($cart[$index])) {
@@ -257,7 +257,7 @@ class Cart extends BaseController
                     throw new \Exception('Gagal insert booking: ' . ($error['message'] ?? 'Unknown error'));
                 }
 
-                // Mark this index as checked out
+                // Tandai item yang sudah dicheckout untuk dihapus dari cart nanti
                 $checkedOutItems[] = $index;
             }
 
@@ -269,22 +269,22 @@ class Cart extends BaseController
                 throw new \Exception('Gagal menyimpan booking: ' . ($error['message'] ?? 'Transaction failed'));
             }
 
-            // Remove only checked out items from cart
+            // Hapus item yang sudah dicheckout dari cart
             foreach ($checkedOutItems as $index) {
                 unset($cart[$index]);
             }
             
-            // Re-index the array
+            // Rapikan ulang indeks array setelah penghapusan
             $cart = array_values($cart);
             
-            // Update cart in session
+            // Update keranjang di session
             if (empty($cart)) {
                 session()->remove('cart');
             } else {
                 session()->set('cart', $cart);
             }
 
-            // Send notification
+            // Kirim notifikasi ke user bahwa booking berhasil dibuat
             $this->sendBookingNotification($user_id);
 
             $message = count($checkedOutItems) . ' item berhasil dicheckout! Booking Anda sedang diproses.';
@@ -297,7 +297,7 @@ class Cart extends BaseController
         }
     }
 
-    // Send notification helper
+    // Fungsi untuk mengirim notifikasi ke user setelah booking berhasil dibuat
     private function sendBookingNotification($userId)
     {
         $notificationData = [
