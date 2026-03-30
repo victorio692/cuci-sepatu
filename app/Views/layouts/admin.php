@@ -496,11 +496,6 @@
                         </div>
                     </div>
                     
-                    <!-- Print Report Button -->
-                    <button onclick="cetakLaporan()" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 font-medium group">
-                        <i class="fas fa-print group-hover:rotate-12 transition-transform duration-300"></i>
-                        <span>Cetak Laporan</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -795,10 +790,6 @@
             }
         }
         
-        // Print Report Function
-        function cetakLaporan() {
-            window.open('<?= base_url("admin/reports/print") ?>', '_blank');
-        }
         
         // Show Admin Logout Animation and call API
         async function showAdminLogoutAnimation(event) {
