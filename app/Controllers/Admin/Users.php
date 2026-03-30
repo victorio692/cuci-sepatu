@@ -284,6 +284,19 @@ class Users extends Controller
     public function toggleActive($id)
     {
         try {
+            // Some deployments still miss users.aktif; create it once so toggle won't crash.
+            if (! $this->db->fieldExists('aktif', 'users')) {
+                $forge = Database::forge($this->db);
+                $forge->addColumn('users', [
+                    'aktif' => [
+                        'type'       => 'TINYINT',
+                        'constraint' => 1,
+                        'default'    => 1,
+                        'null'       => false,
+                    ],
+                ]);
+            }
+
             $user = $this->db->table('users')->where('id', $id)->get()->getRowArray();
 
             if (!$user) {
@@ -296,12 +309,16 @@ class Users extends Controller
             $newStatus = $currentStatus ? 0 : 1;
 
             // Update database
-            $this->db->table('users')
+            $updated = $this->db->table('users')
                 ->where('id', $id)
                 ->update([
                     'aktif' => $newStatus,
                     'updated_at' => date('Y-m-d H:i:s')
                 ]);
+
+            if (! $updated) {
+                return $this->failServerError('Gagal mengubah status user');
+            }
 
             return $this->respond([
                 'success' => true,

@@ -142,6 +142,11 @@ function applyUserSearch() {
     loadUsers(search, 1);  // Reset to page 1 when searching
 }
 
+function toActiveStatus(user) {
+    const raw = user.is_active ?? user.aktif ?? 1;
+    return Number(raw) === 1;
+}
+
 // Render users table
 function renderUsersTable(users, total, pagination = {}) {
     const container = document.getElementById('usersContainer');
@@ -170,7 +175,7 @@ function renderUsersTable(users, total, pagination = {}) {
                         const phone = user.phone || user.no_hp || user.telepon || '-';
                         const email = user.email || '-';
                         const createdAt = new Date(user.created_at || user.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
-                        const isActive = user.is_active !== false && user.is_active !== 0;
+                        const isActive = toActiveStatus(user);
                         
                         return `
                         <tr class="hover:bg-gray-50 transition">
@@ -237,7 +242,7 @@ function renderUsersTable(users, total, pagination = {}) {
         const phone = user.phone || user.no_hp || user.telepon || '-';
         const email = user.email || '-';
         const createdAt = new Date(user.created_at || user.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
-        const isActive = user.is_active !== false && user.is_active !== 0;
+        const isActive = toActiveStatus(user);
         const phoneValid = phone.replace(/[^0-9]/g, '');
         
         mobileHTML += `
@@ -400,20 +405,26 @@ function toggleUserActive(element, userId) {
         },
         credentials: 'include'
     })
-    .then(response => response.json())
-    .then(data => {
-        const isNowActive = data.is_active;
-        
-        // Update button appearance
-        element.className = 'inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer ' + 
-            (isNowActive ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-red-100 text-red-800 hover:bg-red-200');
-        
-        element.innerHTML = `
-            <i class="fas fa-${isNowActive ? 'check-circle' : 'ban'}"></i>
-            <span>${isNowActive ? 'Active' : 'Inactive'}</span>
-        `;
-        
+    .then(async response => {
+        const contentType = response.headers.get('content-type') || '';
+        let payload = null;
+
+        if (contentType.includes('application/json')) {
+            payload = await response.json();
+        }
+
+        if (!response.ok) {
+            const message = payload?.messages?.error || payload?.message || `HTTP ${response.status}`;
+            throw new Error(message);
+        }
+
+        return payload;
+    })
+    .then(() => {
         showToast('Status pengguna berhasil diupdate', 'success');
+        setTimeout(() => {
+            window.location.reload();
+        }, 300);
     })
     .catch(error => {
         console.error('Error:', error);
