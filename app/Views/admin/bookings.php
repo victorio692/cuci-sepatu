@@ -441,47 +441,25 @@ function updateBookingStatus(element) {
     
     if (newStatus === 'selesai') {
         const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengunggah foto hasil cucian.\n\nLanjutkan?';
-        const onConfirm = () => {
+        if (confirm(confirmMsg)) {
             window.location.href = '/admin/bookings/' + bookingId;
-        };
-        const onCancel = () => {
-            if (element.value) element.value = originalStatus;
-        };
-        
-        if (Modal) {
-            Modal.confirm(confirmMsg, onConfirm, onCancel, 'Konfirmasi Status');
         } else {
-            if (confirm(confirmMsg)) {
-                onConfirm();
-            } else {
-                onCancel();
-            }
+            if (element.value) element.value = originalStatus;
         }
         return;
     }
     
     if (newStatus === 'ditolak' || newStatus === 'batal') {
         const confirmMsg = 'Status "Ditolak" memerlukan alasan penolakan.\n\nAnda akan diarahkan ke halaman detail booking untuk mengisi alasan.\n\nLanjutkan?';
-        const onConfirm = () => {
+        if (confirm(confirmMsg)) {
             window.location.href = '/admin/bookings/' + bookingId;
-        };
-        const onCancel = () => {
-            if (element.value) element.value = originalStatus;
-        };
-        
-        if (Modal) {
-            Modal.confirm(confirmMsg, onConfirm, onCancel, 'Konfirmasi Status');
         } else {
-            if (confirm(confirmMsg)) {
-                onConfirm();
-            } else {
-                onCancel();
-            }
+            if (element.value) element.value = originalStatus;
         }
         return;
     }
     
-    fetch('/admin/bookings/' + bookingId + '/status', {
+    fetch('/api/admin/bookings/' + bookingId + '/status', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -498,7 +476,7 @@ function updateBookingStatus(element) {
             
             // Reload bookings with current filters
             const search = document.getElementById('searchInput').value;
-            const status = selectedStatusFilter;
+            const status = document.getElementById('statusFilter').value;
             setTimeout(() => loadBookings(search, status), 500);
         } else {
             showToast(data.message || 'Gagal update status', 'error');
@@ -543,10 +521,13 @@ function showToast(message, type) {
 
 // Delete booking function
 function deleteBooking(id) {
-    const onConfirm = () => {
-        fetch(`/admin/bookings/${id}`, {
-            method: 'DELETE',
-            headers: {
+    if (!confirm('Yakin ingin menghapus pesanan ini?')) {
+        return;
+    }
+    
+    fetch(`/api/admin/bookings/${id}`, {
+        method: 'DELETE',
+        headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
@@ -559,7 +540,7 @@ function deleteBooking(id) {
             
             // Reload bookings with current filters
             const search = document.getElementById('searchInput').value;
-            const status = selectedStatusFilter;
+            const status = document.getElementById('statusFilter').value;
             setTimeout(() => loadBookings(search, status), 500);
         } else {
             showToast(data.message || 'Gagal menghapus pesanan', 'error');
@@ -569,15 +550,6 @@ function deleteBooking(id) {
         console.error('Error:', error);
         showToast('Terjadi kesalahan', 'error');
     });
-    };
-    
-    if (Modal) {
-        Modal.danger('Yakin ingin menghapus pesanan ini?', onConfirm, null, 'Konfirmasi Penghapusan');
-    } else {
-        if (confirm('Yakin ingin menghapus pesanan ini?')) {
-            onConfirm();
-        }
-    }
 }
 
 // Toggle status dropdown (for custom dropdown)
@@ -636,16 +608,8 @@ document.addEventListener('click', function(event) {
 }
 .animate-slide-in {
     animation: slide-in 0.3s ease;
+    
 }
-
-/* Custom dropdown styling for mobile */
-@media (max-width: 768px) {
-    .dropdown-menu-{booking.id} {
-        min-width: 100%;
-        left: 0 !important;
-    }
-}
-
 /* Ensure dropdown stays within viewport */
 div[class*="dropdown-menu-"] {
     z-index: 50;
