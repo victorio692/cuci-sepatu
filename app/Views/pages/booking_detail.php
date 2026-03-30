@@ -394,7 +394,11 @@ function submitCancelBooking(event) {
     const alasan = document.getElementById('alasan_pembatalan').value.trim();
     
     if (alasan.length < 10) {
-        alert('Alasan pembatalan minimal 10 karakter');
+        if (Modal) {
+            Modal.warning('Alasan pembatalan minimal 10 karakter');
+        } else {
+            alert('Alasan pembatalan minimal 10 karakter');
+        }
         return;
     }
     

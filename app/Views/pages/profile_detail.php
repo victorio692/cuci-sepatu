@@ -1372,14 +1372,22 @@ document.getElementById('profilePhoto').addEventListener('change', function(e) {
     if (file) {
         // Check file size (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran file maksimal 2 MB');
+            if (Modal) {
+                Modal.error('Ukuran file maksimal 2 MB');
+            } else {
+                alert('Ukuran file maksimal 2 MB');
+            }
             this.value = '';
             return;
         }
         
         // Check file type
         if (!file.type.match('image/(png|jpeg|jpg)')) {
-            alert('Format file harus PNG, JPG, atau JPEG');
+            if (Modal) {
+                Modal.error('Format file harus PNG, JPG, atau JPEG');
+            } else {
+                alert('Format file harus PNG, JPG, atau JPEG');
+            }
             this.value = '';
             return;
         }

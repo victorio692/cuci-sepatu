@@ -55,6 +55,24 @@
 let currentUserPage = 1;
 let currentUserSearch = '';
 
+// Delete user with modal confirmation
+function deleteUser(element, url) {
+    event.preventDefault();
+    
+    const onConfirm = () => {
+        window.location.href = url;
+    };
+    
+    if (Modal) {
+        Modal.danger('Yakin ingin menghapus user ini?', onConfirm, null, 'Konfirmasi Penghapusan');
+    } else {
+        if (confirm('Yakin ingin menghapus user ini?')) {
+            onConfirm();
+        }
+    }
+    return false;
+}
+
 // Load users from API
 async function loadUsers(search = '', page = 1) {
     const container = document.getElementById('usersContainer');
@@ -201,7 +219,7 @@ function renderUsersTable(users, total, pagination = {}) {
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="/admin/users/delete/${user.id}" 
-                                       onclick="return confirm('Yakin ingin menghapus user ini?')"
+                                       onclick="return deleteUser(this, '/admin/users/delete/${user.id}')"
                                        class="inline-flex items-center justify-center w-8 h-8 bg-red-50 text-red-600 rounded hover:bg-red-100 transition text-xs" title="Hapus">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -276,7 +294,7 @@ function renderUsersTable(users, total, pagination = {}) {
                         <i class="fas fa-edit"></i>
                         <span>Edit</span>
                     </a>
-                    <a href="/admin/users/delete/${user.id}" onclick="return confirm('Yakin ingin menghapus user ini?')" class="flex-1 py-2 text-red-600 hover:bg-red-50 rounded text-xs font-medium transition flex items-center justify-center space-x-1">
+                    <a href="javascript:void(0)" onclick="return deleteUser(this, '/admin/users/delete/${user.id}')" class="flex-1 py-2 text-red-600 hover:bg-red-50 rounded text-xs font-medium transition flex items-center justify-center space-x-1">
                         <i class="fas fa-trash"></i>
                         <span>Hapus</span>
                     </a>

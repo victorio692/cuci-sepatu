@@ -143,7 +143,11 @@ form.addEventListener('submit', function(e) {
     
     if (newPassword !== confirmPassword) {
         e.preventDefault();
-        alert('Password baru dan konfirmasi password tidak sama!');
+        if (Modal) {
+            Modal.error('Password baru dan konfirmasi password tidak sama!');
+        } else {
+            alert('Password baru dan konfirmasi password tidak sama!');
+        }
         return false;
     }
 });

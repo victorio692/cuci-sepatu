@@ -56,7 +56,7 @@
                                 </div>
                                 
                                 <!-- Brand Text -->
-                                <div class="brand-text">SYHCLEANING</div>
+                                
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                                 </div>
                                 
                                 <!-- Brand Text -->
-                                <div class="brand-text">SYHCLEANING</div>
+                                
                             </div>
                         </div>
                     </div>
@@ -1186,8 +1186,14 @@ function showSlide(n) {
 function addToCartQuick(serviceCode, serviceName, price) {
     // Check if user is logged in
     <?php if (!session()->get('user_id')): ?>
-        alert('Silakan login terlebih dahulu untuk menambahkan ke keranjang');
-        window.location.href = '/login';
+        if (Modal) {
+            Modal.alert('Silakan login terlebih dahulu', 'Login Diperlukan', () => {
+                window.location.href = '/login';
+            });
+        } else {
+            alert('Silakan login terlebih dahulu');
+            window.location.href = '/login';
+        }
         return;
     <?php endif; ?>
     
@@ -1243,7 +1249,7 @@ function showCartNotification(serviceName, totalItems) {
     
     // Create notification element
     const notification = document.createElement('div');
-    notification.className = 'cart-notification-popup fixed bottom-6 right-6 bg-white text-gray-900 px-6 py-5 rounded-2xl shadow-2xl z-[9999] max-w-md border-l-4 border-green-500 animate-slide-up';
+    notification.className = 'cart-notification-popup fixed top-6 right-6 bg-white text-gray-900 px-6 py-5 rounded-2xl shadow-2xl z-[9999] max-w-md border-l-4 border-green-500 animate-slide-up';
     notification.style.position = 'fixed';
     notification.style.zIndex = '9999';
     notification.innerHTML = `
@@ -1252,8 +1258,7 @@ function showCartNotification(serviceName, totalItems) {
                 <i class="fas fa-check text-2xl text-green-600"></i>
             </div>
             <div class="flex-1 pt-1">
-                <div class="font-bold text-base text-gray-900 mb-1">Berhasil!</div>
-                <div class="text-sm text-gray-600 mb-3 leading-relaxed">${serviceName}</div>
+                <div class="font-bold text-sm text-gray-900 mb-1">Berhasil ditambahkan ke keranjang</div>
                 <div class="flex items-center justify-between gap-3">
                     <span class="inline-flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1.5 rounded-lg">
                         <i class="fas fa-shopping-cart"></i>
@@ -1534,7 +1539,7 @@ function toggleMoreServices() {
 /* Responsive notification */
 @media (max-width: 640px) {
     .cart-notification-popup {
-        bottom: 1.5rem !important;
+        top: 5rem !important;
         right: 1rem !important;
         left: 1rem !important;
         max-width: none;
@@ -1543,7 +1548,7 @@ function toggleMoreServices() {
 
 @media (min-width: 641px) {
     .cart-notification-popup {
-        bottom: 2rem !important;
+        top: 5.5rem !important;
         right: 2rem !important;
         left: auto !important;
         max-width: 28rem;

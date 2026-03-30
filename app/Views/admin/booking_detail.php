@@ -594,9 +594,15 @@
 const bookingId = <?= $booking['id'] ?>;
 
 function approveBooking() {
-    if (!confirm('Apakah Anda yakin ingin menyetujui pesanan ini?')) return;
+    const onConfirm = () => changeStatus('disetujui');
     
-    changeStatus('disetujui');
+    if (Modal) {
+        Modal.confirm('Apakah Anda yakin ingin menyetujui pesanan ini?', onConfirm, null, 'Konfirmasi Persetujuan');
+    } else {
+        if (confirm('Apakah Anda yakin ingin menyetujui pesanan ini?')) {
+            onConfirm();
+        }
+    }
 }
 
 function showRejectModal() {
@@ -641,20 +647,32 @@ function confirmComplete() {
     const file = fotoInput.files[0];
     
     if (!file) {
-        alert('Foto hasil cucian wajib diupload!');
+        if (Modal) {
+            Modal.error('Foto hasil cucian wajib diupload!');
+        } else {
+            alert('Foto hasil cucian wajib diupload!');
+        }
         return;
     }
 
     // Validate file type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!validTypes.includes(file.type)) {
-        alert('Format foto harus JPG, JPEG, atau PNG!');
+        if (Modal) {
+            Modal.error('Format foto harus JPG, JPEG, atau PNG!');
+        } else {
+            alert('Format foto harus JPG, JPEG, atau PNG!');
+        }
         return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-        alert('Ukuran foto maksimal 5MB!');
+        if (Modal) {
+            Modal.error('Ukuran foto maksimal 5MB!');
+        } else {
+            alert('Ukuran foto maksimal 5MB!');
+        }
         return;
     }
 
@@ -685,14 +703,23 @@ function confirmComplete() {
             closeCompleteModal();
             
             // Show success message
-            alert('Pesanan berhasil ditandai selesai!\n\nFoto hasil cucian telah diupload\nCustomer telah menerima notifikasi\nSepatu siap diambil/diantar');
-            
-            // Reload page to show updated status
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
+            if (Modal) {
+                Modal.success('Pesanan berhasil ditandai selesai!\n\nFoto hasil cucian telah diupload\nCustomer telah menerima notifikasi\nSepatu siap diambil/diantar', 'Berhasil', () => {
+                    setTimeout(() => location.reload(), 500);
+                });
+            } else {
+                alert('Pesanan berhasil ditandai selesai!\n\nFoto hasil cucian telah diupload\nCustomer telah menerima notifikasi\nSepatu siap diambil/diantar');
+                // Reload page to show updated status
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
         } else {
-            alert('Error: ' + (data.message || 'Gagal mengubah status'));
+            if (Modal) {
+                Modal.error('Error: ' + (data.message || 'Gagal mengubah status'));
+            } else {
+                alert('Error: ' + (data.message || 'Gagal mengubah status'));
+            }
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
@@ -701,7 +728,11 @@ function confirmComplete() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
+        if (Modal) {
+            Modal.error('Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
+        } else {
+            alert('Terjadi kesalahan saat unggah foto.\n\nCek console untuk detail atau coba lagi.');
+        }
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Unggah & Tandai Selesai';
@@ -713,7 +744,11 @@ function confirmReject() {
     const reason = document.getElementById('rejectReason').value.trim();
     
     if (!reason) {
-        alert('Alasan penolakan harus diisi!');
+        if (Modal) {
+            Modal.error('Alasan penolakan harus diisi!');
+        } else {
+            alert('Alasan penolakan harus diisi!');
+        }
         return;
     }
     
@@ -728,15 +763,29 @@ function confirmReject() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Pesanan berhasil ditolak');
-            location.reload();
+            if (Modal) {
+                Modal.success('Pesanan berhasil ditolak', 'Berhasil', () => {
+                    location.reload();
+                });
+            } else {
+                alert('Pesanan berhasil ditolak');
+                location.reload();
+            }
         } else {
-            alert(data.message || 'Gagal menolak pesanan');
+            if (Modal) {
+                Modal.error(data.message || 'Gagal menolak pesanan');
+            } else {
+                alert(data.message || 'Gagal menolak pesanan');
+            }
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan');
+        if (Modal) {
+            Modal.error('Terjadi kesalahan');
+        } else {
+            alert('Terjadi kesalahan');
+        }
     });
 }
 
@@ -749,17 +798,30 @@ function changeStatus(newStatus) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Status berhasil diubah');
-            
-            // If completed, show WhatsApp option
-            if (data.show_whatsapp) {
-                if (confirm('Status berhasil diubah menjadi Selesai. Apakah Anda ingin langsung mengirim notifikasi WhatsApp ke customer?')) {
-                    sendWhatsApp();
+            if (Modal) {
+                Modal.success('Status berhasil diubah', 'Berhasil', () => {
+                    // If completed, show WhatsApp option
+                    if (data.show_whatsapp) {
+                        const onConfirm = () => sendWhatsApp();
+                        const onCancel = () => location.reload();
+                        Modal.confirm('Status berhasil diubah menjadi Selesai. Apakah Anda ingin langsung mengirim notifikasi WhatsApp ke customer?', onConfirm, onCancel, 'Notifikasi WhatsApp');
+                    } else {
+                        location.reload();
+                    }
+                });
+            } else {
+                alert('Status berhasil diubah');
+                
+                // If completed, show WhatsApp option
+                if (data.show_whatsapp) {
+                    if (confirm('Status berhasil diubah menjadi Selesai. Apakah Anda ingin langsung mengirim notifikasi WhatsApp ke customer?')) {
+                        sendWhatsApp();
+                    } else {
+                        location.reload();
+                    }
                 } else {
                     location.reload();
                 }
-            } else {
-                location.reload();
             }
         } else {
             alert(data.message || 'Gagal mengubah status');
@@ -778,12 +840,20 @@ function sendWhatsApp() {
         if (data.success) {
             window.open(data.whatsapp_link, '_blank');
         } else {
-            alert(data.message || 'Gagal membuat link WhatsApp');
+            if (Modal) {
+                Modal.error(data.message || 'Gagal membuat link WhatsApp');
+            } else {
+                alert(data.message || 'Gagal membuat link WhatsApp');
+            }
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan');
+        if (Modal) {
+            Modal.error('Terjadi kesalahan');
+        } else {
+            alert('Terjadi kesalahan');
+        }
     });
 }
 

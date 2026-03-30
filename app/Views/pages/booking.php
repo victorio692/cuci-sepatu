@@ -1080,7 +1080,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!selectedService) {
         console.log('❌ VALIDASI GAGAL: Layanan belum dipilih');
         e.preventDefault();
-        alert('Pilih layanan terlebih dahulu');
+        if (Modal) {
+            Modal.warning('Pilih layanan terlebih dahulu');
+        } else {
+            alert('Pilih layanan terlebih dahulu');
+        }
         const serviceSection = document.querySelector('[name="service"]').closest('.grid');
         serviceSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         serviceSection.classList.add('shake');
@@ -1094,7 +1098,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!deliveryDate) {
         console.log('❌ VALIDASI GAGAL: Tanggal belum dipilih');
         e.preventDefault();
-        alert('Tanggal masuk wajib dipilih');
+        if (Modal) {
+            Modal.warning('Tanggal masuk wajib dipilih');
+        } else {
+            alert('Tanggal masuk wajib dipilih');
+        }
         const dateInput = document.getElementById('delivery_date');
         dateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         dateInput.focus();
@@ -1109,7 +1117,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!bookingTime) {
         console.log('❌ VALIDASI GAGAL: Jam booking kosong');
         e.preventDefault();
-        alert('Jam booking wajib diisi');
+        if (Modal) {
+            Modal.warning('Jam booking wajib diisi');
+        } else {
+            alert('Jam booking wajib diisi');
+        }
         const timeInput = document.getElementById('booking_time');
         timeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         timeInput.focus();
@@ -1123,7 +1135,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
     if (!shoePhoto.files || shoePhoto.files.length === 0) {
         console.log('❌ VALIDASI GAGAL: Foto belum diupload');
         e.preventDefault();
-        alert('Wajib unggah foto sepatu terlebih dahulu');
+        if (Modal) {
+            Modal.warning('Wajib unggah foto sepatu terlebih dahulu');
+        } else {
+            alert('Wajib unggah foto sepatu terlebih dahulu');
+        }
         const photoSection = document.getElementById('uploadArea');
         photoSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         photoSection.classList.add('shake');
@@ -1140,7 +1156,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         if (!deliveryAddress) {
             console.log('❌ VALIDASI GAGAL: Alamat pengiriman kosong');
             e.preventDefault();
-            alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
+            if (Modal) {
+                Modal.warning('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
+            } else {
+                alert('Alamat pengiriman wajib diisi jika memilih opsi Diantar ke Rumah');
+            }
             const addressInput = document.getElementById('delivery_address');
             addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             addressInput.focus();
@@ -1159,7 +1179,11 @@ document.getElementById('bookingForm').addEventListener('submit', (e) => {
         if (!pickupAddress) {
             console.log('❌ VALIDASI GAGAL: Alamat penjemputan kosong');
             e.preventDefault();
-            alert('Alamat penjemputan wajib diisi jika memilih opsi Dijemput');
+            if (Modal) {
+                Modal.warning('Alamat penjemputan wajib diisi jika memilih opsi Dijemput');
+            } else {
+                alert('Alamat penjemputan wajib diisi jika memilih opsi Dijemput');
+            }
             const addressInput = document.getElementById('pickup_address');
             addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             addressInput.focus();
@@ -1203,7 +1227,11 @@ fileInput.addEventListener('change', function(e) {
     if (file) {
         // Check file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-            alert('Ukuran file maksimal 5 MB');
+            if (Modal) {
+                Modal.error('Ukuran file maksimal 5 MB');
+            } else {
+                alert('Ukuran file maksimal 5 MB');
+            }
             fileInput.value = '';
             uploadArea.classList.add('shake');
             setTimeout(() => uploadArea.classList.remove('shake'), 500);
@@ -1212,7 +1240,11 @@ fileInput.addEventListener('change', function(e) {
         
         // Check file type
         if (!file.type.match('image/(png|jpeg|jpg)')) {
-            alert('Format file harus PNG, JPG, atau JPEG');
+            if (Modal) {
+                Modal.error('Format file harus PNG, JPG, atau JPEG');
+            } else {
+                alert('Format file harus PNG, JPG, atau JPEG');
+            }
             fileInput.value = '';
             uploadArea.classList.add('shake');
             setTimeout(() => uploadArea.classList.remove('shake'), 500);
@@ -1268,7 +1300,8 @@ uploadArea.addEventListener('drop', (e) => {
 // Logout confirmation and API call
 async function confirmLogout(e) {
     e.preventDefault();
-    if (confirm('Apakah Anda yakin ingin logout?')) {
+    
+    const logout = async () => {
         try {
             console.log('🚀 Sedang Keluar... via API...');
             const response = await fetch('/api/auth/logout', {
@@ -1288,6 +1321,14 @@ async function confirmLogout(e) {
             console.error('❌ Logout error:', error);
             // Still redirect even if error
             window.location.href = '/';
+        }
+    };
+    
+    if (Modal) {
+        Modal.confirm('Apakah Anda yakin ingin logout?', logout, null, 'Konfirmasi Logout');
+    } else {
+        if (confirm('Apakah Anda yakin ingin logout?')) {
+            logout();
         }
     }
 }

@@ -469,13 +469,21 @@ function handlePhotoFile(file) {
     if (!file) return;
     
     if (file.size > 5 * 1024 * 1024) {
-        alert('Ukuran file terlalu besar. Maksimal 5MB');
+        if (Modal) {
+            Modal.error('Ukuran file terlalu besar. Maksimal 5MB');
+        } else {
+            alert('Ukuran file terlalu besar. Maksimal 5MB');
+        }
         return;
     }
     
     const validTypes = ['image/png', 'image/jpg', 'image/jpeg'];
     if (!validTypes.includes(file.type)) {
-        alert('Format file harus PNG, JPG, atau JPEG');
+        if (Modal) {
+            Modal.error('Format file harus PNG, JPG, atau JPEG');
+        } else {
+            alert('Format file harus PNG, JPG, atau JPEG');
+        }
         return;
     }
     
@@ -622,31 +630,51 @@ function submitCheckout() {
     // Validate all required fields
     const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked');
     if (!itemEntryOption) {
-        alert('Pilih opsi barang masuk');
+        if (Modal) {
+            Modal.warning('Pilih opsi barang masuk');
+        } else {
+            alert('Pilih opsi barang masuk');
+        }
         return;
     }
     
     const deliveryOption = document.querySelector('input[name="delivery_option"]:checked');
     if (!deliveryOption) {
-        alert('Pilih opsi pengiriman');
+        if (Modal) {
+            Modal.warning('Pilih opsi pengiriman');
+        } else {
+            alert('Pilih opsi pengiriman');
+        }
         return;
     }
     
     const deliveryDate = document.getElementById('delivery_date').value;
     if (!deliveryDate) {
-        alert('Pilih tanggal masuk');
+        if (Modal) {
+            Modal.warning('Pilih tanggal masuk');
+        } else {
+            alert('Pilih tanggal masuk');
+        }
         return;
     }
     
     const bookingTime = document.getElementById('booking_time').value;
     if (!bookingTime) {
-        alert('Pilih jam booking');
+        if (Modal) {
+            Modal.warning('Pilih jam booking');
+        } else {
+            alert('Pilih jam booking');
+        }
         return;
     }
     
     const shoePhoto = document.getElementById('shoe_photo').files[0];
     if (!shoePhoto) {
-        alert('Unggah foto sepatu');
+        if (Modal) {
+            Modal.warning('Silakan unggah foto sepatu terlebih dahulu', 'Foto Diperlukan');
+        } else {
+            alert('Unggah foto sepatu');
+        }
         return;
     }
     
@@ -654,7 +682,11 @@ function submitCheckout() {
     if (itemEntryOption.value === 'pickup') {
         const pickupAddress = document.getElementById('pickup_address').value.trim();
         if (!pickupAddress || pickupAddress.length < 10) {
-            alert('Alamat penjemputan minimal 10 karakter');
+            if (Modal) {
+                Modal.warning('Alamat penjemputan minimal 10 karakter');
+            } else {
+                alert('Alamat penjemputan minimal 10 karakter');
+            }
             return;
         }
     }
@@ -663,7 +695,11 @@ function submitCheckout() {
     if (deliveryOption.value === 'delivery') {
         const deliveryAddress = document.getElementById('delivery_address').value.trim();
         if (!deliveryAddress || deliveryAddress.length < 10) {
-            alert('Alamat pengiriman minimal 10 karakter');
+            if (Modal) {
+                Modal.warning('Alamat pengiriman minimal 10 karakter');
+            } else {
+                alert('Alamat pengiriman minimal 10 karakter');
+            }
             return;
         }
     }
@@ -743,17 +779,31 @@ function submitCheckout() {
             sessionStorage.removeItem('checkoutItems');
             
             // Show success and redirect
-            alert(data.message);
-            window.location.href = '/my-bookings';
+            if (Modal) {
+                Modal.success(data.message, 'Berhasil', () => {
+                    window.location.href = '/my-bookings';
+                });
+            } else {
+                alert(data.message);
+                window.location.href = '/my-bookings';
+            }
         } else {
-            alert('Error: ' + data.message);
+            if (Modal) {
+                Modal.error('Error: ' + data.message, 'Gagal');
+            } else {
+                alert('Error: ' + data.message);
+            }
             button.disabled = false;
             button.innerHTML = originalText;
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Terjadi kesalahan saat memproses pesanan');
+        if (Modal) {
+            Modal.error('Terjadi kesalahan saat memproses pesanan', 'Kesalahan');
+        } else {
+            alert('Terjadi kesalahan saat memproses pesanan');
+        }
         button.disabled = false;
         button.innerHTML = originalText;
     });

@@ -3,10 +3,13 @@
 namespace App\Controllers\Admin;
 
 use CodeIgniter\Controller;
+use CodeIgniter\API\ResponseTrait;
 use Config\Database;
 
 class Users extends Controller
 {
+    use ResponseTrait;
+    
     protected $db;
 
 
@@ -45,7 +48,7 @@ class Users extends Controller
             $user['full_name'] = $user['nama_lengkap'];
             $user['phone'] = $user['no_hp'];
             $user['created_at'] = $user['created_at'];
-            $user['is_active'] = 1; // Sementara selalu aktif, bisa disesuaikan jika ada kolom status di database
+            $user['is_active'] = $user['aktif'] ?? 1; // Ambil dari database
         }
 
         // Hitung pagination 
@@ -74,8 +77,9 @@ class Users extends Controller
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        // Tambahkan field aktif untuk kebutuhan view (sementara selalu true)
-        $user['aktif'] = 1;
+        // Ambil field aktif dari database
+        // Jika belum ada, default ke 1 (aktif)
+        $user['aktif'] = $user['aktif'] ?? 1;
        
         // Pagination untuk booking user
         $page = (int)($this->request->getVar('page') ?? 1);
@@ -272,6 +276,42 @@ class Users extends Controller
         }
 
         return redirect()->to('/admin/users')->with('error', 'Gagal menghapus user');
+    }
+
+    /**
+     * Toggle user active status
+     */
+    public function toggleActive($id)
+    {
+        try {
+            $user = $this->db->table('users')->where('id', $id)->get()->getRowArray();
+
+            if (!$user) {
+                return $this->failNotFound('User tidak ditemukan');
+            }
+
+            // Toggle status - jika aktif menjadi tidak aktif, dan sebaliknya
+            // Default ke 1 (aktif) jika field belum ada
+            $currentStatus = isset($user['aktif']) ? (int)$user['aktif'] : 1;
+            $newStatus = $currentStatus ? 0 : 1;
+
+            // Update database
+            $this->db->table('users')
+                ->where('id', $id)
+                ->update([
+                    'aktif' => $newStatus,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+
+            return $this->respond([
+                'success' => true,
+                'message' => 'Status user berhasil diubah',
+                'is_active' => (bool)$newStatus
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->failServerError('Error: ' . $e->getMessage());
+        }
     }
 }
 

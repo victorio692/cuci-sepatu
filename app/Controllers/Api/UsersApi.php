@@ -59,6 +59,10 @@ class UsersApi extends BaseController
         
         foreach ($users as &$user) {
             unset($user['password_hash']);
+            // Map field untuk consistency
+            $user['full_name'] = $user['nama_lengkap'];
+            $user['phone'] = $user['no_hp'];
+            $user['is_active'] = $user['aktif'] ?? 1;
         }
 
         return $this->respond([

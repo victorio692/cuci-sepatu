@@ -261,7 +261,7 @@ async function loadCart() {
 
 // Remove item from cart
 async function removeFromCart(index) {
-    if (confirm('Hapus layanan ini dari keranjang?')) {
+    const onConfirm = async () => {
         const cart = JSON.parse(localStorage.getItem(getCartKey()) || '[]');
         cart.splice(index, 1);
         localStorage.setItem(getCartKey(), JSON.stringify(cart));
@@ -269,6 +269,14 @@ async function removeFromCart(index) {
         
         // Show notification
         showNotification('Item berhasil dihapus dari keranjang', 'success');
+    };
+    
+    if (Modal) {
+        Modal.confirm('Hapus layanan ini dari keranjang?', onConfirm, null, 'Konfirmasi Penghapusan');
+    } else {
+        if (confirm('Hapus layanan ini dari keranjang?')) {
+            onConfirm();
+        }
     }
 }
 
@@ -381,7 +389,11 @@ function proceedToCheckout() {
     const selectedItems = cart.filter(item => item.selected !== false);
     
     if (selectedItems.length === 0) {
-        alert('Pilih minimal 1 layanan untuk checkout!');
+        if (Modal) {
+            Modal.warning('Pilih minimal 1 layanan untuk checkout!');
+        } else {
+            alert('Pilih minimal 1 layanan untuk checkout!');
+        }
         return;
     }
     
@@ -396,9 +408,9 @@ function proceedToCheckout() {
 function showNotification(message, type = 'success') {
     const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
     const notification = document.createElement('div');
-    notification.className = `fixed bottom-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-up`;
+    notification.className = `fixed top-24 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-40 animate-slide-down`;
     notification.innerHTML = `
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 whitespace-nowrap">
             <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
             <span>${message}</span>
         </div>
@@ -408,6 +420,8 @@ function showNotification(message, type = 'success') {
     
     setTimeout(() => {
         notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100px) translateY(-20px)';
+        notification.style.transition = 'all 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }

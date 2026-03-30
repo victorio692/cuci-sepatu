@@ -527,20 +527,42 @@ function updateBookingStatus(selectElement) {
     
     if (newStatus === 'selesai') {
         const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengunggah foto hasil cucian.\n\nLanjutkan?';
-        if (confirm(confirmMsg)) {
+        const onConfirm = () => {
             window.location.href = '/admin/bookings/' + bookingId;
-        } else {
+        };
+        const onCancel = () => {
             selectElement.value = originalStatus;
+        };
+        
+        if (Modal) {
+            Modal.confirm(confirmMsg, onConfirm, onCancel, 'Konfirmasi Status');
+        } else {
+            if (confirm(confirmMsg)) {
+                onConfirm();
+            } else {
+                onCancel();
+            }
         }
         return;
     }
     
     if (newStatus === 'ditolak') {
         const confirmMsg = 'Status "Ditolak" memerlukan alasan penolakan.\n\nAnda akan diarahkan ke halaman detail booking untuk mengisi alasan.\n\nLanjutkan?';
-        if (confirm(confirmMsg)) {
+        const onConfirm = () => {
             window.location.href = '/admin/bookings/' + bookingId;
-        } else {
+        };
+        const onCancel = () => {
             selectElement.value = originalStatus;
+        };
+        
+        if (Modal) {
+            Modal.confirm(confirmMsg, onConfirm, onCancel, 'Konfirmasi Status');
+        } else {
+            if (confirm(confirmMsg)) {
+                onConfirm();
+            } else {
+                onCancel();
+            }
         }
         return;
     }
@@ -578,7 +600,7 @@ function updateBookingStatus(selectElement) {
 }
 
 function deleteBooking(id) {
-    if (confirm('Yakin ingin menghapus booking ini?')) {
+    const onConfirm = () => {
         fetch('/api/admin/bookings/' + id, {
             method: 'DELETE',
             headers: {
@@ -605,6 +627,14 @@ function deleteBooking(id) {
             console.error('Error:', error);
             showToast('Terjadi kesalahan', 'error');
         });
+    };
+    
+    if (Modal) {
+        Modal.danger('Yakin ingin menghapus booking ini?', onConfirm, null, 'Konfirmasi Penghapusan');
+    } else {
+        if (confirm('Yakin ingin menghapus booking ini?')) {
+            onConfirm();
+        }
     }
 }
 

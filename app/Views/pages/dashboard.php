@@ -418,7 +418,8 @@ async function markAllAsReadCustomer(event) {
 // Logout confirmation and API call
 async function confirmLogout(e) {
     e.preventDefault();
-    if (confirm('Apakah Anda yakin ingin keluar?')) {
+    
+    const logout = async () => {
         try {
             console.log('🚀 Sedang Keluar... via API...');
             const response = await fetch('/api/auth/logout', {
@@ -438,6 +439,14 @@ async function confirmLogout(e) {
             console.error('❌ Logout error:', error);
             // Still redirect even if error
             window.location.href = '/';
+        }
+    };
+    
+    if (Modal) {
+        Modal.confirm('Apakah Anda yakin ingin keluar?', logout, null, 'Konfirmasi Logout');
+    } else {
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            logout();
         }
     }
 }

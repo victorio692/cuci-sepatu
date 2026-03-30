@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', loadServices);
 
 // Confirm delete function
 function confirmDelete(serviceId, serviceName) {
-    if (confirm('Yakin ingin menghapus layanan "' + serviceName + '"?\n\nLayanan yang sudah digunakan dalam pesanan tidak dapat dihapus.')) {
+    const onConfirm = () => {
         // Create form dynamically
         const form = document.createElement('form');
         form.method = 'POST';
@@ -251,6 +251,16 @@ function confirmDelete(serviceId, serviceName) {
         
         document.body.appendChild(form);
         form.submit();
+    };
+    
+    const message = 'Yakin ingin menghapus layanan "' + serviceName + '"?\n\nLayanan yang sudah digunakan dalam pesanan tidak dapat dihapus.';
+    
+    if (Modal) {
+        Modal.danger(message, onConfirm, null, 'Konfirmasi Penghapusan');
+    } else {
+        if (confirm(message)) {
+            onConfirm();
+        }
     }
 }
 

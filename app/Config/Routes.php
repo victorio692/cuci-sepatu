@@ -138,6 +138,10 @@ $routes->group('api', static function($routes) {
 $routes->group('api', ['filter' => 'auth:admin'], static function($routes) {
     // Users API - For admin panel
     $routes->get('users', 'Api\UsersApi::index');
+    
+    // Admin Bookings API
+    $routes->get('admin/bookings', 'Api\AdminBookingsApi::index');
+    $routes->get('admin/bookings/(:num)', 'Api\AdminBookingsApi::detail/$1');
 });
 // apiservice
 $routes->group('api', function($routes) {

@@ -21,6 +21,7 @@ class UserModel extends Model
         'foto_profil',
         'alamat',
         'role',
+        'aktif',
         'created_at',
         'updated_at'
     ];
