@@ -166,7 +166,8 @@ class Booking extends BaseController
         }
         
         $subtotal = $servicePrice * $quantity;
-        $total = $subtotal + $delivery_fee;
+        $fridayDiscount = $this->getFridayDiscount($delivery_date);
+        $total = max(0, $subtotal + $delivery_fee - $fridayDiscount);
 
         // Simpan booking langsung
         $booking_data = [
@@ -351,7 +352,8 @@ class Booking extends BaseController
             }
             
             $subtotal = $servicePrice * $quantity;
-            $total = $subtotal + $delivery_fee;
+            $fridayDiscount = $this->getFridayDiscount($delivery_date);
+            $total = max(0, $subtotal + $delivery_fee - $fridayDiscount);
 
             // Simpan booking 
             $booking_data = [
@@ -507,6 +509,20 @@ class Booking extends BaseController
         return 0;
     }
 
+    private function getFridayDiscount(?string $date): int
+    {
+        if (empty($date)) {
+            return 0;
+        }
+
+        $timestamp = strtotime($date);
+        if ($timestamp === false) {
+            return 0;
+        }
+
+        return ((int) date('N', $timestamp) === 5) ? 5000 : 0;
+    }
+
     // Checkout dari cart
     public function checkout()
     {
@@ -635,9 +651,13 @@ class Booking extends BaseController
             // - dijemput-diantar (pickup + delivery) = 10000
         }
 
+        $fridayDiscountTotal = $this->getFridayDiscount($pickupDate);
+
         // Simpan setiap item sebagai booking terpisah
         $successCount = 0;
         $bookingIds = [];
+        $remainingDiscount = $fridayDiscountTotal;
+        $remainingItems = count($items);
 
         foreach ($items as $item) {
             $serviceCode = $item['service_code'];
@@ -656,7 +676,24 @@ class Booking extends BaseController
             
             // Distribusikan biaya kirim secara proporsional jika ada lebih dari 1 item, jika hanya 1 item maka biaya kirim penuh
             $itemBiayaKirim = count($items) === 1 ? $biayaKirim : round($biayaKirim * ($quantity / $totalQuantity));
-            $total = $subtotal + $itemBiayaKirim;
+
+            // Diskon Jumat Rp5.000 per checkout dibagi ke item secara proporsional.
+            $itemDiscount = 0;
+            if ($fridayDiscountTotal > 0) {
+                if ($remainingItems === 1) {
+                    $itemDiscount = $remainingDiscount;
+                } else {
+                    $itemDiscount = (int) round($fridayDiscountTotal * ($quantity / $totalQuantity));
+                    if ($itemDiscount > $remainingDiscount) {
+                        $itemDiscount = $remainingDiscount;
+                    }
+                }
+            }
+
+            $remainingDiscount -= $itemDiscount;
+            $remainingItems--;
+
+            $total = max(0, $subtotal + $itemBiayaKirim - $itemDiscount);
 
             $bookingData = [
                 'id_user' => $user_id,

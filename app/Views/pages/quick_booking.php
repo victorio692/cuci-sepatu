@@ -142,6 +142,10 @@
                             <span class="text-gray-600">Biaya Kirim</span>
                             <span class="font-medium" id="summary-delivery">Gratis</span>
                         </div>
+                        <div id="summary-discount-row" class="hidden flex justify-between text-sm">
+                            <span class="text-gray-600">Diskon Jumat</span>
+                            <span class="font-medium text-green-600" id="summary-discount">-Rp 5.000</span>
+                        </div>
                     </div>
 
                     <div class="border-t border-gray-200 pt-3">
@@ -167,20 +171,33 @@
 const basePrice = <?= $service['harga_dasar'] ?>;
 const quantityInput = document.querySelector('input[name="quantity"]');
 const deliveryOption = document.querySelector('select[name="delivery_option"]');
+const deliveryDateInput = document.querySelector('input[name="delivery_date"]');
+
+function isFriday(dateString) {
+    if (!dateString) return false;
+    const date = new Date(`${dateString}T00:00:00`);
+    return date.getDay() === 5;
+}
 
 function updateSummary() {
     const quantity = parseInt(quantityInput.value) || 1;
     const deliveryFee = deliveryOption.value === 'home' ? 5000 : 0;
+    const fridayDiscount = isFriday(deliveryDateInput.value) ? 5000 : 0;
     const subtotal = basePrice * quantity;
-    const total = subtotal + deliveryFee;
+    const total = Math.max(0, subtotal + deliveryFee - fridayDiscount);
 
     document.getElementById('summary-quantity').textContent = quantity + ' pasang';
     document.getElementById('summary-delivery').textContent = deliveryFee > 0 ? 'Rp 5.000' : 'Gratis';
+    const discountRow = document.getElementById('summary-discount-row');
+    discountRow.classList.toggle('hidden', fridayDiscount === 0);
     document.getElementById('summary-total').textContent = 'Rp ' + parseInt(total).toLocaleString('id-ID');
 }
 
 quantityInput.addEventListener('input', updateSummary);
 deliveryOption.addEventListener('change', updateSummary);
+deliveryDateInput.addEventListener('change', updateSummary);
+
+updateSummary();
 </script>
 
 <?= $this->endSection() ?>

@@ -302,6 +302,10 @@
                             <span>Biaya Tambahan:</span>
                             <span id="additionalFee" class="font-semibold text-orange-600">Rp 0</span>
                         </div>
+                        <div id="discountSection" class="flex justify-between text-gray-600 hidden">
+                            <span>Diskon Jumat:</span>
+                            <span id="discountAmount" class="font-semibold text-green-600">-Rp 5.000</span>
+                        </div>
                         
                         <div id="feeInfoSection" class="bg-amber-50 border border-amber-200 rounded-lg p-3 hidden">
                             <p class="text-xs text-amber-800">
@@ -427,6 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update estimasi saat tanggal atau jam booking berubah
     document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
+    document.getElementById('delivery_date').addEventListener('change', updateSummary);
     document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
     // Hitung estimasi saat load
@@ -574,6 +579,7 @@ function loadCheckoutItems() {
 function updateSummary() {
     const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked')?.value;
     const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value;
+    const deliveryDate = document.getElementById('delivery_date')?.value;
     
     const totalQuantity = window.checkoutTotalQuantity || 0;
     const subtotal = window.checkoutSubtotal || 0;
@@ -594,13 +600,17 @@ function updateSummary() {
         feeReasons.push('Pengiriman ke rumah');
     }
     
-    const total = subtotal + additionalFee;
+    const selectedDate = deliveryDate ? new Date(`${deliveryDate}T00:00:00`) : null;
+    const fridayDiscount = (selectedDate && selectedDate.getDay() === 5) ? 5000 : 0;
+    const total = Math.max(0, subtotal + additionalFee - fridayDiscount);
     
     // Update display
     document.getElementById('totalQuantity').textContent = `${totalQuantity} pasang`;
     document.getElementById('subtotalPrice').textContent = `Rp ${parseInt(subtotal).toLocaleString('id-ID')}`;
     
     const additionalFeeSection = document.getElementById('additionalFeeSection');
+    const discountSection = document.getElementById('discountSection');
+    const discountAmount = document.getElementById('discountAmount');
     const feeInfoSection = document.getElementById('feeInfoSection');
     const feeInfoText = document.getElementById('feeInfoText');
     const additionalFeeEl = document.getElementById('additionalFee');
@@ -613,6 +623,13 @@ function updateSummary() {
     } else {
         additionalFeeSection.classList.add('hidden');
         feeInfoSection.classList.add('hidden');
+    }
+
+    if (fridayDiscount > 0) {
+        discountSection.classList.remove('hidden');
+        discountAmount.textContent = `-Rp ${parseInt(fridayDiscount).toLocaleString('id-ID')}`;
+    } else {
+        discountSection.classList.add('hidden');
     }
     
     document.getElementById('totalPrice').textContent = `Rp ${parseInt(total).toLocaleString('id-ID')}`;
@@ -722,6 +739,9 @@ function submitCheckout() {
     if (deliveryOption.value === 'delivery' && totalQuantity === 1) {
         additionalFee += 5000;
     }
+
+    const selectedDate = deliveryDate ? new Date(`${deliveryDate}T00:00:00`) : null;
+    const fridayDiscount = (selectedDate && selectedDate.getDay() === 5) ? 5000 : 0;
     
     // Show loading
     const button = event.target;
@@ -758,6 +778,7 @@ function submitCheckout() {
     formData.append('delivery_method', deliveryMethod);
     formData.append('address', address);
     formData.append('notes', notes);
+    formData.append('friday_discount', fridayDiscount);
     
     // Append photo (as shoe_photos for backend compatibility)
     formData.append('shoe_photos', shoePhoto);
