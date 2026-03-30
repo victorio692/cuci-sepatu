@@ -41,23 +41,23 @@
             <!-- Split Button Export -->
             <div class="w-full relative">
                 <div class="flex w-full">
-                    <!-- Main Button -->
-                    <button type="button" onclick="exportReport('pdf')" class="flex-1 px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-l-lg hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
-                        <i class="fas fa-file-earmark-pdf text-xs md:text-sm"></i>
-                        <span class="hidden sm:inline">Export PDF</span>
-                        <span class="sm:hidden">PDF</span>
+                    <!-- Main Button - Export dengan format yang dipilih -->
+                    <button type="button" id="exportMainBtn" onclick="doExport()" class="flex-1 px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-l-lg hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
+                        <i id="exportMainIcon" class="fas fa-file-earmark-excel text-xs md:text-sm"></i>
+                        <span id="exportMainText" class="hidden sm:inline">Export Excel</span>
+                        <span id="exportMainTextSmall" class="sm:hidden">Excel</span>
                     </button>
                     
-                    <!-- Dropdown Trigger -->
+                    <!-- Dropdown Trigger - untuk pilih format -->
                     <button type="button" onclick="toggleExportDropdown(event)" class="px-2 md:px-4 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-r-lg hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transform hover:-translate-y-0.5 transition font-medium border-l border-emerald-400">
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
                 </div>
                 
-                <!-- Dropdown Menu -->
+                <!-- Dropdown Menu - Pilihan Format -->
                 <div id="exportDropdown" class="absolute hidden right-0 mt-1 w-48 bg-white rounded-lg shadow-2xl border border-gray-100 overflow-hidden z-50 transition">
                     <!-- Export PDF Option -->
-                    <button type="button" onclick="exportReport('pdf')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
+                    <button type="button" onclick="selectExportFormat('pdf')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
                         <i class="fas fa-file-earmark-pdf text-red-500"></i>
                         <div>
                             <div>Export ke PDF</div>
@@ -69,7 +69,7 @@
                     <div class="border-t border-gray-100"></div>
                     
                     <!-- Export Excel Option -->
-                    <button type="button" onclick="exportReport('excel')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
+                    <button type="button" onclick="selectExportFormat('excel')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
                         <i class="fas fa-file-earmark-excel text-green-500"></i>
                         <div>
                             <div>Export ke Excel</div>
@@ -371,8 +371,41 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Export Report Function
-async function exportReport(format) {
+// Export format state (default: excel)
+let currentExportFormat = 'excel';
+
+// Select export format dan update tombol
+function selectExportFormat(format) {
+    currentExportFormat = format;
+    updateExportButton(format);
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+    
+    // Show notification
+    const formatName = format === 'pdf' ? 'PDF' : 'Excel';
+    showToast(` Format export diubah ke ${formatName}`, 'success');
+}
+
+// Update tampilan tombol utama
+function updateExportButton(format) {
+    const mainIcon = document.getElementById('exportMainIcon');
+    const mainText = document.getElementById('exportMainText');
+    const mainTextSmall = document.getElementById('exportMainTextSmall');
+    
+    if (format === 'pdf') {
+        mainIcon.className = 'fas fa-file-earmark-pdf text-xs md:text-sm';
+        if (mainText) mainText.textContent = 'Export PDF';
+        if (mainTextSmall) mainTextSmall.textContent = 'PDF';
+    } else {
+        mainIcon.className = 'fas fa-file-earmark-excel text-xs md:text-sm';
+        if (mainText) mainText.textContent = 'Export Excel';
+        if (mainTextSmall) mainTextSmall.textContent = 'Excel';
+    }
+}
+
+// Download dengan format saat ini
+async function doExport() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     
@@ -381,11 +414,10 @@ async function exportReport(format) {
         return;
     }
     
-    // Close dropdown
-    document.getElementById('exportDropdown').classList.add('hidden');
+    const format = currentExportFormat;
     
     if (format === 'pdf') {
-        // PDF Export - gunakan print view
+        // PDF Export - buka di tab baru
         console.log('📄 Exporting to PDF...', { startDate, endDate });
         window.open(`/admin/reports/print?start_date=${startDate}&end_date=${endDate}`, '_blank');
         showToast('📄 Membuka jendela baru untuk PDF...', 'success');
@@ -413,7 +445,7 @@ async function exportReport(format) {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Laporan_${startDate}_${endDate}.csv`;
+            link.download = `Laporan_Pesanan_${startDate}_${endDate}.csv`;
             document.body.appendChild(link);
             link.click();
             window.URL.revokeObjectURL(url);
@@ -427,6 +459,7 @@ async function exportReport(format) {
         }
     }
 }
+</script>
 </script>
 
 <style>
