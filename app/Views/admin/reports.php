@@ -38,10 +38,46 @@
             </button>
         </div>
         <div class="flex items-end">
-            <a href="#" id="printLink" target="_blank" class="w-full px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
-                <i class="fas fa-print text-xs md:text-sm"></i>
-                <span>Cetak</span>
-            </a>
+            <!-- Split Button Export -->
+            <div class="w-full relative">
+                <div class="flex w-full">
+                    <!-- Main Button -->
+                    <button type="button" onclick="exportReport('pdf')" class="flex-1 px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-l-lg hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transform hover:-translate-y-0.5 transition font-medium flex items-center justify-center space-x-1 md:space-x-2">
+                        <i class="fas fa-file-earmark-pdf text-xs md:text-sm"></i>
+                        <span class="hidden sm:inline">Export PDF</span>
+                        <span class="sm:hidden">PDF</span>
+                    </button>
+                    
+                    <!-- Dropdown Trigger -->
+                    <button type="button" onclick="toggleExportDropdown(event)" class="px-2 md:px-4 py-2 md:py-2.5 text-xs md:text-sm bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-r-lg hover:shadow-lg hover:from-emerald-600 hover:to-emerald-700 transform hover:-translate-y-0.5 transition font-medium border-l border-emerald-400">
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                </div>
+                
+                <!-- Dropdown Menu -->
+                <div id="exportDropdown" class="absolute hidden right-0 mt-1 w-48 bg-white rounded-lg shadow-2xl border border-gray-100 overflow-hidden z-50 transition">
+                    <!-- Export PDF Option -->
+                    <button type="button" onclick="exportReport('pdf')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
+                        <i class="fas fa-file-earmark-pdf text-red-500"></i>
+                        <div>
+                            <div>Export ke PDF</div>
+                            <div class="text-xs text-gray-500">Siap cetak dengan format profesional</div>
+                        </div>
+                    </button>
+                    
+                    <!-- Divider -->
+                    <div class="border-t border-gray-100"></div>
+                    
+                    <!-- Export Excel Option -->
+                    <button type="button" onclick="exportReport('excel')" class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 flex items-center space-x-3 transition font-medium">
+                        <i class="fas fa-file-earmark-excel text-green-500"></i>
+                        <div>
+                            <div>Export ke Excel</div>
+                            <div class="text-xs text-gray-500">Download data terstruktur untuk analisis</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -115,9 +151,7 @@ async function loadReports() {
         if (result.data) {
             renderStats(result.data.ringkasan);
             renderServiceStats(result.data.statistik_layanan);
-            
-            // Update print link
-            document.getElementById('printLink').href = `/admin/reports/print?start_date=${startDate}&end_date=${endDate}`;
+            console.log('✅ Laporan berhasil dimuat');
         }
     } catch (error) {
         console.error('❌ Error loading reports:', error);
@@ -312,6 +346,87 @@ function showToast(message, type) {
 
 // Load reports on page load
 document.addEventListener('DOMContentLoaded', loadReports);
+
+// Toggle Export Dropdown
+function toggleExportDropdown(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const dropdown = document.getElementById('exportDropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('exportDropdown');
+    const dropdownContainer = event.target.closest('.relative');
+    
+    if (dropdownContainer && dropdownContainer.querySelector('#exportDropdown')) {
+        // Clicked inside dropdown container, don't close
+        return;
+    }
+    
+    if (!dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+    }
+});
+
+// Export Report Function
+async function exportReport(format) {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (!startDate || !endDate) {
+        showToast('Pilih tanggal terlebih dahulu', 'error');
+        return;
+    }
+    
+    // Close dropdown
+    document.getElementById('exportDropdown').classList.add('hidden');
+    
+    if (format === 'pdf') {
+        // PDF Export - gunakan print view
+        console.log('📄 Exporting to PDF...', { startDate, endDate });
+        window.open(`/admin/reports/print?start_date=${startDate}&end_date=${endDate}`, '_blank');
+        showToast('📄 Membuka jendela baru untuk PDF...', 'success');
+    } else if (format === 'excel') {
+        // Excel Export
+        console.log('📊 Exporting to Excel...', { startDate, endDate });
+        try {
+            showToast('⏳ Mempersiapkan file Excel...', 'success');
+            
+            const response = await fetch(`/api/admin/reports/export-excel?start_date=${startDate}&end_date=${endDate}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Gagal download Excel');
+            }
+            
+            // Create blob and download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Laporan_${startDate}_${endDate}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+            
+            showToast('✅ Excel berhasil didownload!', 'success');
+            console.log('✅ Excel export completed');
+        } catch (error) {
+            console.error('❌ Error export Excel:', error);
+            showToast('❌ Gagal download Excel: ' + error.message, 'error');
+        }
+    }
+}
 </script>
 
 <style>
@@ -325,8 +440,63 @@ document.addEventListener('DOMContentLoaded', loadReports);
         transform: translateX(0);
     }
 }
+
+@keyframes slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .animate-slide-in {
     animation: slide-in 0.3s ease;
+}
+
+/* Export Dropdown Styles */
+#exportDropdown {
+    animation: slide-down 0.2s ease;
+    right: 0;
+    min-width: 220px;
+}
+
+#exportDropdown:not(.hidden) {
+    display: block;
+}
+
+#exportDropdown.hidden {
+    display: none;
+}
+
+/* Split Button responsiveness */
+@media (max-width: 640px) {
+    .relative button {
+        font-size: 0.75rem;
+    }
+    
+    #exportDropdown {
+        min-width: 180px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto !important;
+    }
+}
+
+/* Smooth dropdown transitions */
+.group:hover #exportDropdown:not(.hidden) {
+    animation: slide-down 0.2s ease;
+}
+
+/* Icon colors for dropdown */
+.fa-file-earmark-pdf {
+    font-weight: 600;
+}
+
+.fa-file-earmark-excel {
+    font-weight: 600;
 }
 </style>
 <?= $this->endSection() ?>

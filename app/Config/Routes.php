@@ -97,6 +97,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], static function($routes) {
     // Reports
     $routes->get('reports', 'Admin\Reports::index');
     $routes->get('reports/print', 'Admin\Reports::print');
+    $routes->get('reports/export-excel', 'Admin\Reports::exportExcel');
     
     // Profile
     $routes->get('profile', 'Admin\Profile::index');
@@ -142,6 +143,9 @@ $routes->group('api', ['filter' => 'auth:admin'], static function($routes) {
     // Admin Bookings API
     $routes->get('admin/bookings', 'Api\AdminBookingsApi::index');
     $routes->get('admin/bookings/(:num)', 'Api\AdminBookingsApi::detail/$1');
+    
+    // Admin Reports API
+    $routes->get('admin/reports/export-excel', 'Admin\Reports::exportExcel');
 });
 // apiservice
 $routes->group('api', function($routes) {
