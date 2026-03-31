@@ -431,10 +431,6 @@
                                 <span class="text-gray-600">Biaya Tambahan</span>
                                 <span id="summaryAdditionalFee" class="font-semibold text-orange-600">Rp 0</span>
                             </div>
-                            <div id="discountSection" class="flex justify-between items-center text-sm sm:text-base hidden">
-                                <span class="text-gray-600">Diskon Jumat</span>
-                                <span id="summaryDiscount" class="font-semibold text-green-600">-Rp 5.000</span>
-                            </div>
                         </div>
                         
                         <div class="flex justify-between items-center mb-4 sm:mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 rounded-lg border border-blue-200 transition-all duration-300 hover:shadow-md">
@@ -839,7 +835,6 @@ function updateSummary() {
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
     const itemEntryOption = document.querySelector('input[name="item_entry_option"]:checked')?.value;
     const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value;
-    const deliveryDate = document.getElementById('delivery_date')?.value;
     
     const summaryTotal = document.getElementById('summaryTotal');
     const summaryService = document.getElementById('summaryService');
@@ -848,8 +843,6 @@ function updateSummary() {
     const summarySubtotal = document.getElementById('summarySubtotal');
     const summaryAdditionalFee = document.getElementById('summaryAdditionalFee');
     const additionalFeeSection = document.getElementById('additionalFeeSection');
-    const discountSection = document.getElementById('discountSection');
-    const summaryDiscount = document.getElementById('summaryDiscount');
     const feeInfoSection = document.getElementById('feeInfoSection');
     const feeInfoText = document.getElementById('feeInfoText');
     
@@ -873,16 +866,14 @@ function updateSummary() {
             feeReasons.push('Pengiriman ke rumah');
         }
         
-        const selectedDate = deliveryDate ? new Date(`${deliveryDate}T00:00:00`) : null;
-        const fridayDiscount = (selectedDate && selectedDate.getDay() === 5) ? 5000 : 0;
-        const total = Math.max(0, subtotal + additionalFee - fridayDiscount);
+        const total = subtotal + additionalFee;
         
         // Get service name
         const serviceLabel = selectedService.closest('label');
         const serviceName = serviceLabel.querySelector('h3').textContent;
         
         // Add fade animation
-        [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee, summaryDiscount].forEach(el => {
+        [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee].forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(10px)';
         });
@@ -906,15 +897,8 @@ function updateSummary() {
                 additionalFeeSection.classList.add('hidden');
                 feeInfoSection.classList.add('hidden');
             }
-
-            if (fridayDiscount > 0) {
-                summaryDiscount.textContent = '-Rp ' + fridayDiscount.toLocaleString('id-ID');
-                discountSection.classList.remove('hidden');
-            } else {
-                discountSection.classList.add('hidden');
-            }
             
-            [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee, summaryDiscount].forEach((el, index) => {
+            [summaryTotal, summaryService, summaryPrice, summaryQuantity, summarySubtotal, summaryAdditionalFee].forEach((el, index) => {
                 setTimeout(() => {
                     el.style.transition = 'all 0.3s ease-out';
                     el.style.opacity = '1';
@@ -930,7 +914,6 @@ function updateSummary() {
         summarySubtotal.textContent = 'Rp 0';
         summaryTotal.textContent = 'Rp 0';
         additionalFeeSection.classList.add('hidden');
-        discountSection.classList.add('hidden');
         feeInfoSection.classList.add('hidden');
     }
 }
@@ -1061,7 +1044,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update estimasi saat tanggal, layanan, atau jam booking berubah
     document.getElementById('delivery_date').addEventListener('change', calculateEstimatedFinish);
-    document.getElementById('delivery_date').addEventListener('change', updateSummary);
     document.getElementById('booking_time').addEventListener('change', calculateEstimatedFinish);
     document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
@@ -1330,13 +1312,13 @@ async function confirmLogout(e) {
                 credentials: 'include'
             });
             
-            console.log('📊 Logout Response Status:', response.status);
+            console.log(' Logout Response Status:', response.status);
             const result = await response.json();
-            console.log('✅ Logout API Response:', result);
+            console.log(' Logout API Response:', result);
             
             window.location.href = '/';
         } catch (error) {
-            console.error('❌ Logout error:', error);
+            console.error(' Logout error:', error);
             // Still redirect even if error
             window.location.href = '/';
         }
