@@ -353,7 +353,7 @@ async function submitRegisterForm() {
                 const errorMessages = Object.values(result.errors).join(', ');
                 showAlert(errorMessages);
             } else {
-                const errorMessage = result.message || 'Email sudah terdaftar. Silakan gunakan email lain atau masuk';
+                const errorMessage = result.message || 'Validasi gagal. Pastikan semua data benar dan coba lagi.';
                 showAlert(errorMessage);
             }
             
