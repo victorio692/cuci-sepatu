@@ -430,34 +430,58 @@ function renderEmptyBookings() {
 }
 
 function updateBookingStatus(element) {
+    // Validate element exists
+    if (!element) {
+        console.error(' Element tidak ditemukan');
+        showToast('Error: Element tidak ditemukan', 'error');
+        return;
+    }
+    
+    console.log('🔄 updateBookingStatus called', element);
+    
     const bookingId = element.getAttribute('data-booking-id');
+    
+    if (!bookingId) {
+        console.error(' Booking ID tidak ditemukan');
+        showToast('Error: Booking ID tidak ditemukan', 'error');
+        return;
+    }
+    
     // Get status from either select.value (desktop) or button data-value (mobile)
     const newStatus = element.value || element.getAttribute('data-value');
-    const originalStatus = element.getAttribute('data-original-status');
+    const originalStatus = element.getAttribute('data-original-status') || newStatus;
     
-    if (!originalStatus) {
+    console.log('📝 Booking ID:', bookingId, '| New Status:', newStatus, '| Original:', originalStatus);
+    
+    if (!originalStatus || !newStatus) {
         element.setAttribute('data-original-status', newStatus);
     }
     
     if (newStatus === 'selesai') {
-        const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengunggah foto hasil cucian.\n\nLanjutkan?';
-        if (confirm(confirmMsg)) {
+        const confirmMsg = 'Status "Selesai" memerlukan foto hasil cucian.\n\nAnda akan diarahkan ke halaman detail booking untuk mengunggah foto hasil cucian.';
+        Modal.confirm(confirmMsg, () => {
             window.location.href = '/admin/bookings/' + bookingId;
-        } else {
+        }, () => {
             if (element.value) element.value = originalStatus;
-        }
+        }, 'Perhatian');
         return;
     }
     
     if (newStatus === 'ditolak' || newStatus === 'batal') {
-        const confirmMsg = 'Status "Ditolak" memerlukan alasan penolakan.\n\nAnda akan diarahkan ke halaman detail booking untuk mengisi alasan.\n\nLanjutkan?';
-        if (confirm(confirmMsg)) {
+        const confirmMsg = 'Status "Ditolak" memerlukan alasan penolakan.\n\nAnda akan diarahkan ke halaman detail booking untuk mengisi alasan.';
+        Modal.confirm(confirmMsg, () => {
             window.location.href = '/admin/bookings/' + bookingId;
-        } else {
+        }, () => {
             if (element.value) element.value = originalStatus;
-        }
+        }, 'Perhatian');
         return;
     }
+    
+    // Store references BEFORE async operation
+    const elementRef = element;
+    const originalStatusRef = originalStatus;
+    
+    console.log('🚀 Mengirim request ke API...');
     
     fetch('/api/admin/bookings/' + bookingId + '/status', {
         method: 'POST',
@@ -468,25 +492,117 @@ function updateBookingStatus(element) {
         credentials: 'include',
         body: JSON.stringify({ status: newStatus })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success || data.code === 200) {
-            element.setAttribute('data-original-status', newStatus);
-            showToast('Status berhasil diupdate', 'success');
+    .then(response => {
+        console.log('📊 Response Status:', response.status, response.ok);
+        console.log('📋 Response Headers:', response.headers.get('Content-Type'));
+        
+        // Parse JSON regardless of status
+        return response.json().then(data => {
+            console.log('📦 Response JSON:', data);
             
-            // Reload bookings with current filters
-            const search = document.getElementById('searchInput').value;
-            const status = document.getElementById('statusFilter').value;
-            setTimeout(() => loadBookings(search, status), 500);
+            // Check HTTP status AFTER parsing JSON
+            if (!response.ok) {
+                // Extract clean error message
+                let errorMsg = data.message || data.error || response.statusText || 'Terjadi kesalahan';
+                
+                if (data.messages && typeof data.messages === 'object') {
+                    // Get first error message from messages object
+                    const firstMsg = Object.values(data.messages)[0];
+                    if (typeof firstMsg === 'string') {
+                        errorMsg = firstMsg;
+                    }
+                }
+                
+                throw new Error(errorMsg);
+            }
+            
+            return data;
+        }).catch(err => {
+            console.error('❌ JSON Parse Error:', err);
+            throw err;
+        });
+    })
+    .then(data => {
+        console.log('✅ API Response Data:', data);
+        
+        // Check for success
+        if (data.success === true || data.code === 200) {
+            console.log('🎉 Status update successful!');
+            
+            // Set original status attribute SAFELY (only for real DOM elements)
+            if (elementRef && elementRef.tagName && typeof elementRef.setAttribute === 'function') {
+                try {
+                    elementRef.setAttribute('data-original-status', newStatus);
+                    console.log('✅ Updated data-original-status');
+                } catch (e) {
+                    console.warn('⚠️ Tidak bisa set attribute:', e.message);
+                }
+            }
+            
+            showToast(' Status berhasil diubah ke: ' + newStatus, 'success');
+            
+            // Reload bookings with current filters after delay
+            const search = document.getElementById('searchInput')?.value || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            console.log('🔄 Reloading bookings dengan filter:', { search, statusFilter });
+            
+            setTimeout(() => {
+                console.log('📥 Meload data bookings...');
+                loadBookings(search, statusFilter);
+            }, 1500);
         } else {
-            showToast(data.message || 'Gagal update status', 'error');
-            if (element.value) element.value = originalStatus;
+            // API returned error in response
+            console.warn('⚠️ API returned error:', data);
+            
+            // Extract error message properly from API response
+            let errorMsg = 'Gagal mengubah status';
+            
+            if (data.message) {
+                errorMsg = data.message;
+            } else if (data.messages) {
+                // Handle CodeIgniter fail() response format
+                if (typeof data.messages === 'string') {
+                    errorMsg = data.messages;
+                } else if (data.messages.error) {
+                    errorMsg = data.messages.error;
+                } else if (typeof data.messages === 'object') {
+                    const firstError = Object.values(data.messages)[0];
+                    errorMsg = typeof firstError === 'string' ? firstError : JSON.stringify(firstError);
+                }
+            }
+            
+            showToast('❌ ' + errorMsg, 'error');
+            
+            // Revert to original safely (only if real DOM element)
+            if (elementRef && typeof elementRef.value !== 'undefined' && elementRef.tagName) {
+                try {
+                    elementRef.value = originalStatusRef;
+                    console.log('↩️ Reverted value to:', originalStatusRef);
+                } catch (e) {
+                    console.warn('⚠️ Tidak bisa revert (pseudo-element):', e.message);
+                }
+            }
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        showToast('Terjadi kesalahan koneksi', 'error');
-        if (element.value) element.value = originalStatus;
+        console.error('❌ Fetch Error:', error.message);
+        
+        // Error message sudah clean dari response handler
+        const displayMsg = error.message.length > 100 
+            ? error.message.substring(0, 97) + '...'
+            : error.message;
+        
+        showToast('❌ ' + displayMsg, 'error');
+        
+        // Revert to original safely (only if real DOM element)
+        if (elementRef && typeof elementRef.value !== 'undefined' && elementRef.tagName) {
+            try {
+                elementRef.value = originalStatusRef;
+                console.log('↩️ Reverted value to:', originalStatusRef);
+            } catch (e) {
+                console.warn('⚠️ Tidak bisa revert (pseudo-element):', e.message);
+            }
+        }
     });
 }
 
@@ -521,10 +637,12 @@ function showToast(message, type) {
 
 // Delete booking function
 function deleteBooking(id) {
-    if (!confirm('Yakin ingin menghapus pesanan ini?')) {
-        return;
-    }
-    
+    Modal.danger('Pesanan yang dihapus tidak dapat dipulihkan. Lanjutkan?', () => {
+        performDeleteBooking(id);
+    }, null, 'Hapus Pesanan');
+}
+
+function performDeleteBooking(id) {
     fetch(`/api/admin/bookings/${id}`, {
         method: 'DELETE',
         headers: {
@@ -571,19 +689,29 @@ function toggleStatusDropdown(button, bookingId) {
 function selectStatus(button, bookingId, newStatus) {
     // Close dropdown
     const menu = document.querySelector(`.dropdown-menu-${bookingId}`);
-    menu.classList.add('hidden');
+    if (menu) {
+        menu.classList.add('hidden');
+    }
     
     // Create a pseudo-element to pass to updateBookingStatus
     const pseudo = {
         getAttribute: (attr) => {
-            if (attr === 'data-booking-id') return bookingId;
+            if (attr === 'data-booking-id') return String(bookingId);
             if (attr === 'data-original-status') return newStatus;
+            if (attr === 'data-value') return newStatus;
+            if (attr === 'data-new-status') return newStatus;
             return null;
         },
-        setAttribute: () => {},
-        value: newStatus
+        setAttribute: (attr, val) => {
+            console.log(`Setting attribute ${attr} = ${val}`);
+        },
+        value: newStatus,
+        // Backup value untuk safety
+        _value: newStatus,
+        get _newStatus() { return newStatus; }
     };
     
+    console.log('📱 selectStatus called from mobile button:', { bookingId, newStatus, pseudo });
     updateBookingStatus(pseudo);
 }
 

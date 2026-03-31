@@ -512,9 +512,8 @@ async function doExport() {
     
     #exportDropdown {
         min-width: 180px;
-        left: 50%;
-        transform: translateX(-50%);
-        right: auto !important;
+        right: 0;
+        left: auto;
     }
 }
 

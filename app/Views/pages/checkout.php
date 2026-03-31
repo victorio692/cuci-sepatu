@@ -700,9 +700,9 @@ function submitCheckout() {
         const pickupAddress = document.getElementById('pickup_address').value.trim();
         if (!pickupAddress || pickupAddress.length < 10) {
             if (Modal) {
-                Modal.warning('Alamat penjemputan minimal 10 karakter');
+                Modal.warning('Masukan alamat penjemputan');
             } else {
-                alert('Alamat penjemputan minimal 10 karakter');
+                alert('Masukan alamat penjemputan');
             }
             return;
         }

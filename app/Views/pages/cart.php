@@ -115,8 +115,8 @@ async function loadCart() {
                 <i class="fas fa-shopping-cart text-gray-300 text-6xl mb-4"></i>
                 <h2 class="text-2xl font-bold text-gray-700 mb-2">Keranjang Kosong</h2>
                 <p class="text-gray-500 mb-6">Belum ada layanan yang ditambahkan ke keranjang</p>
-                <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali Belanja
+                <a href="/" class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition shadow-md hover:shadow-lg">
+                    <i class="fas fa-plus"></i> Pesan Sekarang
                 </a>
             </div>
         `;
