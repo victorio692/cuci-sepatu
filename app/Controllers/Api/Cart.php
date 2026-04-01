@@ -36,7 +36,7 @@ class Cart extends ResourceController
         $data = $this->request->getJSON(true);
 
         if (!isset($data['name'], $data['price'], $data['quantity'])) {
-            return $this->failValidationError('Data tidak lengkap');
+            return $this->failValidationErrors('Data tidak lengkap');
         }
 
         $cart = session()->get('cart') ?? [];
