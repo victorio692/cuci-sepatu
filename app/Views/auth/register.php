@@ -348,12 +348,27 @@ async function submitRegisterForm() {
             console.log('❌ Registration failed:', result.message);
             
             // Show error messages
-            if (result.errors) {
-                // Show validation errors from API
-                const errorMessages = Object.values(result.errors).join(', ');
-                showAlert(errorMessages);
+            const validationErrors = result.errors || result.messages?.errors;
+            const apiMessage = result.message || result.messages?.message || result.messages?.error;
+
+            if (validationErrors && typeof validationErrors === 'object') {
+                const fieldLabels = {
+                    nama_lengkap: 'Nama Lengkap',
+                    email: 'Email',
+                    no_hp: 'No WhatsApp',
+                    password: 'Kata Sandi',
+                    confirm_password: 'Konfirmasi Kata Sandi'
+                };
+
+                const errorMessages = Object.entries(validationErrors).map(([field, message]) => {
+                    const label = fieldLabels[field] || field;
+                    const text = Array.isArray(message) ? message.join(', ') : message;
+                    return `${label}: ${text}`;
+                });
+
+                showAlert(errorMessages.join(' | '));
             } else {
-                const errorMessage = result.message || 'Validasi gagal. Pastikan semua data benar dan coba lagi.';
+                const errorMessage = apiMessage || 'Validasi gagal. Pastikan semua data benar dan coba lagi.';
                 showAlert(errorMessage);
             }
             

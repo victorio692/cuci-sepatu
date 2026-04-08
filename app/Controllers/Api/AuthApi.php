@@ -26,11 +26,40 @@ class AuthApi extends ResourceController
             'confirm_password' => 'required|matches[password]'
         ];
 
-        if (!$this->validate($rules)) {
+        $messages = [
+            'nama_lengkap' => [
+                'required' => 'Nama lengkap wajib diisi.',
+                'min_length' => 'Nama lengkap minimal 3 karakter.',
+                'max_length' => 'Nama lengkap maksimal 100 karakter.'
+            ],
+            'email' => [
+                'required' => 'Email wajib diisi.',
+                'valid_email' => 'Format email tidak valid.',
+                'is_unique' => 'Email sudah terdaftar, silakan gunakan email lain.'
+            ],
+            'no_hp' => [
+                'required' => 'Nomor WhatsApp wajib diisi.',
+                'min_length' => 'Nomor WhatsApp minimal 10 digit.',
+                'max_length' => 'Nomor WhatsApp maksimal 15 digit.'
+            ],
+            'password' => [
+                'required' => 'Kata sandi wajib diisi.',
+                'min_length' => 'Kata sandi minimal 6 karakter.'
+            ],
+            'confirm_password' => [
+                'required' => 'Konfirmasi kata sandi wajib diisi.',
+                'matches' => 'Konfirmasi kata sandi tidak sama dengan kata sandi.'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            $errors = $this->validator->getErrors();
+            $errorFields = implode(', ', array_keys($errors));
+
             return $this->fail([
                 'status' => 'error',
-                'message' => 'Validasi gagal',
-                'errors' => $this->validator->getErrors()
+                'message' => 'Validasi gagal pada field: ' . $errorFields,
+                'errors' => $errors
             ], 400);
         }
 
