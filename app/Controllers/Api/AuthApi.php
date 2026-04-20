@@ -123,7 +123,7 @@ class AuthApi extends ResourceController
         ];
 
         if (!$this->validate($rules)) {
-            return $this->fail([
+            return $this->respond([
                 'status' => 'error',
                 'message' => 'Email dan password harus diisi',
                 'errors' => $this->validator->getErrors()
@@ -138,15 +138,22 @@ class AuthApi extends ResourceController
         $user = $this->model->where('email', $email)->first();
 
         if (!$user) {
-            return $this->fail([
+            return $this->respond([
                 'status' => 'error',
                 'message' => 'Email atau password salah'
             ], 401);
         }
 
+        if (isset($user['aktif']) && (int)$user['aktif'] !== 1) {
+            return $this->respond([
+                'status' => 'error',
+                'message' => 'Akun Anda telah dinonaktifkan. Hubungi admin untuk aktivasi.'
+            ], 403);
+        }
+
         // Verifikasi password
         if (!password_verify($password, $user['password_hash'])) {
-            return $this->fail([
+            return $this->respond([
                 'status' => 'error',
                 'message' => 'Email atau password salah'
             ], 401);

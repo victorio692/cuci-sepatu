@@ -47,7 +47,15 @@ class Auth extends BaseController
         // Cari user berdasarkan email
         $user = $this->db->table('users')->where('email', $email)->get()->getRow();
 
-        if (!$user || !password_verify($password, $user->password_hash)) {
+        if (!$user) {
+            return redirect()->back()->with('error', 'Email atau password salah');
+        }
+
+        if (isset($user->aktif) && (int)$user->aktif !== 1) {
+            return redirect()->back()->with('error', 'Akun Anda telah dinonaktifkan. Hubungi admin untuk aktivasi.');
+        }
+
+        if (!password_verify($password, $user->password_hash)) {
             return redirect()->back()->with('error', 'Email atau password salah');
         }
 

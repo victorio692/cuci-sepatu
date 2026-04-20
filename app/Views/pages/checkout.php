@@ -368,7 +368,11 @@ function useCurrentTime() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('booking_time').value = `${hours}:${minutes}`;
+    const bookingTimeInput = document.getElementById('booking_time');
+    bookingTimeInput.value = `${hours}:${minutes}`;
+
+    // Trigger listeners so estimated finish time follows booking_time.
+    bookingTimeInput.dispatchEvent(new Event('input'));
 }
 
 // Handle item entry option change
@@ -434,9 +438,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('delivery_date').addEventListener('change', updateSummary);
     document.getElementById('booking_time').addEventListener('input', calculateEstimatedFinish);
     
-    // Hitung estimasi saat load
-    calculateEstimatedFinish();
-    
     // Handle delivery option change
     const deliveryOptions = document.querySelectorAll('input[name="delivery_option"]');
     const deliveryAddressSection = document.getElementById('deliveryAddressSection');
@@ -455,8 +456,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Initialize booking time with current time
+    // Initialize booking time with current time.
+    // This will trigger estimated finish calculation via input event.
     useCurrentTime();
+
+    // Hitung estimasi saat load (safety call in case auto event is blocked)
+    calculateEstimatedFinish();
     
     // Update current time display
     updateCurrentTime();

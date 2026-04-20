@@ -34,6 +34,9 @@ class AuthManager
 
         $user_id = $this->session->get('user_id');
         $user = $this->db->table('users')->find($user_id);
+        if (!$user || (isset($user['aktif']) && (int)$user['aktif'] !== 1)) {
+            return null;
+        }
         
         return $user ? (object)$user : null;
     }

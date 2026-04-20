@@ -18,12 +18,17 @@ class Auth implements FilterInterface
             return redirect()->to('/login');
         }
 
+        $db = Database::connect();
+        $user = $db->table('users')->where('id', $session->get('user_id'))->get()->getRowArray();
+
+        if (!$user || (isset($user['aktif']) && (int)$user['aktif'] !== 1)) {
+            $session->destroy();
+            return redirect()->to('/login')->with('error', 'Akun Anda telah dinonaktifkan.');
+        }
+
         // If 'admin' argument is passed, check if user is admin
         if (in_array('admin', $arguments ?? [])) {
-            $db = Database::connect();
-            $user = $db->table('users')->where('id', $session->get('user_id'))->get()->getRowArray();
-            
-            if (!$user || $user['role'] !== 'admin') {
+            if ($user['role'] !== 'admin') {
                 return redirect()->to('/')->with('error', 'Access denied');
             }
         }

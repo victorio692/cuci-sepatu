@@ -245,7 +245,12 @@ async function submitLoginForm() {
             }, 500);
         } else {
             // Error response - tampilkan alert dengan pesan error
-            const errorMessage = result.message || 'Email atau kata sandi anda salah, silakan coba lagi';
+            const errorMessage = result.message
+                || result.error
+                || result.messages?.message
+                || result.messages?.error
+                || (typeof result.messages === 'string' ? result.messages : '')
+                || 'Email atau kata sandi anda salah, silakan coba lagi';
             console.log('❌ Login failed:', errorMessage);
             showAlert(errorMessage);
             
